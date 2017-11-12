@@ -27,7 +27,7 @@ https://docs.google.com/spreadsheets/d/1FaistICZ-BuORu7YYm5fFpgii2cvxZKgEpxApWQ_
 - [ ] Boilerplate setup
 - [ ] MongoDB setup
 - [ ] React/Redux setup
-- [ ]Setting up Component Structures
+- [ ] Setting up Component Structures
 - [ ] Password security
 - [ ] HTTPS
 - [ ] User Authentication

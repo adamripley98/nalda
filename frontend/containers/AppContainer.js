@@ -2,11 +2,14 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import Title from '../components/Title';
+import Login from '../components/auth/Login';
+import Register from '../components/auth/Register';
 
 const AppContainer = ({ name }) => {
     return (
         <div>
             <Title name={name} />
+            <Login />
         </div>
     );
 };
