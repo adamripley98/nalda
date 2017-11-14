@@ -5,6 +5,11 @@ Technologies used: React, Redux, Node, Express, Mongo, Babel
 Link to timesheet:
 https://docs.google.com/spreadsheets/d/1FaistICZ-BuORu7YYm5fFpgii2cvxZKgEpxApWQ_3pY/edit?usp=sharing
 
+Fix weird start error by running "killall -9 node" then "npm start"
+
+## Currently Working on:
+Passport and Mongo Set up, primarily in server.js. Will move into separate passport files once I get it working there first.
+
 ## Frontend
 
 - [ ] Setting up SCSS
