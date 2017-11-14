@@ -1,6 +1,6 @@
 # Contract Work for Nalda
 
-Technologies used: React, Redux, Node, Express, Mongo, Babel
+Technologies used: React, Redux, Node, Express, Mongo
 
 Link to timesheet:
 https://docs.google.com/spreadsheets/d/1FaistICZ-BuORu7YYm5fFpgii2cvxZKgEpxApWQ_3pY/edit?usp=sharing
