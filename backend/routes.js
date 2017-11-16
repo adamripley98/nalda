@@ -11,6 +11,9 @@ const isAuthenticated = (req, res, next) => {
 };
 
 module.exports = (passport) => {
+    router.post('/', (req, res) => {
+        console.log('posted to /');
+    });
   	/* GET login page. */
   	router.get('/', (req, res) => {
       // Display the Login page with any flash message, if any
