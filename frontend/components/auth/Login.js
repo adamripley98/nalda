@@ -79,9 +79,7 @@ class Login extends Component {
 
           <p className="blue-gray-text marg-top-2 marg-bot-0">
             Don't have an account?{" "}
-            <a href="/register" className="purple-text">
-              Register here.
-            </a>
+            <Link to={`/register`}>Register here.</Link>
           </p>
         </form>
       </div>
