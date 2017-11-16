@@ -6,9 +6,9 @@ module.exports = (passport) => {
   	passport.use('login', new LocalStrategy({
       passReqToCallback: true
   },
-  (req, username, password, done) => {
+  (req, email, password, done) => {
       // check in mongo if a user with username exists or not
-      User.findOne({'username': username},
+      User.findOne({'email': email},
           (err, user) => {
               // In case of any error, return using the done method
               if (err) {
@@ -16,7 +16,7 @@ module.exports = (passport) => {
               }
               // Username does not exist, log the error and redirect back
               if (!user) {
-                  console.log('User Not Found with username ' + username);
+                  console.log('User Not Found with email ' + email);
                   return done(null, false, req.flash('message', 'User Not found.'));
               }
               // User exists but wrong password, log the error

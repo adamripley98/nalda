@@ -8,7 +8,6 @@ const api = require('./backend/routes')(passport);
 
 // connecting to mongo
 const connect = process.env.MONGODB_URI;
-console.log('what is my env', process.env);
 mongoose.connect(connect);
 
 app.use(express.static(path.join(__dirname, 'public')));

@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
 
-const isAuthenticated = function(req, res, next) {
+const isAuthenticated = (req, res, next) => {
   	if (req.isAuthenticated()) {
       return next();
   }
 	   // if the user is not authenticated then redirect him to the login page
 	  res.redirect('/');
-    return "hmmmmmmm";
+    return "NOT AUTHENTICATED";
 };
 
 module.exports = (passport) => {
