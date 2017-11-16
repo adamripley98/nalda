@@ -29,7 +29,7 @@ Passport and Mongo Set up, primarily in server.js. Will move into separate passp
 
 ## Backend
 
-- [ ] Boilerplate setup
+- [X] Boilerplate setup
 - [ ] MongoDB setup
 - [ ] React/Redux setup
 - [ ] Setting up Component Structures
