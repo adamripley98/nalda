@@ -3,7 +3,7 @@ var User = require('../models/user');
 var bCrypt = require('bcrypt-nodejs');
 
 module.exports = (passport) => {
-	 passport.use('signup', new LocalStrategy({
+	 passport.use('register', new LocalStrategy({
      passReqToCallback: true // allows us to pass back the entire request to the callback
  },
         (req, email, password, done) => {
@@ -12,7 +12,7 @@ module.exports = (passport) => {
                 User.findOne({'email': email}, function(err, user) {
                     // In case of any error, return using the done method
                     if (err) {
-                        console.log('Error in SignUp: ' + err);
+                        console.log('Error in Register: ' + err);
                         return done(err);
                     }
                     // already exists

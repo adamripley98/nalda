@@ -28,14 +28,15 @@ module.exports = (passport) => {
   	}));
 
   	/* GET Registration Page */
-  	router.get('/signup', (req, res) => {
+  	router.get('/register', (req, res) => {
+      console.log('does it even enter REGISTER???');
   		res.render('register', {message: req.flash('message')});
   	});
 
   	/* Handle Registration POST */
-  	router.post('/signup', passport.authenticate('signup', {
+  	router.post('/register', passport.authenticate('register', {
   		successRedirect: '/home',
-  		failureRedirect: '/signup',
+  		failureRedirect: '/register',
   		failureFlash: true,
   	}));
 

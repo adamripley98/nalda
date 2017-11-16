@@ -21,8 +21,4 @@ const Register = ( ) => {
     );
 };
 
-// Register.propTypes = {
-//     name: PropTypes.string,
-// };
-
 export default Register;
