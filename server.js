@@ -4,7 +4,7 @@ const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const passport = require('passport');
-const api = require('./backend/routes')(passport);
+const routes = require('./backend/routes')(passport);
 
 // connecting to mongo
 const connect = process.env.MONGODB_URI;
@@ -32,7 +32,7 @@ app.get('/', (request, response) => {
     response.sendFile(__dirname + '/public/index.html'); // For React/Redux
 });
 
-app.use('/api', api);
+app.use('/', routes);
 
 app.listen(PORT, error => {
     error

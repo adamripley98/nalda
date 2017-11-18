@@ -12,6 +12,7 @@ const isAuthenticated = (req, res, next) => {
 
 module.exports = (passport) => {
     router.post('/', (req, res) => {
+        res.render('home');
         console.log('posted to /');
     });
   	/* GET login page. */
@@ -20,12 +21,22 @@ module.exports = (passport) => {
   		res.render('index', { message: req.flash('message') });
   	});
 
+
+    // passport.authenticate('login', {
+    //   successRedirect: '/home',
+    //   failureRedirect: '/',
+    //   failureFlash: true,
+    // })
   	/* Handle Login POST */
-  	router.post('/login', passport.authenticate('login', {
-  		successRedirect: '/home',
-  		failureRedirect: '/',
-  		failureFlash: true,
-  	}));
+  	router.post('/login', (req, res) => {
+      console.log('goes into login');
+      res.render('home');
+  });
+
+    router.get('/login', (req, res) => {
+        console.log('does it go here');
+        res.render('login', {message: req.flash('message')});
+    });
 
   	/* GET Registration Page */
   	router.get('/register', (req, res) => {

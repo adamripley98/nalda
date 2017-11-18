@@ -22,12 +22,15 @@ class Login extends Component {
         console.log('submitted my dood.');
         console.log('what is event', event);
         event.preventDefault();
-        axios.post('http://localhost:3000/login', {
+        axios.post('/login', {
             e,
             p,
         })
           .then((resp) => {
               console.log('what is data', resp.data);
+          })
+          .catch((err) => {
+              console.log('there was an error', err);
           });
     }
 
