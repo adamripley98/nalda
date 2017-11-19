@@ -15,6 +15,7 @@ module.exports = (passport) => {
         res.render('home');
         console.log('posted to /');
     });
+
   	/* GET login page. */
   	router.get('/', (req, res) => {
       // Display the Login page with any flash message, if any
@@ -27,11 +28,12 @@ module.exports = (passport) => {
     //   failureRedirect: '/',
     //   failureFlash: true,
     // })
+
   	/* Handle Login POST */
   	router.post('/login', (req, res) => {
       console.log('goes into login');
-      res.render('home');
-  });
+      res.render('Home.js');
+    });
 
     router.get('/login', (req, res) => {
         console.log('does it go here');
