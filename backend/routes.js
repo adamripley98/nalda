@@ -6,7 +6,7 @@ const isAuthenticated = (req, res, next) => {
       return next();
   }
 	   // if the user is not authenticated then redirect him to the login page
-	  res.redirect('/');
+	  res.redirect('/login');
     return "NOT AUTHENTICATED";
 };
 
@@ -33,7 +33,7 @@ module.exports = (passport) => {
   	router.post('/login', (req, res) => {
       console.log('goes into login');
       res.render('Home.js');
-    });
+  });
 
     router.get('/login', (req, res) => {
         console.log('does it go here');

@@ -56,7 +56,7 @@ class Login extends Component {
 
                 <form method="POST" onSubmit={(e) => this.handleSubmit(e)}>
                   <h2 className="marg-bot-1">Login</h2>
-                  <label>Email</label>
+                  <label>Email:</label>
                   <input
                     type="email"
                     className="form-control marg-bot-1"
