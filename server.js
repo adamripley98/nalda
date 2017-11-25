@@ -4,6 +4,7 @@ const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const passport = require('passport');
+const bodyParser = require('body-parser');
 const routes = require('./backend/routes')(passport);
 const LocalStrategy = require('passport-local');
 const User = require('./backend/models/user');
@@ -13,6 +14,8 @@ const auth = require('./backend/passport/login');
 const connect = process.env.MONGODB_URI;
 mongoose.connect(connect);
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // passport configuration work, makes sessions persistant
@@ -42,7 +45,10 @@ passport.deserializeUser((id, done) => {
 });
 
 // passport strategy
-passport.use('local', new LocalStrategy(function(username, password, done) {
+passport.use('local', new LocalStrategy({
+  		usernameField: 'username',
+  		passwordField: 'password'
+}, function(username, password, done) {
   // Find the user with the given username
     User.findOne({ username: username }, function(err, user) {
       // if there's an error, finish trying to authenticate (auth failed)
@@ -69,7 +75,7 @@ app.get('*', (request, response) => {
     response.sendFile(__dirname + '/public/index.html'); // For React/Redux
 });
 
-// app.use('/', auth(passport));
+app.use('/', auth(passport));
 app.use('/', routes);
 
 

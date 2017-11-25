@@ -8,7 +8,7 @@ class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            email: '',
+            username: '',
             password: '',
         };
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -17,7 +17,7 @@ class Login extends Component {
     }
 
     handleSubmit(event) {
-        const username = this.state.email;
+        const username = this.state.username;
         const password = this.state.password;
         console.log('submitted my dood.', username, password);
         console.log('what is event', event);
@@ -37,7 +37,7 @@ class Login extends Component {
     handleChangeEmail(event) {
         console.log('what is email', event.target.value);
         this.setState({
-            email: event.target.value
+            username: event.target.value
         });
     }
 
@@ -60,7 +60,7 @@ class Login extends Component {
                   <input
                     type="email"
                     className="form-control marg-bot-1"
-                    value={this.state.email}
+                    value={this.state.username}
                     onChange={(e) => this.handleChangeEmail(e)}
                     required="true"
                   />
@@ -76,7 +76,7 @@ class Login extends Component {
                   <input
                     type="submit"
                     className={
-                      this.state.password.length && this.state.email.length ?
+                      this.state.password.length && this.state.username.length ?
                         "btn btn-primary" :
                         "btn btn-secondary"
                     }

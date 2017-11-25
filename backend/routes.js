@@ -27,9 +27,10 @@ module.exports = (passport) => {
   		res.render('index', { message: req.flash('message') });
   	});
 
-    router.post('/login', passport.authenticate('local'), function(req, res) {
-        console.log('log', req);
-    });
+    // router.post('/login', passport.authenticate('local'), function(req, res) {
+    //     console.log('log', req);
+    // });
+
     // (req, res) => {
     //   console.log('goes into login');
     //   // res.render('Home.js');

@@ -35,6 +35,9 @@ module.exports = (passport) => {
     router.post('/login', passport.authenticate('local'), function(req, res) {
         console.log('log');
     });
+    // router.post('/login', (req, res) => console.log('posted'));
+
+    // router.post('/login', (req, res) => passport.authenticate('local')(req, res));
   // 	passport.use('login', new LocalStrategy({
   //     passReqToCallback: true
   // },
