@@ -1,28 +1,40 @@
-var LocalStrategy   = require('passport-local').Strategy;
+var LocalStrategy   = require('passport-local');
 var User = require('../models/user');
 var bCrypt = require('bcrypt-nodejs');
+const express = require('express');
+var router = express.Router();
 
 module.exports = (passport) => {
-    console.log('hellllo from login.js');
-    passport.authenticate(new LocalStrategy(
-      (username, password, done) => {
-          console.log('progresssss');
-          User.findOne({ username: username }, (err, user) => {
-              if (err) {
-                  console.log('there was an err finding user', err);
-                  return done(err);
-              }
-              if (!user) {
-                  return done(null, false, { message: 'Incorrect username.' });
-              }
-              if (!user.validPassword(password)) {
-                  return done(null, false, { message: 'Incorrect password.' });
-              }
-              console.log('done');
-              return done(null, user);
-          });
-      }
-    ));
+    // console.log('hellllo from login.js');
+    // passport.use(new LocalStrategy(
+    //   (username, password, done) => {
+    //       console.log('progresssss');
+    //       User.findOne({ username: username }, (err, user) => {
+    //           if (err) {
+    //               console.log('there was an err finding user', err);
+    //               return done(err);
+    //           }
+    //           if (!user) {
+    //               return done(null, false, { message: 'Incorrect username.' });
+    //           }
+    //           if (!user.validPassword(password)) {
+    //               return done(null, false, { message: 'Incorrect password.' });
+    //           }
+    //           console.log('done');
+    //           return done(null, user);
+    //       });
+    //   }
+    // ));
+    // GET Login page
+    router.get('/login', function(req, res) {
+        // res.render('login');
+        console.log('goes into logiiinn');
+    });
+
+    // POST Login page
+    router.post('/login', passport.authenticate('local'), function(req, res) {
+        console.log('log');
+    });
   // 	passport.use('login', new LocalStrategy({
   //     passReqToCallback: true
   // },
@@ -56,4 +68,6 @@ module.exports = (passport) => {
     var isValidPassword = (user, password) => {
         return bCrypt.compareSync(password, user.password);
     };
+
+    return router;
 };

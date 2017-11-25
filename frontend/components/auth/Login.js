@@ -17,14 +17,14 @@ class Login extends Component {
     }
 
     handleSubmit(event) {
-        const e = this.state.email;
-        const p = this.state.password;
-        console.log('submitted my dood.');
+        const username = this.state.email;
+        const password = this.state.password;
+        console.log('submitted my dood.', username, password);
         console.log('what is event', event);
         event.preventDefault();
         axios.post('/login', {
-            e,
-            p,
+            username,
+            password,
         })
           .then((resp) => {
               console.log('what is data', resp.data);

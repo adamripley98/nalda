@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const login = require('./passport/login.js');
-const LocalStrategy = require('passport-local').Strategy;
+const LocalStrategy = require('passport-local');
 const User = require('./models/user');
 
 
@@ -10,7 +10,8 @@ const isAuthenticated = (req, res, next) => {
       return next();
   }
 	   // if the user is not authenticated then redirect to the login page
-	  res.redirect('/login');
+	  // res.redirect('/login');
+    console.log('NOT LOGGED IN');
     return "NOT AUTHENTICATED";
 };
 
@@ -26,16 +27,23 @@ module.exports = (passport) => {
   		res.render('index', { message: req.flash('message') });
   	});
 
-
+    router.post('/login', passport.authenticate('local'), function(req, res) {
+        console.log('log', req);
+    });
     // (req, res) => {
     //   console.log('goes into login');
     //   // res.render('Home.js');
     //   login(passport);
     // }
   	/* Handle Login POST */
-  	router.post('/login', () => login(passport));
+  	// router.post('/login', passport.authenticate('local'), () => login(passport));
+    // POST Login page
+    // router.post('/login', passport.authenticate('local'), (req, res) => {
+    //     console.log('goes into login');
+    //     return res.send({userId: req.user._id});
+    // });
       // res.send("yesssss");
-    console.log('posted to login');
+    // console.log('posted to login');
       // passport.use('login', new LocalStrategy(
       //   (username, password, done) => {
       //       console.log('progresssss');
@@ -55,11 +63,6 @@ module.exports = (passport) => {
       //   }
       // ));
 
-
-    router.get('/login', (req, res) => {
-        console.log('does it go here');
-        res.render('login', {message: req.flash('message')});
-    });
 
   	/* GET Registration Page */
   	router.get('/register', (req, res) => {

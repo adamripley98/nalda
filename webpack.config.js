@@ -12,7 +12,7 @@ module.exports = {
         ],
     },
     resolve: {
-        extensions: ['.js', '.scss']
+        extensions: ['.js', '.scss'],
     },
     output: {
         path: path.join(__dirname, '/public'),
