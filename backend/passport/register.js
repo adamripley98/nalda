@@ -10,12 +10,22 @@ module.exports = (passport) => {
 				 console.log('does it even enter REGISTER???');
 		 });
 
-	/* Handle Registration POST */
-		 router.post('/register', passport.authenticate('register', {
-			 successRedirect: '/home',
-			 failureRedirect: '/register',
-			 failureFlash: true,
-		 }));
+		 /* Handle Registration POST */
+		 router.post('/register', (req, res) => {
+ 		 		// validation step
+				 var newUser = new User({
+					 username: req.body.username,
+					 password: req.body.password,
+				 });
+				 console.log(newUser);
+				 newUser.save((err, user) => {
+					 if (err) {
+						 console.log('error registering a user', err);
+						 return;
+					 }
+					 console.log('registered', user);
+				 });
+ });
 
 		 return router;
 };
