@@ -8,7 +8,8 @@ const bodyParser = require('body-parser');
 const routes = require('./backend/routes')(passport);
 const LocalStrategy = require('passport-local');
 const User = require('./backend/models/user');
-const auth = require('./backend/passport/login');
+const login = require('./backend/passport/login');
+const register = require('./backend/passport/register');
 
 // connecting to mongo
 const connect = process.env.MONGODB_URI;
@@ -75,7 +76,8 @@ app.get('*', (request, response) => {
     response.sendFile(__dirname + '/public/index.html'); // For React/Redux
 });
 
-app.use('/', auth(passport));
+app.use('/', login(passport));
+app.use('/', register(passport));
 app.use('/', routes);
 
 
