@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const login = require('./passport/login.js');
+const LocalStrategy = require('passport-local').Strategy;
+const User = require('./models/user');
+
 
 const isAuthenticated = (req, res, next) => {
   	if (req.isAuthenticated()) {
@@ -24,18 +27,34 @@ module.exports = (passport) => {
   	});
 
 
-    // passport.authenticate('login', {
-    //   successRedirect: '/home',
-    //   failureRedirect: '/',
-    //   failureFlash: true,
-    // })
-
+    // (req, res) => {
+    //   console.log('goes into login');
+    //   // res.render('Home.js');
+    //   login(passport);
+    // }
   	/* Handle Login POST */
-  	router.post('/login', (req, res) => {
-      console.log('goes into login');
-      // res.render('Home.js');
-      login(passport);
-  });
+  	router.post('/login', () => login(passport));
+      // res.send("yesssss");
+    console.log('posted to login');
+      // passport.use('login', new LocalStrategy(
+      //   (username, password, done) => {
+      //       console.log('progresssss');
+      //       User.findOne({ username: username }, (err, user) => {
+      //           if (err) {
+      //               console.log('there was an err finding user', err);
+      //               return done(err);
+      //           }
+      //           if (!user) {
+      //               return done(null, false, { message: 'Incorrect username.' });
+      //           }
+      //           if (!user.validPassword(password)) {
+      //               return done(null, false, { message: 'Incorrect password.' });
+      //           }
+      //           return done(null, user);
+      //       });
+      //   }
+      // ));
+
 
     router.get('/login', (req, res) => {
         console.log('does it go here');
