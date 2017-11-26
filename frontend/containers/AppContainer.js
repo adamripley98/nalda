@@ -12,7 +12,6 @@ const AppContainer = ({ name }) => {
         <div>
             <Router>
               <div>
-                <Title name={name} />
                 <Switch>
                   <Route exact path="/" component={Home}/>
                   <Route exact path="/login" component={Login}/>
