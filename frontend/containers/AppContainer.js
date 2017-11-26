@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import Title from '../components/Title';
+import Nav from '../components/shared/Nav';
 import Login from '../components/auth/Login';
 import Home from '../components/Home';
 import Register from '../components/auth/Register';
@@ -12,7 +12,7 @@ const AppContainer = ({ name }) => {
         <div>
             <Router>
               <div>
-                <Title name={name} />
+                <Nav />
                 <Switch>
                   <Route exact path="/" component={Home}/>
                   <Route exact path="/login" component={Login}/>
