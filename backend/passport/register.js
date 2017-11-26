@@ -9,12 +9,14 @@ module.exports = (passport) => {
 			 User.findOne({ 'username': req.body.username }, (err, user) => {
      if (err) {
          console.log('Error in SignUp: ' + err);
-				 return;
+				 res.send('false');
+				 return false;
      }
     	// already exists
      if (user) {
          console.log('User already exists with username: ' + req.body.username);
-				 return;
+				 res.send('false');
+				 return false;
      }
 		 // if no error and user doesn't already exist, create
 		 const newUser = new User({
@@ -25,9 +27,12 @@ module.exports = (passport) => {
 		 newUser.save((er, usr) => {
 			 if (er) {
 				 console.log('error registering a user', er);
-				 return;
+				 res.send('false');
+				 return false;
 			 }
 			 console.log('registeredd', usr);
+			 res.send(true);
+			 return true;
 		 });
  });
  });

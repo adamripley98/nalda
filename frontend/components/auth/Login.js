@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import { Link} from 'react-router-dom';
+import { Link, Redirect} from 'react-router-dom';
 
 
 class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            redirectToHome: false,
             username: '',
             password: '',
         };
@@ -28,6 +29,14 @@ class Login extends Component {
         })
           .then((resp) => {
               console.log('what is data', resp.data);
+              if (resp.data) {
+                  console.log('should redirect to home');
+                  this.setState({
+                      redirectToHome: true,
+                  });
+              } else {
+                  console.log('shouldnt redirect');
+              }
           })
           .catch((err) => {
               console.log('there was an error', err);
@@ -49,6 +58,11 @@ class Login extends Component {
     }
 
     render() {
+        if (this.state.redirectToHome) {
+            return (
+               <Redirect to="/home"/>
+            );
+        }
         return (
           <div className="container">
             <div className="row">

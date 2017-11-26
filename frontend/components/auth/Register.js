@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 
 class Register extends Component {
@@ -11,6 +11,7 @@ class Register extends Component {
             username: '',
             password: '',
             verifyPassword: '',
+            redirectToLogin: false,
         };
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChangeEmail = this.handleChangeEmail.bind(this);
@@ -35,6 +36,14 @@ class Register extends Component {
             })
               .then((resp) => {
                   console.log('what is data', resp.data);
+                  if (resp.data) {
+                      console.log('redirect to login');
+                      this.setState({
+                          redirectToLogin: true
+                      });
+                  } else {
+                      console.log('shouldnt redirect');
+                  }
               })
               .catch((err) => {
                   console.log('there was an error', err);
@@ -63,6 +72,11 @@ class Register extends Component {
     }
 
     render() {
+        if (this.state.redirectToLogin) {
+            return (
+               <Redirect to="/login"/>
+            );
+        }
         return (
           <div className="container">
             <div className="row">

@@ -7,15 +7,23 @@ module.exports = (passport) => {
         passport.authenticate('local', (err, user) => {
             if (err) {
                 console.log('ERROR logging in', err);
-                return;
+                res.send(false);
+                return false;
             }
             if (!user) {
                 console.log('user doesnt exist');
-                return;
+                res.send(false);
+                return false;
             }
             req.logIn(user, (errr) => {
-                if (errr) { return next(errr); }
+                if (errr) {
+                    console.log('err logging in', errr);
+                    res.send(false);
+                    return false;
+                }
                 console.log('login successful', user.username);
+                res.send(true);
+                return true;
             });
         })(req, res, next);
     });
