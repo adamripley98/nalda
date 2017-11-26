@@ -11,20 +11,36 @@ module.exports = (passport) => {
 		 });
 
 		 /* Handle Registration POST */
+		 // TODO: need to show alert in appropriate way if error or if user exists already
 		 router.post('/register', (req, res) => {
  		 		// validation step
-				 var newUser = new User({
-					 username: req.body.username,
-					 password: req.body.password,
-				 });
-				 console.log(newUser);
-				 newUser.save((err, user) => {
-					 if (err) {
-						 console.log('error registering a user', err);
-						 return;
-					 }
-					 console.log('registered', user);
-				 });
+			 User.findOne({ 'username': req.body.username }, (err, user) => {
+			 // In case of any error, return using the done method
+     if (err) {
+         console.log('Error in SignUp: ' + err);
+         // return done(err);
+				 return;
+     }
+        // already exists
+     if (user) {
+         console.log('User already exists with username: ' + req.body.username);
+         // return done(null, false, req.flash('message', 'User Already Exists'));
+				 return;
+     }
+		 // if no error and user doesn't already exist:
+		 const newUser = new User({
+			 username: req.body.username,
+			 password: req.body.password,
+		 });
+		 console.log(newUser);
+		 newUser.save((er, usr) => {
+			 if (er) {
+				 console.log('error registering a user', er);
+				 return;
+			 }
+			 console.log('registeredd', usr);
+		 });
+ });
  });
 
 		 return router;

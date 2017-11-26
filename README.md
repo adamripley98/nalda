@@ -5,10 +5,9 @@ Technologies used: React, Redux, Passport, Node, Express, MongoDB
 Link to timesheet:
 https://docs.google.com/spreadsheets/d/1FaistICZ-BuORu7YYm5fFpgii2cvxZKgEpxApWQ_3pY/edit?usp=sharing
 
-Fix weird start error by running "killall -9 node" then "npm start"
-
+To start, run "npm start" or concurrently run "npm run frontend" and "npm run backend"
 ## Currently Working on:
-Passport and Mongo Set up, primarily in server.js. Will move into separate passport files once I get it working there first.
+Backend Mongo and passport set up. To do: refactor code, encrypt passwords before storing, implement redux
 
 ## Frontend
 
@@ -30,7 +29,7 @@ Passport and Mongo Set up, primarily in server.js. Will move into separate passp
 ## Backend
 
 - [X] Boilerplate setup
-- [ ] MongoDB setup
+- [X] MongoDB setup
 - [ ] React/Redux setup
 - [ ] Setting up Component Structures
 - [ ] Password security

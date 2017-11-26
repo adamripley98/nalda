@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 
 class Register extends Component {
@@ -101,8 +102,12 @@ class Register extends Component {
                         "btn btn-primary" :
                         "btn btn-secondary"
                     }
-                    value="Login"
+                    value="Register"
                   />
+                  <p className="blue-gray-text marg-top-2 marg-bot-0">
+                    Already have an account?{" "}
+                    <Link to={`/login`}>Login here.</Link>
+                  </p>
                 </form>
               </div>
             </div>
