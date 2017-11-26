@@ -9,7 +9,6 @@ export default function Root({ store }) {
         <Provider store={store}>
             <div>
                 <AppContainer />
-                <DevTools />
             </div>
         </Provider>
     );

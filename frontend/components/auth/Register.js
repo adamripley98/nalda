@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-
+import Thin from '../shared/Thin';
+import GrayWrapper from '../shared/GrayWrapper';
 
 class Register extends Component {
     constructor(props) {
@@ -62,58 +63,63 @@ class Register extends Component {
         });
     }
 
-    render() {
-        return (
-          <div className="container">
-            <div className="row">
-              <div className="col-12 col-md-8 offset-md-2 col-lg-6 offset-xl-3 col-xl-4 offset-xl-4">
+  render() {
+    return (
+      <GrayWrapper>
+        <Thin>
+          <form className="thin-form" method="POST" onSubmit={(e) => this.handleSubmit(e)}>
+            <h2 className="marg-bot-1 bold">
+              Register
+            </h2>
+            <label>
+              Email
+            </label>
+            <input
+              type="email"
+              className="form-control marg-bot-1"
+              value={this.state.username}
+              onChange={(e) => this.handleChangeEmail(e)}
+              required="true"
+            />
 
-                <form method="POST" onSubmit={(e) => this.handleSubmit(e)}>
-                  <h2 className="marg-bot-1">Register</h2>
-                  <label>Email:</label>
-                  <input
-                    type="email"
-                    className="form-control marg-bot-1"
-                    value={this.state.username}
-                    onChange={(e) => this.handleChangeEmail(e)}
-                    required="true"
-                  />
-
-                  <label>Password</label>
-                  <input
-                    type="password"
-                    className="form-control marg-bot-1"
-                    value={this.state.password}
-                    onChange={(e) => this.handleChangePassword(e)}
-                    required="true"
-                  />
-                  <label>Confirm Password</label>
-                  <input
-                    type="password"
-                    className="form-control marg-bot-1"
-                    value={this.state.verifyPassword}
-                    onChange={(e) => this.handleChangeVerifyPassword(e)}
-                    required="true"
-                  />
-                  <input
-                    type="submit"
-                    className={
-                      this.state.verifyPassword.length && this.state.password.length && this.state.username.length ?
-                        "btn btn-primary" :
-                        "btn btn-secondary"
-                    }
-                    value="Register"
-                  />
-                  <p className="blue-gray-text marg-top-2 marg-bot-0">
-                    Already have an account?{" "}
-                    <Link to={`/login`}>Login here.</Link>
-                  </p>
-                </form>
-              </div>
-            </div>
-          </div>
-        );
-    }
+            <label>
+              Password
+            </label>
+            <input
+              type="password"
+              className="form-control marg-bot-1"
+              value={this.state.password}
+              onChange={(e) => this.handleChangePassword(e)}
+              required="true"
+            />
+            <label>
+              Confirm Password
+            </label>
+            <input
+              type="password"
+              className="form-control marg-bot-1"
+              value={this.state.verifyPassword}
+              onChange={(e) => this.handleChangeVerifyPassword(e)}
+              required="true"
+            />
+            <input
+              type="submit"
+              className={
+                this.state.verifyPassword.length && this.state.password.length && this.state.username.length ?
+                  "btn btn-primary full-width" :
+                  "btn btn-primary full-width disabled"
+              }
+              value="Register"
+            />
+            <p className="blue-gray-text marg-top-1 marg-bot-0">
+              Already have an account?{" "}
+              <Link to="/login">Login here.</Link>
+            </p>
+          </form>
+        </Thin>
+      </GrayWrapper>
+    );
+  }
 }
 
 export default Register;
