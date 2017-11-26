@@ -1,73 +1,92 @@
+// Import frameworkds
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+
+// Import components
 import Thin from '../shared/Thin';
 import GrayWrapper from '../shared/GrayWrapper';
 
+/**
+ * Component to render the user registration form
+ */
 class Register extends Component {
+  // Constructor method
     constructor(props) {
-        super(props);
-        this.state = {
-            username: '',
-            password: '',
-            verifyPassword: '',
-        };
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleChangeEmail = this.handleChangeEmail.bind(this);
-        this.handleChangePassword = this.handleChangePassword.bind(this);
-        this.handleChangeVerifyPassword = this.handleChangeVerifyPassword.bind(this);
+      super(props);
+      this.state = {
+          username: '',
+          password: '',
+          verifyPassword: '',
+      };
+
+      // Binding this to helper methods
+      this.handleSubmit = this.handleSubmit.bind(this);
+      this.handleChangeEmail = this.handleChangeEmail.bind(this);
+      this.handleChangePassword = this.handleChangePassword.bind(this);
+      this.handleChangeVerifyPassword = this.handleChangeVerifyPassword.bind(this);
     }
 
+    // Handle when the register form is submitted
     handleSubmit(event) {
-        const username = this.state.username;
-        const password = this.state.password;
-        const verifyPassword = this.state.verifyPassword;
-        console.log('submitted my dood.', username, password);
-        console.log('what is event', event);
-        event.preventDefault();
-        // TODO: use bootstrap to make alert look better
-        if (verifyPassword !== password) {
-            alert('passwords must match!');
-        } else {
-            axios.post('/register', {
-                username,
-                password,
-            })
-              .then((resp) => {
-                  console.log('what is data', resp.data);
-              })
-              .catch((err) => {
-                  console.log('there was an error', err);
-              });
-        }
+      const username = this.state.username;
+      const password = this.state.password;
+      const verifyPassword = this.state.verifyPassword;
+      console.log('submitted my dood.', username, password);
+      console.log('what is event', event);
+
+      // Prevent the default form action
+      event.preventDefault();
+
+      /**
+       * TODO: use bootstrap to make alert look better
+       */
+      if (verifyPassword !== password) {
+        alert('passwords must match!');
+      } else {
+        axios.post('/register', {
+          username,
+          password,
+        })
+        .then((resp) => {
+          console.log('what is data', resp.data);
+        })
+        .catch((err) => {
+          console.log('there was an error', err);
+        });
+      }
     }
 
+    // Handle when a user types into the email
     handleChangeEmail(event) {
-        console.log('what is email', event.target.value);
-        this.setState({
-            username: event.target.value
-        });
+      console.log('what is email', event.target.value);
+      this.setState({
+        username: event.target.value
+      });
     }
 
+    // Handle when a user types into the password
     handleChangePassword(event) {
-        console.log('what is password', event.target.value);
-        this.setState({
-            password: event.target.value
-        });
+      console.log('what is password', event.target.value);
+      this.setState({
+        password: event.target.value
+      });
     }
 
+    // Handle when a user types into the confirm password
     handleChangeVerifyPassword(event) {
-        this.setState({
-            verifyPassword: event.target.value
-        });
+      this.setState({
+        verifyPassword: event.target.value
+      });
     }
 
+  // Function to render the actual component
   render() {
     return (
       <GrayWrapper>
         <Thin>
-          <form className="thin-form" method="POST" onSubmit={(e) => this.handleSubmit(e)}>
+          <form className="thin-form" method="POST" onSubmit={ this.handleSubmit }>
             <h2 className="marg-bot-1 bold">
               Register
             </h2>
@@ -78,7 +97,7 @@ class Register extends Component {
               type="email"
               className="form-control marg-bot-1"
               value={this.state.username}
-              onChange={(e) => this.handleChangeEmail(e)}
+              onChange={ this.handleChangeEmail }
               required="true"
             />
 
@@ -89,7 +108,7 @@ class Register extends Component {
               type="password"
               className="form-control marg-bot-1"
               value={this.state.password}
-              onChange={(e) => this.handleChangePassword(e)}
+              onChange={ this.handleChangePassword }
               required="true"
             />
             <label>
@@ -99,7 +118,7 @@ class Register extends Component {
               type="password"
               className="form-control marg-bot-1"
               value={this.state.verifyPassword}
-              onChange={(e) => this.handleChangeVerifyPassword(e)}
+              onChange={ this.handleChangeVerifyPassword }
               required="true"
             />
             <input

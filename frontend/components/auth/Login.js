@@ -1,19 +1,22 @@
+// Import framworks
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+
+// Import components
 import Thin from '../shared/Thin';
 import GrayWrapper from '../shared/GrayWrapper';
 
+/**
+ * Component to render the user login form
+ */
 class Login extends Component {
-  // Constructor methods
+  // Constructor method
   constructor(props) {
     super(props);
-
-    // Set the state
     this.state = {
-      username: '',
-      password: '',
+      username: "",
+      password: "",
     };
 
     // Bind this to helper methods
@@ -22,6 +25,7 @@ class Login extends Component {
     this.handleChangePassword = this.handleChangePassword.bind(this);
   }
 
+  // Handle when the user submits the form
   handleSubmit(event) {
     const username = this.state.username;
     const password = this.state.password;
@@ -29,15 +33,15 @@ class Login extends Component {
     console.log('what is event', event);
     event.preventDefault();
     axios.post('/login', {
-        username,
-        password,
+      username,
+      password,
     })
-      .then((resp) => {
-          console.log('what is data', resp.data);
-      })
-      .catch((err) => {
-          console.log('there was an error', err);
-      });
+    .then((resp) => {
+      console.log('what is data', resp.data);
+    })
+    .catch((err) => {
+      console.log('there was an error', err);
+    });
   }
 
   handleChangeEmail(event) {
@@ -54,6 +58,7 @@ class Login extends Component {
     });
   }
 
+  // Function to render the component
   render() {
     return (
       <GrayWrapper>
@@ -68,8 +73,8 @@ class Login extends Component {
             <input
               type="email"
               className="form-control marg-bot-1"
-              value={this.state.username}
-              onChange={(e) => this.handleChangeEmail(e)}
+              value={ this.state.username }
+              onChange={ this.handleChangeEmail }
               required="true"
             />
 
@@ -79,8 +84,8 @@ class Login extends Component {
             <input
               type="password"
               className="form-control marg-bot-1"
-              value={this.state.password}
-              onChange={(e) => this.handleChangePassword(e)}
+              value={ this.state.password }
+              onChange={ this.handleChangePassword }
               required="true"
             />
             <input
@@ -94,8 +99,7 @@ class Login extends Component {
             />
 
             <p className="marg-top-1 marg-bot-0">
-              Don't have an account?{" "}
-              <Link to="/register">Register here.</Link>
+              Don't have an account? <Link to="/register">Register here.</Link>
             </p>
           </form>
         </Thin>
@@ -103,10 +107,5 @@ class Login extends Component {
     );
   }
 }
-
-// Login.propTypes = {
-//     name: PropTypes.string,
-// };
-
 
 export default Login;
