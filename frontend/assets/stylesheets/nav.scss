@@ -1,0 +1,15 @@
+.navbar {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+  box-shadow: 0.2rem 0rem 0.2rem rgba(0, 0, 0, 0.1);
+  font-weight: bold;
+
+  .navbar-toggler {
+    border: 1px solid transparent;
+    outline: 0;
+
+    &:focus,
+    &:active {
+      outline: 0;
+    }
+  }
+}

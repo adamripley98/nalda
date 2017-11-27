@@ -1,10 +1,18 @@
+// Import frameworkds
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { Link, Redirect } from 'react-router-dom';
 
+// Import components
+import Thin from '../shared/Thin';
+import GrayWrapper from '../shared/GrayWrapper';
 
+/**
+ * Component to render the user registration form
+ */
 class Register extends Component {
+  // Constructor method
     constructor(props) {
         super(props);
         this.state = {
@@ -19,6 +27,7 @@ class Register extends Component {
         this.handleChangeVerifyPassword = this.handleChangeVerifyPassword.bind(this);
     }
 
+    // Handle when the register form is submitted
     handleSubmit(event) {
         const username = this.state.username;
         const password = this.state.password;
@@ -51,83 +60,91 @@ class Register extends Component {
         }
     }
 
+    // Handle when a user types into the email
     handleChangeEmail(event) {
-        console.log('what is email', event.target.value);
-        this.setState({
-            username: event.target.value
-        });
+      console.log('what is email', event.target.value);
+      this.setState({
+        username: event.target.value
+      });
     }
 
+    // Handle when a user types into the password
     handleChangePassword(event) {
-        console.log('what is password', event.target.value);
-        this.setState({
-            password: event.target.value
-        });
+      console.log('what is password', event.target.value);
+      this.setState({
+        password: event.target.value
+      });
     }
 
+    // Handle when a user types into the confirm password
     handleChangeVerifyPassword(event) {
-        this.setState({
-            verifyPassword: event.target.value
-        });
+      this.setState({
+        verifyPassword: event.target.value
+      });
     }
 
-    render() {
-        if (this.state.redirectToLogin) {
+  // Function to render the actual component
+  render() {
+    if (this.state.redirectToLogin) {
             return (
                <Redirect to="/login"/>
             );
         }
-        return (
-          <div className="container">
-            <div className="row">
-              <div className="col-12 col-md-8 offset-md-2 col-lg-6 offset-xl-3 col-xl-4 offset-xl-4">
-
-                <form method="POST" onSubmit={(e) => this.handleSubmit(e)}>
-                  <h2 className="marg-bot-1">Register</h2>
-                  <label>Email:</label>
-                  <input
-                    type="email"
-                    className="form-control marg-bot-1"
-                    value={this.state.username}
-                    onChange={(e) => this.handleChangeEmail(e)}
-                    required="true"
-                  />
-
-                  <label>Password</label>
-                  <input
-                    type="password"
-                    className="form-control marg-bot-1"
-                    value={this.state.password}
-                    onChange={(e) => this.handleChangePassword(e)}
-                    required="true"
-                  />
-                  <label>Confirm Password</label>
-                  <input
-                    type="password"
-                    className="form-control marg-bot-1"
-                    value={this.state.verifyPassword}
-                    onChange={(e) => this.handleChangeVerifyPassword(e)}
-                    required="true"
-                  />
-                  <input
-                    type="submit"
-                    className={
-                      this.state.verifyPassword.length && this.state.password.length && this.state.username.length ?
-                        "btn btn-primary" :
-                        "btn btn-secondary"
-                    }
-                    value="Register"
-                  />
-                  <p className="blue-gray-text marg-top-2 marg-bot-0">
-                    Already have an account?{" "}
-                    <Link to={`/login`}>Login here.</Link>
-                  </p>
-                </form>
-              </div>
-            </div>
-          </div>
-        );
-    }
+    return (
+      <GrayWrapper>
+        <Thin>
+          <form className="thin-form" method="POST" onSubmit={ this.handleSubmit }>
+            <h2 className="marg-bot-1 bold">
+              Register
+            </h2>
+            <label>
+              Email
+            </label>
+            <input
+              type="email"
+              className="form-control marg-bot-1"
+              value={this.state.username}
+              onChange={ this.handleChangeEmail }
+              required="true"
+            />
+            <label>
+              Password
+            </label>
+            <input
+              type="password"
+              className="form-control marg-bot-1"
+              value={this.state.password}
+              onChange={ this.handleChangePassword }
+              required="true"
+            />
+            <label>
+              Confirm Password
+            </label>
+            <input
+              type="password"
+              className="form-control marg-bot-1"
+              value={this.state.verifyPassword}
+              onChange={ this.handleChangeVerifyPassword }
+              required="true"
+            />
+            <input
+              type="submit"
+              className={
+                this.state.verifyPassword.length && this.state.password.length && this.state.username.length ?
+                  "btn btn-primary full-width" :
+                  "btn btn-primary full-width disabled"
+              }
+              value="Register"
+            />
+            <p className="blue-gray-text marg-top-1 marg-bot-0">
+              Already have an account?{" "}
+              <Link to="/login">Login here.</Link>
+            </p>
+          </form>
+        </Thin>
+      </GrayWrapper>
+    );
+  }
 }
 
 export default Register;

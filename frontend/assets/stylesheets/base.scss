@@ -1,4 +1,80 @@
-h1 {
-  font-family: helvetica;
-  font-weight: 200;
+@import './colors';
+@import './strapper';
+@import './nav';
+
+.btn {
+  cursor: hand;
+  cursor: pointer;
+  font-weight: bold;
+
+  &.full-width {
+    width: 100%;
+  }
+}
+
+a {
+  text-decoration: none !important;
+
+  &:active,
+  &:focus,
+  &:hover,
+  &:visited {
+    text-decoration: none !important;
+  }
+}
+
+.thin-form {
+  padding: 1rem;
+  margin-top: 1.5rem;
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  box-shadow: 0rem 0.2rem 0.2rem rgba(0, 0, 0, 0.05);
+
+  label {
+    font-weight: bold;
+    color: $gray;
+    margin-bottom: 0rem;
+  }
+
+  .form-control {
+    border-radius: 0rem;
+    border-right: 0px solid transparent;
+    border-left: 0px solid transparent;
+    border-top: 0px solid transparent;
+    border-bottom: 2px solid $lighter-gray;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+  }
+}
+
+.gray-wrapper {
+  background: $snow;
+  min-height: calc(100vh - 56.27px);
+  width: 100%;
+  margin: 0rem !important;
+  padding: 0rem !important;
+}
+
+footer {
+  padding: 1rem 0rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.15);
+  background: $snow;
+
+  .footer-nav {
+    strong {
+      display: block;
+    }
+
+    .link {
+      display: block;
+
+      a {
+        color: $gray;
+
+        &:hover {
+          color: $dark-gray;
+        }
+      }
+    }
+  }
 }

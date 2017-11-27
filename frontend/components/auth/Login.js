@@ -1,10 +1,17 @@
+// Import framworks
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import axios from 'axios';
 import { Link, Redirect} from 'react-router-dom';
 
+// Import components
+import Thin from '../shared/Thin';
+import GrayWrapper from '../shared/GrayWrapper';
 
+/**
+ * Component to render the user login form
+ */
 class Login extends Component {
+    // Constructor method
     constructor(props) {
         super(props);
         this.state = {
@@ -43,20 +50,21 @@ class Login extends Component {
           });
     }
 
-    handleChangeEmail(event) {
-        console.log('what is email', event.target.value);
-        this.setState({
-            username: event.target.value
-        });
-    }
 
-    handleChangePassword(event) {
-        console.log('what is password', event.target.value);
-        this.setState({
-            password: event.target.value
-        });
-    }
-
+  handleChangeEmail(event) {
+    console.log('what is email', event.target.value);
+    this.setState({
+      username: event.target.value
+    });
+  }
+  
+  handleChangePassword(event) {
+    console.log('what is password', event.target.value);
+    this.setState({
+      password: event.target.value
+    });
+  }
+  
     render() {
         if (this.state.redirectToHome) {
             return (
@@ -64,54 +72,50 @@ class Login extends Component {
             );
         }
         return (
-          <div className="container">
-            <div className="row">
-              <div className="col-12 col-md-8 offset-md-2 col-lg-6 offset-xl-3 col-xl-4 offset-xl-4">
+          <GrayWrapper>
+            <Thin>
+              <form className="thin-form" method="POST" onSubmit={(e) => this.handleSubmit(e)}>
+                <h2 className="marg-bot-1 bold">
+                  Login
+                </h2>
+                <label>
+                  Email
+                </label>
+                <input
+                  type="email"
+                  className="form-control marg-bot-1"
+                  value={ this.state.username }
+                  onChange={ this.handleChangeEmail }
+                  required="true"
+                />
 
-                <form method="POST" onSubmit={(e) => this.handleSubmit(e)}>
-                  <h2 className="marg-bot-1">Login</h2>
-                  <label>Email:</label>
-                  <input
-                    type="email"
-                    className="form-control marg-bot-1"
-                    value={this.state.username}
-                    onChange={(e) => this.handleChangeEmail(e)}
-                    required="true"
-                  />
+                <label>
+                  Password
+                </label>
+                <input
+                  type="password"
+                  className="form-control marg-bot-1"
+                  value={ this.state.password }
+                  onChange={ this.handleChangePassword }
+                  required="true"
+                />
+                <input
+                  type="submit"
+                  className={
+                    this.state.password && this.state.username ?
+                      "btn btn-primary full-width" :
+                      "btn btn-primary disabled full-width"
+                  }
+                  value="Login"
+                />
 
-                  <label>Password</label>
-                  <input
-                    type="password"
-                    className="form-control marg-bot-1"
-                    value={this.state.password}
-                    onChange={(e) => this.handleChangePassword(e)}
-                    required="true"
-                  />
-                  <input
-                    type="submit"
-                    className={
-                      this.state.password.length && this.state.username.length ?
-                        "btn btn-primary" :
-                        "btn btn-secondary"
-                    }
-                    value="Login"
-                  />
-
-                  <p className="blue-gray-text marg-top-2 marg-bot-0">
-                    Don't have an account?{" "}
-                    <Link to={`/register`}>Register here.</Link>
-                  </p>
-                </form>
-              </div>
-            </div>
-          </div>
+                <p className="marg-top-1 marg-bot-0">
+                  Don't have an account? <Link to="/register">Register here.</Link>
+                </p>
+              </form>
+            </Thin>
+          </GrayWrapper>
         );
-    }
 }
-
-// Login.propTypes = {
-//     name: PropTypes.string,
-// };
-
 
 export default Login;
