@@ -31,19 +31,8 @@ var flash = require('connect-flash');
 app.use(flash());
 
 // Initialize Passport
-// var initPassport = require('./backend/passport/init');
-// initPassport(passport);
-passport.serializeUser((user, done) => {
-    console.log('serializing user: ', user);
-    done(null, user._id);
-});
-
-passport.deserializeUser((id, done) => {
-    User.findById(id, (err, user) => {
-        console.log('deserializing user:', user);
-        done(err, user);
-    });
-});
+var initPassport = require('./backend/passport/init');
+initPassport(passport);
 
 // passport strategy
 passport.use('local', new LocalStrategy({

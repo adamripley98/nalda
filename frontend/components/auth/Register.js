@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 // Import components
 import Thin from '../shared/Thin';
@@ -14,48 +14,50 @@ import GrayWrapper from '../shared/GrayWrapper';
 class Register extends Component {
   // Constructor method
     constructor(props) {
-      super(props);
-      this.state = {
-          username: '',
-          password: '',
-          verifyPassword: '',
-      };
-
-      // Binding this to helper methods
-      this.handleSubmit = this.handleSubmit.bind(this);
-      this.handleChangeEmail = this.handleChangeEmail.bind(this);
-      this.handleChangePassword = this.handleChangePassword.bind(this);
-      this.handleChangeVerifyPassword = this.handleChangeVerifyPassword.bind(this);
+        super(props);
+        this.state = {
+            username: '',
+            password: '',
+            verifyPassword: '',
+            redirectToLogin: false,
+        };
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleChangeEmail = this.handleChangeEmail.bind(this);
+        this.handleChangePassword = this.handleChangePassword.bind(this);
+        this.handleChangeVerifyPassword = this.handleChangeVerifyPassword.bind(this);
     }
 
     // Handle when the register form is submitted
     handleSubmit(event) {
-      const username = this.state.username;
-      const password = this.state.password;
-      const verifyPassword = this.state.verifyPassword;
-      console.log('submitted my dood.', username, password);
-      console.log('what is event', event);
-
-      // Prevent the default form action
-      event.preventDefault();
-
-      /**
-       * TODO: use bootstrap to make alert look better
-       */
-      if (verifyPassword !== password) {
-        alert('passwords must match!');
-      } else {
-        axios.post('/register', {
-          username,
-          password,
-        })
-        .then((resp) => {
-          console.log('what is data', resp.data);
-        })
-        .catch((err) => {
-          console.log('there was an error', err);
-        });
-      }
+        const username = this.state.username;
+        const password = this.state.password;
+        const verifyPassword = this.state.verifyPassword;
+        console.log('submitted my dood.', username, password);
+        console.log('what is event', event);
+        event.preventDefault();
+        // TODO: use bootstrap to make alert look better
+        if (verifyPassword !== password) {
+            alert('passwords must match!');
+        } else {
+            axios.post('/register', {
+                username,
+                password,
+            })
+              .then((resp) => {
+                  console.log('what is data', resp.data);
+                  if (resp.data) {
+                      console.log('redirect to login');
+                      this.setState({
+                          redirectToLogin: true
+                      });
+                  } else {
+                      console.log('shouldnt redirect');
+                  }
+              })
+              .catch((err) => {
+                  console.log('there was an error', err);
+              });
+        }
     }
 
     // Handle when a user types into the email
@@ -83,6 +85,11 @@ class Register extends Component {
 
   // Function to render the actual component
   render() {
+    if (this.state.redirectToLogin) {
+            return (
+               <Redirect to="/login"/>
+            );
+        }
     return (
       <GrayWrapper>
         <Thin>
@@ -100,7 +107,6 @@ class Register extends Component {
               onChange={ this.handleChangeEmail }
               required="true"
             />
-
             <label>
               Password
             </label>

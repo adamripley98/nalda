@@ -10,28 +10,27 @@ import Login from '../components/auth/Login';
 import Home from '../components/Home';
 import Register from '../components/auth/Register';
 import Footer from '../components/shared/Footer';
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 /**
  * Component to handle routing on the frontend
  *
  * TODO handle not found (404)
  */
-const AppContainer = () => {
-  return (
-    <div>
-      <Router>
-      <div>
-        <Nav />
-        <Switch>
-          <Route exact path="/" component={Home}/>
-          <Route exact path="/login" component={Login}/>
-          <Route exact path="/register" component={Register}/>
-        </Switch>
-        <Footer />
-      </div>
-    </Router>
-    </div>
-  );
+const AppContainer = ({ name }) => {
+    return (
+        <div>
+            <Router>
+              <div>
+                <Switch>
+                  <Route exact path="/" component={Home}/>
+                  <Route exact path="/login" component={Login}/>
+                  <Route exact path="/register" component={Register}/>
+                </Switch>
+              </div>
+          </Router>
+        </div>
+    );
 };
 
 const mapStateToProps = (state) => {
