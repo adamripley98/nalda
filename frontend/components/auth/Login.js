@@ -57,14 +57,14 @@ class Login extends Component {
       username: event.target.value
     });
   }
-  
+
   handleChangePassword(event) {
     console.log('what is password', event.target.value);
     this.setState({
       password: event.target.value
     });
   }
-  
+
     render() {
         if (this.state.redirectToHome) {
             return (
@@ -116,6 +116,7 @@ class Login extends Component {
             </Thin>
           </GrayWrapper>
         );
+    }
 }
 
 export default Login;
