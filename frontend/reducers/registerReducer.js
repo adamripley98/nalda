@@ -1,3 +1,4 @@
+// reducer which handles all events related to user registration
 const registerReducer = (state = {'username': '', 'password': '', 'confirmPassword': ''}, action) => {
     switch (action.type) {
         case 'REGISTER': {

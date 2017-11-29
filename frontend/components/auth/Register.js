@@ -27,7 +27,7 @@ class Register extends Component {
         this.handleChangeVerifyPassword = this.handleChangeVerifyPassword.bind(this);
     }
 
-    // Handle when the register form is submitted
+    // Handle when the register form is submitted, posts to register.js
     handleSubmit(event) {
         const username = this.state.username;
         const password = this.state.password;
@@ -36,6 +36,7 @@ class Register extends Component {
         console.log('what is event', event);
         event.preventDefault();
         // TODO: use bootstrap to make alert look better
+        // makes sure passwords match
         if (verifyPassword !== password) {
             alert('passwords must match!');
         } else {
@@ -46,12 +47,9 @@ class Register extends Component {
               .then((resp) => {
                   console.log('what is data', resp.data);
                   if (resp.data) {
-                      console.log('redirect to login');
                       this.setState({
                           redirectToLogin: true
                       });
-                  } else {
-                      console.log('shouldnt redirect');
                   }
               })
               .catch((err) => {
@@ -78,73 +76,74 @@ class Register extends Component {
 
     // Handle when a user types into the confirm password
     handleChangeVerifyPassword(event) {
-      this.setState({
-        verifyPassword: event.target.value
-      });
+        this.setState({
+            verifyPassword: event.target.value
+        });
     }
 
   // Function to render the actual component
-  render() {
-    if (this.state.redirectToLogin) {
+    render() {
+        // redirects if a register is successful
+        if (this.state.redirectToLogin) {
             return (
                <Redirect to="/login"/>
             );
         }
-    return (
-      <GrayWrapper>
-        <Thin>
-          <form className="thin-form" method="POST" onSubmit={ this.handleSubmit }>
-            <h2 className="marg-bot-1 bold">
-              Register
-            </h2>
-            <label>
-              Email
-            </label>
-            <input
-              type="email"
-              className="form-control marg-bot-1"
-              value={this.state.username}
-              onChange={ this.handleChangeEmail }
-              required="true"
-            />
-            <label>
-              Password
-            </label>
-            <input
-              type="password"
-              className="form-control marg-bot-1"
-              value={this.state.password}
-              onChange={ this.handleChangePassword }
-              required="true"
-            />
-            <label>
-              Confirm Password
-            </label>
-            <input
-              type="password"
-              className="form-control marg-bot-1"
-              value={this.state.verifyPassword}
-              onChange={ this.handleChangeVerifyPassword }
-              required="true"
-            />
-            <input
-              type="submit"
-              className={
-                this.state.verifyPassword.length && this.state.password.length && this.state.username.length ?
-                  "btn btn-primary full-width" :
-                  "btn btn-primary full-width disabled"
-              }
-              value="Register"
-            />
-            <p className="blue-gray-text marg-top-1 marg-bot-0">
-              Already have an account?{" "}
-              <Link to="/login">Login here.</Link>
-            </p>
-          </form>
-        </Thin>
-      </GrayWrapper>
-    );
-  }
+        return (
+          <GrayWrapper>
+            <Thin>
+              <form className="thin-form" method="POST" onSubmit={ this.handleSubmit }>
+                <h2 className="marg-bot-1 bold">
+                  Register
+                </h2>
+                <label>
+                  Email
+                </label>
+                <input
+                  type="email"
+                  className="form-control marg-bot-1"
+                  value={this.state.username}
+                  onChange={ this.handleChangeEmail }
+                  required="true"
+                />
+                <label>
+                  Password
+                </label>
+                <input
+                  type="password"
+                  className="form-control marg-bot-1"
+                  value={this.state.password}
+                  onChange={ this.handleChangePassword }
+                  required="true"
+                />
+                <label>
+                  Confirm Password
+                </label>
+                <input
+                  type="password"
+                  className="form-control marg-bot-1"
+                  value={this.state.verifyPassword}
+                  onChange={ this.handleChangeVerifyPassword }
+                  required="true"
+                />
+                <input
+                  type="submit"
+                  className={
+                    this.state.verifyPassword.length && this.state.password.length && this.state.username.length ?
+                      "btn btn-primary full-width" :
+                      "btn btn-primary full-width disabled"
+                  }
+                  value="Register"
+                />
+                <p className="blue-gray-text marg-top-1 marg-bot-0">
+                  Already have an account?{" "}
+                  <Link to="/login">Login here.</Link>
+                </p>
+              </form>
+            </Thin>
+          </GrayWrapper>
+        );
+    }
 }
 
 export default Register;

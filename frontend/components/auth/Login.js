@@ -23,7 +23,7 @@ class Login extends Component {
         this.handleChangeEmail = this.handleChangeEmail.bind(this);
         this.handleChangePassword = this.handleChangePassword.bind(this);
     }
-
+    // submit method posts to login in login.js with username and password
     handleSubmit(event) {
         const username = this.state.username;
         const password = this.state.password;
@@ -35,14 +35,11 @@ class Login extends Component {
             password,
         })
           .then((resp) => {
-              console.log('what is data', resp.data);
+              // redirects only if login is successful
               if (resp.data) {
-                  console.log('should redirect to home');
                   this.setState({
                       redirectToHome: true,
                   });
-              } else {
-                  console.log('shouldnt redirect');
               }
           })
           .catch((err) => {
@@ -50,27 +47,28 @@ class Login extends Component {
           });
     }
 
+    // every time email or password is changed, these methods are called
+    handleChangeEmail(event) {
+        this.setState({
+            username: event.target.value
+        });
+    }
 
-  handleChangeEmail(event) {
-    console.log('what is email', event.target.value);
-    this.setState({
-      username: event.target.value
-    });
-  }
-
-  handleChangePassword(event) {
-    console.log('what is password', event.target.value);
-    this.setState({
-      password: event.target.value
-    });
-  }
+    handleChangePassword(event) {
+        console.log('what is password', event.target.value);
+        this.setState({
+            password: event.target.value
+        });
+    }
 
     render() {
+        // waits for successful login before redirecting
         if (this.state.redirectToHome) {
             return (
                <Redirect to="/home"/>
             );
         }
+        // otherwise displays login page
         return (
           <GrayWrapper>
             <Thin>
