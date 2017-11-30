@@ -1,13 +1,17 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { configureStore, history } from './store/configureStore';
+import { createStore, applyMiddleware } from 'redux';
+import rootReducer from './reducers';
+import logger from 'redux-logger';
+
+// import { configureStore, history } from './store/configureStore';
 import Root from './containers/Root';
 
 import './assets/stylesheets/base.scss';
 
-const store = configureStore();
+const store = createStore(rootReducer, applyMiddleware(logger));
 
 render(
-    <Root store={store} history={history} />,
+    <Root store={store} />,
     document.getElementById('root')
 );

@@ -13,6 +13,7 @@ export default function(ComponentToRender) {
             if (!this.props.userId) {
                 return (<Login/>);
             } else {
+                return (<Login/>);
                 console.log('userid inside require auth', this.props.userId);
             }
         }
@@ -36,6 +37,7 @@ export default function(ComponentToRender) {
     };
 
     const mapStateToProps = (state) => {
+        console.log('state', state);
         return {
             userId: state.loginState.userId
         };

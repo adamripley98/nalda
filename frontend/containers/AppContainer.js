@@ -17,15 +17,8 @@ import requireAuth from '../components/auth/Authenticate';
  *
  * TODO handle not found (404)
  */
-let isLoggedIn = false;
 
 class AppContainer extends Component {
-
-    componentWillMount() {
-        if (this.props.userId) {
-            isLoggedIn = true;
-        }
-    }
 
     render() {
         console.log('WHAT IS PROPS OF APP CONTAINER', this.props);
@@ -37,13 +30,6 @@ class AppContainer extends Component {
                     <Route exact path="/login" component={Login}/>
                     <Route exact path="/register" component={Register}/>
                     <Route exact path="/" component={Home}/>
-                    {/* <Route exact path="/home" render={() => (
-                      !isLoggedIn ? (
-                        <Redirect to="/login"/>
-                      ) : (
-                        <Home/>
-                      )
-                    )}/> */}
                     <Route exact path="/home" component={requireAuth(Home)}/>
                   </Switch>
                 </div>
@@ -58,6 +44,7 @@ AppContainer.propTypes = {
 };
 
 const mapStateToProps = (state) => {
+    console.log('state insides app contin', state);
     return {
         userId: state.loginState.userId
     };
