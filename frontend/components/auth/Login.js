@@ -1,14 +1,14 @@
 // Import framworks
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Link, Redirect} from 'react-router-dom';
+import { Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 // Import components
 import Thin from '../shared/Thin';
 import GrayWrapper from '../shared/GrayWrapper';
-import {saveLoginUsername, saveLoginPassword, login} from '../../actions/index.js';
+import {login} from '../../actions/index.js';
 
 // const handleLoginSubmit = (username, password, onLogin) => {
 //     console.log('username and passwrod', username, password);
