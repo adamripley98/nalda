@@ -10,66 +10,6 @@ import Thin from '../shared/Thin';
 import GrayWrapper from '../shared/GrayWrapper';
 import {login} from '../../actions/index.js';
 
-// const handleLoginSubmit = (username, password, onLogin) => {
-//     console.log('username and passwrod', username, password);
-//     axios.post('/login', {
-//         username,
-//         password,
-//     })
-//     .then((resp) => {
-//         onLogin(resp.data.userId);
-//     });
-// };
-
-// let Login = ({username, updateUsername, password, updatePassword, onLogin}) => {
-//     return (
-//       <GrayWrapper>
-//         <Thin>
-//           <form className="thin-form" method="POST" onSubmit={(e) => {
-//               e.preventDefault();
-//               handleLoginSubmit(username, password, onLogin);
-//           }}>
-//             <h2 className="marg-bot-1 bold">
-//               Login
-//             </h2>
-//             <label>
-//               Email
-//             </label>
-//             <input
-//               type="email"
-//               className="form-control marg-bot-1"
-//               value={ username }
-//               onChange={ (e) => updateUsername(e.target.value) }
-//               required="true"
-//             />
-//             <label>
-//               Password
-//             </label>
-//             <input
-//               type="password"
-//               className="form-control marg-bot-1"
-//               value={ password }
-//               onChange={ (e) => updatePassword(e.target.value) }
-//               required="true"
-//             />
-//             <input
-//               type="submit"
-//               className={
-//                 password && username ?
-//                   "btn btn-primary full-width" :
-//                   "btn btn-primary disabled full-width"
-//               }
-//               value="Login"
-//             />
-//             <p className="marg-top-1 marg-bot-0">
-//               Don't have an account? <Link to="/register">Register here.</Link>
-//             </p>
-//           </form>
-//         </Thin>
-//       </GrayWrapper>
-//     );
-// };
-
 class Login extends Component {
     // Constructor method
     constructor(props) {
@@ -96,20 +36,23 @@ class Login extends Component {
         })
           .then((resp) => {
               console.log('what is resp', resp.data, resp.data._id);
+              console.log('props before', this.props);
               onLogin(resp.data._id);
+              console.log('props after', this.props);
           })
           .catch((err) => {
               console.log('there was an error', err);
           });
     }
 
-
+    // Handle when a user types into the email
     handleChangeEmail(event) {
         this.setState({
             username: event.target.value
         });
     }
 
+    // Handle when a user types into the password
     handleChangePassword(event) {
         this.setState({
             password: event.target.value
@@ -166,15 +109,13 @@ class Login extends Component {
 }
 
 Login.propTypes = {
-    username: PropTypes.string,
-    password: PropTypes.string,
+    userId: PropTypes.string,
     onLogin: PropTypes.func,
 };
 
 const mapStateToProps = state => {
     return {
-        username: state.loginState.loginUsername,
-        password: state.loginState.loginPassword,
+        userId: state.loginState.userId,
     };
 };
 

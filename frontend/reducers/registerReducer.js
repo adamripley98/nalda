@@ -1,5 +1,5 @@
 // reducer which handles all events related to user registration
-const registerReducer = (state = {'username': '', 'password': '', 'verPassword': ''}, action) => {
+const registerReducer = (state = {}, action) => {
     switch (action.type) {
         case 'REGISTER': {
             const newState = Object.assign({}, state);
