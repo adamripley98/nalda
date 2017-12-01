@@ -10,6 +10,9 @@ import Login from '../components/auth/Login';
 import Home from '../components/Home';
 import Register from '../components/auth/Register';
 import Footer from '../components/shared/Footer';
+import ArticleForm from '../components/content/ArticleForm';
+import ListingForm from '../components/content/ListingForm';
+import VideoForm from '../components/content/VideoForm';
 import requireAuth from '../components/auth/Authenticate';
 
 /**
@@ -17,11 +20,9 @@ import requireAuth from '../components/auth/Authenticate';
  *
  * TODO handle not found (404)
  */
-
 class AppContainer extends Component {
-
+    // Render the application
     render() {
-        console.log('WHAT IS PROPS OF APP CONTAINER', this.props);
         return (
           <div>
               <Router>
@@ -31,6 +32,9 @@ class AppContainer extends Component {
                     <Route exact path="/register" component={Register}/>
                     <Route exact path="/" component={Home}/>
                     <Route exact path="/home" component={requireAuth(Home)}/>
+                    <Route exact path="/articles/new" component={ArticleForm} />
+                    <Route exact path="/listings/new" component={ListingForm} />
+                    <Route exact path="/videos/new" component={VideoForm} />
                   </Switch>
                 </div>
             </Router>
