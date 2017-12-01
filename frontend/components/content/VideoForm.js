@@ -13,17 +13,15 @@ class ArticleForm extends React.Component {
     super(props);
     this.state = {
       title: "",
-      subtitle: "",
-      image: "",
-      body: "",
+      video: "",
+      description: "",
       error: "",
     };
 
     // Bind this to helper methods
     this.handleChangeTitle = this.handleChangeTitle.bind(this);
-    this.handleChangeSubtitle = this.handleChangeSubtitle.bind(this);
-    this.handleChangeImage = this.handleChangeImage.bind(this);
-    this.handleChangeBody = this.handleChangeBody.bind(this);
+    this.handleChangeVideo = this.handleChangeVideo.bind(this);
+    this.handleChangeDescription = this.handleChangeDescription.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -39,24 +37,17 @@ class ArticleForm extends React.Component {
     });
   }
 
-  // Helper method to handle a change to the subtitle state
-  handleChangeSubtitle(event) {
-    this.setState({
-      subtitle: event.target.value,
-    });
-  }
-
-  // Helper method to handle a change to the image state
-  handleChangeImage(event) {
+  // Helper method to handle a change to the video state
+  handleChangeVideo(event) {
     this.setState({
       image: event.target.value,
     });
   }
 
-  // Helper method to handle a change to the body state
-  handleChangeBody(event) {
+  // Helper method to handle a change to the description state
+  handleChangeDescription(event) {
     this.setState({
-      body: event.target.value,
+      description: event.target.value,
     });
   }
 
@@ -78,17 +69,17 @@ class ArticleForm extends React.Component {
       this.setState({
         error: "Body must be populated.",
       });
+    } else if (!this.state.video) {
+      this.setState({
+        error: "Video must be populated",
+      });
     } else if (this.state.title.length < 4 || this.state.title.length > 100) {
       this.setState({
         error: "Title must be between 4 and 100 characters long.",
       });
-    } else if (this.state.subtitle.length < 4 || this.state.subtitle.length > 200) {
+    } else if (this.state.description.length < 4) {
       this.setState({
-        error: "Subtitle must be between 4 and 200 characters long.",
-      });
-    } else if (this.state.body.length < 4) {
-      this.setState({
-        error: "Body must be at least 4 characters long",
+        error: "Description must be at least 4 characters long",
       });
     } else {
       // Set the error to the empty string
@@ -140,41 +131,31 @@ class ArticleForm extends React.Component {
                 onChange={ this.handleChangeTitle }
               />
               <label>
-                Subtitle
-              </label>
-              <input
-                name="subtitle"
-                type="text"
-                className="form-control marg-bot-1"
-                value={ this.state.subtitle }
-                onChange={ this.handleChangeSubtitle }
-              />
-              <label>
-                Image (url to an image)
+                Video (url to a video)
               </label>
               <input
                 name="image"
                 type="url"
                 className="form-control marg-bot-1"
-                value={ this.state.image }
-                onChange={ this.handleChangeImage }
+                value={ this.state.video }
+                onChange={ this.handleChangeVideo }
               />
               <label>
-                Body
+                Description
               </label>
               <textarea
-                name="body"
+                name="description"
                 type="text"
                 className="form-control marg-bot-1"
                 rows="1"
-                value={ this.state.body }
-                onChange={ this.handleChangeBody }
+                value={ this.state.description }
+                onChange={ this.handleChangeDescription }
               />
               <input
                 type="submit"
-                value="Create Article"
+                value="Create Video"
                 className={
-                  this.state.title && this.state.subtitle && this.state.body ? (
+                  this.state.title && this.state.video && this.state.description ? (
                     "btn btn-primary full-width"
                   ) : (
                     "btn btn-primary disabled full-width"

@@ -11,6 +11,8 @@ import Home from '../components/Home';
 import Register from '../components/auth/Register';
 import Footer from '../components/shared/Footer';
 import ArticleForm from '../components/content/ArticleForm';
+import ListingForm from '../components/content/ListingForm';
+import VideoForm from '../components/content/VideoForm';
 
 /**
  * Component to handle routing on the frontend
@@ -28,6 +30,8 @@ const AppContainer = ({ name }) => {
                   <Route exact path="/login" component={Login}/>
                   <Route exact path="/register" component={Register}/>
                   <Route exact path="/articles/new" component={ArticleForm} />
+                  <Route exact path="/listings/new" component={ListingForm} />
+                  <Route exact path="/videos/new" component={VideoForm} />
                 </Switch>
                 <Footer />
               </div>
