@@ -1,6 +1,7 @@
 @import './colors';
 @import './strapper';
 @import './nav';
+@import './footer';
 
 .btn {
   cursor: hand;
@@ -61,30 +62,6 @@ a {
   width: 100%;
   margin: 0rem !important;
   padding: 0rem !important;
-}
-
-footer {
-  padding: 1rem 0rem;
-  border-top: 1px solid rgba(0, 0, 0, 0.15);
-  background: $snow;
-
-  .footer-nav {
-    strong {
-      display: block;
-    }
-
-    .link {
-      display: block;
-
-      a {
-        color: $gray;
-
-        &:hover {
-          color: $dark-gray;
-        }
-      }
-    }
-  }
 }
 
 .preview {
