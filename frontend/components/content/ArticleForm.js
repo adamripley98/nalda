@@ -65,13 +65,37 @@ class ArticleForm extends React.Component {
     // Prevent the default submit action
     event.preventDefault();
 
-    /**
-     * TODO error checking
-     */
-
-    /**
-     * TODO make the request
-     */
+    // Begin error checking
+    if (!this.state.title) {
+      this.setState({
+        error: "Title must be populated.",
+      });
+    } else if (!this.state.subtitle) {
+      this.setState({
+        error: "Subtitle must be populated.",
+      });
+    } else if (!this.state.body) {
+      this.setState({
+        error: "Body must be populated.",
+      });
+    } else if (this.state.title.length < 4 || this.state.title.length > 100) {
+      this.setState({
+        error: "Title must be between 4 and 100 characters long.",
+      });
+    } else if (this.state.subtitle.length < 4 || this.state.subtitle.length > 200) {
+      this.setState({
+        error: "Subtitle must be between 4 and 200 characters long.",
+      });
+    } else if (this.state.body.length < 4) {
+      this.setState({
+        error: "Body must be at least 4 characters long",
+      });
+    } else {
+      // Otherwise, the request is properly formulated
+      /**
+       * TODO SEND THE REQEUST TO MAKE A NEW ARTICLE, AND REDIRECT
+       */
+    }
   }
 
   // Render the component
@@ -121,7 +145,7 @@ class ArticleForm extends React.Component {
                 onChange={ this.handleChangeSubtitle }
               />
               <label>
-                Image
+                Image (url to an image)
               </label>
               <input
                 name="image"
@@ -144,7 +168,13 @@ class ArticleForm extends React.Component {
               <input
                 type="submit"
                 value="Create Article"
-                className="btn btn-primary full-width"
+                className={
+                  this.state.title && this.state.subtitle && this.state.body ? (
+                    "btn btn-primary full-width"
+                  ) : (
+                    "btn btn-primary disabled full-width"
+                  )
+                }
               />
             </form>
           </div>
