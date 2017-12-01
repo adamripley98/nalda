@@ -11,7 +11,7 @@ const Nav = () => {
   return (
     <nav className="navbar navbar-toggleable-md navbar-light">
       <button className="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span className="navbar-toggler-icon"></span>
+        <span className="navbar-toggler-icon" />
       </button>
       <Link to="/" className="navbar-brand">Nalda</Link>
 

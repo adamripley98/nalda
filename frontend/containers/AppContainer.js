@@ -2,7 +2,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 // Import components
 import Nav from '../components/shared/Nav';
@@ -21,44 +21,45 @@ import requireAuth from '../components/auth/Authenticate';
  * TODO handle not found (404)
  */
 class AppContainer extends Component {
-    // Render the application
-    render() {
-        return (
+  // Render the application
+  render() {
+    return (
+      <div>
+        <Router>
           <div>
-              <Router>
-                <div>
-                  <Switch>
-                    <Route exact path="/login" component={Login}/>
-                    <Route exact path="/register" component={Register}/>
-                    <Route exact path="/" component={Home}/>
-                    <Route exact path="/home" component={requireAuth(Home)}/>
-                    <Route exact path="/articles/new" component={ArticleForm} />
-                    <Route exact path="/listings/new" component={ListingForm} />
-                    <Route exact path="/videos/new" component={VideoForm} />
-                  </Switch>
-                </div>
-            </Router>
+            <Nav />
+            <Switch>
+              <Route exact path="/login" component={Login}/>
+              <Route exact path="/register" component={Register}/>
+              <Route exact path="/" component={Home}/>
+              <Route exact path="/home" component={requireAuth(Home)}/>
+              <Route exact path="/articles/new" component={ArticleForm} />
+              <Route exact path="/listings/new" component={ListingForm} />
+              <Route exact path="/videos/new" component={VideoForm} />
+            </Switch>
+            <Footer />
           </div>
-        );
-    }
+        </Router>
+      </div>
+    );
+  }
 }
 
 AppContainer.propTypes = {
-    userId: PropTypes.string,
+  userId: PropTypes.string,
 };
 
 const mapStateToProps = (state) => {
-    console.log('state insides app contin', state);
-    return {
-        userId: state.loginState.userId
-    };
+  return {
+    userId: state.loginState.userId
+  };
 };
 
 const mapDispatchToProps = (/* dispatch */) => {
-    return {};
+  return {};
 };
 
 export default connect(
-    mapStateToProps,
-    mapDispatchToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(AppContainer);

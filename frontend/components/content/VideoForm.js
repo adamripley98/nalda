@@ -101,9 +101,9 @@ class ArticleForm extends React.Component {
         <Medium>
           <div className="card thin-form no-pad">
             <div className="tabs">
-              <Link className="tab active" to="/articles/new">Article</Link>
+              <Link className="tab" to="/articles/new">Article</Link>
               <Link className="tab" to="/listings/new">Listing</Link>
-              <Link className="tab" to="/videos/new">Video</Link>
+              <Link className="tab active" to="/videos/new">Video</Link>
             </div>
             <form className="pad-1" onSubmit={ this.handleSubmit }>
               {
