@@ -1,8 +1,8 @@
 // Import frameworks
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
 
 // Import components
 import Nav from '../components/shared/Nav';
@@ -13,39 +13,49 @@ import Footer from '../components/shared/Footer';
 import ArticleForm from '../components/content/ArticleForm';
 import ListingForm from '../components/content/ListingForm';
 import VideoForm from '../components/content/VideoForm';
+import requireAuth from '../components/auth/Authenticate';
 
 /**
  * Component to handle routing on the frontend
  *
  * TODO handle not found (404)
  */
-const AppContainer = ({ name }) => {
-    return (
-        <div>
-            <Router>
-              <div>
-                <Nav />
-                <Switch>
-                  <Route exact path="/" component={Home}/>
-                  <Route exact path="/login" component={Login}/>
-                  <Route exact path="/register" component={Register}/>
-                  <Route exact path="/articles/new" component={ArticleForm} />
-                  <Route exact path="/listings/new" component={ListingForm} />
-                  <Route exact path="/videos/new" component={VideoForm} />
-                </Switch>
-                <Footer />
-              </div>
-          </Router>
-        </div>
-    );
+class AppContainer extends Component {
+    // Render the application
+    render() {
+        return (
+          <div>
+              <Router>
+                <div>
+                  <Switch>
+                    <Route exact path="/login" component={Login}/>
+                    <Route exact path="/register" component={Register}/>
+                    <Route exact path="/" component={Home}/>
+                    <Route exact path="/home" component={requireAuth(Home)}/>
+                    <Route exact path="/articles/new" component={ArticleForm} />
+                    <Route exact path="/listings/new" component={ListingForm} />
+                    <Route exact path="/videos/new" component={VideoForm} />
+                  </Switch>
+                </div>
+            </Router>
+          </div>
+        );
+    }
+}
+
+AppContainer.propTypes = {
+    userId: PropTypes.string,
 };
 
 const mapStateToProps = (state) => {
-  return {};
+    console.log('state insides app contin', state);
+    return {
+        userId: state.loginState.userId
+    };
 };
 
 const mapDispatchToProps = (/* dispatch */) => {
-  return {};
+    return {};
 };
 
 export default connect(
