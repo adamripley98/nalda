@@ -1,32 +1,34 @@
 // Import framworks
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Link, Redirect} from 'react-router-dom';
+import { Link} from 'react-router-dom';
+import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
 
 // Import components
 import Thin from '../shared/Thin';
 import GrayWrapper from '../shared/GrayWrapper';
+import {login} from '../../actions/index.js';
 
-/**
- * Component to render the user login form
- */
 class Login extends Component {
     // Constructor method
     constructor(props) {
         super(props);
         this.state = {
-            redirectToHome: false,
             username: '',
             password: '',
         };
-        this.handleSubmit = this.handleSubmit.bind(this);
+        // bindings so 'this' refers to component
+        this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
         this.handleChangeEmail = this.handleChangeEmail.bind(this);
         this.handleChangePassword = this.handleChangePassword.bind(this);
     }
 
-    handleSubmit(event) {
+    // when login button clicked, will attempt to login on backend (login.js)
+    handleLoginSubmit(event) {
         const username = this.state.username;
         const password = this.state.password;
+        const onLogin = this.props.onLogin;
         console.log('submitted my dood.', username, password);
         console.log('what is event', event);
         event.preventDefault();
@@ -34,47 +36,38 @@ class Login extends Component {
             username,
             password,
         })
+          // if successful, will send back userId. If redux state contains userId, will redirect to home
           .then((resp) => {
-              console.log('what is data', resp.data);
-              if (resp.data) {
-                  console.log('should redirect to home');
-                  this.setState({
-                      redirectToHome: true,
-                  });
-              } else {
-                  console.log('shouldnt redirect');
-              }
+              console.log('what is resp', resp.data, resp.data._id);
+              console.log('props before', this.props);
+              onLogin(resp.data._id);
+              console.log('props after', this.props);
           })
           .catch((err) => {
               console.log('there was an error', err);
           });
     }
 
+    // Handle when a user types into the email
+    handleChangeEmail(event) {
+        this.setState({
+            username: event.target.value
+        });
+    }
 
-  handleChangeEmail(event) {
-    console.log('what is email', event.target.value);
-    this.setState({
-      username: event.target.value
-    });
-  }
+    // Handle when a user types into the password
+    handleChangePassword(event) {
+        this.setState({
+            password: event.target.value
+        });
+    }
 
-  handleChangePassword(event) {
-    console.log('what is password', event.target.value);
-    this.setState({
-      password: event.target.value
-    });
-  }
-
+    // renders actual Login component
     render() {
-        if (this.state.redirectToHome) {
-            return (
-               <Redirect to="/home"/>
-            );
-        }
         return (
           <GrayWrapper>
             <Thin>
-              <form className="thin-form" method="POST" onSubmit={(e) => this.handleSubmit(e)}>
+              <form className="thin-form" method="POST" onSubmit={(e) => this.handleLoginSubmit(e)}>
                 <h2 className="marg-bot-1 bold">
                   Login
                 </h2>
@@ -101,6 +94,7 @@ class Login extends Component {
                 />
                 <input
                   type="submit"
+                  // ensures not empty
                   className={
                     this.state.password && this.state.username ?
                       "btn btn-primary full-width" :
@@ -118,5 +112,30 @@ class Login extends Component {
         );
     }
 }
+
+Login.propTypes = {
+    userId: PropTypes.string,
+    onLogin: PropTypes.func,
+};
+
+// allows us to access redux state as this.props.userId inside component
+const mapStateToProps = state => {
+    return {
+        userId: state.loginState.userId,
+    };
+};
+
+// allows us to dispatch a login event by calling this.props.onLogin
+const mapDispatchToProps = dispatch => {
+    return {
+        onLogin: (userId) => dispatch(login(userId))
+    };
+};
+
+// redux config
+Login = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Login);
 
 export default Login;

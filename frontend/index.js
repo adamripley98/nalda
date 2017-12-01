@@ -1,13 +1,32 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { configureStore, history } from './store/configureStore';
+import { compose, createStore, applyMiddleware } from 'redux';
+// import { autoRehydrate, persistStore } from 'redux-persist';
+import { persistStore } from 'redux-persist';
+
+import rootReducer from './reducers';
+import logger from 'redux-logger';
+
+// import { configureStore, history } from './store/configureStore';
 import Root from './containers/Root';
 
 import './assets/stylesheets/base.scss';
 
-const store = configureStore();
+const store = createStore(
+   rootReducer,
+   undefined,
+   compose(
+     applyMiddleware(logger),
+   )
+ );
+
+persistStore(
+  store,
+  null,
+  () => store.getState()
+);
 
 render(
-    <Root store={store} history={history} />,
+    <Root store={store} />,
     document.getElementById('root')
 );

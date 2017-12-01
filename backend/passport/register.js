@@ -6,24 +6,26 @@ var router = express.Router();
 module.exports = (passport) => {
 		 // TODO: need to show alert in appropriate way if error or if user exists already
 		 router.post('/register', (req, res) => {
+			 // will attempt to find user in database
 			 User.findOne({ 'username': req.body.username }, (err, user) => {
      if (err) {
          console.log('Error in SignUp: ' + err);
 				 res.send('false');
 				 return false;
      }
-    	// already exists
+    	// user already exists
      if (user) {
          console.log('User already exists with username: ' + req.body.username);
 				 res.send('false');
 				 return false;
      }
-		 // if no error and user doesn't already exist, create
+		 // if no error and user doesn't already exist, create a user
 		 const newUser = new User({
 			 username: req.body.username,
 			 password: req.body.password,
 		 });
 		 console.log(newUser);
+		 // saving new user in Mongo
 		 newUser.save((er, usr) => {
 			 if (er) {
 				 console.log('error registering a user', er);
