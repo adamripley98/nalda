@@ -12,9 +12,6 @@ export default function(ComponentToRender) {
         componentWillMount() {
             if (!this.props.userId) {
                 return (<Login/>);
-            } else {
-                return (<Login/>);
-                console.log('userid inside require auth', this.props.userId);
             }
         }
 
@@ -26,8 +23,13 @@ export default function(ComponentToRender) {
 
         render() {
             console.log('userid inside require auth', this.props.userId);
+            if (this.props.userId) {
+                return (
+                    <ComponentToRender {...this.props} />
+                );
+            }
             return (
-                <ComponentToRender {...this.props} />
+                <Login/>
             );
         }
     }
