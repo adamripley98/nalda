@@ -12,7 +12,7 @@ const Footer = () => {
     <footer>
       <div className="container-fluid">
         <div className="row">
-          <div className="col-12 col-md-6 col-lg-3">
+          <div className="col-12 col-md-6 col-lg-4">
             <h3 className="bold">
               Nalda
             </h3>

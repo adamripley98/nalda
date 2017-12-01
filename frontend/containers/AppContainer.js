@@ -10,7 +10,7 @@ import Login from '../components/auth/Login';
 import Home from '../components/Home';
 import Register from '../components/auth/Register';
 import Footer from '../components/shared/Footer';
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import ArticleForm from '../components/content/ArticleForm';
 
 /**
  * Component to handle routing on the frontend
@@ -22,11 +22,14 @@ const AppContainer = ({ name }) => {
         <div>
             <Router>
               <div>
+                <Nav />
                 <Switch>
                   <Route exact path="/" component={Home}/>
                   <Route exact path="/login" component={Login}/>
                   <Route exact path="/register" component={Register}/>
+                  <Route exact path="/articles/new" component={ArticleForm} />
                 </Switch>
+                <Footer />
               </div>
           </Router>
         </div>

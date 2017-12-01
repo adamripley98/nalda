@@ -30,6 +30,14 @@ a {
   border: 1px solid rgba(0, 0, 0, 0.15);
   box-shadow: 0rem 0.2rem 0.2rem rgba(0, 0, 0, 0.05);
 
+  textarea {
+    resize: none;
+  }
+
+  &.no-pad {
+    padding: 0rem;
+  }
+
   label {
     font-weight: bold;
     color: $gray;
@@ -75,6 +83,50 @@ footer {
           color: $dark-gray;
         }
       }
+    }
+  }
+}
+
+.preview {
+  padding: 1rem;
+
+  h4 {
+    margin-bottom: 0;
+  }
+}
+
+.tabs {
+  width: 100%;
+  display: flex;
+  border-radius: 0.4rem 0.4rem 0rem 0rem;
+
+  .tab {
+    flex: 1;
+    color: $light-gray;
+    padding: 0.5rem 1rem;
+    font-weight: bold;
+    background: $light-snow;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+    font-size: 1.2rem;
+
+    &:hover {
+      color: $gray;
+    }
+
+    &:first-child {
+      border-right: 1px solid rgba(0, 0, 0, 0.15);
+      border-top-left-radius: 0.4rem;
+    }
+
+    &:last-child {
+      border-left: 1px solid rgba(0, 0, 0, 0.15);
+      border-top-right-radius: 0.4rem;
+    }
+
+    &.active {
+      background: white;
+      border-bottom: 1px solid transparent;
+      color: black;
     }
   }
 }

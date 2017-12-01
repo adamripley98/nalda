@@ -57,65 +57,66 @@ class Login extends Component {
       username: event.target.value
     });
   }
-  
+
   handleChangePassword(event) {
     console.log('what is password', event.target.value);
     this.setState({
       password: event.target.value
     });
   }
-  
-    render() {
-        if (this.state.redirectToHome) {
-            return (
-               <Redirect to="/home"/>
-            );
-        }
+
+  render() {
+    if (this.state.redirectToHome) {
         return (
-          <GrayWrapper>
-            <Thin>
-              <form className="thin-form" method="POST" onSubmit={(e) => this.handleSubmit(e)}>
-                <h2 className="marg-bot-1 bold">
-                  Login
-                </h2>
-                <label>
-                  Email
-                </label>
-                <input
-                  type="email"
-                  className="form-control marg-bot-1"
-                  value={ this.state.username }
-                  onChange={ this.handleChangeEmail }
-                  required="true"
-                />
-
-                <label>
-                  Password
-                </label>
-                <input
-                  type="password"
-                  className="form-control marg-bot-1"
-                  value={ this.state.password }
-                  onChange={ this.handleChangePassword }
-                  required="true"
-                />
-                <input
-                  type="submit"
-                  className={
-                    this.state.password && this.state.username ?
-                      "btn btn-primary full-width" :
-                      "btn btn-primary disabled full-width"
-                  }
-                  value="Login"
-                />
-
-                <p className="marg-top-1 marg-bot-0">
-                  Don't have an account? <Link to="/register">Register here.</Link>
-                </p>
-              </form>
-            </Thin>
-          </GrayWrapper>
+           <Redirect to="/home"/>
         );
+    }
+    return (
+      <GrayWrapper>
+        <Thin>
+          <form className="thin-form" method="POST" onSubmit={(e) => this.handleSubmit(e)}>
+            <h2 className="marg-bot-1 bold">
+              Login
+            </h2>
+            <label>
+              Email
+            </label>
+            <input
+              type="email"
+              className="form-control marg-bot-1"
+              value={ this.state.username }
+              onChange={ this.handleChangeEmail }
+              required="true"
+            />
+
+            <label>
+              Password
+            </label>
+            <input
+              type="password"
+              className="form-control marg-bot-1"
+              value={ this.state.password }
+              onChange={ this.handleChangePassword }
+              required="true"
+            />
+            <input
+              type="submit"
+              className={
+                this.state.password && this.state.username ?
+                  "btn btn-primary full-width" :
+                  "btn btn-primary disabled full-width"
+              }
+              value="Login"
+            />
+
+            <p className="marg-top-1 marg-bot-0">
+              Don't have an account? <Link to="/register">Register here.</Link>
+            </p>
+          </form>
+        </Thin>
+      </GrayWrapper>
+    );
+  };
 }
 
 export default Login;

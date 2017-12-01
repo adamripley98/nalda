@@ -9,10 +9,40 @@ class Home extends React.Component {
   render() {
     return (
       <GrayWrapper>
-        <div>
-          <h1 className="marg-bot-0">
-            Hello there! This is home component
-          </h1>
+        <div className="container">
+          <div className="space-1"></div>
+          <div className="row">
+            <div className="col-6 col-lg-3">
+              <div className="card preview">
+                <h3>
+                  Example article title
+                </h3>
+                <h4>
+                  With a subtitle
+                </h4>
+              </div>
+            </div>
+            <div className="col-6 col-lg-3">
+              <div className="card preview">
+                <h3>
+                  Example article title
+                </h3>
+                <h4>
+                  With a subtitle
+                </h4>
+              </div>
+            </div>
+            <div className="col-6 col-lg-3">
+              <div className="card preview">
+                <h3>
+                  Example article title
+                </h3>
+                <h4>
+                  With a subtitle
+                </h4>
+              </div>
+            </div>
+          </div>
         </div>
       </GrayWrapper>
     );
