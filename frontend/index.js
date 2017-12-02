@@ -1,15 +1,15 @@
+// Import typical frameworks
 import React from 'react';
 import { render } from 'react-dom';
-import { compose, createStore, applyMiddleware } from 'redux';
-// import { autoRehydrate, persistStore } from 'redux-persist';
-import { persistStore } from 'redux-persist';
 
+// Necessary for redux state persistence
+import { persistStore } from 'redux-persist';
+import { compose, createStore, applyMiddleware } from 'redux';
 import rootReducer from './reducers';
 import logger from 'redux-logger';
-
-// import { configureStore, history } from './store/configureStore';
 import Root from './containers/Root';
 
+// Imported for styling
 import './assets/stylesheets/base.scss';
 
 const store = createStore(
@@ -20,6 +20,7 @@ const store = createStore(
    )
  );
 
+// Persist Store allows redux state to not reset when page refresh
 persistStore(
   store,
   null,

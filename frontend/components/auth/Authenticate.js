@@ -8,42 +8,42 @@ import Login from './Login';
 
 
 export default function(ComponentToRender) {
-    class Authenticate extends Component {
-        componentWillMount() {
-            if (!this.props.userId) {
-                return (<Login/>);
-            }
-        }
-
-        componentWillUpdate(nextProps) {
-            if (!nextProps.userId) {
-                return (<Login/>);
-            }
-        }
-
-        render() {
-            console.log('userid inside require auth', this.props.userId);
-            if (this.props.userId) {
-                return (
-                    <ComponentToRender {...this.props} />
-                );
-            }
-            return (
-                <Login/>
-            );
-        }
+  class Authenticate extends Component {
+    componentWillMount() {
+      if (!this.props.userId) {
+        return (<Login/>);
+      }
     }
 
-    Authenticate.propTypes = {
-        userId: PropTypes.string,
-    };
+    componentWillUpdate(nextProps) {
+      if (!nextProps.userId) {
+        return (<Login/>);
+      }
+    }
 
-    const mapStateToProps = (state) => {
-        console.log('state', state);
-        return {
-            userId: state.loginState.userId
-        };
-    };
+    render() {
+      console.log('userid inside require auth', this.props.userId);
+      if (this.props.userId) {
+        return (
+            <ComponentToRender {...this.props} />
+        );
+      }
+      return (
+            <Login/>
+      );
+    }
+  }
 
-    return connect(mapStateToProps)(Authenticate);
+  Authenticate.propTypes = {
+    userId: PropTypes.string,
+  };
+
+  const mapStateToProps = (state) => {
+    console.log('state', state);
+    return {
+      userId: state.loginState.userId
+    };
+  };
+
+  return connect(mapStateToProps)(Authenticate);
 }

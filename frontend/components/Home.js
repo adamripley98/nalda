@@ -10,7 +10,7 @@ class Home extends React.Component {
     return (
       <GrayWrapper>
         <div className="container">
-          <div className="space-1"></div>
+          <div className="space-1"/>
           <div className="row">
             <div className="col-6 col-lg-3">
               <div className="card preview">
