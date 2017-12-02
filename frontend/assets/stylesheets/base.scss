@@ -107,3 +107,21 @@ a {
     }
   }
 }
+
+.article {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+
+  h1 {
+    font-weight: bold !important;
+    font-size: 3rem !important;
+  }
+
+  img {
+    margin-bottom: 1rem;
+  }
+
+  p {
+    line-height: 1.5;
+  }
+}

@@ -1,27 +1,27 @@
 import React from 'react';
-import Medium from '../shared/Medium';
-import GrayWrapper from '../shared/GrayWrapper';
+import Medium from '../../shared/Medium';
+import GrayWrapper from '../../shared/GrayWrapper';
 import autosize from 'autosize';
 import { Link } from 'react-router-dom';
 
 /**
  * Component to render the new article form
  */
-class ListingForm extends React.Component {
+class ArticleForm extends React.Component {
   // Constructor method
   constructor(props) {
     super(props);
     this.state = {
       title: "",
+      video: "",
       description: "",
-      image: "",
       error: "",
     };
 
     // Bind this to helper methods
     this.handleChangeTitle = this.handleChangeTitle.bind(this);
+    this.handleChangeVideo = this.handleChangeVideo.bind(this);
     this.handleChangeDescription = this.handleChangeDescription.bind(this);
-    this.handleChangeImage = this.handleChangeImage.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -37,17 +37,17 @@ class ListingForm extends React.Component {
     });
   }
 
-  // Helper method to handle a change to the description state
-  handleChangeDescription(event) {
+  // Helper method to handle a change to the video state
+  handleChangeVideo(event) {
     this.setState({
-      subtitle: event.target.value,
+      image: event.target.value,
     });
   }
 
-  // Helper method to handle a change to the image state
-  handleChangeImage(event) {
+  // Helper method to handle a change to the description state
+  handleChangeDescription(event) {
     this.setState({
-      image: event.target.value,
+      description: event.target.value,
     });
   }
 
@@ -56,26 +56,30 @@ class ListingForm extends React.Component {
     // Prevent the default submit action
     event.preventDefault();
 
-    /**
-     * TODO error checking for image
-     */
-
     // Begin error checking
     if (!this.state.title) {
       this.setState({
         error: "Title must be populated.",
       });
-    } else if (!this.state.description) {
+    } else if (!this.state.subtitle) {
       this.setState({
-        error: "Description must be populated.",
+        error: "Subtitle must be populated.",
+      });
+    } else if (!this.state.body) {
+      this.setState({
+        error: "Body must be populated.",
+      });
+    } else if (!this.state.video) {
+      this.setState({
+        error: "Video must be populated",
       });
     } else if (this.state.title.length < 4 || this.state.title.length > 100) {
       this.setState({
         error: "Title must be between 4 and 100 characters long.",
       });
-    } else if (this.state.description.length < 4 || this.state.description.length > 2000) {
+    } else if (this.state.description.length < 4) {
       this.setState({
-        error: "Subtitle must be between 4 and 2000 characters long.",
+        error: "Description must be at least 4 characters long",
       });
     } else {
       // Set the error to the empty string
@@ -98,8 +102,8 @@ class ListingForm extends React.Component {
           <div className="card thin-form no-pad">
             <div className="tabs">
               <Link className="tab" to="/articles/new">Article</Link>
-              <Link className="tab active" to="/listings/new">Listing</Link>
-              <Link className="tab" to="/videos/new">Video</Link>
+              <Link className="tab" to="/listings/new">Listing</Link>
+              <Link className="tab active" to="/videos/new">Video</Link>
             </div>
             <form className="pad-1" onSubmit={ this.handleSubmit }>
               {
@@ -127,20 +131,20 @@ class ListingForm extends React.Component {
                 onChange={ this.handleChangeTitle }
               />
               <label>
-                Image (url to an image)
+                Video (url to a video)
               </label>
               <input
                 name="image"
                 type="url"
                 className="form-control marg-bot-1"
-                value={ this.state.image }
-                onChange={ this.handleChangeImage }
+                value={ this.state.video }
+                onChange={ this.handleChangeVideo }
               />
               <label>
                 Description
               </label>
               <textarea
-                name="body"
+                name="description"
                 type="text"
                 className="form-control marg-bot-1"
                 rows="1"
@@ -149,9 +153,9 @@ class ListingForm extends React.Component {
               />
               <input
                 type="submit"
-                value="Create Listing"
+                value="Create Video"
                 className={
-                  this.state.title && this.state.description ? (
+                  this.state.title && this.state.video && this.state.description ? (
                     "btn btn-primary full-width"
                   ) : (
                     "btn btn-primary disabled full-width"
@@ -166,4 +170,4 @@ class ListingForm extends React.Component {
   }
 }
 
-export default ListingForm;
+export default ArticleForm;

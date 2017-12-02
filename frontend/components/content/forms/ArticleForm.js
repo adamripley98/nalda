@@ -1,6 +1,6 @@
 import React from 'react';
-import Medium from '../shared/Medium';
-import GrayWrapper from '../shared/GrayWrapper';
+import Medium from '../../shared/Medium';
+import GrayWrapper from '../../shared/GrayWrapper';
 import autosize from 'autosize';
 import { Link } from 'react-router-dom';
 
