@@ -53,7 +53,7 @@ AppContainer.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
-    userId: state.loginState.userId
+    userId: state.authState.userId
   };
 };
 

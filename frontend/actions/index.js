@@ -2,7 +2,7 @@
 // ---------------------------Authentication Actions----------------------------
 // -----------------------------------------------------------------------------
 
-// Dispatch login action, will call appropriate reducer (loginReducer.js)
+// Dispatch login action, will call appropriate reducer (authReducer.js)
 export function login(userId) {
   return {
     type: 'LOGIN',
@@ -10,7 +10,7 @@ export function login(userId) {
   };
 }
 
-// Dispatch register action, will call appropriate reducer (registerReducer.js)
+// Dispatch register action, will call appropriate reducer (authReducer.js)
 // TODO: potentially will need userId here too, not for now though
 export function register() {
   return {
@@ -18,7 +18,7 @@ export function register() {
   };
 }
 
-// Dispatch logout action, will call appropriate reducer (logoutReducer.js)
+// Dispatch logout action, will call appropriate reducer (authReducer.js)
 export function logout() {
   return {
     type: 'LOGOUT'

@@ -41,7 +41,7 @@ export default function(ComponentToRender) {
   const mapStateToProps = (state) => {
     console.log('state', state);
     return {
-      userId: state.loginState.userId
+      userId: state.authState.userId
     };
   };
 

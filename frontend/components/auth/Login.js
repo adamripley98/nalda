@@ -121,7 +121,7 @@ Login.propTypes = {
 // Allows us to access redux state as this.props.userId inside component
 const mapStateToProps = state => {
   return {
-    userId: state.loginState.userId,
+    userId: state.authState.userId,
   };
 };
 

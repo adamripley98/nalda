@@ -22,15 +22,14 @@ class Nav extends Component {
 
   // When logout button clicked, will attempt to logout on backend (logout.js)
   handleLogoutSubmit(event) {
+    console.log('logout clicked');
     const onLogout = this.props.onLogout;
     event.preventDefault();
     axios.post('/logout')
-        // if successful, will send back userId. If redux state contains userId, will redirect to home
+        // If successful, will dispatch logout event which will clear user from redux state
         .then((resp) => {
-          console.log('what is resp', resp.data, resp.data._id);
-          console.log('props before', this.props);
+          console.log('logout after axios', resp);
           onLogout();
-          console.log('props after', this.props);
         })
         .catch((err) => {
           console.log('there was an error', err);
@@ -75,7 +74,7 @@ Nav.propTypes = {
 // Allows us to access redux state as this.props.userId inside component
 const mapStateToProps = state => {
   return {
-    userId: state.loginState.userId,
+    userId: state.authState.userId,
   };
 };
 
