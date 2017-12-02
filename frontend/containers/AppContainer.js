@@ -32,12 +32,12 @@ class AppContainer extends Component {
             <Switch>
               <Route exact path="/login" component={Login}/>
               <Route exact path="/register" component={Register}/>
-              <Route exact path="/" component={Home}/>
+              <Route exact path="/" component={requireAuth(Home)}/>
               <Route exact path="/home" component={requireAuth(Home)}/>
-              <Route exact path="/articles/new" component={ArticleForm} />
-              <Route exact path="/listings/new" component={ListingForm} />
-              <Route exact path="/videos/new" component={VideoForm} />
-              <Route exact path="/articles/:id" component={Article} />
+              <Route exact path="/articles/new" component={requireAuth(ArticleForm)} />
+              <Route exact path="/listings/new" component={requireAuth(ListingForm)} />
+              <Route exact path="/videos/new" component={requireAuth(VideoForm)} />
+              <Route exact path="/articles/:id" component={requireAuth(Article)} />
             </Switch>
             <Footer />
           </div>
