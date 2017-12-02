@@ -1,6 +1,7 @@
 @import './colors';
 @import './strapper';
 @import './nav';
+@import './footer';
 
 .btn {
   cursor: hand;
@@ -63,30 +64,6 @@ a {
   padding: 0rem !important;
 }
 
-footer {
-  padding: 1rem 0rem;
-  border-top: 1px solid rgba(0, 0, 0, 0.15);
-  background: $snow;
-
-  .footer-nav {
-    strong {
-      display: block;
-    }
-
-    .link {
-      display: block;
-
-      a {
-        color: $gray;
-
-        &:hover {
-          color: $dark-gray;
-        }
-      }
-    }
-  }
-}
-
 .preview {
   padding: 1rem;
 
@@ -128,5 +105,23 @@ footer {
       border-bottom: 1px solid transparent;
       color: black;
     }
+  }
+}
+
+.article {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+
+  h1 {
+    font-weight: bold !important;
+    font-size: 3rem !important;
+  }
+
+  img {
+    margin-bottom: 1rem;
+  }
+
+  p {
+    line-height: 1.5;
   }
 }

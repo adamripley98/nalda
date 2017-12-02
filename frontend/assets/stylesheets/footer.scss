@@ -1,0 +1,29 @@
+footer {
+  .footer-top {
+    padding: 1rem 0rem 2rem 0rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.15);
+    background: $navy;
+    color: white;
+
+    .footer-nav {
+      .link {
+        display: block;
+
+        a {
+          color: rgba(255, 255, 255, 0.8);
+
+          &:hover {
+            color: white;
+          }
+        }
+      }
+    }
+  }
+
+  .footer-bottom {
+    background: $dark-navy;
+    color: rgba(255, 255, 255, 0.8);
+    padding: 0.5rem 2rem;
+    font-size: 0.8rem;
+  }
+}

@@ -10,9 +10,10 @@ import Login from '../components/auth/Login';
 import Home from '../components/Home';
 import Register from '../components/auth/Register';
 import Footer from '../components/shared/Footer';
-import ArticleForm from '../components/content/ArticleForm';
-import ListingForm from '../components/content/ListingForm';
-import VideoForm from '../components/content/VideoForm';
+import ArticleForm from '../components/content/forms/ArticleForm';
+import ListingForm from '../components/content/forms/ListingForm';
+import VideoForm from '../components/content/forms/VideoForm';
+import Article from '../components/content/articles/Article';
 import requireAuth from '../components/auth/Authenticate';
 
 /**
@@ -36,6 +37,7 @@ class AppContainer extends Component {
               <Route exact path="/articles/new" component={ArticleForm} />
               <Route exact path="/listings/new" component={ListingForm} />
               <Route exact path="/videos/new" component={VideoForm} />
+              <Route exact path="/articles/:id" component={Article} />
             </Switch>
             <Footer />
           </div>
