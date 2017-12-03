@@ -60,15 +60,21 @@ class Nav extends Component {
             <li className="nav-item">
               <Link to="/" className="nav-link">Home</Link>
             </li>
-            <li className="nav-item">
-              <Link to="/register" className="nav-link">Register</Link>
-            </li>
-            <li className="nav-item">
-              <Link to="/login" className="nav-link">Login</Link>
-            </li>
-            <li className="nav-item">
-              <div onClick={(e) => this.handleLogoutSubmit(e)} className="nav-link">Logout</div>
-            </li>
+            {this.props.userId ?
+            (
+              <li className="nav-item">
+                <div onClick={(e) => this.handleLogoutSubmit(e)} className="nav-link">Logout</div>
+              </li>
+            ) : (
+              <div>
+                <li className="nav-item">
+                  <Link to="/register" className="nav-link">Register</Link>
+                </li>
+                <li className="nav-item">
+                  <Link to="/login" className="nav-link">Login</Link>
+                </li>
+              </div>
+            )}
           </ul>
         </div>
       </nav>

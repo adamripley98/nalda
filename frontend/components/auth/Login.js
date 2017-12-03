@@ -68,7 +68,8 @@ class Login extends Component {
 
     // Renders actual Login component
   render() {
-    if (this.state.redirectToHome) {
+    // If user is logged in or if user successfully logs in, redirects to home
+    if (this.props.userId || this.state.redirectToHome) {
       return (
         <Redirect to="/"/>
       );
