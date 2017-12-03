@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Link} from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -18,6 +18,9 @@ class Nav extends Component {
     super(props);
     // Bindings so 'this' refers to component
     this.handleLogoutSubmit = this.handleLogoutSubmit.bind(this);
+    this.state = {
+      redirectToLogin: false,
+    };
   }
 
   // When logout button clicked, will attempt to logout on backend (logout.js)
@@ -30,12 +33,19 @@ class Nav extends Component {
         .then((resp) => {
           console.log('logout after axios', resp);
           onLogout();
+          this.setState({
+            redirectToLogin: true,
+          });
         })
         .catch((err) => {
           console.log('there was an error', err);
         });
   }
   render() {
+    // Puts url back to /login when you log out
+    if (this.state.redirectToLogin) {
+      return (<Redirect to="/login"/>);
+    }
     return (
       <nav className="navbar navbar-toggleable-md navbar-light">
         <button className="navbar-toggler navbar-toggler-right collapsed" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
