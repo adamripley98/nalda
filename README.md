@@ -19,22 +19,22 @@ Backend Mongo and passport set up. To do: refactor code, encrypt passwords befor
 - [ ] Ajax search suggestions
 - [ ] Routing 	
 - [ ] User show pages
-- [ ] Footer
+- [X] Footer
 - [ ] Homepage display (mobile and desktop)
-- [ ] Article form display
-- [ ] Video form display
-- [ ] Listing form display
+- [X] Article form display
+- [X] Video form display
+- [X] Listing form display
 - [ ] General Design Updates/finishing touches
 
 ## Backend
 
 - [X] Boilerplate setup
 - [X] MongoDB setup
-- [ ] React/Redux setup
+- [X] React/Redux setup
 - [ ] Setting up Component Structures
-- [ ] Password security
+- [X] Password security
 - [ ] HTTPS
-- [ ] User Authentication
+- [X] User Authentication
 - [ ] Articles/Listing Backend
 - [ ] Video
 - [ ] Searching Functionality
@@ -42,5 +42,5 @@ Backend Mongo and passport set up. To do: refactor code, encrypt passwords befor
 - [ ] Recommendations
 - [ ] Storing hours
 - [ ] Domain registration/setup
-- [ ] API Routing
+- [X] API Routing
 - [ ] Linking frontend and backend

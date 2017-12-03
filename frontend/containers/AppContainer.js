@@ -19,14 +19,11 @@ import Article from '../components/content/articles/Article';
 import NotFoundSection from '../components/NotFoundSection';
 import requireAuth from '../components/auth/Authenticate';
 
-/**
- * Component to handle routing on the frontend
- *
- * TODO handle not found (404)
- */
+// Component to handle routing on the frontend
 class AppContainer extends Component {
   // Render the application
   render() {
+    // Some routes require authentication, others don't
     return (
       <div>
         <Router>
