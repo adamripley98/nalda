@@ -25,7 +25,7 @@ module.exports = (passport) => {
 				 // If no error and user doesn't already exist, create a user
 				 const newUser = new User({
 					 username: req.body.username,
-					 password: req.body.password,
+					 password: createHash(req.body.password),
 				 });
 				 // Saving new user in Mongo
 				 newUser.save((er, usr) => {
@@ -45,7 +45,7 @@ module.exports = (passport) => {
 };
 
 // Checks password to make sure it is valid
-// Must match, contain between 8-30 characters, have a number, uppercase
+// Must match, contain between 8-30 characters, have a number, uppercase, special character, no weird characters
 const isValidPassword = (password, verPassword) => {
   if (password !== verPassword) {
 	  return 'Password fields must match.';
@@ -63,7 +63,7 @@ const isValidPassword = (password, verPassword) => {
   return 'success';
 };
 
-    // Generates hash using bCrypt, storing password safely
-	    var createHash = (password) => {
-	        return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
-	    };
+// Generates hash using bCrypt, storing password safely
+var createHash = (password) => {
+  return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
+};

@@ -1,3 +1,4 @@
+// Import frameworks
 const path = require('path');
 const mongoose = require('mongoose');
 const express = require('express');
@@ -6,13 +7,18 @@ const PORT = process.env.PORT || 3000;
 const passport = require('passport');
 const bodyParser = require('body-parser');
 const routes = require('./backend/routes')(passport);
+const bCrypt = require('bcrypt-nodejs');
 const LocalStrategy = require('passport-local');
+
+// Import Models
 const User = require('./backend/models/user');
+
+// Import other routes
 const login = require('./backend/passport/login');
 const register = require('./backend/passport/register');
 const logout = require('./backend/passport/logout');
 
-// connecting to mongo
+// Connecting to mongo
 const connect = process.env.MONGODB_URI;
 mongoose.connect(connect);
 
@@ -20,7 +26,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// passport configuration work, makes sessions persistant
+// Passport configuration work, makes sessions persistant
 const expressSession = require('express-session');
 app.use(expressSession({secret: 'mySecretKey'}));
 app.use(passport.initialize());
@@ -35,7 +41,7 @@ app.use(flash());
 var initPassport = require('./backend/passport/init');
 initPassport(passport);
 
-// passport strategy
+// Passport strategy
 passport.use('local', new LocalStrategy({
   		usernameField: 'username',
   		passwordField: 'password'
@@ -52,7 +58,7 @@ passport.use('local', new LocalStrategy({
       return done(null, false, { message: 'Incorrect username.' });
     }
       // if passwords do not match, auth failed
-    if (user.password !== password) {
+    if (!isValidPassword(user, password)) {
       return done(null, false, { message: 'Incorrect password.' });
     }
       // auth has has succeeded
@@ -61,6 +67,9 @@ passport.use('local', new LocalStrategy({
 }
 ));
 
+const isValidPassword = (user, password) => {
+  return bCrypt.compareSync(password, user.password);
+};
 
 app.get('*', (request, response) => {
   response.sendFile(__dirname + '/public/index.html'); // For React/Redux

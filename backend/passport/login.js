@@ -1,4 +1,3 @@
-var bCrypt = require('bcrypt-nodejs');
 const express = require('express');
 var router = express.Router();
 
@@ -27,10 +26,6 @@ module.exports = (passport) => {
       });
     })(req, res, next);
   });
-
-  const isValidPassword = (user, password) => {
-    return bCrypt.compareSync(password, user.password);
-  };
 
   return router;
 };
