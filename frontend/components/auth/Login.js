@@ -1,7 +1,7 @@
 // Import framworks
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Link} from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -17,6 +17,7 @@ class Login extends Component {
     this.state = {
       username: '',
       password: '',
+      redirectToHome: false,
     };
     // bindings so 'this' refers to component
     this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
@@ -42,6 +43,9 @@ class Login extends Component {
           console.log('props before', this.props);
           onLogin(resp.data._id);
           console.log('props after', this.props);
+          this.setState({
+            redirectToHome: true,
+          });
         })
         .catch((err) => {
           console.log('there was an error', err);
@@ -64,6 +68,11 @@ class Login extends Component {
 
     // Renders actual Login component
   render() {
+    if (this.state.redirectToHome) {
+      return (
+        <Redirect to="/"/>
+      );
+    }
     return (
       <GrayWrapper>
         <Thin>

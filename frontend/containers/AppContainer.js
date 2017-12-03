@@ -39,8 +39,8 @@ class AppContainer extends Component {
               <Route exact path="/listings/new" component={requireAuth(ListingForm)} />
               <Route exact path="/videos/new" component={requireAuth(VideoForm)} />
               <Route exact path="/articles/:id" component={requireAuth(Article)} />
-              <Route exact path="/notfound" component={NotFoundSection}/>
-              <Redirect from="*" to="/notfound" push/>
+              <Route exact path="/404" component={NotFoundSection}/>
+              <Redirect from="*" to="/404" push/>
             </Switch>
             <Footer />
           </div>

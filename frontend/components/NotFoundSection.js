@@ -13,7 +13,7 @@ class NotFoundSection extends Component {
       <GrayWrapper>
         <Thin>
             <p className="marg-top-1 marg-bot-0">
-              Uh oh! Looks like this page doesn't exist. <Link to="/">Go back to home.</Link>
+              Uh oh! Looks like this page has either been moved or doesn't exist. <Link to="/">Go back to home.</Link>
             </p>
         </Thin>
       </GrayWrapper>
