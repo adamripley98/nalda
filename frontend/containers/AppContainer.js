@@ -8,6 +8,8 @@ import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-d
 import Nav from '../components/shared/Nav';
 import Login from '../components/auth/Login';
 import Home from '../components/Home';
+import About from '../components/About';
+import Contact from '../components/Contact';
 import Register from '../components/auth/Register';
 import Footer from '../components/shared/Footer';
 import ArticleForm from '../components/content/forms/ArticleForm';
@@ -33,6 +35,8 @@ class AppContainer extends Component {
             <Switch>
               <Route exact path="/login" component={Login}/>
               <Route exact path="/register" component={Register}/>
+              <Route exact path="/about" component={About}/>
+              <Route exact path="/contact" component={Contact}/>
               <Route exact path="/" component={requireAuth(Home)}/>
               <Route exact path="/home" component={requireAuth(Home)}/>
               <Route exact path="/articles/new" component={requireAuth(ArticleForm)} />

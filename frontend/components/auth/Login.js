@@ -18,6 +18,7 @@ class Login extends Component {
       username: '',
       password: '',
       redirectToHome: false,
+      error: "",
     };
     // bindings so 'this' refers to component
     this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
@@ -41,11 +42,17 @@ class Login extends Component {
         .then((resp) => {
           console.log('what is resp', resp.data, resp.data._id);
           console.log('props before', this.props);
-          onLogin(resp.data._id);
+          if (!resp.data._id) {
+            this.setState({
+              error: resp.data,
+            });
+          } else {
+            onLogin(resp.data._id);
+            this.setState({
+              redirectToHome: true,
+            });
+          }
           console.log('props after', this.props);
-          this.setState({
-            redirectToHome: true,
-          });
         })
         .catch((err) => {
           console.log('there was an error', err);
@@ -78,6 +85,20 @@ class Login extends Component {
       <GrayWrapper>
         <Thin>
           <form className="thin-form" method="POST" onSubmit={(e) => this.handleLoginSubmit(e)}>
+            {
+              this.state.error ? (
+                <div className="alert alert-danger">
+                  <p className="bold marg-bot-05">
+                    An error occured:
+                  </p>
+                  <p className="marg-bot-0">
+                    { this.state.error }
+                  </p>
+                </div>
+              ) : (
+                ""
+              )
+            }
             <h2 className="marg-bot-1 bold">
               Login
             </h2>

@@ -18,6 +18,8 @@ class Register extends Component {
       username: '',
       password: '',
       verPassword: '',
+      error: '',
+      redirectToLogin: false,
     };
     // Bindings so 'this' refers to component
     this.handleRegisterSubmit = this.handleRegisterSubmit.bind(this);
@@ -33,36 +35,39 @@ class Register extends Component {
     const verPassword = this.state.verPassword;
     const onRegister = this.props.onRegister;
     event.preventDefault();
-    // TODO: use bootstrap to make alert look better
-    // TODO: decide if authentication errors should be handled on frontend/backend/both
-    // TODO: needs to alert if user already exists
-    if (verPassword !== password) {
-      alert('passwords must match!');
-    } else {
-        // Post to register, will check on backend in mongo for issues
-      axios.post('/register', {
-        username,
-        password,
-      })
-      // If there are no issues, it will dispatch a register event
-        .then((resp) => {
-          console.log('what is data', resp.data);
+    // Post to register, will check on backend in mongo for issues
+    axios.post('/register', {
+      username,
+      password,
+      verPassword,
+    })
+      .then((resp) => {
+        // If issue with register, error message will display
+        if (resp.data !== 'success') {
+          this.setState({
+            error: resp.data,
+          });
+        } else {
+          // If successful, redirect to login page and dispatch a register event
+          this.setState({
+            redirectToLogin: true,
+          });
           onRegister();
-        })
-        .catch((err) => {
-          console.log('there was an error', err);
-        });
-    }
+        }
+      })
+      .catch((err) => {
+        console.log('there was an error', err);
+      });
   }
 
-    // Handle when a user types into the email
+  // Handle when a user types into the email
   handleChangeEmail(event) {
     this.setState({
       username: event.target.value
     });
   }
 
-    // Handle when a user types into the password
+  // Handle when a user types into the password
   handleChangePassword(event) {
     console.log('what is password', event.target.value);
     this.setState({
@@ -70,19 +75,38 @@ class Register extends Component {
     });
   }
 
-    // Handle when a user types into the confirm password
+  // Handle when a user types into the confirm password
   handleChangeVerifyPassword(event) {
     this.setState({
       verPassword: event.target.value
     });
   }
 
-    // Function to render the actual component
+  // Function to render the actual component
   render() {
+    if (this.state.redirectToLogin) {
+      return (
+        <Redirect to="/login"/>
+      );
+    }
     return (
       <GrayWrapper>
         <Thin>
           <form className="thin-form" method="POST" onSubmit={ (e) => this.handleRegisterSubmit(e) }>
+            {
+              this.state.error ? (
+                <div className="alert alert-danger">
+                  <p className="bold marg-bot-05">
+                    An error occured:
+                  </p>
+                  <p className="marg-bot-0">
+                    { this.state.error }
+                  </p>
+                </div>
+              ) : (
+                ""
+              )
+            }
             <h2 className="marg-bot-1 bold">
               Register
             </h2>
@@ -141,20 +165,20 @@ Register.propTypes = {
   onRegister: PropTypes.func
 };
 
-// currently no props, possibly will add userId if needed
+// Currently no props, possibly will add userId if needed
 const mapStateToProps = state => {
   return {
   };
 };
 
-// when we call onRegister now, it will dispatch register event
+// When we call onRegister now, it will dispatch register event
 const mapDispatchToProps = dispatch => {
   return {
     onRegister: () => dispatch(register()),
   };
 };
 
-// redux config
+// Redux config
 Register = connect(
     mapStateToProps,
     mapDispatchToProps
