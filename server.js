@@ -10,6 +10,7 @@ const LocalStrategy = require('passport-local');
 const User = require('./backend/models/user');
 const login = require('./backend/passport/login');
 const register = require('./backend/passport/register');
+const logout = require('./backend/passport/logout');
 
 // connecting to mongo
 const connect = process.env.MONGODB_URI;
@@ -38,40 +39,41 @@ initPassport(passport);
 passport.use('local', new LocalStrategy({
   		usernameField: 'username',
   		passwordField: 'password'
-}, function(username, password, done) {
+}, (username, password, done) => {
   // Find the user with the given username
-    User.findOne({ username: username }, function(err, user) {
-      // if there's an error, finish trying to authenticate (auth failed)
-        if (err) {
-            console.error('Error fetching user in LocalStrategy', err);
-            return done(err);
-        }
-        // if no user present, auth failed
-        if (!user) {
-            return done(null, false, { message: 'Incorrect username.' });
-        }
-        // if passwords do not match, auth failed
-        if (user.password !== password) {
-            return done(null, false, { message: 'Incorrect password.' });
-        }
-        // auth has has succeeded
-        return done(null, user);
-    });
+  User.findOne({ username: username }, (err, user) =>{
+    // if there's an error, finish trying to authenticate (auth failed)
+    if (err) {
+      console.error('Error fetching user in LocalStrategy', err);
+      return done(err);
+    }
+    // if no user present, auth failed
+    if (!user) {
+      return done(null, false, { message: 'Incorrect username.' });
+    }
+      // if passwords do not match, auth failed
+    if (user.password !== password) {
+      return done(null, false, { message: 'Incorrect password.' });
+    }
+      // auth has has succeeded
+    return done(null, user);
+  });
 }
 ));
 
 
 app.get('*', (request, response) => {
-    response.sendFile(__dirname + '/public/index.html'); // For React/Redux
+  response.sendFile(__dirname + '/public/index.html'); // For React/Redux
 });
 
 app.use('/', login(passport));
 app.use('/', register(passport));
+app.use('/', logout(passport));
 app.use('/', routes);
 
 
 app.listen(PORT, error => {
-    error
-    ? console.error(error)
-    : console.info(`==> 🌎 Listening on port ${PORT}. Visit http://localhost:${PORT}/ in your browser.`);
+  error
+  ? console.error(error)
+  : console.info(`==> 🌎 Listening on port ${PORT}. Visit http://localhost:${PORT}/ in your browser.`);
 });

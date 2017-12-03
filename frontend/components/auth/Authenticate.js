@@ -2,6 +2,7 @@
 import React, {Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { Redirect } from 'react-router-dom';
 
 // import components
 import Login from './Login';
@@ -11,13 +12,17 @@ export default function(ComponentToRender) {
   class Authenticate extends Component {
     componentWillMount() {
       if (!this.props.userId) {
-        return (<Login/>);
+        return (
+          <Redirect to="/login"/>
+        );
       }
     }
 
     componentWillUpdate(nextProps) {
       if (!nextProps.userId) {
-        return (<Login/>);
+        return (
+          <Redirect to="/login"/>
+        );
       }
     }
 
@@ -29,7 +34,7 @@ export default function(ComponentToRender) {
         );
       }
       return (
-            <Login/>
+            <Redirect to="/login"/>
       );
     }
   }
@@ -41,7 +46,7 @@ export default function(ComponentToRender) {
   const mapStateToProps = (state) => {
     console.log('state', state);
     return {
-      userId: state.loginState.userId
+      userId: state.authState.userId
     };
   };
 

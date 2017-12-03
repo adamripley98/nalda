@@ -2,7 +2,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
 
 // Import components
 import Nav from '../components/shared/Nav';
@@ -14,6 +14,7 @@ import ArticleForm from '../components/content/forms/ArticleForm';
 import ListingForm from '../components/content/forms/ListingForm';
 import VideoForm from '../components/content/forms/VideoForm';
 import Article from '../components/content/articles/Article';
+import NotFoundSection from '../components/NotFoundSection';
 import requireAuth from '../components/auth/Authenticate';
 
 /**
@@ -32,12 +33,14 @@ class AppContainer extends Component {
             <Switch>
               <Route exact path="/login" component={Login}/>
               <Route exact path="/register" component={Register}/>
-              <Route exact path="/" component={Home}/>
+              <Route exact path="/" component={requireAuth(Home)}/>
               <Route exact path="/home" component={requireAuth(Home)}/>
-              <Route exact path="/articles/new" component={ArticleForm} />
-              <Route exact path="/listings/new" component={ListingForm} />
-              <Route exact path="/videos/new" component={VideoForm} />
-              <Route exact path="/articles/:id" component={Article} />
+              <Route exact path="/articles/new" component={requireAuth(ArticleForm)} />
+              <Route exact path="/listings/new" component={requireAuth(ListingForm)} />
+              <Route exact path="/videos/new" component={requireAuth(VideoForm)} />
+              <Route exact path="/articles/:id" component={requireAuth(Article)} />
+              <Route exact path="/404" component={NotFoundSection}/>
+              <Redirect from="*" to="/404" push/>
             </Switch>
             <Footer />
           </div>
@@ -53,7 +56,7 @@ AppContainer.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
-    userId: state.loginState.userId
+    userId: state.authState.userId
   };
 };
 

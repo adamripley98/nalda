@@ -2,5 +2,5 @@ const express = require('express');
 const router = express.Router();
 
 module.exports = (passport) => {
-    return router;
+  return router;
 };

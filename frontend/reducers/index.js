@@ -3,8 +3,7 @@ import { persistCombineReducers } from 'redux-persist';
 import storage from 'redux-persist/es/storage';
 
 // Import reducers from other files
-import loginReducer from './loginReducer';
-import registerReducer from './registerReducer';
+import authReducer from './authReducer';
 
 // Config necessary for state persistance
 const config = {
@@ -14,8 +13,7 @@ const config = {
 
 // Root reducer combines all separate reducers and calls appropriate one
 const rootReducer = persistCombineReducers(config, {
-  loginState: loginReducer,
-  registerState: registerReducer,
+  authState: authReducer,
 });
 
 export default rootReducer;
