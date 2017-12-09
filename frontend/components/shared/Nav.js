@@ -8,9 +8,6 @@ import { logout } from '../../actions/index.js';
 
 /**
  * Renders the navbar at the top of the screen on all pages.
- *
- * TODO make this stateful depending on if the user is logged in or not.
- * Currently, it assumes that the user is not logged in.
  */
 class Nav extends Component {
 

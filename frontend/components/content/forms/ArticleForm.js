@@ -1,8 +1,10 @@
+// Import frameworks
 import React from 'react';
 import Medium from '../../shared/Medium';
 import GrayWrapper from '../../shared/GrayWrapper';
 import autosize from 'autosize';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
+import axios from 'axios';
 
 /**
  * Component to render the new article form
@@ -17,6 +19,7 @@ class ArticleForm extends React.Component {
       image: "",
       body: "",
       error: "",
+      redirectToHome: false,
     };
 
     // Bind this to helper methods
@@ -30,6 +33,13 @@ class ArticleForm extends React.Component {
   // Handle resizing textarea
   componentDidMount() {
     autosize(document.querySelectorAll('textarea'));
+  }
+
+  redirectToHome() {
+    console.log('goes into redirect');
+    return (
+      <Redirect to="/"/>
+    );
   }
 
   // Helper method to handle a change to the title state
@@ -95,16 +105,32 @@ class ArticleForm extends React.Component {
       this.setState({
         error: "",
       });
-
-      // Otherwise, the request is properly formulated
-      /**
-       * TODO SEND THE REQUEST TO MAKE A NEW ARTICLE, AND REDIRECT
-       */
+      // Otherwise, the request is properly formulated. Post request to routes.js
+      axios.post('/articles/new', {
+        title: this.state.title,
+        subtitle: this.state.subtitle,
+        image: this.state.image,
+        body: this.state.body,
+      })
+      .then((resp) => {
+        console.log('what is resp', resp.data);
+        this.setState({
+          redirectToHome: true,
+        });
+      })
+      .catch((err) => {
+        console.log('there was an error', err);
+      });
     }
   }
 
   // Render the component
   render() {
+    if (this.state.redirectToHome) {
+      return (
+        <Redirect to="/home"/>
+      );
+    }
     return (
       <GrayWrapper>
         <Medium>
@@ -180,6 +206,7 @@ class ArticleForm extends React.Component {
                     "btn btn-primary disabled full-width"
                   )
                 }
+                onSubmit={(e) => this.handleSubmit(e)}
               />
             </form>
           </div>

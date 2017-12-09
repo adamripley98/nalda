@@ -71,15 +71,14 @@ const isValidPassword = (user, password) => {
   return bCrypt.compareSync(password, user.password);
 };
 
-app.get('*', (request, response) => {
-  response.sendFile(__dirname + '/public/index.html'); // For React/Redux
-});
-
 app.use('/', login(passport));
 app.use('/', register(passport));
 app.use('/', logout(passport));
 app.use('/', routes);
 
+app.get('*', (request, response) => {
+  response.sendFile(__dirname + '/public/index.html'); // For React/Redux
+});
 
 app.listen(PORT, error => {
   error
