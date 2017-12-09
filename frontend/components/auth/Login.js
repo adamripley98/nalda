@@ -20,13 +20,13 @@ class Login extends Component {
       redirectToHome: false,
       error: "",
     };
-    // bindings so 'this' refers to component
+    // Bindings so 'this' refers to component
     this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
     this.handleChangeEmail = this.handleChangeEmail.bind(this);
     this.handleChangePassword = this.handleChangePassword.bind(this);
   }
 
-  // when login button clicked, will attempt to login on backend (login.js)
+  // When login button clicked, will attempt to login on backend (login.js)
   handleLoginSubmit(event) {
     const username = this.state.username;
     const password = this.state.password;
@@ -38,7 +38,7 @@ class Login extends Component {
       username,
       password,
     })
-        // if successful, will send back userId. If redux state contains userId, will redirect to home
+        // If successful, will send back userId. If redux state contains userId, will redirect to home
         .then((resp) => {
           console.log('what is resp', resp.data, resp.data._id);
           console.log('props before', this.props);
@@ -76,13 +76,9 @@ class Login extends Component {
     // Renders actual Login component
   render() {
     // If user is logged in or if user successfully logs in, redirects to home
-    if (this.props.userId || this.state.redirectToHome) {
-      return (
-        <Redirect to="/"/>
-      );
-    }
     return (
       <GrayWrapper>
+        {(this.props.userId || this.state.redirectToHome) && <Redirect to="/"/>}
         <Thin>
           <form className="thin-form" method="POST" onSubmit={(e) => this.handleLoginSubmit(e)}>
             {
@@ -125,7 +121,7 @@ class Login extends Component {
             />
             <input
               type="submit"
-              // ensures not empty
+              // Ensures not empty
               className={
                 this.state.password && this.state.username ?
                   "btn btn-primary full-width" :

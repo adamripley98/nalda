@@ -39,6 +39,7 @@
     "prop-types": "^15.5.8",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
+    "react-radio-buttons": "^1.2.0",
     "react-redux": "^5.0.5",
     "react-router-dom": "^4.2.2",
     "redux": "^3.7.2",
@@ -49,6 +50,7 @@
     "redux-persist": "^5.4.0",
     "sass-loader": "^6.0.3",
     "style-loader": "^0.16.1",
+    "uuid-v4": "^0.1.0",
     "webpack": "^2.3.3"
   },
   "devDependencies": {

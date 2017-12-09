@@ -1,47 +1,74 @@
+// Import frameworks
 import React from 'react';
 import GrayWrapper from './shared/GrayWrapper';
+import axios from 'axios';
+import uuid from 'uuid-v4';
+import { Redirect } from 'react-router-dom';
+
 
 /**
  * Component for the homepage of the application
  */
 class Home extends React.Component {
+  // Constructor method
+  constructor(props) {
+    super(props);
+    this.state = {
+      articles: [],
+      redirectToArticle: false,
+      articleClicked: '',
+    };
+  }
+
+  // Load articles from Mongo
+  componentDidMount() {
+    axios.get('/home')
+    .then((resp) => {
+      this.setState({
+        articles: resp.data,
+      });
+    })
+    .catch((err) => {
+      console.log('err', err);
+    });
+  }
+
+  openArticle(art) {
+    console.log('open article', art._id);
+    this.setState({
+      redirectToArticle: true,
+      articleClicked: art._id,
+    });
+  }
+
+  // Methods renders each individual article
+  renderArticles() {
+    return this.state.articles.map((art) => (
+      <div className="col-6 col-lg-3" onClick={() => this.openArticle(art)} key={ uuid() }>
+        <div className="card preview">
+          <h2>
+            {art.title}
+          </h2>
+          <img height="200" width="200" src={art.image}/>
+          <h7>
+            {art.subtitle}
+          </h7>
+        </div>
+      </div>
+    ));
+  }
+
   // Function to render the component
   render() {
     return (
       <GrayWrapper>
+        {this.state.redirectToArticle && <Redirect to={`/articles/${this.state.articleClicked}`}/>}
         <div className="container">
           <div className="space-1"/>
           <div className="row">
-            <div className="col-6 col-lg-3">
-              <div className="card preview">
-                <h3>
-                  Example article title
-                </h3>
-                <h4>
-                  With a subtitle
-                </h4>
-              </div>
-            </div>
-            <div className="col-6 col-lg-3">
-              <div className="card preview">
-                <h3>
-                  Example article title
-                </h3>
-                <h4>
-                  With a subtitle
-                </h4>
-              </div>
-            </div>
-            <div className="col-6 col-lg-3">
-              <div className="card preview">
-                <h3>
-                  Example article title
-                </h3>
-                <h4>
-                  With a subtitle
-                </h4>
-              </div>
-            </div>
+            {
+              this.renderArticles()
+            }
           </div>
         </div>
       </GrayWrapper>
