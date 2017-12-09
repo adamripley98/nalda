@@ -16,6 +16,7 @@ const authReducer = (state = {}, action) => {
     // When register event is called, doesn't update redux state for now
     case 'REGISTER': {
       const newState = Object.assign({}, state);
+      newState.userId = action.userId;
       return newState;
     }
     default:

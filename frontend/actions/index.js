@@ -12,9 +12,10 @@ export function login(userId) {
 
 // Dispatch register action, will call appropriate reducer (authReducer.js)
 // TODO: potentially will need userId here too, not for now though
-export function register() {
+export function register(userId) {
   return {
     type: 'REGISTER',
+    userId,
   };
 }
 

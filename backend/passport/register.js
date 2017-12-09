@@ -34,8 +34,10 @@ module.exports = (passport) => {
 						 res.send('Unknown registration error');
 						 return false;
 					 }
-					 console.log('registeredd', usr);
-					 res.send('success');
+					 req.login(usr, (e) => {
+						 if (e) console.log('error', e);
+						 res.send(usr);
+					 });
 					 return true;
 				 });
 		 });
