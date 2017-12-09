@@ -66,6 +66,11 @@ class Contact extends Component {
         error: "All fields must be populated."
       });
     } else {
+      // Remove any errors from a prior attempt
+      this.setState({
+        error: "",
+      });
+
       /**
        * TODO
        */

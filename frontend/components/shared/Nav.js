@@ -59,37 +59,57 @@ class Nav extends Component {
           {this.props.userId ? (
             <ul className="navbar-nav ml-auto">
               <li className="nav-item">
-                <Link to="/" className="nav-link">Home</Link>
+                <Link to="/" className="nav-link">
+                  Home
+                </Link>
               </li>
               <li className="nav-item">
-                <Link to="/about" className="nav-link">About</Link>
+                <Link to="/about" className="nav-link">
+                  About
+                </Link>
               </li>
               <li className="nav-item">
-                <Link to="/contact" className="nav-link">Contact</Link>
+                <Link to="/contact" className="nav-link">
+                  Contact
+                </Link>
               </li>
               <li className="nav-item">
-                <Link to="/articles/new" className="nav-link">Create</Link>
+                <Link to="/articles/new" className="nav-link">
+                  Create
+                </Link>
               </li>
               <li className="nav-item">
-                <a onClick={ this.handleLogoutSubmit } className="nav-link">Logout</a>
+                <a onClick={ this.handleLogoutSubmit } className="nav-link cursor">
+                  Logout
+                </a>
               </li>
             </ul>
           ) : (
             <ul className="navbar-nav ml-auto">
               <li className="nav-item">
-                <Link to="/" className="nav-link">Home</Link>
+                <Link to="/" className="nav-link">
+                  Home
+                </Link>
               </li>
               <li className="nav-item">
-                <Link to="/about" className="nav-link">About</Link>
+                <Link to="/about" className="nav-link">
+                  About
+                </Link>
               </li>
               <li className="nav-item">
-                <Link to="/contact" className="nav-link">Contact</Link>
+                <Link to="/contact" className="nav-link">
+                  Contact
+                </Link>
               </li>
               <li className="nav-item">
-                <Link to="/register" className="nav-link">Register</Link>
+                <Link to="/register" className="nav-link">
+                  Register
+                </Link>
               </li>
               <li className="nav-item">
-                <Link to="/login" className="nav-link">Login</Link>
+                <Link to="/login" className="nav-link">
+                  Login
+                </Link>
               </li>
           </ul>
           )}
