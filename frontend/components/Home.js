@@ -3,7 +3,12 @@ import React from 'react';
 import GrayWrapper from './shared/GrayWrapper';
 import axios from 'axios';
 import uuid from 'uuid-v4';
+import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+import PropTypes from 'prop-types';
+
+// Import components
+import { openArt } from '../actions/index.js';
 
 
 /**
@@ -35,9 +40,19 @@ class Home extends React.Component {
 
   openArticle(art) {
     console.log('open article', art._id);
-    this.setState({
-      redirectToArticle: true,
-      articleClicked: art._id,
+    axios.post(`/articles/${art._id}`, {
+      articleId: art._id
+    })
+    .then((resp) => {
+      console.log('art opened', resp.data);
+      openArt(resp.data);
+      this.setState({
+        redirectToArticle: true,
+        articleClicked: art._id,
+      });
+    })
+    .catch((err) => {
+      if (err) console.log('err', err);
     });
   }
 
@@ -75,5 +90,26 @@ class Home extends React.Component {
     );
   }
 }
+
+Home.propTypes = {
+  openArticle: PropTypes.func,
+};
+
+const mapStateToProps = state => {
+  return {
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    openArt: (article) => dispatch(openArt(article))
+  };
+};
+
+// Redux config
+Home = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Home);
 
 export default Home;

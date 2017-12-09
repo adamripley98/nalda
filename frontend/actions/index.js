@@ -11,7 +11,6 @@ export function login(userId) {
 }
 
 // Dispatch register action, will call appropriate reducer (authReducer.js)
-// TODO: potentially will need userId here too, not for now though
 export function register(userId) {
   return {
     type: 'REGISTER',
@@ -23,5 +22,16 @@ export function register(userId) {
 export function logout() {
   return {
     type: 'LOGOUT'
+  };
+}
+
+// -----------------------------------------------------------------------------
+// ---------------------------Article Actions-----------------------------------
+// -----------------------------------------------------------------------------
+
+export function openArt(article) {
+  return {
+    type: 'OPENART',
+    article,
   };
 }

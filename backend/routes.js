@@ -17,6 +17,7 @@ module.exports = () => {
     });
     return true;
   });
+
   // Route to handle a new article submission
   router.post('/articles/new', (req, res) => {
     // Creates a new article with given params
@@ -37,6 +38,16 @@ module.exports = () => {
       res.send('success');
       return true;
     });
+  });
+
+  // Route to handle opening a specific article
+  router.post('/articles/:articleId', (req, res) => {
+    // Pull specific article from mongo
+    Article.findById(req.body.articleId, (err, article) => {
+      if (err) console.log('e', err);
+      res.send(article);
+    });
+    return;
   });
   return router;
 };
