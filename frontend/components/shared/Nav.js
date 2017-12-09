@@ -25,29 +25,32 @@ class Nav extends Component {
 
   // When logout button clicked, will attempt to logout on backend (logout.js)
   handleLogoutSubmit(event) {
-    console.log('logout clicked');
-    const onLogout = this.props.onLogout;
+    // Prevent the default action
     event.preventDefault();
+
+    const onLogout = this.props.onLogout;
     axios.post('/logout')
-        // If successful, will dispatch logout event which will clear user from redux state
-        .then((resp) => {
-          console.log('logout after axios', resp);
-          onLogout();
-          this.setState({
-            redirectToLogin: true,
-          });
-        })
-        .catch((err) => {
-          console.log('there was an error', err);
+      // If successful, will dispatch logout event which will clear user from redux state
+      .then(() => {
+        // Dispatch the action
+        onLogout();
+
+        // Set the state to redirect to login
+        this.setState({
+          redirectToLogin: true,
         });
+      })
+      .catch((err) => {
+        /**
+         * TODO handle this better
+         */
+        console.log('There was an error', err);
+      });
   }
   render() {
-    // Puts url back to /login when you log out
-    if (this.state.redirectToLogin) {
-      return (<Redirect to="/login"/>);
-    }
     return (
       <nav className="navbar navbar-toggleable-md navbar-light">
+        { this.state.redirectToLogin && (<Redirect to="/login"/>) }
         <button className="navbar-toggler navbar-toggler-right collapsed" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span className="icon-bar top-bar" />
           <span className="icon-bar middle-bar" />
