@@ -39,6 +39,7 @@
     "prop-types": "^15.5.8",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
+    "react-radio-buttons": "^1.2.0",
     "react-redux": "^5.0.5",
     "react-router-dom": "^4.2.2",
     "redux": "^3.7.2",
