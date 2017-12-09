@@ -7,6 +7,7 @@ const GrayWrapper = ({ children }) => {
   return (
     <div className="gray-wrapper">
       { children }
+      <div className="space-2" />
     </div>
   );
 };
