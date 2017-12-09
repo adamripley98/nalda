@@ -56,37 +56,43 @@ class Nav extends Component {
         <Link to="/" className="navbar-brand">Nalda</Link>
 
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul className="navbar-nav ml-auto">
-            <li className="nav-item">
-              <Link to="/" className="nav-link">Home</Link>
-            </li>
-            <li className="nav-item">
-              <Link to="/about" className="nav-link">About</Link>
-            </li>
-            <li className="nav-item">
-              <Link to="/contact" className="nav-link">Contact</Link>
-            </li>
-            {this.props.userId ?
-            (
-              <div>
-                <li className="nav-item">
-                  <Link to="/articles/new" className="nav-link">Create</Link>
-                </li>
-                <li className="nav-item">
-                  <div onClick={(e) => this.handleLogoutSubmit(e)} className="nav-link">Logout</div>
-                </li>
-              </div>
-            ) : (
-              <div>
-                <li className="nav-item">
-                  <Link to="/register" className="nav-link">Register</Link>
-                </li>
-                <li className="nav-item">
-                  <Link to="/login" className="nav-link">Login</Link>
-                </li>
-              </div>
-            )}
+          {this.props.userId ? (
+            <ul className="navbar-nav ml-auto">
+              <li className="nav-item">
+                <Link to="/" className="nav-link">Home</Link>
+              </li>
+              <li className="nav-item">
+                <Link to="/about" className="nav-link">About</Link>
+              </li>
+              <li className="nav-item">
+                <Link to="/contact" className="nav-link">Contact</Link>
+              </li>
+              <li className="nav-item">
+                <Link to="/articles/new" className="nav-link">Create</Link>
+              </li>
+              <li className="nav-item">
+                <a onClick={ this.handleLogoutSubmit } className="nav-link">Logout</a>
+              </li>
+            </ul>
+          ) : (
+            <ul className="navbar-nav ml-auto">
+              <li className="nav-item">
+                <Link to="/" className="nav-link">Home</Link>
+              </li>
+              <li className="nav-item">
+                <Link to="/about" className="nav-link">About</Link>
+              </li>
+              <li className="nav-item">
+                <Link to="/contact" className="nav-link">Contact</Link>
+              </li>
+              <li className="nav-item">
+                <Link to="/register" className="nav-link">Register</Link>
+              </li>
+              <li className="nav-item">
+                <Link to="/login" className="nav-link">Login</Link>
+              </li>
           </ul>
+          )}
         </div>
       </nav>
     );
