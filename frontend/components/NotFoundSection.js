@@ -6,15 +6,23 @@ import { Link} from 'react-router-dom';
 import Thin from './shared/Thin';
 import GrayWrapper from './shared/GrayWrapper';
 
+/**
+ * Component rendered if the desired page is not found
+ */
 class NotFoundSection extends Component {
-    // If route is invalid
   render() {
     return (
       <GrayWrapper>
         <Thin>
-            <p className="marg-top-1 marg-bot-0">
-              Uh oh! Looks like this page has either been moved or doesn't exist. <Link to="/">Go back to home.</Link>
+          <div className="card pad-1 marg-top-1">
+            <h2 className="bold marg-bot-1">Page not found</h2>
+            <p className="marg-bot-1">
+              Uh oh! Looks like this page has either been moved or doesn't exist.
             </p>
+            <Link to="/" className="btn btn-primary full-width">
+              Back to home
+            </Link>
+          </div>
         </Thin>
       </GrayWrapper>
     );
