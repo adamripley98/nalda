@@ -84,13 +84,9 @@ class Register extends Component {
 
   // Function to render the actual component
   render() {
-    if (this.state.redirectToLogin) {
-      return (
-        <Redirect to="/login"/>
-      );
-    }
     return (
       <GrayWrapper>
+        {this.state.redirectToLogin && <Redirect to="/login"/>}
         <Thin>
           <form className="thin-form" method="POST" onSubmit={ (e) => this.handleRegisterSubmit(e) }>
             {

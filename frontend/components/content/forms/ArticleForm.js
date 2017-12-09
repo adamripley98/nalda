@@ -126,13 +126,9 @@ class ArticleForm extends React.Component {
 
   // Render the component
   render() {
-    if (this.state.redirectToHome) {
-      return (
-        <Redirect to="/home"/>
-      );
-    }
     return (
       <GrayWrapper>
+        {this.state.redirectToHome && <Redirect to="/home"/>}
         <Medium>
           <div className="card thin-form no-pad">
             <div className="tabs">

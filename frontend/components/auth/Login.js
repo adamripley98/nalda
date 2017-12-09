@@ -76,13 +76,9 @@ class Login extends Component {
     // Renders actual Login component
   render() {
     // If user is logged in or if user successfully logs in, redirects to home
-    if (this.props.userId || this.state.redirectToHome) {
-      return (
-        <Redirect to="/"/>
-      );
-    }
     return (
       <GrayWrapper>
+        {(this.props.userId || this.state.redirectToHome) && <Redirect to="/"/>}
         <Thin>
           <form className="thin-form" method="POST" onSubmit={(e) => this.handleLoginSubmit(e)}>
             {

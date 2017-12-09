@@ -60,13 +60,9 @@ class Home extends React.Component {
 
   // Function to render the component
   render() {
-    if (this.state.redirectToArticle) {
-      return (
-        <Redirect to={`/articles/${this.state.articleClicked}`}/>
-      );
-    }
     return (
       <GrayWrapper>
+        {this.state.redirectToArticle && <Redirect to={`/articles/${this.state.articleClicked}`}/>}
         <div className="container">
           <div className="space-1"/>
           <div className="row">
