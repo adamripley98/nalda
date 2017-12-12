@@ -9,6 +9,7 @@ const authReducer = (state = {}, action) => {
     }
     // When logout event is called, will remove user from redux state
     case 'LOGOUT': {
+      console.log('enters lougout in authReducer');
       const newState = Object.assign({}, state);
       newState.userId = null;
       return newState;
@@ -16,6 +17,7 @@ const authReducer = (state = {}, action) => {
     // When register event is called, doesn't update redux state for now
     case 'REGISTER': {
       const newState = Object.assign({}, state);
+      newState.userId = action.userId;
       return newState;
     }
     default:

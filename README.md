@@ -7,7 +7,7 @@ https://docs.google.com/spreadsheets/d/1FaistICZ-BuORu7YYm5fFpgii2cvxZKgEpxApWQ_
 
 To start, run "npm start" or concurrently run "npm run frontend" and "npm run backend"
 ## Currently Working on:
-Backend Mongo and passport set up. To do: refactor code, encrypt passwords before storing, implement redux
+Backend for articles and listings
 
 ## Frontend
 
@@ -31,14 +31,14 @@ Backend Mongo and passport set up. To do: refactor code, encrypt passwords befor
 - [X] Boilerplate setup
 - [X] MongoDB setup
 - [X] React/Redux setup
-- [ ] Setting up Component Structures
+- [X] Setting up Component Structures
 - [X] Password security
 - [ ] HTTPS
 - [X] User Authentication
 - [ ] Articles/Listing Backend
 - [ ] Video
 - [ ] Searching Functionality
-- [ ] Nav bar
+- [X] Nav bar
 - [ ] Recommendations
 - [ ] Storing hours
 - [ ] Domain registration/setup

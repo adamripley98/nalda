@@ -19,7 +19,7 @@ class Register extends Component {
       password: '',
       verPassword: '',
       error: '',
-      redirectToLogin: false,
+      redirectToHome: false,
     };
     // Bindings so 'this' refers to component
     this.handleRegisterSubmit = this.handleRegisterSubmit.bind(this);
@@ -42,17 +42,18 @@ class Register extends Component {
       verPassword,
     })
       .then((resp) => {
+        console.log('register respisne', resp.data);
         // If issue with register, error message will display
-        if (resp.data !== 'success') {
+        if (!resp.data._id) {
           this.setState({
             error: resp.data,
           });
         } else {
-          // If successful, redirect to login page and dispatch a register event
+          // If successful, redirect to home page and dispatch a register event
           this.setState({
-            redirectToLogin: true,
+            redirectToHome: true,
           });
-          onRegister();
+          onRegister(resp.data._id);
         }
       })
       .catch((err) => {
@@ -86,7 +87,7 @@ class Register extends Component {
   render() {
     return (
       <GrayWrapper>
-        {this.state.redirectToLogin && <Redirect to="/login"/>}
+        {this.state.redirectToHome && <Redirect to="/"/>}
         <Thin>
           <form className="thin-form" method="POST" onSubmit={ (e) => this.handleRegisterSubmit(e) }>
             {
@@ -164,13 +165,14 @@ Register.propTypes = {
 // Currently no props, possibly will add userId if needed
 const mapStateToProps = state => {
   return {
+    userId: state.authState.userId,
   };
 };
 
 // When we call onRegister now, it will dispatch register event
 const mapDispatchToProps = dispatch => {
   return {
-    onRegister: () => dispatch(register()),
+    onRegister: (userId) => dispatch(register(userId)),
   };
 };
 
