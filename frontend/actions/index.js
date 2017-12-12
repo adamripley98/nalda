@@ -20,6 +20,7 @@ export function register(userId) {
 
 // Dispatch logout action, will call appropriate reducer (authReducer.js)
 export function logout() {
+  console.log('enters logout in actions');
   return {
     type: 'LOGOUT'
   };
@@ -30,6 +31,7 @@ export function logout() {
 // -----------------------------------------------------------------------------
 
 export function openArt(article) {
+  console.log('enters openArt in actions');
   return {
     type: 'OPENART',
     article,

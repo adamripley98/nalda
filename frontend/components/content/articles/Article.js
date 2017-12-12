@@ -88,7 +88,7 @@ Article.propTypes = {
 
 const mapStateToProps = state => {
   return {
-    article: state.articleState.currentArticle
+    article: state.articleState.article
   };
 };
 

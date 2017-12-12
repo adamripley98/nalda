@@ -39,13 +39,14 @@ class Home extends React.Component {
   }
 
   openArticle(art) {
+    const openCurrentArticle = this.props.openCurrentArticle;
     console.log('open article', art._id);
     axios.post(`/articles/${art._id}`, {
       articleId: art._id
     })
     .then((resp) => {
       console.log('art opened', resp.data);
-      openArt(resp.data);
+      openCurrentArticle(resp.data);
       this.setState({
         redirectToArticle: true,
         articleClicked: art._id,
@@ -102,7 +103,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    openArt: (article) => dispatch(openArt(article))
+    openCurrentArticle: (article) => dispatch(openArt(article))
   };
 };
 

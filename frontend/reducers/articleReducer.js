@@ -5,7 +5,7 @@ const articleReducer = (state = {}, action) => {
     case 'OPENART': {
       console.log('enters open article');
       const newState = Object.assign({}, state);
-      newState.currentArticle = action.article;
+      newState.article = action.article;
       return newState;
     }
     default:
