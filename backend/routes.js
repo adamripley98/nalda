@@ -4,6 +4,7 @@ const router = express.Router();
 
 // Import models
 const Article = require('./models/article');
+const Listing = require('./models/listing');
 
 module.exports = () => {
   // Route to get data from mongo when home page is loaded
@@ -49,5 +50,31 @@ module.exports = () => {
     });
     return;
   });
+
+  // Route to handle creating new listings
+  router.post('/listings/new', (req, res) => {
+    // Creates a new listing with given params
+    const newListing = new Listing({
+      title: req.body.title,
+      description: req.body.description,
+      image: req.body.image,
+      hours: req.body.hours,
+      rating: req.body.rating,
+      price: req.body.price,
+    });
+    // Saving new article in Mongo
+    newListing.save((er, listing) => {
+      if (er) {
+        console.log('error registering an listing', er);
+        res.send('Error saving listing');
+        return false;
+      }
+      console.log('successful listing register', listing);
+      res.send('success');
+      return true;
+    });
+  });
+
+
   return router;
 };
