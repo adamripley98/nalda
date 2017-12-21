@@ -62,14 +62,14 @@ class Home extends React.Component {
   renderArticles() {
     return this.state.articles.map((art) => (
       <div className="col-6 col-lg-3" onClick={() => this.openArticle(art)} key={ uuid() }>
-        <div className="card preview">
-          <h2>
+        <div className="article-preview">
+          <img className="img-fluid" alt={art.title} src={art.image} />
+          <h2 className="title">
             {art.title}
           </h2>
-          <img className="img-fluid" alt={art.title} src={art.image} />
-          <h7>
+          <h6 className="subtitle">
             {art.subtitle}
-          </h7>
+          </h6>
         </div>
       </div>
     ));

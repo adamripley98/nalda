@@ -17,9 +17,9 @@ const Review = ({title, content, createdAt, rating, name }) => {
 
   // Half star
   const halfStar = (
-    <span className="fa-stack">
-      <i className="fa fa-star fa-stack-1x fa-lg" />
-      <i className="fa fa-star-half full fa-stack-1x fa-lg" />
+    <span className="half-star">
+      <i className="fa fa-star fa-lg" />
+      <i className="fa fa-star-half full fa-lg" />
     </span>
   );
 

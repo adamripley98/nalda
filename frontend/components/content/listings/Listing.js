@@ -93,6 +93,17 @@ class Listing extends React.Component {
 
   // Render the component
   render() {
+    // Count the number of reviews
+    const count = this.state.reviews.length;
+
+    // Compute the average rating for all reviews
+    let average = 0.0;
+    this.state.reviews.forEach(review => {
+      average += review.rating;
+    });
+    average = average / count;
+
+    // Return the component
     return (
       <div className="listing">
         <div className="background-image preview background-fixed" style={{ backgroundImage: `url(${this.state.img})` }}/>
@@ -120,6 +131,9 @@ class Listing extends React.Component {
               <h5 className="subtitle">
                 Reviews
               </h5>
+              <p>
+                There { count === 1 ? ("is 1 review") : (`are ${count} reviews`) } on this listing with an average rating of { average } out of 5.0 stars.
+              </p>
               { this.renderReviews() }
             </div>
           </div>

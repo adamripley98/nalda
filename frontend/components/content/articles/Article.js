@@ -3,6 +3,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import Button from '../../shared/Button';
+
 /**
  * Component to render an article
  */
@@ -59,9 +61,7 @@ class Article extends React.Component {
               </p>
             </div>
             <div className="space-1" />
-            <p className="marg-top-1 marg-bot-0">
-              <Link to="/">Head back to home</Link>
-            </p>
+            <Button />
           </div>
         </div>
       </div>

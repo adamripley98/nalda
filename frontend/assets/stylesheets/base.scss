@@ -58,6 +58,12 @@ body {
 
   &.btn-primary {
     background: $red;
+
+    &:hover,
+    &:active,
+    &:focus {
+      background: $dark-red;
+    }
   }
 }
 
@@ -92,7 +98,7 @@ a {
 // For example, this is used for login and register forms
 .thin-form {
   padding: 1rem;
-  margin-top: 1.5rem;
+  margin: 1.5rem 0rem;
   background: white;
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 0.4rem;
@@ -155,11 +161,21 @@ a {
   }
 }
 
-.preview {
+.article-preview {
   padding: 1rem;
 
-  h4 {
+  img {
+    border-radius: 0.4rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .title {
+    font-weight: bold;
+  }
+
+  .subtitle {
     margin-bottom: 0;
+    font-size: 1.4rem;
   }
 }
 

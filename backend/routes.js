@@ -1,13 +1,22 @@
+/**
+ * Handles all backend routes
+ * NOTE all of these routes are prefixed with "/api"
+ */
+
 // Import frameworks
 const express = require('express');
 const router = express.Router();
 
-// Import models
+// Import database models
 const Article = require('./models/article');
 const Listing = require('./models/listing');
 
 module.exports = () => {
-  // Route to get data from mongo when home page is loaded
+  /**
+   * Route to get data from mongo when home page is loaded
+   * This should pull articles, listings, and videos alike
+   * TODO pull all data
+   */
   router.get('/home', (req, res) => {
     // Pulls articles from mongo
     Article.find((err, articles) => {
@@ -19,7 +28,13 @@ module.exports = () => {
     return true;
   });
 
-  // Route to handle a new article submission
+  /**
+   * Route to handle a new article submission
+   * @param title
+   * @param subtitle
+   * @param image (url)
+   * @param body (text of the article)
+   */
   router.post('/articles/new', (req, res) => {
     // Creates a new article with given params
     const newArticle = new Article({
@@ -28,7 +43,8 @@ module.exports = () => {
       image: req.body.image,
       body: req.body.body,
     });
-    // Saving new article in Mongo
+
+    // Save the new article in Mongo
     newArticle.save((er, article) => {
       if (er) {
         console.log('error registering an article', er);
@@ -41,17 +57,30 @@ module.exports = () => {
     });
   });
 
-  // Route to handle opening a specific article
+  /**
+   * Route to handle pulling the information for a specific article
+   * TODO better error checking
+   */
   router.post('/articles/:articleId', (req, res) => {
+    // Find the id from the url
+    const id = req.body.articleId;
+
     // Pull specific article from mongo
-    Article.findById(req.body.articleId, (err, article) => {
+    Article.findById(id, (err, article) => {
       if (err) console.log('e', err);
       res.send(article);
     });
-    return;
   });
 
-  // Route to handle creating new listings
+  /**
+   * Route to handle creating new listings
+   * @param title
+   * @param description
+   * @param image
+   * @param hours (TODO update the structure for this)
+   * @param rating (0.5 increments from 0 to 5)
+   * @param price
+   */
   router.post('/listings/new', (req, res) => {
     // Creates a new listing with given params
     const newListing = new Listing({
@@ -62,7 +91,8 @@ module.exports = () => {
       rating: req.body.rating,
       price: req.body.price,
     });
-    // Saving new article in Mongo
+
+    // Save the new article in mongo
     newListing.save((er, listing) => {
       if (er) {
         console.log('error registering an listing', er);
@@ -75,6 +105,6 @@ module.exports = () => {
     });
   });
 
-
+  // Return the router for use throughout the application
   return router;
 };
