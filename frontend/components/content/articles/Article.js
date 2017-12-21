@@ -1,12 +1,14 @@
 // Import frameworks
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Button from '../../shared/Button';
+import axios from 'axios';
+import Loading from '../../shared/Loading';
 
 /**
  * Component to render an article
+ * TODO error handling
  */
 class Article extends React.Component {
   // Constructor method
@@ -14,13 +16,48 @@ class Article extends React.Component {
     super(props);
     // TODO: Remove dummy state
     this.state = {
+      error: "",
       user: {
         name: "Adam Ripley",
         profilePicture: "https://scontent-lga3-1.xx.fbcdn.net/v/t31.0-8/19800933_1555674071163224_6756529645784213707_o.jpg?oh=d3ce5cc19160312229b760b7448d3c67&oe=5A8FEE3B",
-      }
+      },
+      article: {},
+      pending: true,
     };
     // Bind this to helper methods
     this.renderAuthor = this.renderAuthor.bind(this);
+  }
+
+  // Pull the article data from the database
+  componentDidMount() {
+    // Find teh id in the url
+    const id = this.props.match.params.id;
+
+    // Find the article
+    axios.get(`/api/articles/${id}`)
+      .then(res => {
+        console.log(res);
+        if (res.data.success) {
+          this.setState({
+            error: "",
+            article: res.data.data,
+            pending: false,
+          });
+        } else {
+          // If there was an error with the request
+          this.setState({
+            error: res.data.error,
+            pending: false,
+          });
+        }
+      })
+      .catch(err => {
+        // If there was an error making the request
+        this.setState({
+          error: err,
+          pending: false,
+        });
+      });
   }
 
   // Helper method to render the author
@@ -41,27 +78,33 @@ class Article extends React.Component {
   }
 
   // Render the component
-  // TODO: Style the 'Back to home' link
   render() {
     return (
       <div className="container">
         <div className="row">
-          <div className="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-            <div className="card article pad-1">
-              <h1>
-                { this.props.article.title }
-              </h1>
-              <h3>
-                { this.state.subtitle }
-              </h3>
-              { this.renderAuthor() }
-              <img src={ this.props.article.image } alt={ this.props.article.title } className="img-fluid" />
-              <p>
-                { this.props.article.body }
-              </p>
-            </div>
-            <div className="space-1" />
-            <Button />
+          <div className="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2 article">
+            {
+              (this.state.pending) ? (
+                <Loading />
+              ) : (
+                <div>
+                  <h1>
+                    { this.state.article.title }
+                  </h1>
+                  <h3>
+                    { this.state.subtitle }
+                  </h3>
+                  <div className="line marg-0" />
+                  { this.renderAuthor() }
+                  <img src={ this.state.article.image } alt={ this.state.article.title } className="img-fluid" />
+                  <p>
+                    { this.state.article.body }
+                  </p>
+                  <div className="space-1" />
+                  <Button />
+                </div>
+              )
+            }
           </div>
         </div>
       </div>
@@ -70,7 +113,7 @@ class Article extends React.Component {
 }
 
 Article.propTypes = {
-  article: PropTypes.object,
+  match: PropTypes.object,
 };
 
 const mapStateToProps = state => {
@@ -85,8 +128,8 @@ const mapDispatchToProps = () => {
 
 // Redux config
 Article = connect(
-    mapStateToProps,
-    mapDispatchToProps
+  mapStateToProps,
+  mapDispatchToProps,
 )(Article);
 
 export default Article;

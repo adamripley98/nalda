@@ -12,6 +12,7 @@
 
   img {
     margin-bottom: 1rem;
+    border-radius: 0.4rem;
   }
 
   p {
@@ -22,7 +23,6 @@
     width: 100%;
     padding: 0.5rem 0rem;
     display: block;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
     display: flex;
 
     .author-img {

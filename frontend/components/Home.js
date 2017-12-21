@@ -1,14 +1,9 @@
 // Import frameworks
 import React from 'react';
 import axios from 'axios';
-import uuid from 'uuid-v4';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-
-// Import components
-import { openArt } from '../actions/index.js';
-
 
 /**
  * Component for the homepage of the application
@@ -28,7 +23,7 @@ class Home extends React.Component {
 
   // Load articles from Mongo once thre component mounts
   componentDidMount() {
-    axios.get('/home')
+    axios.get('/api/home')
     .then((resp) => {
       this.setState({
         articles: resp.data,
@@ -39,38 +34,21 @@ class Home extends React.Component {
     });
   }
 
-  openArticle(art) {
-    const openCurrentArticle = this.props.openCurrentArticle;
-    console.log('open article', art._id);
-    axios.post(`/articles/${art._id}`, {
-      articleId: art._id
-    })
-    .then((resp) => {
-      console.log('art opened', resp.data);
-      openCurrentArticle(resp.data);
-      this.setState({
-        redirectToArticle: true,
-        articleClicked: art._id,
-      });
-    })
-    .catch((err) => {
-      if (err) console.log('err', err);
-    });
-  }
-
   // Methods renders each individual article
   renderArticles() {
     return this.state.articles.map((art) => (
-      <div className="col-6 col-lg-3" onClick={() => this.openArticle(art)} key={ uuid() }>
-        <div className="article-preview">
-          <img className="img-fluid" alt={art.title} src={art.image} />
-          <h2 className="title">
-            {art.title}
-          </h2>
-          <h6 className="subtitle">
-            {art.subtitle}
-          </h6>
-        </div>
+      <div className="col-6 col-lg-3" key={ art._id } >
+        <Link to={ `/articles/${art._id}` } >
+          <div className="article-preview">
+            <img className="img-fluid" alt={art.title} src={art.image} />
+            <h2 className="title">
+              {art.title}
+            </h2>
+            <h6 className="subtitle">
+              {art.subtitle}
+            </h6>
+          </div>
+        </Link>
       </div>
     ));
   }
@@ -101,16 +79,14 @@ const mapStateToProps = () => {
   return {};
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    openCurrentArticle: (article) => dispatch(openArt(article))
-  };
+const mapDispatchToProps = () => {
+  return {};
 };
 
 // Redux config
 Home = connect(
-    mapStateToProps,
-    mapDispatchToProps
+  mapStateToProps,
+  mapDispatchToProps,
 )(Home);
 
 export default Home;

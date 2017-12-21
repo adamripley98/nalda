@@ -13,6 +13,16 @@ const Listing = require('./models/listing');
 
 module.exports = () => {
   /**
+   * Route to signify that the API is working
+   */
+  router.get('/', (req, res) => {
+    res.send({
+      success: true,
+      data: "API is up and running.",
+    });
+  });
+
+  /**
    * Route to get data from mongo when home page is loaded
    * This should pull articles, listings, and videos alike
    * TODO pull all data
@@ -61,14 +71,28 @@ module.exports = () => {
    * Route to handle pulling the information for a specific article
    * TODO better error checking
    */
-  router.post('/articles/:articleId', (req, res) => {
+  router.get('/articles/:id', (req, res) => {
     // Find the id from the url
-    const id = req.body.articleId;
+    const id = req.params.id;
 
     // Pull specific article from mongo
     Article.findById(id, (err, article) => {
-      if (err) console.log('e', err);
-      res.send(article);
+      if (err) {
+        res.send({
+          success: false,
+          error: err,
+        });
+      } else if (!article) {
+        res.send({
+          success: false,
+          error: "Article not found",
+        });
+      } else {
+        res.send({
+          success: true,
+          data: article,
+        });
+      }
     });
   });
 

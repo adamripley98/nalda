@@ -22,6 +22,7 @@ const logout = require('./backend/passport/logout');
 const connect = process.env.MONGODB_URI;
 mongoose.connect(connect);
 
+// Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -43,8 +44,8 @@ initPassport(passport);
 
 // Passport strategy
 passport.use('local', new LocalStrategy({
-  		usernameField: 'username',
-  		passwordField: 'password'
+  usernameField: 'username',
+  passwordField: 'password',
 }, (username, password, done) => {
   // Find the user with the given username
   User.findOne({ username: username }, (err, user) =>{
@@ -74,7 +75,7 @@ const isValidPassword = (user, password) => {
 app.use('/', login(passport));
 app.use('/', register(passport));
 app.use('/', logout(passport));
-app.use('/', routes);
+app.use('/api/', routes);
 
 app.get('*', (request, response) => {
   response.sendFile(__dirname + '/public/index.html'); // For React/Redux

@@ -141,6 +141,15 @@ a {
   }
 }
 
+// Style the loading circle
+.loading {
+  width: 100%;
+  text-align: center;
+  color: $light-gray;
+  font-size: 1.25rem;
+  padding: 1rem 0rem;
+}
+
 // Format styling for picking hours
 .time-select {
   display: flex;
