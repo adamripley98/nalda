@@ -1,0 +1,61 @@
+/**
+ * Styling for all components related to articles
+ */
+.article {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+
+  h1 {
+    font-weight: bold !important;
+    font-size: 3rem !important;
+  }
+
+  img {
+    margin-bottom: 1rem;
+  }
+
+  p {
+    line-height: 1.5;
+  }
+
+  .author {
+    width: 100%;
+    padding: 0.5rem 0rem;
+    display: block;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    display: flex;
+
+    .author-img {
+      width: 3rem;
+      height: 3rem;
+      border-radius: 50%;
+      background: $gray;
+      display: inline-block;
+      margin-right: 0.5rem;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+
+    .text {
+      flex: 1;
+      display: inline-block;
+      margin-bottom: 0rem;
+
+      p.name {
+        margin-top: 0.3rem;
+        font-weight: bold;
+        color: $gray;
+        margin-bottom: 0;
+      }
+
+      p.timestamp {
+        font-weight: normal;
+        font-style: italic;
+        color: $gray;
+        font-size: 0.8rem;
+        margin-bottom: 0;
+      }
+    }
+  }
+}

@@ -1,8 +1,41 @@
+/**
+ * Import SCSS files for specific components of the applciation
+ */
 @import './colors';
 @import './strapper';
 @import './nav';
 @import './footer';
+@import './article';
+@import './listing';
 
+/**
+ * General styles relevant to the whole application
+ * Keep all other styles modular and import into this file
+ * This file is what is included in every page on the application
+ */
+
+// Setting the fonts for the application
+body {
+  font-family: 'Quicksand', sans-serif;
+}
+
+// Make each page take up the full-height of the screen (at least)
+.app-content {
+  min-height: calc(100vh - 56.27px);
+  width: 100%;
+  margin: 0rem !important;
+  padding: 0rem !important;
+}
+
+// Modular class for letting background images display optimally on all sizes
+.background-image {
+  width: 100%;
+  background-size: cover;
+  background-repeat: none;
+  background-position: center;
+}
+
+// Make buttons clickable with bold text
 .btn {
   cursor: hand;
   cursor: pointer;
@@ -13,6 +46,7 @@
   }
 }
 
+// Remove underline on all anchor tags
 a {
   text-decoration: none !important;
 
@@ -24,13 +58,17 @@ a {
   }
 }
 
+// Styling for thin forms used throughout the application
+// For example, this is used for login and register forms
 .thin-form {
   padding: 1rem;
   margin-top: 1.5rem;
   background: white;
   border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 0.4rem;
-  
+
+  // Make it such that you can't drag textareas to greater lengths
+  // Textareas should expand automatically due to autosize
   textarea {
     resize: none;
   }
@@ -39,12 +77,14 @@ a {
     padding: 0rem;
   }
 
+  // Labels above input fields
   label {
     font-weight: bold;
     color: $gray;
     margin-bottom: 0rem;
   }
 
+  // Style input fields
   .form-control {
     border-radius: 0rem;
     border-right: 0px solid transparent;
@@ -54,13 +94,6 @@ a {
     padding-top: 0.25rem;
     padding-bottom: 0.25rem;
   }
-}
-
-.app-content {
-  min-height: calc(100vh - 56.27px);
-  width: 100%;
-  margin: 0rem !important;
-  padding: 0rem !important;
 }
 
 .preview {
@@ -103,65 +136,6 @@ a {
       background: white;
       border-bottom: 1px solid transparent;
       color: black;
-    }
-  }
-}
-
-.article {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-
-  h1 {
-    font-weight: bold !important;
-    font-size: 3rem !important;
-  }
-
-  img {
-    margin-bottom: 1rem;
-  }
-
-  p {
-    line-height: 1.5;
-  }
-
-  .author {
-    width: 100%;
-    padding: 0.5rem 0rem;
-    display: block;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-    display: flex;
-
-    .author-img {
-      width: 3rem;
-      height: 3rem;
-      border-radius: 50%;
-      background: $gray;
-      display: inline-block;
-      margin-right: 0.5rem;
-      background-position: center;
-      background-repeat: no-repeat;
-      background-size: cover;
-    }
-
-    .text {
-      flex: 1;
-      display: inline-block;
-      margin-bottom: 0rem;
-
-      p.name {
-        margin-top: 0.3rem;
-        font-weight: bold;
-        color: $gray;
-        margin-bottom: 0;
-      }
-
-      p.timestamp {
-        font-weight: normal;
-        font-style: italic;
-        color: $gray;
-        font-size: 0.8rem;
-        margin-bottom: 0;
-      }
     }
   }
 }
