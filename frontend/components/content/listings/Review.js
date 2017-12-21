@@ -6,7 +6,7 @@ import moment from 'moment';
 /**
  * Component to render a listing
  */
-const Review = ({title, content, createdAt, rating }) => {
+const Review = ({title, content, createdAt, rating, name }) => {
   // Format the timestamp
   const timestamp = moment(createdAt).fromNow();
 
@@ -66,12 +66,18 @@ const Review = ({title, content, createdAt, rating }) => {
           rating >= 5 ? fullStar : emptyStar
         )
       }
+      <p>
+        { rating } / 5.0
+      </p>
     </div>
   );
 
   // Render the component
   return (
     <div className="review">
+      <p className="timestamp">
+        { timestamp }
+      </p>
       { renderRating }
       <h6>
         { title }
@@ -79,8 +85,8 @@ const Review = ({title, content, createdAt, rating }) => {
       <p>
         { content }
       </p>
-      <p className="timestamp">
-        { timestamp }
+      <p className="name">
+        - { name }
       </p>
     </div>
   );
@@ -91,6 +97,7 @@ Review.propTypes = {
   content: PropTypes.string,
   createdAt: PropTypes.number,
   rating: PropTypes.number,
+  name: PropTypes.string,
 };
 
 export default Review;

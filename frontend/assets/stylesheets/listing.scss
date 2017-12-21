@@ -1,6 +1,8 @@
 /**
  * Styling for all components related to listings
  */
+
+// General styling for the listing itself
 .listing {
   color: $dark-gray;
 
@@ -26,6 +28,7 @@
   }
 }
 
+// Styling for reviews on listings
 .review {
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 0.4rem;
@@ -45,6 +48,14 @@
     font-style: italic;
     color: $gray;
     opacity: 0.8;
+    position: absolute;
+    right: 2rem;
+    font-size: 0.8rem;
+  }
+
+  .name {
+    font-style: italic;
+    margin-top: 0.25rem;
   }
 
   .rating {
@@ -61,6 +72,12 @@
       &.fa-star-half {
         transform: translateX(-0.25rem);
       }
+    }
+
+    p {
+      display: inline-block;
+      color: $gray;
+      margin-left: 0.5rem;
     }
   }
 }

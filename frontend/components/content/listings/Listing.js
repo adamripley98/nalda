@@ -41,7 +41,7 @@ class Listing extends React.Component {
         },
         {
           name: "Adam Ripley",
-          rating: 5,
+          rating: 5.0,
           title: "This is a second review",
           content: "This is the content of my review. I hope you like reading it.",
           createdAt: 1513816699243,
@@ -78,6 +78,7 @@ class Listing extends React.Component {
           key={ uuid() }
           createdAt={ review.createdAt }
           rating={ review.rating }
+          name={ review.name }
         />
       ));
     }
