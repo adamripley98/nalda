@@ -1,9 +1,10 @@
-// Import framworks
+// Import frameworks
 import React, { Component } from 'react';
 import autosize from 'autosize';
 
 // Import components
 import Thin from './shared/Thin';
+import ErrorMessage from './shared/ErrorMessage';
 
 /**
  * Component for contacting Nalda
@@ -60,7 +61,7 @@ class Contact extends Component {
     event.preventDefault();
 
     // Error checking
-    if (!this.state.name || this.state.email || this.state.message) {
+    if (!this.state.name || !this.state.email || !this.state.message) {
       this.setState({
         error: "All fields must be populated."
       });
@@ -85,20 +86,7 @@ class Contact extends Component {
           <p className="marg-bot-1">
             Questions or comments about the app? Interested in joining the Nalda team? Reach out and we will get back to you shortly.
           </p>
-          {
-            this.state.error ? (
-              <div className="alert alert-danger">
-                <p className="bold marg-bot-05">
-                  An error occured:
-                </p>
-                <p className="marg-bot-0">
-                  { this.state.error }
-                </p>
-              </div>
-            ) : (
-              ""
-            )
-          }
+          <ErrorMessage error={ this.state.error } />
           <div className="row">
             <div className="col-12 col-sm-6">
               <label>

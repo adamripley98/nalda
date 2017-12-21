@@ -33,6 +33,16 @@ body {
   background-size: cover;
   background-repeat: none;
   background-position: center;
+
+  &.background-fixed {
+    background-attachment: fixed;
+  }
+}
+
+@media screen and (max-device-width: 848px) {
+  .background-image.background-fixed {
+    background-attachment: inherit;
+  }
 }
 
 // Make buttons clickable with bold text
@@ -40,15 +50,27 @@ body {
   cursor: hand;
   cursor: pointer;
   font-weight: bold;
+  border: 0px solid transparent;
 
   &.full-width {
     width: 100%;
+  }
+
+  &.btn-primary {
+    background: $red;
   }
 }
 
 // Remove underline on all anchor tags
 a {
   text-decoration: none !important;
+  color: $blue;
+
+  &:active,
+  &:focus,
+  &:hover {
+    color: $dark-blue;
+  }
 
   &:active,
   &:focus,
@@ -72,7 +94,7 @@ a {
   padding: 1rem;
   margin-top: 1.5rem;
   background: white;
-  border: 1px solid rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 0.4rem;
 
   // Make it such that you can't drag textareas to greater lengths
@@ -88,7 +110,7 @@ a {
   // Labels above input fields
   label {
     font-weight: bold;
-    color: $gray;
+    color: $dark-gray;
     margin-bottom: 0rem;
   }
 
@@ -98,9 +120,38 @@ a {
     border-right: 0px solid transparent;
     border-left: 0px solid transparent;
     border-top: 0px solid transparent;
-    border-bottom: 2px solid $light-gray;
+    border-bottom: 2px solid $gray;
     padding-top: 0.25rem;
     padding-bottom: 0.25rem;
+
+    &:hover {
+      border-bottom: 2px solid $dark-gray;
+    }
+
+    &:focus,
+    &:active {
+      border-bottom: 2px solid $blue;
+    }
+  }
+}
+
+// Format styling for picking hours
+.time-select {
+  display: flex;
+
+  p {
+    display: inline-block;
+    width: auto;
+    margin-bottom: 0rem;
+    padding: 0.25rem 0rem;
+    line-height: 1;
+    transform: translateY(0.25rem);
+  }
+
+  .form-control {
+    flex: 1;
+    width: auto;
+    margin-left: 1rem;
   }
 }
 
@@ -123,7 +174,7 @@ a {
     padding: 0.5rem 1rem;
     font-weight: bold;
     background: $light-gray;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     font-size: 1.2rem;
 
     &:hover {
@@ -131,12 +182,12 @@ a {
     }
 
     &:first-child {
-      border-right: 1px solid rgba(0, 0, 0, 0.15);
+      border-right: 1px solid rgba(0, 0, 0, 0.1);
       border-top-left-radius: 0.4rem;
     }
 
     &:last-child {
-      border-left: 1px solid rgba(0, 0, 0, 0.15);
+      border-left: 1px solid rgba(0, 0, 0, 0.1);
       border-top-right-radius: 0.4rem;
     }
 

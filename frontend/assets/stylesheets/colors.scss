@@ -1,8 +1,17 @@
-// Color palette for all styles in the application
+/**
+ * Color palette for all styles in the application
+ */
+
+// Shades of gray
+$light-gray: #efefef;
+$gray: #BEBEBE;
+$dark-gray: #606060;
+
+// Primary colors
 $red: #fd5c63;
 $blue: #79cccd;
 $dark-blue: #6bb7b9;
 $darker-blue: #007d8c;
-$light-gray: #F5F5F5;
-$gray: #BEBEBE;
-$dark-gray: #606060;
+
+// Additional colors
+$gold: #ffd633;

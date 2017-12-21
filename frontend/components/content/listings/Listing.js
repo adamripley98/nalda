@@ -2,7 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import uuid from 'uuid-v4';
-import GoogleMapReact from 'google-map-react';
+import Review from './Review';
 
 /**
  * Component to render a listing
@@ -34,14 +34,14 @@ class Listing extends React.Component {
       reviews: [
         {
           name: "Cameron Cabo",
-          stars: 4,
+          rating: 0.5,
           title: "This is the title of my review",
           content: "This is the content of my review. I hope you like reading it.",
           createdAt: 1513816681804,
         },
         {
           name: "Adam Ripley",
-          stars: 5,
+          rating: 5,
           title: "This is a second review",
           content: "This is the content of my review. I hope you like reading it.",
           createdAt: 1513816699243,
@@ -52,9 +52,6 @@ class Listing extends React.Component {
     // Bind this to helper methods
     this.renderAmenities = this.renderAmenities.bind(this);
   }
-
-  // Handle when the component mounts
-  componentDidMount() {}
 
   // Helper method to render amenities
   renderAmenities() {
@@ -70,11 +67,34 @@ class Listing extends React.Component {
     return null;
   }
 
+  // Helper method to render reviews
+  renderReviews() {
+    // Check if there are reviews to return
+    if (this.state.reviews) {
+      return this.state.reviews.map(review => (
+        <Review
+          title={ review.title }
+          content={ review.content }
+          key={ uuid() }
+          createdAt={ review.createdAt }
+          rating={ review.rating }
+        />
+      ));
+    }
+
+    // If there are no reviews
+    return (
+      <div className="card marg-bot-1">
+        No one has reviewed this listing yet! You could be the first.
+      </div>
+    );
+  }
+
   // Render the component
   render() {
     return (
       <div className="listing">
-        <div className="background-image preview" style={{ backgroundImage: `url(${this.state.img})` }}/>
+        <div className="background-image preview background-fixed" style={{ backgroundImage: `url(${this.state.img})` }}/>
         <div className="container content">
           <div className="row">
             <div className="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
@@ -95,10 +115,15 @@ class Listing extends React.Component {
               <h5 className="subtitle">
                 Location
               </h5>
-              <div id="map" />
+              <div className="line" />
+              <h5 className="subtitle">
+                Reviews
+              </h5>
+              { this.renderReviews() }
             </div>
           </div>
         </div>
+        <div className="space-2" />
       </div>
     );
   }

@@ -3,7 +3,7 @@
  */
 .listing {
   color: $dark-gray;
-  
+
   .preview {
     height: 40vh;
     width: 100%;
@@ -22,6 +22,45 @@
 
     .amenity {
       margin-bottom: 0.5rem;
+    }
+  }
+}
+
+.review {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 0.4rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+
+  p {
+    margin-bottom: 0rem;
+  }
+
+  h6 {
+    font-weight: bold;
+  }
+
+  .timestamp {
+    text-align: right;
+    font-style: italic;
+    color: $gray;
+    opacity: 0.8;
+  }
+
+  .rating {
+    color: $light-gray;
+    margin-bottom: 0.5rem;
+
+    .fa {
+      margin-right: 0.25rem;
+
+      &.full {
+        color: $gold;
+      }
+
+      &.fa-star-half {
+        transform: translateX(-0.25rem);
+      }
     }
   }
 }

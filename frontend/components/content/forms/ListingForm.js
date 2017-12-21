@@ -1,8 +1,12 @@
+// Import frameworks
 import React from 'react';
-import Medium from '../../shared/Medium';
 import autosize from 'autosize';
 import { Link, Redirect } from 'react-router-dom';
 import axios from 'axios';
+
+// Import components
+import ErrorMessage from '../../shared/ErrorMessage';
+import Medium from '../../shared/Medium';
 
 /**
  * Component to render the new article form
@@ -151,20 +155,7 @@ class ListingForm extends React.Component {
             <Link className="tab" to="/videos/new">Video</Link>
           </div>
           <form className="pad-1" onSubmit={ this.handleSubmit }>
-            {
-              this.state.error ? (
-                <div className="alert alert-danger">
-                  <p className="bold marg-bot-05">
-                    An error occured:
-                  </p>
-                  <p className="marg-bot-0">
-                    { this.state.error }
-                  </p>
-                </div>
-              ) : (
-                ""
-              )
-            }
+            <ErrorMessage error={ this.state.error } />
             <label>
               Title
             </label>
@@ -199,6 +190,13 @@ class ListingForm extends React.Component {
             <label>
               Hours
             </label>
+            <div className="time-select">
+              <p>
+                Monday
+              </p>
+              <input type="time" className="form-control" />
+              <input type="time" className="form-control" />
+            </div>
             <textarea
               name="body"
               type="text"
