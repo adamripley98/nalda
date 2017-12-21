@@ -2,20 +2,20 @@
   border-bottom: 1px solid rgba(0, 0, 0, 0.15);
   box-shadow: 0rem 0.15rem 0.15rem rgba(0, 0, 0, 0.2);
   font-weight: bold;
-  background: $navy;
-  color: white;
+  background: white;
+  color: $gray;
 
   .navbar-brand {
-    color: white !important;
+    color: $red !important;
   }
 
   .nav-link {
-    color: rgba(255, 255, 255, 0.8) !important;
+    color: $gray;
 
     &:hover,
     &:active,
     &:focus {
-      color: white !important;
+      color: $dark-gray !important;
     }
   }
 
@@ -30,7 +30,7 @@
       outline: 0;
 
       .icon-bar {
-        background: white;
+        background: $gray;
       }
     }
   }

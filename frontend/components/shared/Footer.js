@@ -46,10 +46,10 @@ const Footer = () => {
               </div>
             </div>
           </div>
+          <div className="footer-bottom">
+            Created by Cameron Cabo and Adam Ripley. Nalda © 2017.
+          </div>
         </div>
-      </div>
-      <div className="footer-bottom">
-        Created by Cameron Cabo and Adam Ripley. Nalda © 2017.
       </div>
     </footer>
   );

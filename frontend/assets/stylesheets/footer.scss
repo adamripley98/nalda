@@ -5,18 +5,18 @@ footer {
   .footer-top {
     padding: 1rem 0rem 2rem 0rem;
     border-top: 1px solid rgba(0, 0, 0, 0.15);
-    background: $navy;
-    color: white;
+    background: white;
+    color: $dark-gray;
 
     .footer-nav {
       .link {
         display: block;
 
         a {
-          color: rgba(255, 255, 255, 0.8);
+          color: $gray;
 
           &:hover {
-            color: white;
+            color: $dark-gray;
           }
         }
       }
@@ -24,9 +24,7 @@ footer {
   }
 
   .footer-bottom {
-    background: $dark-navy;
-    color: rgba(255, 255, 255, 0.8);
-    padding: 0.5rem 2rem;
+    color: $gray;
     font-size: 0.8rem;
   }
 }

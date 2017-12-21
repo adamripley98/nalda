@@ -98,7 +98,7 @@ a {
     border-right: 0px solid transparent;
     border-left: 0px solid transparent;
     border-top: 0px solid transparent;
-    border-bottom: 2px solid $lighter-gray;
+    border-bottom: 2px solid $light-gray;
     padding-top: 0.25rem;
     padding-bottom: 0.25rem;
   }
@@ -119,15 +119,15 @@ a {
 
   .tab {
     flex: 1;
-    color: $light-gray;
+    color: $gray;
     padding: 0.5rem 1rem;
     font-weight: bold;
-    background: $light-snow;
+    background: $light-gray;
     border-bottom: 1px solid rgba(0, 0, 0, 0.15);
     font-size: 1.2rem;
 
     &:hover {
-      color: $gray;
+      color: $dark-gray;
     }
 
     &:first-child {

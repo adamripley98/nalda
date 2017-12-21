@@ -2,6 +2,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import uuid from 'uuid-v4';
+import GoogleMapReact from 'google-map-react';
 
 /**
  * Component to render a listing
@@ -22,6 +23,10 @@ class Listing extends React.Component {
         "Family/kid friendly",
         "Wifi",
       ],
+      location: {
+        lat: 59.95,
+        lng: 30.33,
+      },
       user: {
         name: "Adam Ripley",
         profilePicture: "https://scontent-lga3-1.xx.fbcdn.net/v/t31.0-8/19800933_1555674071163224_6756529645784213707_o.jpg?oh=d3ce5cc19160312229b760b7448d3c67&oe=5A8FEE3B",
@@ -47,6 +52,9 @@ class Listing extends React.Component {
     // Bind this to helper methods
     this.renderAmenities = this.renderAmenities.bind(this);
   }
+
+  // Handle when the component mounts
+  componentDidMount() {}
 
   // Helper method to render amenities
   renderAmenities() {
@@ -87,6 +95,7 @@ class Listing extends React.Component {
               <h5 className="subtitle">
                 Location
               </h5>
+              <div id="map" />
             </div>
           </div>
         </div>
