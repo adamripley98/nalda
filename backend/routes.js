@@ -31,11 +31,17 @@ module.exports = () => {
     // Pulls articles from mongo
     Article.find((err, articles) => {
       if (err) {
-        console.log('error getting articles', err);
+        res.send({
+          success: false,
+          error: err,
+        });
+      } else {
+        res.send({
+          success: true,
+          data: articles,
+        });
       }
-      res.send(articles);
     });
-    return true;
   });
 
   /**
@@ -44,6 +50,7 @@ module.exports = () => {
    * @param subtitle
    * @param image (url)
    * @param body (text of the article)
+   * TODO error checking
    */
   router.post('/articles/new', (req, res) => {
     // Creates a new article with given params
@@ -55,15 +62,19 @@ module.exports = () => {
     });
 
     // Save the new article in Mongo
-    newArticle.save((er, article) => {
-      if (er) {
-        console.log('error registering an article', er);
-        res.send('Error saving article');
-        return false;
+    newArticle.save((err, article) => {
+      if (err) {
+        // If there was an error saving the article
+        res.send({
+          success: false,
+          error: err,
+        });
+      } else {
+        res.send({
+          success: true,
+          data: article,
+        });
       }
-      console.log('successful article register', article);
-      res.send('success');
-      return true;
     });
   });
 

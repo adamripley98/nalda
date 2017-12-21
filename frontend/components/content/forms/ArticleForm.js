@@ -34,8 +34,8 @@ class ArticleForm extends React.Component {
     autosize(document.querySelectorAll('textarea'));
   }
 
+  // Function to redirect the user to home
   redirectToHome() {
-    console.log('goes into redirect');
     return (
       <Redirect to="/"/>
     );
@@ -104,22 +104,32 @@ class ArticleForm extends React.Component {
       this.setState({
         error: "",
       });
+
       // Otherwise, the request is properly formulated. Post request to routes.js
-      axios.post('/articles/new', {
+      axios.post('/api/articles/new', {
         title: this.state.title,
         subtitle: this.state.subtitle,
         image: this.state.image,
         body: this.state.body,
       })
-      .then((resp) => {
-        console.log('what is resp', resp.data);
-        this.setState({
-          redirectToHome: true,
+        .then((res) => {
+          if (res.data.success) {
+            // If creating the article was successful
+            this.setState({
+              redirectToHome: true,
+            });
+          } else {
+            this.setState({
+              error: res.data.error,
+            });
+          }
+        })
+        .catch((err) => {
+          // If there was an error in making the request
+          this.setState({
+            error: err,
+          });
         });
-      })
-      .catch((err) => {
-        console.log('there was an error', err);
-      });
     }
   }
 

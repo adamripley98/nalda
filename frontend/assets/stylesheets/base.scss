@@ -172,6 +172,7 @@ a {
 
 .article-preview {
   padding: 1rem;
+  color: black;
 
   img {
     border-radius: 0.4rem;
@@ -185,6 +186,7 @@ a {
   .subtitle {
     margin-bottom: 0;
     font-size: 1.4rem;
+    color: $dark-gray;
   }
 }
 
