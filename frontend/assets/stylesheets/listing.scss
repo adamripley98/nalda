@@ -6,4 +6,20 @@
     height: 40vh;
     width: 100%;
   }
+
+  .content {
+    margin-top: 1.5rem;
+
+    .title {
+      font-weight: bold;
+    }
+
+    .subtitle {
+      font-weight: bold;
+    }
+
+    .amenity {
+      margin-bottom: 0.5rem;
+    }
+  }
 }
