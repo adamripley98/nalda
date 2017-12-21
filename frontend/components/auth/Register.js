@@ -7,7 +7,6 @@ import { Link, Redirect } from 'react-router-dom';
 
 // Import components
 import Thin from '../shared/Thin';
-import GrayWrapper from '../shared/GrayWrapper';
 import {register} from '../../actions/index.js';
 
 class Register extends Component {
@@ -86,74 +85,72 @@ class Register extends Component {
   // Function to render the actual component
   render() {
     return (
-      <GrayWrapper>
-        {this.state.redirectToHome && <Redirect to="/"/>}
-        <Thin>
-          <form className="thin-form" method="POST" onSubmit={ (e) => this.handleRegisterSubmit(e) }>
-            {
-              this.state.error ? (
-                <div className="alert alert-danger">
-                  <p className="bold marg-bot-05">
-                    An error occured:
-                  </p>
-                  <p className="marg-bot-0">
-                    { this.state.error }
-                  </p>
-                </div>
+      <Thin>
+        { this.state.redirectToHome && <Redirect to="/"/> }
+        <form className="thin-form" method="POST" onSubmit={ (e) => this.handleRegisterSubmit(e) }>
+          {
+            this.state.error ? (
+              <div className="alert alert-danger">
+                <p className="bold marg-bot-05">
+                  An error occured:
+                </p>
+                <p className="marg-bot-0">
+                  { this.state.error }
+                </p>
+              </div>
+            ) : (
+              ""
+            )
+          }
+          <h2 className="marg-bot-1 bold">
+            Register
+          </h2>
+          <label>
+            Email
+          </label>
+          <input
+            type="email"
+            className="form-control marg-bot-1"
+            value={this.state.username}
+            onChange={ this.handleChangeEmail }
+            required="true"
+          />
+          <label>
+            Password
+          </label>
+          <input
+            type="password"
+            className="form-control marg-bot-1"
+            value={this.state.password}
+            onChange={ this.handleChangePassword }
+            required="true"
+          />
+          <label>
+            Confirm Password
+          </label>
+          <input
+            type="password"
+            className="form-control marg-bot-1"
+            value={this.state.verPassword}
+            onChange={ this.handleChangeVerifyPassword }
+            required="true"
+          />
+          <input
+            type="submit"
+            className={
+              this.state.verPassword.length && this.state.password.length && this.state.username.length ? (
+                "btn btn-primary full-width"
               ) : (
-                ""
+                "btn btn-primary full-width disabled"
               )
             }
-            <h2 className="marg-bot-1 bold">
-              Register
-            </h2>
-            <label>
-              Email
-            </label>
-            <input
-              type="email"
-              className="form-control marg-bot-1"
-              value={this.state.username}
-              onChange={ this.handleChangeEmail }
-              required="true"
-            />
-            <label>
-              Password
-            </label>
-            <input
-              type="password"
-              className="form-control marg-bot-1"
-              value={this.state.password}
-              onChange={ this.handleChangePassword }
-              required="true"
-            />
-            <label>
-              Confirm Password
-            </label>
-            <input
-              type="password"
-              className="form-control marg-bot-1"
-              value={this.state.verPassword}
-              onChange={ this.handleChangeVerifyPassword }
-              required="true"
-            />
-            <input
-              type="submit"
-              // ensures fields aren't empty
-              className={
-                this.state.verPassword.length && this.state.password.length && this.state.username.length ?
-                  "btn btn-primary full-width" :
-                  "btn btn-primary full-width disabled"
-              }
-              value="Register"
-            />
-            <p className="blue-gray-text marg-top-1 marg-bot-0">
-              Already have an account?{" "}
-              <Link to="/login">Login here.</Link>
-            </p>
-          </form>
-        </Thin>
-      </GrayWrapper>
+            value="Register"
+          />
+          <p className="blue-gray-text marg-top-1 marg-bot-0">
+            Already have an account?&nbsp; <Link to="/login">Login here.</Link>
+          </p>
+        </form>
+      </Thin>
     );
   }
 }

@@ -1,6 +1,5 @@
 import React from 'react';
 import Medium from '../../shared/Medium';
-import GrayWrapper from '../../shared/GrayWrapper';
 import autosize from 'autosize';
 import { Link, Redirect } from 'react-router-dom';
 import axios from 'axios';
@@ -143,109 +142,107 @@ class ListingForm extends React.Component {
   // TODO: Make Hours, Rating, and Price sliders, not text input
   render() {
     return (
-      <GrayWrapper>
-        {this.state.redirectToHome && <Redirect to="/home"/>}
-        <Medium>
-          <div className="card thin-form no-pad">
-            <div className="tabs">
-              <Link className="tab" to="/articles/new">Article</Link>
-              <Link className="tab active" to="/listings/new">Listing</Link>
-              <Link className="tab" to="/videos/new">Video</Link>
-            </div>
-            <form className="pad-1" onSubmit={ this.handleSubmit }>
-              {
-                this.state.error ? (
-                  <div className="alert alert-danger">
-                    <p className="bold marg-bot-05">
-                      An error occured:
-                    </p>
-                    <p className="marg-bot-0">
-                      { this.state.error }
-                    </p>
-                  </div>
+      <Medium>
+        { this.state.redirectToHome && <Redirect to="/home"/> }
+        <div className="card thin-form no-pad">
+          <div className="tabs">
+            <Link className="tab" to="/articles/new">Article</Link>
+            <Link className="tab active" to="/listings/new">Listing</Link>
+            <Link className="tab" to="/videos/new">Video</Link>
+          </div>
+          <form className="pad-1" onSubmit={ this.handleSubmit }>
+            {
+              this.state.error ? (
+                <div className="alert alert-danger">
+                  <p className="bold marg-bot-05">
+                    An error occured:
+                  </p>
+                  <p className="marg-bot-0">
+                    { this.state.error }
+                  </p>
+                </div>
+              ) : (
+                ""
+              )
+            }
+            <label>
+              Title
+            </label>
+            <input
+              name="title"
+              type="text"
+              className="form-control marg-bot-1"
+              value={ this.state.title }
+              onChange={ this.handleChangeTitle }
+            />
+            <label>
+              Image (url to an image)
+            </label>
+            <input
+              name="image"
+              type="url"
+              className="form-control marg-bot-1"
+              value={ this.state.image }
+              onChange={ this.handleChangeImage }
+            />
+            <label>
+              Description
+            </label>
+            <textarea
+              name="body"
+              type="text"
+              className="form-control marg-bot-1"
+              rows="1"
+              value={ this.state.description }
+              onChange={ this.handleChangeDescription }
+            />
+            <label>
+              Hours
+            </label>
+            <textarea
+              name="body"
+              type="text"
+              className="form-control marg-bot-1"
+              rows="1"
+              value={ this.state.hours }
+              onChange={ this.handleChangeHours }
+            />
+            <label>
+              Rating
+            </label>
+            <textarea
+              name="body"
+              type="text"
+              className="form-control marg-bot-1"
+              rows="1"
+              value={ this.state.rating }
+              onChange={ this.handleChangeRating }
+            />
+            <label>
+              Price
+            </label>
+            <textarea
+              name="body"
+              type="text"
+              className="form-control marg-bot-1"
+              rows="1"
+              value={ this.state.price }
+              onChange={ this.handleChangePrice }
+            />
+            <input
+              type="submit"
+              value="Create Listing"
+              className={
+                this.state.title && this.state.description && this.state.hours && this.state.rating && this.state.price ? (
+                  "btn btn-primary full-width"
                 ) : (
-                  ""
+                  "btn btn-primary disabled full-width"
                 )
               }
-              <label>
-                Title
-              </label>
-              <input
-                name="title"
-                type="text"
-                className="form-control marg-bot-1"
-                value={ this.state.title }
-                onChange={ this.handleChangeTitle }
-              />
-              <label>
-                Image (url to an image)
-              </label>
-              <input
-                name="image"
-                type="url"
-                className="form-control marg-bot-1"
-                value={ this.state.image }
-                onChange={ this.handleChangeImage }
-              />
-              <label>
-                Description
-              </label>
-              <textarea
-                name="body"
-                type="text"
-                className="form-control marg-bot-1"
-                rows="1"
-                value={ this.state.description }
-                onChange={ this.handleChangeDescription }
-              />
-              <label>
-                Hours
-              </label>
-              <textarea
-                name="body"
-                type="text"
-                className="form-control marg-bot-1"
-                rows="1"
-                value={ this.state.hours }
-                onChange={ this.handleChangeHours }
-              />
-              <label>
-                Rating
-              </label>
-              <textarea
-                name="body"
-                type="text"
-                className="form-control marg-bot-1"
-                rows="1"
-                value={ this.state.rating }
-                onChange={ this.handleChangeRating }
-              />
-              <label>
-                Price
-              </label>
-              <textarea
-                name="body"
-                type="text"
-                className="form-control marg-bot-1"
-                rows="1"
-                value={ this.state.price }
-                onChange={ this.handleChangePrice }
-              />
-              <input
-                type="submit"
-                value="Create Listing"
-                className={
-                  this.state.title && this.state.description && this.state.hours && this.state.rating && this.state.price ? (
-                    "btn btn-primary full-width"
-                  ) : (
-                    "btn btn-primary disabled full-width"
-                  )
-                }
-              />
-            </form>
-          </div>
-        </Medium>
-      </GrayWrapper>
+            />
+          </form>
+        </div>
+      </Medium>
     );
   }
 }

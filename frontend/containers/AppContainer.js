@@ -2,7 +2,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 // Import components
 import Nav from '../components/shared/Nav';
@@ -29,19 +29,21 @@ class AppContainer extends Component {
         <Router>
           <div>
             <Nav />
-            <Switch>
-              <Route exact path="/login" component={Login}/>
-              <Route exact path="/register" component={Register}/>
-              <Route exact path="/about" component={About}/>
-              <Route exact path="/contact" component={Contact}/>
-              <Route exact path="/" component={requireAuth(Home)}/>
-              <Route exact path="/home" component={requireAuth(Home)}/>
-              <Route exact path="/articles/new" component={requireAuth(ArticleForm)} />
-              <Route exact path="/listings/new" component={requireAuth(ListingForm)} />
-              <Route exact path="/videos/new" component={requireAuth(VideoForm)} />
-              <Route exact path="/articles/:id" component={Article} />
-              <Route exact path="/*" component={NotFoundSection}/>
-            </Switch>
+            <div className="app-content">
+              <Switch>
+                <Route exact path="/login" component={Login}/>
+                <Route exact path="/register" component={Register}/>
+                <Route exact path="/about" component={About}/>
+                <Route exact path="/contact" component={Contact}/>
+                <Route exact path="/" component={requireAuth(Home)}/>
+                <Route exact path="/home" component={requireAuth(Home)}/>
+                <Route exact path="/articles/new" component={requireAuth(ArticleForm)} />
+                <Route exact path="/listings/new" component={requireAuth(ListingForm)} />
+                <Route exact path="/videos/new" component={requireAuth(VideoForm)} />
+                <Route exact path="/articles/:id" component={Article} />
+                <Route exact path="/*" component={NotFoundSection}/>
+              </Switch>
+            </div>
             <Footer />
           </div>
         </Router>

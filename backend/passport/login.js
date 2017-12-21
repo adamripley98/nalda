@@ -8,8 +8,7 @@ module.exports = (passport) => {
         console.log('ERROR logging in', err);
         res.send(err);
         return false;
-      }
-      if (!user) {
+      } else if (!user) {
         console.log('user doesnt exist');
         res.send('Invalid username or password.');
         return false;

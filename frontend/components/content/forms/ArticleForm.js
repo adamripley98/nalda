@@ -1,7 +1,6 @@
 // Import frameworks
 import React from 'react';
 import Medium from '../../shared/Medium';
-import GrayWrapper from '../../shared/GrayWrapper';
 import autosize from 'autosize';
 import { Link, Redirect } from 'react-router-dom';
 import axios from 'axios';
@@ -127,87 +126,85 @@ class ArticleForm extends React.Component {
   // Render the component
   render() {
     return (
-      <GrayWrapper>
-        {this.state.redirectToHome && <Redirect to="/home"/>}
-        <Medium>
-          <div className="card thin-form no-pad">
-            <div className="tabs">
-              <Link className="tab active" to="/articles/new">Article</Link>
-              <Link className="tab" to="/listings/new">Listing</Link>
-              <Link className="tab" to="/videos/new">Video</Link>
-            </div>
-            <form className="pad-1" onSubmit={ this.handleSubmit }>
-              {
-                this.state.error ? (
-                  <div className="alert alert-danger">
-                    <p className="bold marg-bot-05">
-                      An error occured:
-                    </p>
-                    <p className="marg-bot-0">
-                      { this.state.error }
-                    </p>
-                  </div>
+      <Medium>
+        { this.state.redirectToHome && <Redirect to="/home"/> }
+        <div className="card thin-form no-pad">
+          <div className="tabs">
+            <Link className="tab active" to="/articles/new">Article</Link>
+            <Link className="tab" to="/listings/new">Listing</Link>
+            <Link className="tab" to="/videos/new">Video</Link>
+          </div>
+          <form className="pad-1" onSubmit={ this.handleSubmit }>
+            {
+              this.state.error ? (
+                <div className="alert alert-danger">
+                  <p className="bold marg-bot-05">
+                    An error occured:
+                  </p>
+                  <p className="marg-bot-0">
+                    { this.state.error }
+                  </p>
+                </div>
+              ) : (
+                ""
+              )
+            }
+            <label>
+              Title
+            </label>
+            <input
+              name="title"
+              type="text"
+              className="form-control marg-bot-1"
+              value={ this.state.title }
+              onChange={ this.handleChangeTitle }
+            />
+            <label>
+              Subtitle
+            </label>
+            <input
+              name="subtitle"
+              type="text"
+              className="form-control marg-bot-1"
+              value={ this.state.subtitle }
+              onChange={ this.handleChangeSubtitle }
+            />
+            <label>
+              Image (url to an image)
+            </label>
+            <input
+              name="image"
+              type="url"
+              className="form-control marg-bot-1"
+              value={ this.state.image }
+              onChange={ this.handleChangeImage }
+            />
+            <label>
+              Body
+            </label>
+            <textarea
+              name="body"
+              type="text"
+              className="form-control marg-bot-1"
+              rows="1"
+              value={ this.state.body }
+              onChange={ this.handleChangeBody }
+            />
+            <input
+              type="submit"
+              value="Create Article"
+              className={
+                this.state.title && this.state.subtitle && this.state.body ? (
+                  "btn btn-primary full-width"
                 ) : (
-                  ""
+                  "btn btn-primary disabled full-width"
                 )
               }
-              <label>
-                Title
-              </label>
-              <input
-                name="title"
-                type="text"
-                className="form-control marg-bot-1"
-                value={ this.state.title }
-                onChange={ this.handleChangeTitle }
-              />
-              <label>
-                Subtitle
-              </label>
-              <input
-                name="subtitle"
-                type="text"
-                className="form-control marg-bot-1"
-                value={ this.state.subtitle }
-                onChange={ this.handleChangeSubtitle }
-              />
-              <label>
-                Image (url to an image)
-              </label>
-              <input
-                name="image"
-                type="url"
-                className="form-control marg-bot-1"
-                value={ this.state.image }
-                onChange={ this.handleChangeImage }
-              />
-              <label>
-                Body
-              </label>
-              <textarea
-                name="body"
-                type="text"
-                className="form-control marg-bot-1"
-                rows="1"
-                value={ this.state.body }
-                onChange={ this.handleChangeBody }
-              />
-              <input
-                type="submit"
-                value="Create Article"
-                className={
-                  this.state.title && this.state.subtitle && this.state.body ? (
-                    "btn btn-primary full-width"
-                  ) : (
-                    "btn btn-primary disabled full-width"
-                  )
-                }
-                onSubmit={(e) => this.handleSubmit(e)}
-              />
-            </form>
-          </div>
-        </Medium>
-      </GrayWrapper>
+              onSubmit={(e) => this.handleSubmit(e)}
+            />
+          </form>
+        </div>
+      </Medium>
     );
   }
 }

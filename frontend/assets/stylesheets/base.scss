@@ -29,8 +29,8 @@ a {
   margin-top: 1.5rem;
   background: white;
   border: 1px solid rgba(0, 0, 0, 0.15);
-  box-shadow: 0rem 0.2rem 0.2rem rgba(0, 0, 0, 0.05);
-
+  border-radius: 0.4rem;
+  
   textarea {
     resize: none;
   }
@@ -56,8 +56,7 @@ a {
   }
 }
 
-.gray-wrapper {
-  background: $snow;
+.app-content {
   min-height: calc(100vh - 56.27px);
   width: 100%;
   margin: 0rem !important;

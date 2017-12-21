@@ -1,6 +1,5 @@
 // Import frameworks
 import React from 'react';
-import GrayWrapper from './shared/GrayWrapper';
 import axios from 'axios';
 import uuid from 'uuid-v4';
 import { connect } from 'react-redux';
@@ -18,6 +17,8 @@ class Home extends React.Component {
   // Constructor method
   constructor(props) {
     super(props);
+
+    // Set the state
     this.state = {
       articles: [],
       redirectToArticle: false,
@@ -25,7 +26,7 @@ class Home extends React.Component {
     };
   }
 
-  // Load articles from Mongo
+  // Load articles from Mongo once thre component mounts
   componentDidMount() {
     axios.get('/home')
     .then((resp) => {
@@ -65,7 +66,7 @@ class Home extends React.Component {
           <h2>
             {art.title}
           </h2>
-          <img height="200" width="200" src={art.image}/>
+          <img className="img-fluid" alt={art.title} src={art.image} />
           <h7>
             {art.subtitle}
           </h7>
@@ -77,28 +78,27 @@ class Home extends React.Component {
   // Function to render the component
   render() {
     return (
-      <GrayWrapper>
-        {this.state.redirectToArticle && <Redirect to={`/articles/${this.state.articleClicked}`}/>}
-        <div className="container">
-          <div className="space-1"/>
-          <div className="row">
-            {
-              this.renderArticles()
-            }
-          </div>
+      <div className="container">
+        {
+          this.state.redirectToArticle && (
+            <Redirect to={`/articles/${this.state.articleClicked}`} />
+          )
+        }
+        <div className="space-1"/>
+        <div className="row">
+          { this.renderArticles() }
         </div>
-      </GrayWrapper>
+      </div>
     );
   }
 }
 
 Home.propTypes = {
-  openArticle: PropTypes.func,
+  openCurrentArticle: PropTypes.func,
 };
 
-const mapStateToProps = state => {
-  return {
-  };
+const mapStateToProps = () => {
+  return {};
 };
 
 const mapDispatchToProps = dispatch => {

@@ -1,6 +1,5 @@
 // Import frameworks
 import React from 'react';
-import GrayWrapper from '../../shared/GrayWrapper';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -43,30 +42,29 @@ class Article extends React.Component {
   // TODO: Style the 'Back to home' link
   render() {
     return (
-      <GrayWrapper>
-        <div className="container">
-          <div className="row">
-            <div className="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-              <div className="card article pad-1">
-                <h1>
-                  { this.props.article.title }
-                </h1>
-                <h3>
-                  { this.state.subtitle }
-                </h3>
-                { this.renderAuthor() }
-                <img src={ this.props.article.image } alt={ this.props.article.title } className="img-fluid" />
-                <p>
-                  { this.props.article.body }
-                </p>
-              </div>
+      <div className="container">
+        <div className="row">
+          <div className="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+            <div className="card article pad-1">
+              <h1>
+                { this.props.article.title }
+              </h1>
+              <h3>
+                { this.state.subtitle }
+              </h3>
+              { this.renderAuthor() }
+              <img src={ this.props.article.image } alt={ this.props.article.title } className="img-fluid" />
+              <p>
+                { this.props.article.body }
+              </p>
             </div>
+            <div className="space-1" />
+            <p className="marg-top-1 marg-bot-0">
+              <Link to="/">Head back to home</Link>
+            </p>
           </div>
         </div>
-        <p className="marg-top-1 marg-bot-0">
-          <Link to="/">Head back to home</Link>
-        </p>
-      </GrayWrapper>
+      </div>
     );
   }
 }
@@ -81,9 +79,8 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-  };
+const mapDispatchToProps = () => {
+  return {};
 };
 
 // Redux config
