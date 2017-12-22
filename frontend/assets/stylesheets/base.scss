@@ -127,6 +127,8 @@ a {
     border-left: 0px solid transparent;
     border-top: 0px solid transparent;
     border-bottom: 2px solid $gray;
+    border-radius: 0px !important;
+    -webkit-appearance: none;
     padding-top: 0.25rem;
     padding-bottom: 0.25rem;
 
@@ -161,6 +163,7 @@ a {
     padding: 0.25rem 0rem;
     line-height: 1;
     transform: translateY(0.25rem);
+    min-width: 6rem;
   }
 
   .form-control {
@@ -172,6 +175,7 @@ a {
 
 .article-preview {
   color: black;
+  margin-bottom: 1rem;
 
   img {
     border-radius: 0.4rem;

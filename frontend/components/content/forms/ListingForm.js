@@ -19,8 +19,8 @@ class ListingForm extends React.Component {
       title: "",
       description: "",
       image: "",
-      rating: "",
-      price: "",
+      rating: 0.0,
+      price: "$",
       hours: "",
       error: "",
       redirectToHome: "",
@@ -197,36 +197,90 @@ class ListingForm extends React.Component {
               <input type="time" className="form-control" />
               <input type="time" className="form-control" />
             </div>
-            <textarea
-              name="body"
-              type="text"
-              className="form-control marg-bot-1"
-              rows="1"
-              value={ this.state.hours }
-              onChange={ this.handleChangeHours }
-            />
-            <label>
-              Rating
-            </label>
-            <textarea
-              name="body"
-              type="text"
-              className="form-control marg-bot-1"
-              rows="1"
-              value={ this.state.rating }
-              onChange={ this.handleChangeRating }
-            />
-            <label>
-              Price
-            </label>
-            <textarea
-              name="body"
-              type="text"
-              className="form-control marg-bot-1"
-              rows="1"
-              value={ this.state.price }
-              onChange={ this.handleChangePrice }
-            />
+            <div className="time-select">
+              <p>
+                Tuesday
+              </p>
+              <input type="time" className="form-control" />
+              <input type="time" className="form-control" />
+            </div>
+            <div className="time-select">
+              <p>
+                Wednesday
+              </p>
+              <input type="time" className="form-control" />
+              <input type="time" className="form-control" />
+            </div>
+            <div className="time-select">
+              <p>
+                Thursday
+              </p>
+              <input type="time" className="form-control" />
+              <input type="time" className="form-control" />
+            </div>
+            <div className="time-select">
+              <p>
+                Friday
+              </p>
+              <input type="time" className="form-control" />
+              <input type="time" className="form-control" />
+            </div>
+            <div className="time-select">
+              <p>
+                Saturday
+              </p>
+              <input type="time" className="form-control" />
+              <input type="time" className="form-control" />
+            </div>
+            <div className="time-select marg-bot-1">
+              <p>
+                Sunday
+              </p>
+              <input type="time" className="form-control" />
+              <input type="time" className="form-control" />
+            </div>
+            <div className="row">
+              <div className="col-12 col-md-6">
+                <label>
+                  Rating
+                </label>
+                <select
+                  className="form-control marg-bot-1"
+                  id="exampleFormControlSelect1"
+                  value={ this.state.rating }
+                  onChange={ this.handleChangeRating }
+                >
+                  <option>0.0</option>
+                  <option>0.5</option>
+                  <option>1.0</option>
+                  <option>1.5</option>
+                  <option>2.0</option>
+                  <option>2.5</option>
+                  <option>3.0</option>
+                  <option>3.5</option>
+                  <option>4.0</option>
+                  <option>4.5</option>
+                  <option>5.0</option>
+                </select>
+              </div>
+              <div className="col-12 col-md-6">
+                <label>
+                  Price
+                </label>
+                <select
+                  className="form-control marg-bot-1"
+                  id="exampleFormControlSelect1"
+                  value={ this.state.price }
+                  onChange={ this.handleChangePrice }
+                >
+                  <option>$</option>
+                  <option>$$</option>
+                  <option>$$$</option>
+                  <option>$$$$</option>
+                </select>
+              </div>
+            </div>
+
             <input
               type="submit"
               value="Create Listing"

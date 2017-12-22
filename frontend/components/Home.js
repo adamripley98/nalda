@@ -93,15 +93,23 @@ class Home extends React.Component {
         {
           !this.state.pendingArticles && (
             <div>
-              <div className="space-2" />
+              <div className="space-1" />
               <Button to="/articles" text="View all articles" />
-              <div className="line marg-0" />
             </div>
           )
         }
+        <div className="line marg-0" />
         <div className="space-1"/>
         <h3 className="title">
           Recent listings
+        </h3>
+        <div className="row">
+          <Loading />
+        </div>
+        <div className="line marg-0" />
+        <div className="space-1"/>
+        <h3 className="title">
+          Recent videos
         </h3>
         <div className="row">
           <Loading />

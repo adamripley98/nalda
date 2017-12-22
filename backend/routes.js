@@ -11,6 +11,7 @@ const router = express.Router();
 const Article = require('./models/article');
 const Listing = require('./models/listing');
 
+// Export the following methods for routing
 module.exports = () => {
   /**
    * Route to signify that the API is working
