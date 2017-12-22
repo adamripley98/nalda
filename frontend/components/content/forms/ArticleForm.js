@@ -7,6 +7,8 @@ import axios from 'axios';
 
 /**
  * Component to render the new article form
+ * TODO redirect to article instead of to home
+ * TODO flash notifications when a new article is made?
  */
 class ArticleForm extends React.Component {
   // Constructor method
@@ -136,85 +138,88 @@ class ArticleForm extends React.Component {
   // Render the component
   render() {
     return (
-      <Medium>
+      <div>
         { this.state.redirectToHome && <Redirect to="/home"/> }
-        <div className="card thin-form no-pad">
-          <div className="tabs">
-            <Link className="tab active" to="/articles/new">Article</Link>
-            <Link className="tab" to="/listings/new">Listing</Link>
-            <Link className="tab" to="/videos/new">Video</Link>
-          </div>
-          <form className="pad-1" onSubmit={ this.handleSubmit }>
-            {
-              this.state.error ? (
-                <div className="alert alert-danger">
-                  <p className="bold marg-bot-05">
-                    An error occured:
-                  </p>
-                  <p className="marg-bot-0">
-                    { this.state.error }
-                  </p>
-                </div>
-              ) : (
-                ""
-              )
-            }
-            <label>
-              Title
-            </label>
-            <input
-              name="title"
-              type="text"
-              className="form-control marg-bot-1"
-              value={ this.state.title }
-              onChange={ this.handleChangeTitle }
-            />
-            <label>
-              Subtitle
-            </label>
-            <input
-              name="subtitle"
-              type="text"
-              className="form-control marg-bot-1"
-              value={ this.state.subtitle }
-              onChange={ this.handleChangeSubtitle }
-            />
-            <label>
-              Image (url to an image)
-            </label>
-            <input
-              name="image"
-              type="text"
-              className="form-control marg-bot-1"
-              value={ this.state.image }
-              onChange={ this.handleChangeImage }
-            />
-            <label>
-              Body
-            </label>
-            <textarea
-              name="body"
-              type="text"
-              className="form-control marg-bot-1"
-              rows="1"
-              value={ this.state.body }
-              onChange={ this.handleChangeBody }
-            />
-            <input
-              type="submit"
-              value="Create Article"
-              className={
-                this.state.title && this.state.subtitle && this.state.body ? (
-                  "btn btn-primary full-width"
+        <Medium>
+          <div className="card thin-form no-pad">
+            <div className="tabs">
+              <Link className="tab active" to="/articles/new">Article</Link>
+              <Link className="tab" to="/listings/new">Listing</Link>
+              <Link className="tab" to="/videos/new">Video</Link>
+            </div>
+            <form className="pad-1" onSubmit={ this.handleSubmit }>
+              {
+                this.state.error ? (
+                  <div className="alert alert-danger">
+                    <p className="bold marg-bot-05">
+                      An error occured:
+                    </p>
+                    <p className="marg-bot-0">
+                      { this.state.error }
+                    </p>
+                  </div>
                 ) : (
-                  "btn btn-primary disabled full-width"
+                  ""
                 )
               }
-              onSubmit={(e) => this.handleSubmit(e)}
-            />
-          </form>
-        </div>
-      </Medium>
+              <label>
+                Title
+              </label>
+              <input
+                name="title"
+                type="text"
+                className="form-control marg-bot-1"
+                value={ this.state.title }
+                onChange={ this.handleChangeTitle }
+              />
+              <label>
+                Subtitle
+              </label>
+              <input
+                name="subtitle"
+                type="text"
+                className="form-control marg-bot-1"
+                value={ this.state.subtitle }
+                onChange={ this.handleChangeSubtitle }
+              />
+              <label>
+                Image (url to an image)
+              </label>
+              <input
+                name="image"
+                type="text"
+                className="form-control marg-bot-1"
+                value={ this.state.image }
+                onChange={ this.handleChangeImage }
+              />
+              <label>
+                Body
+              </label>
+              <textarea
+                name="body"
+                type="text"
+                className="form-control marg-bot-1"
+                rows="1"
+                value={ this.state.body }
+                onChange={ this.handleChangeBody }
+              />
+              <input
+                type="submit"
+                value="Create Article"
+                className={
+                  this.state.title && this.state.subtitle && this.state.body ? (
+                    "btn btn-primary full-width"
+                  ) : (
+                    "btn btn-primary disabled full-width"
+                  )
+                }
+                onSubmit={(e) => this.handleSubmit(e)}
+              />
+            </form>
+          </div>
+        </Medium>
+        <div className="space-2" />
+      </div>
     );
   }
 }

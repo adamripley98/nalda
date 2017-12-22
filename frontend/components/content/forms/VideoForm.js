@@ -96,73 +96,76 @@ class ArticleForm extends React.Component {
   // Render the component
   render() {
     return (
-      <Medium>
-        <div className="card thin-form no-pad">
-          <div className="tabs">
-            <Link className="tab" to="/articles/new">Article</Link>
-            <Link className="tab" to="/listings/new">Listing</Link>
-            <Link className="tab active" to="/videos/new">Video</Link>
-          </div>
-          <form className="pad-1" onSubmit={ this.handleSubmit }>
-            {
-              this.state.error ? (
-                <div className="alert alert-danger">
-                  <p className="bold marg-bot-05">
-                    An error occured:
-                  </p>
-                  <p className="marg-bot-0">
-                    { this.state.error }
-                  </p>
-                </div>
-              ) : (
-                ""
-              )
-            }
-            <label>
-              Title
-            </label>
-            <input
-              name="title"
-              type="text"
-              className="form-control marg-bot-1"
-              value={ this.state.title }
-              onChange={ this.handleChangeTitle }
-            />
-            <label>
-              Video (url to a video)
-            </label>
-            <input
-              name="image"
-              type="url"
-              className="form-control marg-bot-1"
-              value={ this.state.video }
-              onChange={ this.handleChangeVideo }
-            />
-            <label>
-              Description
-            </label>
-            <textarea
-              name="description"
-              type="text"
-              className="form-control marg-bot-1"
-              rows="1"
-              value={ this.state.description }
-              onChange={ this.handleChangeDescription }
-            />
-            <input
-              type="submit"
-              value="Create Video"
-              className={
-                this.state.title && this.state.video && this.state.description ? (
-                  "btn btn-primary full-width"
+      <div>
+        <Medium>
+          <div className="card thin-form no-pad">
+            <div className="tabs">
+              <Link className="tab" to="/articles/new">Article</Link>
+              <Link className="tab" to="/listings/new">Listing</Link>
+              <Link className="tab active" to="/videos/new">Video</Link>
+            </div>
+            <form className="pad-1" onSubmit={ this.handleSubmit }>
+              {
+                this.state.error ? (
+                  <div className="alert alert-danger">
+                    <p className="bold marg-bot-05">
+                      An error occured:
+                    </p>
+                    <p className="marg-bot-0">
+                      { this.state.error }
+                    </p>
+                  </div>
                 ) : (
-                  "btn btn-primary disabled full-width"
+                  ""
                 )
               }
-            />
-          </form>
-        </div>
-      </Medium>
+              <label>
+                Title
+              </label>
+              <input
+                name="title"
+                type="text"
+                className="form-control marg-bot-1"
+                value={ this.state.title }
+                onChange={ this.handleChangeTitle }
+              />
+              <label>
+                Video (url to a video)
+              </label>
+              <input
+                name="image"
+                type="url"
+                className="form-control marg-bot-1"
+                value={ this.state.video }
+                onChange={ this.handleChangeVideo }
+              />
+              <label>
+                Description
+              </label>
+              <textarea
+                name="description"
+                type="text"
+                className="form-control marg-bot-1"
+                rows="1"
+                value={ this.state.description }
+                onChange={ this.handleChangeDescription }
+              />
+              <input
+                type="submit"
+                value="Create Video"
+                className={
+                  this.state.title && this.state.video && this.state.description ? (
+                    "btn btn-primary full-width"
+                  ) : (
+                    "btn btn-primary disabled full-width"
+                  )
+                }
+              />
+            </form>
+          </div>
+        </Medium>
+        <div className="space-2" />
+      </div>
     );
   }
 }

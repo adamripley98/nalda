@@ -24,6 +24,28 @@ module.exports = () => {
   });
 
   /**
+   * Pull all listings from the database
+   */
+  router.get('/listings', (req, res) => {
+    // Pulls articles from mongo
+    Listing.find((err, listings) => {
+      if (err) {
+        // If there was an error with the request
+        res.send({
+          success: false,
+          error: err,
+        });
+      } else {
+        // If everything went as planned
+        res.send({
+          success: true,
+          data: listings,
+        });
+      }
+    });
+  });
+
+  /**
    * Pull all articles from the database
    */
   router.get('/articles', (req, res) => {

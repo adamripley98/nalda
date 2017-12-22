@@ -146,155 +146,158 @@ class ListingForm extends React.Component {
   // TODO: Make Hours, Rating, and Price sliders, not text input
   render() {
     return (
-      <Medium>
+      <div>
         { this.state.redirectToHome && <Redirect to="/home"/> }
-        <div className="card thin-form no-pad">
-          <div className="tabs">
-            <Link className="tab" to="/articles/new">Article</Link>
-            <Link className="tab active" to="/listings/new">Listing</Link>
-            <Link className="tab" to="/videos/new">Video</Link>
-          </div>
-          <form className="pad-1" onSubmit={ this.handleSubmit }>
-            <ErrorMessage error={ this.state.error } />
-            <label>
-              Title
-            </label>
-            <input
-              name="title"
-              type="text"
-              className="form-control marg-bot-1"
-              value={ this.state.title }
-              onChange={ this.handleChangeTitle }
-            />
-            <label>
-              Image (url to an image)
-            </label>
-            <input
-              name="image"
-              type="url"
-              className="form-control marg-bot-1"
-              value={ this.state.image }
-              onChange={ this.handleChangeImage }
-            />
-            <label>
-              Description
-            </label>
-            <textarea
-              name="body"
-              type="text"
-              className="form-control marg-bot-1"
-              rows="1"
-              value={ this.state.description }
-              onChange={ this.handleChangeDescription }
-            />
-            <label>
-              Hours
-            </label>
-            <div className="time-select">
-              <p>
-                Monday
-              </p>
-              <input type="time" className="form-control" />
-              <input type="time" className="form-control" />
+        <Medium>
+          <div className="card thin-form no-pad">
+            <div className="tabs">
+              <Link className="tab" to="/articles/new">Article</Link>
+              <Link className="tab active" to="/listings/new">Listing</Link>
+              <Link className="tab" to="/videos/new">Video</Link>
             </div>
-            <div className="time-select">
-              <p>
-                Tuesday
-              </p>
-              <input type="time" className="form-control" />
-              <input type="time" className="form-control" />
-            </div>
-            <div className="time-select">
-              <p>
-                Wednesday
-              </p>
-              <input type="time" className="form-control" />
-              <input type="time" className="form-control" />
-            </div>
-            <div className="time-select">
-              <p>
-                Thursday
-              </p>
-              <input type="time" className="form-control" />
-              <input type="time" className="form-control" />
-            </div>
-            <div className="time-select">
-              <p>
-                Friday
-              </p>
-              <input type="time" className="form-control" />
-              <input type="time" className="form-control" />
-            </div>
-            <div className="time-select">
-              <p>
-                Saturday
-              </p>
-              <input type="time" className="form-control" />
-              <input type="time" className="form-control" />
-            </div>
-            <div className="time-select marg-bot-1">
-              <p>
-                Sunday
-              </p>
-              <input type="time" className="form-control" />
-              <input type="time" className="form-control" />
-            </div>
-            <div className="row">
-              <div className="col-12 col-md-6">
-                <label>
-                  Rating
-                </label>
-                <select
-                  className="form-control marg-bot-1"
-                  id="exampleFormControlSelect1"
-                  value={ this.state.rating }
-                  onChange={ this.handleChangeRating }
-                >
-                  <option>0.0</option>
-                  <option>0.5</option>
-                  <option>1.0</option>
-                  <option>1.5</option>
-                  <option>2.0</option>
-                  <option>2.5</option>
-                  <option>3.0</option>
-                  <option>3.5</option>
-                  <option>4.0</option>
-                  <option>4.5</option>
-                  <option>5.0</option>
-                </select>
+            <form className="pad-1" onSubmit={ this.handleSubmit }>
+              <ErrorMessage error={ this.state.error } />
+              <label>
+                Title
+              </label>
+              <input
+                name="title"
+                type="text"
+                className="form-control marg-bot-1"
+                value={ this.state.title }
+                onChange={ this.handleChangeTitle }
+              />
+              <label>
+                Image (url to an image)
+              </label>
+              <input
+                name="image"
+                type="url"
+                className="form-control marg-bot-1"
+                value={ this.state.image }
+                onChange={ this.handleChangeImage }
+              />
+              <label>
+                Description
+              </label>
+              <textarea
+                name="body"
+                type="text"
+                className="form-control marg-bot-1"
+                rows="1"
+                value={ this.state.description }
+                onChange={ this.handleChangeDescription }
+              />
+              <label>
+                Hours
+              </label>
+              <div className="time-select">
+                <p>
+                  Monday
+                </p>
+                <input type="time" className="form-control" />
+                <input type="time" className="form-control" />
               </div>
-              <div className="col-12 col-md-6">
-                <label>
-                  Price
-                </label>
-                <select
-                  className="form-control marg-bot-1"
-                  id="exampleFormControlSelect1"
-                  value={ this.state.price }
-                  onChange={ this.handleChangePrice }
-                >
-                  <option>$</option>
-                  <option>$$</option>
-                  <option>$$$</option>
-                  <option>$$$$</option>
-                </select>
+              <div className="time-select">
+                <p>
+                  Tuesday
+                </p>
+                <input type="time" className="form-control" />
+                <input type="time" className="form-control" />
               </div>
-            </div>
+              <div className="time-select">
+                <p>
+                  Wednesday
+                </p>
+                <input type="time" className="form-control" />
+                <input type="time" className="form-control" />
+              </div>
+              <div className="time-select">
+                <p>
+                  Thursday
+                </p>
+                <input type="time" className="form-control" />
+                <input type="time" className="form-control" />
+              </div>
+              <div className="time-select">
+                <p>
+                  Friday
+                </p>
+                <input type="time" className="form-control" />
+                <input type="time" className="form-control" />
+              </div>
+              <div className="time-select">
+                <p>
+                  Saturday
+                </p>
+                <input type="time" className="form-control" />
+                <input type="time" className="form-control" />
+              </div>
+              <div className="time-select marg-bot-1">
+                <p>
+                  Sunday
+                </p>
+                <input type="time" className="form-control" />
+                <input type="time" className="form-control" />
+              </div>
+              <div className="row">
+                <div className="col-12 col-md-6">
+                  <label>
+                    Rating
+                  </label>
+                  <select
+                    className="form-control marg-bot-1"
+                    id="exampleFormControlSelect1"
+                    value={ this.state.rating }
+                    onChange={ this.handleChangeRating }
+                  >
+                    <option>0.0</option>
+                    <option>0.5</option>
+                    <option>1.0</option>
+                    <option>1.5</option>
+                    <option>2.0</option>
+                    <option>2.5</option>
+                    <option>3.0</option>
+                    <option>3.5</option>
+                    <option>4.0</option>
+                    <option>4.5</option>
+                    <option>5.0</option>
+                  </select>
+                </div>
+                <div className="col-12 col-md-6">
+                  <label>
+                    Price
+                  </label>
+                  <select
+                    className="form-control marg-bot-1"
+                    id="exampleFormControlSelect1"
+                    value={ this.state.price }
+                    onChange={ this.handleChangePrice }
+                  >
+                    <option>$</option>
+                    <option>$$</option>
+                    <option>$$$</option>
+                    <option>$$$$</option>
+                  </select>
+                </div>
+              </div>
 
-            <input
-              type="submit"
-              value="Create Listing"
-              className={
-                this.state.title && this.state.description && this.state.hours && this.state.rating && this.state.price ? (
-                  "btn btn-primary full-width"
-                ) : (
-                  "btn btn-primary disabled full-width"
-                )
-              }
-            />
-          </form>
-        </div>
-      </Medium>
+              <input
+                type="submit"
+                value="Create Listing"
+                className={
+                  this.state.title && this.state.description && this.state.hours && this.state.rating && this.state.price ? (
+                    "btn btn-primary full-width"
+                  ) : (
+                    "btn btn-primary disabled full-width"
+                  )
+                }
+              />
+            </form>
+          </div>
+        </Medium>
+        <div className="space-2" />
+      </div>
     );
   }
 }

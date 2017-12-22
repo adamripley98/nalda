@@ -20,37 +20,65 @@ class Home extends React.Component {
     this.state = {
       articles: [],
       pendingArticles: true,
-      error: "",
+      articlesError: "",
+      listings: [],
+      pendingListings: true,
+      listingsError: "",
     };
   }
 
-  // Load articles from Mongo once thre component mounts
+  // Load data once the component mounts
   componentDidMount() {
+    // Pull all articles from the database
     axios.get('/api/articles')
-    .then((resp) => {
-      if (resp.data.success) {
-        // Limit to the first four articles
+      .then((resp) => {
+        if (resp.data.success) {
+          // Limit to the first four articles
+          this.setState({
+            articles: resp.data.data.slice(0, 4),
+            pendingArticles: false,
+            articlesError: "",
+          });
+        } else {
+          this.setState({
+            pendingArticles: false,
+            articlesError: resp.data.error,
+          });
+        }
+      })
+      .catch(err => {
         this.setState({
-          articles: resp.data.data.slice(0, 4),
           pendingArticles: false,
-          error: "",
+          articlesError: err,
         });
-      } else {
-        this.setState({
-          pendingArticles: false,
-          error: resp.data.error,
-        });
-      }
-    })
-    .catch(err => {
-      this.setState({
-        pendingArticles: false,
-        error: err,
       });
-    });
+
+    // Pull all listings from the database
+    axios.get('/api/listings')
+      .then((resp) => {
+        if (resp.data.success) {
+          // Limit to the first four listings
+          this.setState({
+            listings: resp.data.data.slice(0, 4),
+            pendingListings: false,
+            listingsError: "",
+          });
+        } else {
+          this.setState({
+            pendingListings: false,
+            listingsError: resp.data.error,
+          });
+        }
+      })
+      .catch(err => {
+        this.setState({
+          pendingListings: false,
+          listingsError: err,
+        });
+      });
   }
 
-  // Methods renders each individual article
+  // Helper method to render each individual article
   renderArticles() {
     return this.state.articles.map((art) => (
       <div className="col-6 col-lg-3" key={ art._id } >
@@ -62,6 +90,25 @@ class Home extends React.Component {
             </h2>
             <h6 className="subtitle">
               {art.subtitle}
+            </h6>
+          </div>
+        </Link>
+      </div>
+    ));
+  }
+
+  // Helper method to render each individual listing
+  renderListings() {
+    return this.state.listings.map((listing) => (
+      <div className="col-6 col-lg-3" key={ listing._id } >
+        <Link to={ `/articles/${listing._id}` } >
+          <div className="article-preview">
+            <img className="img-fluid" alt={listing.name} src={listing.image} />
+            <h2 className="title">
+              {listing.name}
+            </h2>
+            <h6 className="subtitle">
+              {listing.description}
             </h6>
           </div>
         </Link>
@@ -82,8 +129,8 @@ class Home extends React.Component {
             this.state.pendingArticles ? (
               <Loading />
             ) : (
-              this.state.error ? (
-                <ErrorMessage error={ this.state.error } />
+              this.state.articlesError ? (
+                <ErrorMessage error={ this.state.articlesError } />
               ) : (
                 this.renderArticles()
               )
@@ -104,8 +151,26 @@ class Home extends React.Component {
           Recent listings
         </h3>
         <div className="row">
-          <Loading />
+          {
+            this.state.pendingListings ? (
+              <Loading />
+            ) : (
+              this.state.listingsError ? (
+                <ErrorMessage error={ this.state.listingsError } />
+              ) : (
+                this.renderListings()
+              )
+            )
+          }
         </div>
+        {
+          !this.state.pendingListings && (
+            <div>
+              <div className="space-1" />
+              <Button to="/listings" text="View all listings" />
+            </div>
+          )
+        }
         <div className="line marg-0" />
         <div className="space-1"/>
         <h3 className="title">
