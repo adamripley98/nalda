@@ -18,6 +18,7 @@ import Home from '../components/Home';
 import Article from '../components/content/articles/Article';
 import Articles from '../components/content/articles/Articles';
 import Listing from '../components/content/listings/Listing';
+import Listings from '../components/content/listings/Listings';
 import Video from '../components/content/videos/Video';
 
 // Content editing components
@@ -49,19 +50,30 @@ class AppContainer extends Component {
             <Nav />
             <div className="app-content">
               <Switch>
+                { /* User registration routes */ }
                 <Route exact path="/login" component={Login}/>
                 <Route exact path="/register" component={Register}/>
+
+                { /* General routes */ }
                 <Route exact path="/about" component={About}/>
                 <Route exact path="/contact" component={Contact}/>
                 <Route exact path="/" component={requireAuth(Home)}/>
-                <Route exact path="/home" component={requireAuth(Home)}/>
+
+                { /* Routes for articles */ }
                 <Route exact path="/articles/new" component={requireAuth(ArticleForm)} />
-                <Route exact path="/listings/new" component={requireAuth(ListingForm)} />
-                <Route exact path="/videos/new" component={requireAuth(VideoForm)} />
                 <Route exact path="/articles/:id" component={Article} />
                 <Route exact path="/articles" component={Articles} />
+
+                { /* Routes for listings */ }
+                <Route exact path="/listings/new" component={requireAuth(ListingForm)} />
+                <Route exact path="/listings" components={Listings} />
                 <Route exact path="/listings/:id" component={Listing} />
+
+                { /* Routes for videos */ }
+                <Route exact path="/videos/new" component={requireAuth(VideoForm)} />
                 <Route exact path="/videos/:id" component={Video} />
+
+                { /* 404 if no other route was matched */ }
                 <Route exact path="/*" component={NotFoundSection}/>
               </Switch>
             </div>

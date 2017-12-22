@@ -147,7 +147,7 @@ class ListingForm extends React.Component {
   render() {
     return (
       <div>
-        { this.state.redirectToHome && <Redirect to="/home"/> }
+        { this.state.redirectToHome && <Redirect to="/"/> }
         <Medium>
           <div className="card thin-form no-pad">
             <div className="tabs">
