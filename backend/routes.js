@@ -145,27 +145,64 @@ module.exports = () => {
    * @param price
    */
   router.post('/listings/new', (req, res) => {
-    // Creates a new listing with given params
-    const newListing = new Listing({
-      title: req.body.title,
-      description: req.body.description,
-      image: req.body.image,
-      hours: req.body.hours,
-      rating: req.body.rating,
-      price: req.body.price,
-    });
+    // Isolate variables from the body
+    const title = req.body.title;
+    const description = req.body.description;
+    const image = req.body.image;
+    const hours = req.body.hours;
+    const rating = req.body.rating;
+    const price = req.body.price;
+    let error = "";
 
-    // Save the new article in mongo
-    newListing.save((er, listing) => {
-      if (er) {
-        console.log('error registering an listing', er);
-        res.send('Error saving listing');
-        return false;
-      }
-      console.log('successful listing register', listing);
-      res.send('success');
-      return true;
-    });
+    // Error checking
+    if (!title) {
+      error = "Title must be populated.";
+    } else if (!description) {
+      error = "Description must be populated.";
+    } else if (!image) {
+      error = "Image must be populated.";
+    } else if (!hours) {
+      error = "Hours must be populated.";
+    } else if (!rating) {
+      error = "Rating must be populated.";
+    } else if (!price) {
+      error = "Price must be populated.";
+    }
+
+    // Handle error if there is one
+    if (error) {
+      res.send({
+        success: false,
+        error,
+      });
+    } else {
+      // Creates a new listing with given params
+      const newListing = new Listing({
+        title,
+        description,
+        image,
+        hours,
+        rating,
+        price,
+      });
+
+      // Save the new article in mongo
+      newListing.save((er, listing) => {
+        if (er) {
+          // Pass on any error to the user
+          res.send({
+            success: false,
+            error: er,
+          });
+        } else {
+          // Send the data along if it was successfully stored
+          res.send({
+            success: true,
+            data: listing,
+          });
+        }
+      });
+    }
   });
 
   // Return the router for use throughout the application
