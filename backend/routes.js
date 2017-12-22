@@ -23,11 +23,9 @@ module.exports = () => {
   });
 
   /**
-   * Route to get data from mongo when home page is loaded
-   * This should pull articles, listings, and videos alike
-   * TODO pull all data
+   * Pull all articles from the database
    */
-  router.get('/home', (req, res) => {
+  router.get('/articles', (req, res) => {
     // Pulls articles from mongo
     Article.find((err, articles) => {
       if (err) {
@@ -55,34 +53,62 @@ module.exports = () => {
    * TODO error checking
    */
   router.post('/articles/new', (req, res) => {
-    // Creates a new article with given params
-    const newArticle = new Article({
-      title: req.body.title,
-      subtitle: req.body.subtitle,
-      image: req.body.image,
-      body: req.body.body,
-    });
+    // Isolate variables
+    const title = req.body.title;
+    const subtitle = req.body.subtitle;
+    const image = req.body.image;
+    const body = req.body.body;
+    let error = "";
+    const urlRegexp = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
 
-    // Save the new article in Mongo
-    newArticle.save((err, article) => {
-      if (err) {
-        // If there was an error saving the article
-        res.send({
-          success: false,
-          error: err,
-        });
-      } else {
-        res.send({
-          success: true,
-          data: article,
-        });
-      }
-    });
+    // Perform error checking on variables
+    if (!title) {
+      error = "Title must be populated.";
+    } else if (!subtitle) {
+      error = "Subtitle must be populated.";
+    } else if (!image) {
+      error = "Image must be populated.";
+    } else if (!body) {
+      error = "Body must be populated.";
+    } else if (!urlRegexp.test(image)) {
+      error = "Image must be a valid URL to an image.";
+    }
+
+    // If there was an error or not
+    if (error) {
+      res.send({
+        success: false,
+        error,
+      });
+    } else {
+      // Creates a new article with given params
+      const newArticle = new Article({
+        title,
+        subtitle,
+        image,
+        body,
+      });
+
+      // Save the new article in Mongo
+      newArticle.save((err, article) => {
+        if (err) {
+          // If there was an error saving the article
+          res.send({
+            success: false,
+            error: err,
+          });
+        } else {
+          res.send({
+            success: true,
+            data: article,
+          });
+        }
+      });
+    }
   });
 
   /**
    * Route to handle pulling the information for a specific article
-   * TODO better error checking
    */
   router.get('/articles/:id', (req, res) => {
     // Find the id from the url

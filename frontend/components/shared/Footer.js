@@ -41,6 +41,11 @@ class Footer extends React.Component {
                           About
                         </Link>
                       </div>
+                      <div className="link">
+                        <Link to="/articles">
+                          Articles
+                        </Link>
+                      </div>
                     </div>
                   ) : (
                     <div className="pad-1">
@@ -100,8 +105,8 @@ const mapDispatchToProps = () => {
 
 // Redux config
 Footer = connect(
-    mapStateToProps,
-    mapDispatchToProps
+  mapStateToProps,
+  mapDispatchToProps,
 )(Footer);
 
 export default Footer;

@@ -184,7 +184,7 @@ class ArticleForm extends React.Component {
             </label>
             <input
               name="image"
-              type="url"
+              type="text"
               className="form-control marg-bot-1"
               value={ this.state.image }
               onChange={ this.handleChangeImage }

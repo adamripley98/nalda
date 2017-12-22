@@ -16,7 +16,9 @@ import ArticleForm from '../components/content/forms/ArticleForm';
 import ListingForm from '../components/content/forms/ListingForm';
 import VideoForm from '../components/content/forms/VideoForm';
 import Article from '../components/content/articles/Article';
+import Articles from '../components/content/articles/Articles';
 import Listing from '../components/content/listings/Listing';
+import Video from '../components/content/videos/Video';
 import NotFoundSection from '../components/NotFoundSection';
 import requireAuth from '../components/auth/Authenticate';
 
@@ -42,7 +44,9 @@ class AppContainer extends Component {
                 <Route exact path="/listings/new" component={requireAuth(ListingForm)} />
                 <Route exact path="/videos/new" component={requireAuth(VideoForm)} />
                 <Route exact path="/articles/:id" component={Article} />
+                <Route exact path="/articles" component={Articles} />
                 <Route exact path="/listings/:id" component={Listing} />
+                <Route exact path="/videos/:id" component={Video} />
                 <Route exact path="/*" component={NotFoundSection}/>
               </Switch>
             </div>
