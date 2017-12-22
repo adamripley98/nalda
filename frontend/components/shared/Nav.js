@@ -3,14 +3,13 @@ import axios from 'axios';
 import { Redirect, Link } from 'react-router-dom';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-
 import { logout } from '../../actions/index.js';
 
 /**
  * Renders the navbar at the top of the screen on all pages.
  */
 class Nav extends Component {
-
+  // Constructor method
   constructor(props) {
     super(props);
     // Bindings so 'this' refers to component

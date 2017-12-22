@@ -31,11 +31,13 @@ module.exports = () => {
     // Pulls articles from mongo
     Article.find((err, articles) => {
       if (err) {
+        // If there was an error with the request
         res.send({
           success: false,
           error: err,
         });
       } else {
+        // If everything went as planned
         res.send({
           success: true,
           data: articles,

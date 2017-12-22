@@ -2,8 +2,10 @@
 import React from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { Redirect, Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
+import Loading from './shared/Loading';
+import ErrorMessage from './shared/ErrorMessage';
 
 /**
  * Component for the homepage of the application
@@ -16,8 +18,8 @@ class Home extends React.Component {
     // Set the state
     this.state = {
       articles: [],
-      redirectToArticle: false,
-      articleClicked: '',
+      pendingArticles: true,
+      error: "",
     };
   }
 
@@ -25,19 +27,31 @@ class Home extends React.Component {
   componentDidMount() {
     axios.get('/api/home')
     .then((resp) => {
-      this.setState({
-        articles: resp.data.data,
-      });
+      if (resp.data.success) {
+        this.setState({
+          articles: resp.data.data,
+          pendingArticles: false,
+          error: "",
+        });
+      } else {
+        this.setState({
+          pendingArticles: false,
+          error: resp.data.error,
+        });
+      }
     })
-    .catch((err) => {
-      console.log('err', err);
+    .catch(err => {
+      this.setState({
+        pendingArticles: false,
+        error: err,
+      });
     });
   }
 
   // Methods renders each individual article
   renderArticles() {
     return this.state.articles.map((art) => (
-      <div className="col-6 col-lg-3" key={ art._id } >
+      <div className="col-6 col-lg-4 col-xl-3" key={ art._id } >
         <Link to={ `/articles/${art._id}` } >
           <div className="article-preview">
             <img className="img-fluid" alt={art.title} src={art.image} />
@@ -56,15 +70,23 @@ class Home extends React.Component {
   // Function to render the component
   render() {
     return (
-      <div className="container">
-        {
-          this.state.redirectToArticle && (
-            <Redirect to={`/articles/${this.state.articleClicked}`} />
-          )
-        }
+      <div className="container home">
         <div className="space-1"/>
+        <h3 className="title">
+          Recent articles
+        </h3>
         <div className="row">
-          { this.renderArticles() }
+          {
+            this.state.pendingArticles ? (
+              <Loading />
+            ) : (
+              this.state.error ? (
+                <ErrorMessage error={ this.state.error } />
+              ) : (
+                this.renderArticles()
+              )
+            )
+          }
         </div>
       </div>
     );

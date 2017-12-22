@@ -171,7 +171,6 @@ a {
 }
 
 .article-preview {
-  padding: 1rem;
   color: black;
 
   img {
@@ -223,5 +222,13 @@ a {
       border-bottom: 1px solid transparent;
       color: black;
     }
+  }
+}
+
+.home {
+  .title {
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: black;
   }
 }
