@@ -10,6 +10,7 @@ const router = express.Router();
 // Import database models
 const Article = require('./models/article');
 const Listing = require('./models/listing');
+const Video = require('./models/video');
 
 // Export the following methods for routing
 module.exports = () => {
@@ -20,6 +21,28 @@ module.exports = () => {
     res.send({
       success: true,
       data: "API is up and running.",
+    });
+  });
+
+  /**
+   * Pull all videos from the database
+   */
+  router.get('/videos', (req, res) => {
+    // Pulls videos from mongo
+    Video.find((err, videos) => {
+      if (err) {
+        // If there was an error with the request
+        res.send({
+          success: false,
+          error: err,
+        });
+      } else {
+        // If everything went as planned
+        res.send({
+          success: true,
+          data: videos,
+        });
+      }
     });
   });
 

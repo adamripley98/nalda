@@ -4,25 +4,40 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
-// Import components
+// Shared and general components
 import Nav from '../components/shared/Nav';
-import Login from '../components/auth/Login';
-import Home from '../components/Home';
-import About from '../components/About';
-import Contact from '../components/Contact';
-import Register from '../components/auth/Register';
 import Footer from '../components/shared/Footer';
-import ArticleForm from '../components/content/forms/ArticleForm';
-import ListingForm from '../components/content/forms/ListingForm';
-import VideoForm from '../components/content/forms/VideoForm';
+
+// Authorization components
+import Login from '../components/auth/Login';
+import Register from '../components/auth/Register';
+import requireAuth from '../components/auth/Authenticate';
+
+// Content viewing compontents
+import Home from '../components/Home';
 import Article from '../components/content/articles/Article';
 import Articles from '../components/content/articles/Articles';
 import Listing from '../components/content/listings/Listing';
 import Video from '../components/content/videos/Video';
-import NotFoundSection from '../components/NotFoundSection';
-import requireAuth from '../components/auth/Authenticate';
 
-// Component to handle routing on the frontend
+// Content editing components
+import ArticleForm from '../components/content/forms/ArticleForm';
+import ListingForm from '../components/content/forms/ListingForm';
+import VideoForm from '../components/content/forms/VideoForm';
+
+// Other components
+import About from '../components/About';
+import Contact from '../components/Contact';
+import NotFoundSection from '../components/NotFoundSection';
+
+/**
+ * Component to handle routing on the frontend
+ * When necessary, these components will pull data from the backend
+ * Backend routes are prefixed with 'api/' and reside in '../backend/routes.js'
+ *
+ * TODO make a call to the backend to sync the backend session with the frontend
+ * session. This can be on component did mount or component did update
+ */
 class AppContainer extends Component {
   // Render the application
   render() {
