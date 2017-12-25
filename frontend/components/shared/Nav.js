@@ -7,6 +7,7 @@ import { logout } from '../../actions/index.js';
 
 /**
  * Renders the navbar at the top of the screen on all pages.
+ * TODO search functionality
  */
 class Nav extends Component {
   // Constructor method
@@ -17,21 +18,36 @@ class Nav extends Component {
     this.state = {
       redirectToLogin: false,
       search: "",
+      active: false,
     };
 
     // Bindings so 'this' refers to component
     this.handleLogoutSubmit = this.handleLogoutSubmit.bind(this);
     this.handleChangeSearch = this.handleChangeSearch.bind(this);
+    this.toggleMenu = this.toggleMenu.bind(this);
   }
 
-  // Handle when a user searches for something
+  /**
+   * Handle when a user searches for something
+   */
   handleChangeSearch(event) {
     this.setState({
       search: event.target.value,
     });
   }
 
-  // When logout button clicked, will attempt to logout on backend (logout.js)
+  /**
+   * Handle when a user clicks the toggle menu button
+   */
+  toggleMenu() {
+    this.setState({
+      active: !this.state.active,
+    });
+  }
+
+  /**
+   * When logout button clicked, will attempt to logout on backend (logout.js)
+   */
   handleLogoutSubmit(event) {
     // Prevent the default action
     event.preventDefault();
@@ -55,6 +71,10 @@ class Nav extends Component {
         console.log('There was an error', err);
       });
   }
+
+  /**
+   * Render the navbar
+   */
   render() {
     return (
       <nav className="nav">
@@ -111,6 +131,22 @@ class Nav extends Component {
               </Link>
           </div>
         )}
+        <div className="menu">
+          <div className="bars" onClick={ this.toggleMenu }>
+            <div className="bar" />
+            <div className="bar" />
+            <div className="bar" />
+          </div>
+        </div>
+
+        <div id="sidebar" style={{ display: !this.state.active && "none" }}>
+          <div className="shade" onClick={ this.toggleMenu } />
+          <div className="side-menu">
+            <div className="header">
+              STUFF
+            </div>
+          </div>
+        </div>
       </nav>
     );
   }
