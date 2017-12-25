@@ -10,14 +10,22 @@ import Thin from '../shared/Thin';
 import ErrorMessage from '../shared/ErrorMessage';
 import {register} from '../../actions/index.js';
 
+/**
+ * Component to render a form for registration
+ * TODO add name field to users
+ * TODO add profile picture field to users
+ */
 class Register extends Component {
-    // Constructor method
+  /**
+   * Constructor method
+   */
   constructor(props) {
     super(props);
 
     // Set the state
     this.state = {
-      username: '',
+      email: '',
+      name: '',
       password: '',
       verPassword: '',
       error: '',
@@ -26,52 +34,107 @@ class Register extends Component {
 
     // Bindings so 'this' refers to component
     this.handleRegisterSubmit = this.handleRegisterSubmit.bind(this);
+    this.handleChangeName = this.handleChangeName.bind(this);
     this.handleChangeEmail = this.handleChangeEmail.bind(this);
     this.handleChangePassword = this.handleChangePassword.bind(this);
     this.handleChangeVerifyPassword = this.handleChangeVerifyPassword.bind(this);
   }
 
-  // Handle when the register form is submitted
+  /**
+   * Handle when the register form is submitted
+   * TODO name
+   * TODO profile picture
+   * TODO front end validations
+   * TODO change from "username" to "email" (more accurate variable name)
+   *      we will have to change this on the backend
+   */
   handleRegisterSubmit(event) {
-    const username = this.state.username;
+    // Prevent the default submit action
+    event.preventDefault();
+
+    // Isolate form fields
+    const name = this.state.name;
+    const email = this.state.email;
     const password = this.state.password;
     const verPassword = this.state.verPassword;
     const onRegister = this.props.onRegister;
-    event.preventDefault();
-    // Post to register, will check on backend in mongo for issues
-    axios.post('/register', {
-      username,
-      password,
-      verPassword,
-    })
-      .then((resp) => {
-        console.log('register respisne', resp.data);
-        // If issue with register, error message will display
-        if (!resp.data._id) {
-          this.setState({
-            error: resp.data,
-          });
-        } else {
-          // If successful, redirect to home page and dispatch a register event
-          this.setState({
-            redirectToHome: true,
-          });
-          onRegister(resp.data._id);
-        }
-      })
-      .catch((err) => {
-        console.log('there was an error', err);
+
+    // Front end error checking
+    if (!name) {
+      this.setState({
+        error: "Name must be populated.",
       });
+    } else if (!email) {
+      this.setState({
+        error: "Email must be populated.",
+      });
+    } else if (!password) {
+      this.setState({
+        error: "Password must be populated.",
+      });
+    } else if (!verPassword) {
+      this.setState({
+        error: "Confirm password must be populated.",
+      });
+    } else if (password !== verPassword) {
+      this.setState({
+        error: "Password and confirm password must match.",
+      });
+    } else {
+      // Fields are all polpulated
+      // Remove any existing error
+      this.setState({
+        error: "",
+      });
+
+      // Post to register, will check on backend in mongo for issues
+      axios.post('/register', {
+        name,
+        username: email,
+        password,
+        verPassword,
+      })
+        .then((resp) => {
+          // If issue with register, error message will display
+          if (!resp.data._id) {
+            this.setState({
+              error: resp.data,
+            });
+          } else {
+            // If successful, redirect to home page and dispatch a register event
+            this.setState({
+              redirectToHome: true,
+            });
+            onRegister(resp.data._id);
+          }
+        })
+        .catch((err) => {
+          console.log('there was an error', err);
+        });
+    }
   }
 
-  // Handle when a user types into the email
-  handleChangeEmail(event) {
+  /**
+   * Handle when a yser types into the name
+   */
+  handleChangeName(event) {
     this.setState({
-      username: event.target.value
+      name: event.target.value,
     });
   }
 
-  // Handle when a user types into the password
+  /**
+   * Handle when a user types into the email
+   */
+  handleChangeEmail(event) {
+    this.setState({
+      email: event.target.value
+    });
+  }
+
+  /**
+   * Handle when a user types into the password
+   */
   handleChangePassword(event) {
     console.log('what is password', event.target.value);
     this.setState({
@@ -79,14 +142,18 @@ class Register extends Component {
     });
   }
 
-  // Handle when a user types into the confirm password
+  /**
+   * Handle when a user types into the confirm password
+   */
   handleChangeVerifyPassword(event) {
     this.setState({
       verPassword: event.target.value
     });
   }
 
-  // Function to render the actual component
+  /**
+   * Function to render the actual component
+   */
   render() {
     return (
       <div>
@@ -98,12 +165,22 @@ class Register extends Component {
             </h2>
             <ErrorMessage error={ this.state.error } />
             <label>
+              Name
+            </label>
+            <input
+              type="text"
+              className="form-control marg-bot-1"
+              value={this.state.name}
+              onChange={ this.handleChangeName }
+              required="true"
+            />
+            <label>
               Email
             </label>
             <input
-              type="email"
+              type="text"
               className="form-control marg-bot-1"
-              value={this.state.username}
+              value={this.state.email}
               onChange={ this.handleChangeEmail }
               required="true"
             />
@@ -130,7 +207,13 @@ class Register extends Component {
             <input
               type="submit"
               className={
-                this.state.verPassword.length && this.state.password.length && this.state.username.length ? (
+                (
+                  this.state.name &&
+                  this.state.verPassword &&
+                  this.state.password &&
+                  this.state.email &&
+                  this.state.password === this.state.verPassword
+                ) ? (
                   "btn btn-primary full-width"
                 ) : (
                   "btn btn-primary full-width disabled"
