@@ -1,14 +1,83 @@
-.navbar {
+.nav {
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   font-weight: bold;
   background: white;
   color: $gray;
+  padding: 0rem 0.5rem;
+  display: flex;
 
-  .navbar-brand {
+  .logo {
     color: $red !important;
+    font-size: 1.5rem;
+    padding: 0.5rem 1rem;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
   }
 
-  .nav-link {
+  .search {
+    padding: 0.6rem 0.5rem;
+    width: 24rem;
+    max-width: 100% !important;
+    display: flex;
+
+    .fa-search {
+      color: $gray;
+      padding-right: 0.7rem;
+      font-size: 1.2rem;
+      padding-top: 0.5rem;
+      padding-left: 0.2rem;
+    }
+
+    .form-control {
+      border-radius: 0px;
+      border-right: 0px solid transparent !important;
+      border-top: 0px solid transparent !important;
+      border-left: 0px solid transparent !important;
+      border-bottom: 2px solid transparent;
+      flex: 1;
+      padding-left: 0rem;
+      padding-right: 0rem;
+
+      &:hover {
+        border-bottom: 2px solid $gray;
+      }
+
+      &:focus,
+      &:active {
+        border-bottom: 2px solid $blue;
+      }
+
+      &::-webkit-input-placeholder {
+        color: $gray;
+      }
+
+      &::-moz-placeholder {
+        color: $gray;
+      }
+
+      &:-ms-input-placeholder {
+        color: $gray;
+      }
+
+      &:-moz-placeholder {
+        color: $gray;
+      }
+    }
+  }
+
+  .links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex: 1;
+
+    .link {
+      display: inline-block;
+      width: auto;
+      padding: 0.9rem 0.6rem;
+    }
+  }
+
+  .link {
     color: $gray;
 
     &:hover,
