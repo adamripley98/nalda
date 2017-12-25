@@ -93,33 +93,23 @@ class Nav extends Component {
               </a>
             </div>
           ) : (
-            <ul className="links right">
-              <li className="nav-item">
-                <Link to="/" className="link">
-                  Home
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link to="/about" className="link">
-                  About
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link to="/contact" className="link">
-                  Contact
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link to="/register" className="link">
-                  Register
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link to="/login" className="link">
-                  Login
-                </Link>
-              </li>
-          </ul>
+            <div className="links right">
+              <Link to="/" className="link">
+                Home
+              </Link>
+              <Link to="/about" className="link">
+                About
+              </Link>
+              <Link to="/contact" className="link">
+                Contact
+              </Link>
+              <Link to="/register" className="link">
+                Register
+              </Link>
+              <Link to="/login" className="link">
+                Login
+              </Link>
+          </div>
         )}
       </nav>
     );
