@@ -9,6 +9,31 @@ To start, run "npm start" or concurrently run "npm run frontend" and "npm run ba
 ## Currently Working on:
 Backend for articles and listings
 
+## TODO
+- [ ] Admin add page (similar look to contact page) where admins can enter email addresses and add both other admins and other content creators. Only admins can add people as content creators and only content creators can create posts.
+- [ ] Default create users with type “user”. Admin can switch them to “admin” or “creator”
+- [ ] Protect admin, creator, and user routes.
+- [ ] Allow users to leave reviews: comments and ratings.
+- [ ] Complete listing backend (already stores listing in Mongo, just need to populate to home screen.
+- [ ] Complete individual listing view
+- [ ] Video backend
+- [ ] Video frontend
+- [ ] Search bar and functionality on home page
+- [ ] Make sort by recent actually work (give everything posted a time stamp)
+- [ ] Home page needs to have other ways of sorting: most popular, by category, by author?, etc
+- [ ] Make it so when you post an article or listing it uses real user data and time of posting when showing author
+- [ ] Style “about” page. (Need a few paragraphs from nalda about the company)
+- [ ] Potentially have a “join the team” page where it sends an email to them allowing them to add that person as a content editor. Maybe not for beta
+- [ ] Store listing data better (array of times, ratings as numbers, need to store reviews/comments as well)
+- [ ] Add author field to every posting
+- [ ] Incorporate Nalda logo and other advice from edward
+- [ ] Any sort of recommendations??? Probably not for beta tbh
+- [ ] Fix authentication route bug (when you refresh on a page that requires authentication it redirects to home page????)
+- [ ] Forgot password send email reset
+- [ ] HTTPS?
+- [ ] Domain registration 
+
+
 ## Frontend
 
 - [ ] Setting up SCSS

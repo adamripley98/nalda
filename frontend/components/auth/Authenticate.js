@@ -4,10 +4,6 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 
-// import components
-import Login from './Login';
-
-
 export default function(ComponentToRender) {
   class Authenticate extends Component {
     componentWillMount() {
