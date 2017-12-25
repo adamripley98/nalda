@@ -42,6 +42,7 @@ import NotFoundSection from '../components/NotFoundSection';
 class AppContainer extends Component {
   // Render the application
   render() {
+    console.log('auth STATE props in app container', this.props);
     // Some routes require authentication, others don't
     return (
       <div>
@@ -91,7 +92,8 @@ AppContainer.propTypes = {
 
 const mapStateToProps = (state) => {
   return {
-    userId: state.authState.userId
+    userId: state.authState.userId,
+    userType: state.authState.userType,
   };
 };
 

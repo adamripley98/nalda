@@ -13,6 +13,7 @@ Backend for articles and listings
 - [ ] Admin add page (similar look to contact page) where admins can enter email addresses and add both other admins and other content creators. Only admins can add people as content creators and only content creators can create posts.
 - [ ] Default create users with type “user”. Admin can switch them to “admin” or “creator”
 - [ ] Protect admin, creator, and user routes.
+- [ ] Add name field to user model in Mongo, population on screen: "Welcome, Adam"
 - [ ] Allow users to leave reviews: comments and ratings.
 - [ ] Complete listing backend (already stores listing in Mongo, just need to populate to home screen.
 - [ ] Complete individual listing view
@@ -31,7 +32,7 @@ Backend for articles and listings
 - [ ] Fix authentication route bug (when you refresh on a page that requires authentication it redirects to home page????)
 - [ ] Forgot password send email reset
 - [ ] HTTPS?
-- [ ] Domain registration 
+- [ ] Domain registration
 
 
 ## Frontend

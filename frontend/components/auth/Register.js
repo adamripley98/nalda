@@ -81,7 +81,7 @@ class Register extends Component {
         error: "Password and confirm password must match.",
       });
     } else {
-      // Fields are all polpulated
+      // Fields are all populated
       // Remove any existing error
       this.setState({
         error: "",
@@ -105,7 +105,7 @@ class Register extends Component {
             this.setState({
               redirectToHome: true,
             });
-            onRegister(resp.data._id);
+            onRegister(resp.data._id, resp.data.userType);
           }
         })
         .catch((err) => {
@@ -115,7 +115,7 @@ class Register extends Component {
   }
 
   /**
-   * Handle when a yser types into the name
+   * Handle when a user types into the name
    */
   handleChangeName(event) {
     this.setState({
@@ -239,13 +239,14 @@ Register.propTypes = {
 const mapStateToProps = state => {
   return {
     userId: state.authState.userId,
+    userType: state.authState.userType,
   };
 };
 
 // When we call onRegister now, it will dispatch register event
 const mapDispatchToProps = dispatch => {
   return {
-    onRegister: (userId) => dispatch(register(userId)),
+    onRegister: (userId, userType) => dispatch(register(userId, userType)),
   };
 };
 

@@ -63,7 +63,7 @@ class Login extends Component {
               error: resp.data,
             });
           } else {
-            onLogin(resp.data._id);
+            onLogin(resp.data._id, resp.data.userType);
             this.setState({
               redirectToHome: true,
             });
@@ -154,13 +154,14 @@ Login.propTypes = {
 const mapStateToProps = state => {
   return {
     userId: state.authState.userId,
+    userType: state.authState.userType,
   };
 };
 
 // Allows us to dispatch a login event by calling this.props.onLogin
 const mapDispatchToProps = dispatch => {
   return {
-    onLogin: (userId) => dispatch(login(userId))
+    onLogin: (userId, userType) => dispatch(login(userId, userType))
   };
 };
 
