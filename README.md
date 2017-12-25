@@ -11,7 +11,7 @@ Backend for articles and listings
 
 ## Frontend
 
-- [ ] Setting up SCSS
+- [x] Setting up SCSS
 - [ ] Video styling
 - [ ] Login/Register/Reset/Edit Account Form styling
 - [ ] Sendgrid configuration for sending emails

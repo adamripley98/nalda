@@ -12,11 +12,23 @@ class Nav extends Component {
   // Constructor method
   constructor(props) {
     super(props);
-    // Bindings so 'this' refers to component
-    this.handleLogoutSubmit = this.handleLogoutSubmit.bind(this);
+
+    // Set the state
     this.state = {
       redirectToLogin: false,
+      search: "",
     };
+
+    // Bindings so 'this' refers to component
+    this.handleLogoutSubmit = this.handleLogoutSubmit.bind(this);
+    this.handleChangeSearch = this.handleChangeSearch.bind(this);
+  }
+
+  // Handle when a user searches for something
+  handleChangeSearch(event) {
+    this.setState({
+      search: event.target.value,
+    });
   }
 
   // When logout button clicked, will attempt to logout on backend (logout.js)
@@ -45,74 +57,70 @@ class Nav extends Component {
   }
   render() {
     return (
-      <nav className="navbar navbar-toggleable-md navbar-light">
+      <nav className="nav">
         { this.state.redirectToLogin && (<Redirect to="/login"/>) }
-        <button className="navbar-toggler navbar-toggler-right collapsed" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span className="icon-bar top-bar" />
-          <span className="icon-bar middle-bar" />
-          <span className="icon-bar bottom-bar" />
-        </button>
-        <Link to="/" className="navbar-brand">Nalda</Link>
+        <Link to="/" className="logo">Nalda</Link>
+          { /* Render left-aligned part of the navbar */ }
+          { /* TODO */ }
+          <div className="search">
+            <i className="fa fa-search" aria-hidden="true" />
+            <input
+              className="form-control"
+              id="search"
+              value={ this.state.seach }
+              onChange={ this.handleChangeSearch }
+              placeholder="Search for activities, places, or curators."
+            />
+          </div>
 
-        <div className="collapse navbar-collapse" id="navbarSupportedContent">
+          { /* Render right-aligned part of the navbar */ }
           {this.props.userId ? (
-            <ul className="navbar-nav ml-auto">
-              <li className="nav-item">
-                <Link to="/" className="nav-link">
-                  Home
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link to="/about" className="nav-link">
-                  About
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link to="/contact" className="nav-link">
-                  Contact
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link to="/articles/new" className="nav-link">
-                  Create
-                </Link>
-              </li>
-              <li className="nav-item">
-                <a onClick={ this.handleLogoutSubmit } className="nav-link cursor">
-                  Logout
-                </a>
-              </li>
-            </ul>
+            <div className="links right">
+              <Link to="/" className="link">
+                Home
+              </Link>
+              <Link to="/about" className="link">
+                About
+              </Link>
+              <Link to="/contact" className="link">
+                Contact
+              </Link>
+              <Link to="/articles/new" className="link">
+                Create
+              </Link>
+              <a onClick={ this.handleLogoutSubmit } className="link cursor">
+                Logout
+              </a>
+            </div>
           ) : (
-            <ul className="navbar-nav ml-auto">
+            <ul className="links right">
               <li className="nav-item">
-                <Link to="/" className="nav-link">
+                <Link to="/" className="link">
                   Home
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="/about" className="nav-link">
+                <Link to="/about" className="link">
                   About
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="/contact" className="nav-link">
+                <Link to="/contact" className="link">
                   Contact
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="/register" className="nav-link">
+                <Link to="/register" className="link">
                   Register
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="/login" className="nav-link">
+                <Link to="/login" className="link">
                   Login
                 </Link>
               </li>
           </ul>
-          )}
-        </div>
+        )}
       </nav>
     );
   }
