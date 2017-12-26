@@ -29,6 +29,7 @@ import VideoForm from '../components/content/forms/VideoForm';
 // Other components
 import About from '../components/About';
 import Contact from '../components/Contact';
+import Admin from '../components/Admin';
 import NotFoundSection from '../components/NotFoundSection';
 
 /**
@@ -42,7 +43,6 @@ import NotFoundSection from '../components/NotFoundSection';
 class AppContainer extends Component {
   // Render the application
   render() {
-    console.log('auth STATE props in app container', this.props);
     // Some routes require authentication, others don't
     return (
       <div>
@@ -59,6 +59,9 @@ class AppContainer extends Component {
                 <Route exact path="/about" component={About}/>
                 <Route exact path="/contact" component={Contact}/>
                 <Route exact path="/" component={requireAuth(Home)}/>
+
+                { /* Admin routes */ }
+                <Route exact path="/admin" component={Admin}/>
 
                 { /* Routes for articles */ }
                 <Route exact path="/articles/new" component={requireAuth(ArticleForm)} />
@@ -88,6 +91,7 @@ class AppContainer extends Component {
 
 AppContainer.propTypes = {
   userId: PropTypes.string,
+  userType: PropTypes.string,
 };
 
 const mapStateToProps = (state) => {

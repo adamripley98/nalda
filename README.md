@@ -10,9 +10,10 @@ To start, run "npm start" or concurrently run "npm run frontend" and "npm run ba
 Backend for articles and listings
 
 ## TODO
-- [ ] Admin add page (similar look to contact page) where admins can enter email addresses and add both other admins and other content creators. Only admins can add people as content creators and only content creators can create posts.
-- [ ] Default create users with type “user”. Admin can switch them to “admin” or “creator”
-- [ ] Protect admin, creator, and user routes.
+- [ ] Admin add page (similar look to contact page) where admins can enter email addresses and add both other admins and other content curators. Only admins can add people as content curators and only content curators can create posts.
+- [ ] Default create users with type “user”. Admin can switch them to “admin” or “curators”
+- [ ] Protect admin, curator, and user routes.
+- [ ] Allow admins to remove curators
 - [ ] Add name field to user model in Mongo, population on screen: "Welcome, Adam"
 - [ ] Allow users to leave reviews: comments and ratings.
 - [ ] Complete listing backend (already stores listing in Mongo, just need to populate to home screen.
@@ -24,13 +25,15 @@ Backend for articles and listings
 - [ ] Home page needs to have other ways of sorting: most popular, by category, by author?, etc
 - [ ] Make it so when you post an article or listing it uses real user data and time of posting when showing author
 - [ ] Style “about” page. (Need a few paragraphs from nalda about the company)
-- [ ] Potentially have a “join the team” page where it sends an email to them allowing them to add that person as a content editor. Maybe not for beta
+- [ ] Potentially have a “join the team” page where it sends an email to them allowing them to add that person as a content curator. Maybe not for beta
 - [ ] Store listing data better (array of times, ratings as numbers, need to store reviews/comments as well)
 - [ ] Add author field to every posting
 - [ ] Incorporate Nalda logo and other advice from edward
 - [ ] Any sort of recommendations??? Probably not for beta tbh
 - [ ] Fix authentication route bug (when you refresh on a page that requires authentication it redirects to home page????)
+- [ ] Contact form actually sends them an email
 - [ ] Forgot password send email reset
+- [ ] Change password backend and frontend
 - [ ] HTTPS?
 - [ ] Domain registration
 

@@ -11,6 +11,7 @@ const router = express.Router();
 const Article = require('./models/article');
 const Listing = require('./models/listing');
 const Video = require('./models/video');
+const User = require('./models/user');
 
 // Export the following methods for routing
 module.exports = () => {
@@ -22,6 +23,33 @@ module.exports = () => {
       success: true,
       data: "API is up and running.",
     });
+  });
+
+  /**
+   * Route to handle adding new admins, admins allowed to add more admins/curators and create content
+   * @param userToAdd
+   */
+  router.post('/add/admin', (req, res) => {
+    console.log('adding admin');
+    User.find({username: req.body.userToAdd}, (err, user) => {
+      if (err) {
+        res.send({
+          success: false,
+          error: err,
+        });
+      }
+      res.send({
+        success: true,
+      });
+    });
+  });
+
+  /**
+   * Route to handle adding new curators, allowed to create content but not add others
+   * @param userToAdd
+   */
+  router.post('/add/curator', (req, res) => {
+    res.send({success: true});
   });
 
   /**

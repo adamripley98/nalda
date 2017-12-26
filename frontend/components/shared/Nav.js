@@ -105,9 +105,22 @@ class Nav extends Component {
               <Link to="/contact" className="link">
                 Contact
               </Link>
-              <Link to="/articles/new" className="link">
-                Create
-              </Link>
+              { /* render create link only if admin or curator */ }
+              { this.props.userType === 'admin' || this.props.userType === 'curator' ? (
+                <Link to="/articles/new" className="link">
+                  Create
+                </Link>
+              ) : (
+                console.log('general user logged in')
+              )}
+              { /* render admin panel only if admin */ }
+              { this.props.userType === 'admin' ? (
+                <Link to="admin" className="link">
+                  Admin
+                </Link>
+              ) : (
+                console.log('admin not logged in')
+              )}
               <a onClick={ this.handleLogoutSubmit } className="link cursor">
                 Logout
               </a>
@@ -154,6 +167,7 @@ class Nav extends Component {
 
 Nav.propTypes = {
   userId: PropTypes.string,
+  userType: PropTypes.string,
   onLogout: PropTypes.func,
 };
 
@@ -161,6 +175,7 @@ Nav.propTypes = {
 const mapStateToProps = state => {
   return {
     userId: state.authState.userId,
+    userType: state.authState.userType,
   };
 };
 
