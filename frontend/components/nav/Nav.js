@@ -8,6 +8,7 @@ import { logout } from '../../actions/index.js';
 /**
  * Renders the navbar at the top of the screen on all pages.
  * TODO search functionality
+ * TODO populate this with user name
  */
 class Nav extends Component {
   // Constructor method
@@ -57,7 +58,15 @@ class Nav extends Component {
         { /* Render the user's profile information */ }
         <div className="user-info">
           <div className="user-text">
-            Hi, Cameron
+            { /* Render the user's locaiton information */ }
+            <div className="location">
+              University City, PA
+            </div>
+            <div className="name">
+              <p>
+                Hi, <Link to="/account">Cameron</Link>
+              </p>
+            </div>
           </div>
           <div className="user-img" />
         </div>

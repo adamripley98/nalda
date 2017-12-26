@@ -21,6 +21,7 @@
   position: fixed;
   width: 100%;
   z-index: 1299;
+  box-shadow: 0.2rem 0rem 0.1rem rgba(0, 0, 0, 0.2);
 
   .logo {
     color: $red !important;
@@ -91,8 +92,23 @@
     .user-text {
       flex: 1;
       text-align: right;
-      padding: 1rem 0rem;
-      display: inline-block;
+      display: flex;
+
+      .location,
+      .name {
+        padding: 1rem 0rem;
+      }
+
+      .location {
+        flex: 1;
+        padding-right: 0.6rem;
+        border-right: 1px solid $border;
+      }
+
+      .name {
+        padding-left: 0.6rem;
+        width: auto;
+      }
     }
 
     .user-img {
@@ -203,6 +219,31 @@
     &:active,
     &:focus {
       color: $dark-gray !important;
+    }
+  }
+}
+
+/**
+ * Hide the user text when the screen is below 748 px
+ */
+@media screen and (max-width: 748px) {
+  .nav .user-info {
+    display: block;
+    text-align: right;
+
+    .user-text {
+      display: none;
+    }
+  }
+}
+
+@media screen and (max-device-width: 748px) {
+  .nav .user-info {
+    display: block;
+    text-align: right;
+
+    .user-text {
+      display: none;
     }
   }
 }
