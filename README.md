@@ -17,21 +17,12 @@ To run the application, run `npm start`. For more responsive hot-reloading on th
 ## Currently Working on:
 Backend for articles and listings
 
-## TODO
+## Admins
+
 - [ ] Admin add page (similar look to contact page) where admins can enter email addresses and add both other admins and other content creators. Only admins can add people as content creators and only content creators can create posts.
-- [ ] Default create users with type “user”. Admin can switch them to “admin” or “creator”
-- [ ] Protect admin, creator, and user routes.
-- [ ] Allow users to leave reviews: comments and ratings.
-- [ ] Complete listing backend (already stores listing in Mongo, just need to populate to home screen.
-- [ ] Complete individual listing view
-- [ ] Video backend
-- [ ] Video frontend
-- [ ] Search bar and functionality on home page
-- [ ] Make sort by recent actually work (give everything posted a time stamp)
-- [ ] Home page needs to have other ways of sorting: most popular, by category, by author?, etc
-- [ ] Make it so when you post an article or listing it uses real user data and time of posting when showing author
-- [ ] Style “about” page. (Need a few paragraphs from nalda about the company)
-- [ ] Potentially have a “join the team” page where it sends an email to them allowing them to add that person as a content editor. Maybe not for beta
+- [ ] Allow admins to update a user's privileges (ex. from user to curator)
+- [ ] Protect `admin`, `curator`, and `user` routes.
+- [ ] Allow `users` to leave reviews: comments and ratings.
 
 ## Users
 
@@ -43,16 +34,22 @@ Backend for articles and listings
   - [ ] Videos
   - [ ] Listings
   - [ ] Articles
+- [ ] Curator show pages
+  * This should display all of the content a curator has written
+- [ ] Default create users with type `user`. Admin can switch them to `admin` or `curator`
 
 ## Listings
 
 - [ ] Store an array of times or two fields for each day
 - [ ] Store reviews / comments on listings
 - [ ] Form for adding reviews
+- [ ] Complete listing view
+- [ ] Complete listing backend (already stores listing in Mongo, just need to populate to home screen.
 
 ## Videos
 
 - [ ] Improve styling
+- [ ] Video backend
 
 ## Frontend
 
@@ -63,9 +60,8 @@ Backend for articles and listings
 - [ ] Login/Register/Reset/Edit Account Form styling
 - [ ] Individual listing view
 - [ ] Ajax search suggestions
-- [ ] Curator show pages
-  * This should display all of the content a curator has written
 - [ ] Incorporate Nalda logo and other advice from Edward
+- [ ] Home page needs to have other ways of sorting: most popular, by category, by author?, etc
 
 ## Backend
 
@@ -82,10 +78,16 @@ Backend for articles and listings
 - [ ] Domain registration/setup
 - [ ] Better user auth checks on the backend
 - [ ] Better parameter error checking on the backend
+- [ ] Link user data to posted article
+- [ ] Give content a timestamp
+  - [ ] Videos
+  - [ ] Listings
+  - [ ] Articles
 
 ## Other
 
 - [ ] Make a check in the `AppContainer` component to ensure that `passport` and `redux` are in sync (`redux persist`) makes it such that this can outlast the backend session
+- [ ] Style about page
 
 ## Bugs
 - [ ] Fix authentication route bug
@@ -98,3 +100,4 @@ Backend for articles and listings
   * How should we get a user's location?
   * Should all content have a location?
   * Should we only show content near the user?
+* What information do you want on the about page?
