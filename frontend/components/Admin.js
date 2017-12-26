@@ -47,6 +47,7 @@ class Admin extends Component {
       userToAdd: this.state.email,
     })
     .then((resp) => {
+      console.log('resp', resp.data);
       // Shows any errors
       if (resp.data.error) {
         this.setState({error: resp.data.error});

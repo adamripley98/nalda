@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 
 export default function(ComponentToRender) {
-  class AuthenticateAdmin extends Component {
+  class RequireAdmin extends Component {
     componentWillMount() {
       if (!this.props.userId) {
         return (
@@ -35,7 +35,7 @@ export default function(ComponentToRender) {
     }
   }
 
-  AuthenticateAdmin.propTypes = {
+  RequireAdmin.propTypes = {
     userId: PropTypes.string,
     userType: PropTypes.string,
   };
@@ -48,5 +48,5 @@ export default function(ComponentToRender) {
     };
   };
 
-  return connect(mapStateToProps)(AuthenticateAdmin);
+  return connect(mapStateToProps)(RequireAdmin);
 }

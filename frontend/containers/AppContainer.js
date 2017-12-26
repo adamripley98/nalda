@@ -11,8 +11,8 @@ import Footer from '../components/shared/Footer';
 // Authorization components
 import Login from '../components/auth/Login';
 import Register from '../components/auth/Register';
-import requireAuth from '../components/auth/Authenticate';
-import requireAdmin from '../components/auth/AuthenticateAdmin';
+import requireCurator from '../components/auth/RequireCurator';
+import requireAdmin from '../components/auth/RequireAdmin';
 
 // Content viewing compontents
 import Home from '../components/Home';
@@ -59,23 +59,23 @@ class AppContainer extends Component {
                 { /* General routes */ }
                 <Route exact path="/about" component={About}/>
                 <Route exact path="/contact" component={Contact}/>
-                <Route exact path="/" component={requireAuth(Home)}/>
+                <Route exact path="/" component={requireCurator(Home)}/>
 
                 { /* Admin routes */ }
                 <Route exact path="/admin" component={requireAdmin(Admin)}/>
 
                 { /* Routes for articles */ }
-                <Route exact path="/articles/new" component={requireAuth(ArticleForm)} />
+                <Route exact path="/articles/new" component={requireCurator(ArticleForm)} />
                 <Route exact path="/articles/:id" component={Article} />
                 <Route exact path="/articles" component={Articles} />
 
                 { /* Routes for listings */ }
-                <Route exact path="/listings/new" component={requireAuth(ListingForm)} />
+                <Route exact path="/listings/new" component={requireCurator(ListingForm)} />
                 <Route exact path="/listings" components={Listings} />
                 <Route exact path="/listings/:id" component={Listing} />
 
                 { /* Routes for videos */ }
-                <Route exact path="/videos/new" component={requireAuth(VideoForm)} />
+                <Route exact path="/videos/new" component={requireCurator(VideoForm)} />
                 <Route exact path="/videos/:id" component={Video} />
 
                 { /* 404 if no other route was matched */ }
