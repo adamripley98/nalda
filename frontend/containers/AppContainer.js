@@ -12,6 +12,7 @@ import Footer from '../components/shared/Footer';
 import Login from '../components/auth/Login';
 import Register from '../components/auth/Register';
 import requireAuth from '../components/auth/Authenticate';
+import Account from '../components/auth/Account';
 
 // Content viewing compontents
 import Home from '../components/Home';
@@ -54,6 +55,9 @@ class AppContainer extends Component {
                 { /* User registration routes */ }
                 <Route exact path="/login" component={Login}/>
                 <Route exact path="/register" component={Register}/>
+
+                { /* Other user routes */ }
+                <Route exact path="/account" component={Account} />
 
                 { /* General routes */ }
                 <Route exact path="/about" component={About}/>

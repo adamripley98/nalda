@@ -12,7 +12,7 @@
  * Fixed navbar at the top of every page
  */
 .nav {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid $border;
   font-weight: bold;
   background: white;
   color: $gray;
@@ -26,7 +26,7 @@
     color: $red !important;
     font-size: 1.5rem;
     padding: 0.5rem 1rem;
-    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    border-right: 1px solid $border;
   }
 
   .search {
@@ -79,18 +79,48 @@
       }
     }
   }
+
+  .user-info {
+    flex: 1;
+    border-right: 1px solid $border;
+    margin: 0;
+    padding: 0;
+    height: 57.19px;
+    display: flex;
+
+    .user-text {
+      flex: 1;
+      text-align: right;
+      padding: 1rem 0rem;
+      display: inline-block;
+    }
+
+    .user-img {
+      height: 2rem;
+      margin: 0.8rem;
+      width: 2rem;
+      border-radius: 50%;
+      background: $gray;
+      display: inline-block;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      display: inline-block;
+    }
+  }
 }
 
 .menu {
-  position: absolute;
-  right: 1rem;
-  padding: 1rem 0.6rem;
+  padding: 1rem 0.6rem 1rem 1rem;
   z-index: 1301;
+  width: 3.6rem;
 
   .bars {
     width: 2rem;
     cursor: hand;
     cursor: pointer;
+    z-index: 1302;
+    position: absolute;
 
     &:hover,
     &:focus,
@@ -128,6 +158,8 @@
     height: 100%;
     cursor: hand;
     cursor: pointer;
+    top: 0;
+    position: fixed;
   }
 
   .side-menu {
@@ -138,7 +170,7 @@
     right: 0;
     min-width: 20rem !important;
     max-width: 100%;
-    border-left: 1px solid rgba(0, 0, 0, 0.1);
+    border-left: 1px solid $border;
   }
 
   .links {

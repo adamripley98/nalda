@@ -54,6 +54,14 @@ class Nav extends Component {
           />
         </div>
 
+        { /* Render the user's profile information */ }
+        <div className="user-info">
+          <div className="user-text">
+            Hi, Cameron
+          </div>
+          <div className="user-img" />
+        </div>
+
         { /* Render the sidebar */ }
         <Sidebar />
       </nav>
