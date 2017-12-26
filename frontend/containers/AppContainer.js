@@ -48,6 +48,7 @@ class AppContainer extends Component {
         <Router>
           <div>
             <Nav />
+            <div className="nav-space" />
             <div className="app-content">
               <Switch>
                 { /* User registration routes */ }

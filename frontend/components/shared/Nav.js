@@ -80,8 +80,7 @@ class Nav extends Component {
       <nav className="nav">
         { this.state.redirectToLogin && (<Redirect to="/login"/>) }
         <Link to="/" className="logo">Nalda</Link>
-          { /* Render left-aligned part of the navbar */ }
-          { /* TODO */ }
+          { /* Render the search bar on the left of the navbar */ }
           <div className="search">
             <i className="fa fa-search" aria-hidden="true" />
             <input
@@ -92,45 +91,6 @@ class Nav extends Component {
               placeholder="Search for activities, places, or curators."
             />
           </div>
-
-          { /* Render right-aligned part of the navbar */ }
-          {this.props.userId ? (
-            <div className="links right">
-              <Link to="/" className="link">
-                Home
-              </Link>
-              <Link to="/about" className="link">
-                About
-              </Link>
-              <Link to="/contact" className="link">
-                Contact
-              </Link>
-              <Link to="/articles/new" className="link">
-                Create
-              </Link>
-              <a onClick={ this.handleLogoutSubmit } className="link cursor">
-                Logout
-              </a>
-            </div>
-          ) : (
-            <div className="links right">
-              <Link to="/" className="link">
-                Home
-              </Link>
-              <Link to="/about" className="link">
-                About
-              </Link>
-              <Link to="/contact" className="link">
-                Contact
-              </Link>
-              <Link to="/register" className="link">
-                Register
-              </Link>
-              <Link to="/login" className="link">
-                Login
-              </Link>
-          </div>
-        )}
         <div className="menu">
           <div className="bars" onClick={ this.toggleMenu }>
             <div className="bar" />
@@ -142,9 +102,45 @@ class Nav extends Component {
         <div id="sidebar" style={{ display: !this.state.active && "none" }}>
           <div className="shade" onClick={ this.toggleMenu } />
           <div className="side-menu">
-            <div className="header">
-              STUFF
-            </div>
+            {
+              this.props.userId ? (
+                <div className="links">
+                  <Link to="/" className="link">
+                    Home
+                  </Link>
+                  <Link to="/about" className="link">
+                    About
+                  </Link>
+                  <Link to="/contact" className="link">
+                    Contact
+                  </Link>
+                  <Link to="/articles/new" className="link">
+                    Create
+                  </Link>
+                  <a onClick={ this.handleLogoutSubmit } className="link cursor">
+                    Logout
+                  </a>
+                </div>
+              ) : (
+                <div className="links">
+                  <Link to="/" className="link">
+                    Home
+                  </Link>
+                  <Link to="/about" className="link">
+                    About
+                  </Link>
+                  <Link to="/contact" className="link">
+                    Contact
+                  </Link>
+                  <Link to="/register" className="link">
+                    Register
+                  </Link>
+                  <Link to="/login" className="link">
+                    Login
+                  </Link>
+                </div>
+              )
+            }
           </div>
         </div>
       </nav>
