@@ -48,11 +48,16 @@ class Nav extends Component {
         <div className="search">
           <i className="fa fa-search" aria-hidden="true" />
           <input
-            className="form-control"
-            id="search"
+            className="form-control small"
             value={ this.state.seach }
             onChange={ this.handleChangeSearch }
-            placeholder="Search for activities, places, or curators."
+            placeholder="Search"
+          />
+          <input
+            className="form-control large"
+            value={ this.state.seach }
+            onChange={ this.handleChangeSearch }
+            placeholder="Search for activities, places, or curators"
           />
         </div>
 

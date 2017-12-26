@@ -54,6 +54,10 @@
       padding-left: 0rem;
       padding-right: 0rem;
 
+      &.small {
+        display: none;
+      }
+
       &:hover {
         border-bottom: 2px solid $gray;
       }
@@ -259,6 +263,33 @@
     border-right: 1px solid $border;
 
     .user-text {
+      display: none;
+    }
+  }
+}
+
+/**
+ * Swap the placeholder on smaller screen sizes for a shorter version
+ */
+@media screen and (max-width: 648px) {
+  .nav .search .form-control {
+    &.small {
+      display: block;
+    }
+
+    &.large {
+      display: none;
+    }
+  }
+}
+
+@media screen and (max-device-width: 648px) {
+  .nav .search .form-control {
+    &.small {
+      display: block;
+    }
+
+    &.large {
       display: none;
     }
   }

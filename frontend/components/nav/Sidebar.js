@@ -90,11 +90,8 @@ class Sidebar extends Component {
                   <Link to="/" className="link">
                     Home
                   </Link>
-                  <Link to="/about" className="link">
-                    About
-                  </Link>
-                  <Link to="/contact" className="link">
-                    Contact
+                  <Link to="/account" className="link">
+                    Account
                   </Link>
                   <Link to="/articles/new" className="link">
                     Create
