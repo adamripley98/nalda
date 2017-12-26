@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 // Shared and general components
-import Nav from '../components/shared/Nav';
+import Nav from '../components/nav/Nav';
 import Footer from '../components/shared/Footer';
 
 // Authorization components
