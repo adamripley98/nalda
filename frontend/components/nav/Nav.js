@@ -9,6 +9,7 @@ import { logout } from '../../actions/index.js';
  * Renders the navbar at the top of the screen on all pages.
  * TODO search functionality
  * TODO populate this with user name
+ * TODO pull location from the database
  */
 class Nav extends Component {
   // Constructor method

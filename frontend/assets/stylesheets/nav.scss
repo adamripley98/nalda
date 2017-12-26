@@ -83,7 +83,6 @@
 
   .user-info {
     flex: 1;
-    border-right: 1px solid $border;
     margin: 0;
     padding: 0;
     height: 57.19px;
@@ -101,12 +100,12 @@
 
       .location {
         flex: 1;
-        padding-right: 0.6rem;
+        padding-right: 1rem;
         border-right: 1px solid $border;
       }
 
       .name {
-        padding-left: 0.6rem;
+        padding-left: 1rem;
         width: auto;
       }
     }
@@ -224,12 +223,28 @@
 }
 
 /**
- * Hide the user text when the screen is below 748 px
+ * Hide yser name when the screen is below 928px
  */
-@media screen and (max-width: 748px) {
+@media screen and (max-width: 928px) {
+  .nav .user-info .user-text .name {
+    display: none;
+  }
+}
+
+@media screen and (max-device-width: 928px) {
+  .nav .user-info .user-text .name {
+    display: none;
+  }
+}
+
+/**
+ * Hide the user text when the screen is below 848px
+ */
+@media screen and (max-width: 848px) {
   .nav .user-info {
     display: block;
     text-align: right;
+    border-right: 1px solid $border;
 
     .user-text {
       display: none;
@@ -237,10 +252,11 @@
   }
 }
 
-@media screen and (max-device-width: 748px) {
+@media screen and (max-device-width: 848px) {
   .nav .user-info {
     display: block;
     text-align: right;
+    border-right: 1px solid $border;
 
     .user-text {
       display: none;
