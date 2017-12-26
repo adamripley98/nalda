@@ -147,9 +147,45 @@ a {
 .loading {
   width: 100%;
   text-align: center;
-  color: $light-gray;
-  font-size: 1.25rem;
   padding: 1rem 0rem;
+
+  .loader {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    display: inline-block;
+    border-right: 6px solid $light-gray;
+    border-bottom: 6px solid $light-gray;
+    border-left: 6px solid transparent;
+    border-top: 6px solid transparent;
+    -webkit-animation: right 2s infinite linear;
+
+    &.reverse {
+      position: absolute;
+      transform: translateX(-4rem);
+      -webkit-animation: right 1s infinite linear;
+    }
+  }
+}
+
+@-webkit-keyframes right {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@-webkit-keyframes left {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(-360deg);
+  }
 }
 
 // Format styling for picking hours
@@ -231,6 +267,8 @@ a {
 }
 
 .home {
+  margin-bottom: 2rem;
+  
   .title {
     font-weight: bold;
     margin-bottom: 1rem;

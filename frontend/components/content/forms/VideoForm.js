@@ -130,7 +130,7 @@ class ArticleForm extends React.Component {
                 onChange={ this.handleChangeTitle }
               />
               <label>
-                Video (url to a video)
+                Link to YouTube video
               </label>
               <input
                 name="image"

@@ -71,8 +71,8 @@ class AppContainer extends Component {
 
                 { /* Routes for listings */ }
                 <Route exact path="/listings/new" component={requireAuth(ListingForm)} />
-                <Route exact path="/listings" components={Listings} />
                 <Route exact path="/listings/:id" component={Listing} />
+                <Route exact path="/listings" components={Listings} />
 
                 { /* Routes for videos */ }
                 <Route exact path="/videos/new" component={requireAuth(VideoForm)} />

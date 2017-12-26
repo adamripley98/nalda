@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Loading from '../../shared/Loading';
 import ErrorMessage from '../../shared/ErrorMessage';
+import Button from '../../shared/Button';
 
 /**
  * Component for the homepage of the application
@@ -71,7 +72,7 @@ class Listings extends React.Component {
       <div className="container home">
         <div className="space-1"/>
         <h3 className="title">
-          Articles
+          Listings
         </h3>
         <div className="row">
           {
@@ -83,6 +84,13 @@ class Listings extends React.Component {
               ) : (
                 this.renderListings()
               )
+            )
+          }
+          {
+            !this.state.pending && (
+              <div className="col-12 marg-top-1">
+                <Button />
+              </div>
             )
           }
         </div>

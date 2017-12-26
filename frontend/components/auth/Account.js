@@ -4,6 +4,7 @@ import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Button from '../shared/Button';
+import Loading from '../shared/Loading';
 
 // Import components
 import ErrorMessage from '../shared/ErrorMessage';
@@ -22,6 +23,7 @@ class Account extends Component {
       email: '',
       profilePicture: '',
       error: '',
+      pending: true,
     };
   }
 
@@ -31,6 +33,13 @@ class Account extends Component {
    */
   componentDidMount() {
     return false;
+  }
+
+  /**
+   * Helper function to render a user's information
+   */
+  renderInfo() {
+    return "info";
   }
 
   /**
@@ -46,10 +55,11 @@ class Account extends Component {
         <div className="container">
           <div className="row">
             <div className="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-              <h3 className="bold">
+              <h3 className="bold marg-top-1 marg-bot-1">
                 Account information
               </h3>
               { this.state.error && <ErrorMessage error={ this.state.error } /> }
+              { this.state.pending ? <Loading /> : this.renderInfo() }
               <Button />
             </div>
           </div>

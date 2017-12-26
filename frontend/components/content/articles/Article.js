@@ -30,7 +30,7 @@ class Article extends React.Component {
 
   // Pull the article data from the database
   componentDidMount() {
-    // Find teh id in the url
+    // Find the id in the url
     const id = this.props.match.params.id;
 
     // Find the article
@@ -94,7 +94,6 @@ class Article extends React.Component {
                   <h3>
                     { this.state.subtitle }
                   </h3>
-                  <div className="line marg-0" />
                   { this.renderAuthor() }
                   <img src={ this.state.article.image } alt={ this.state.article.title } className="img-fluid" />
                   <p>

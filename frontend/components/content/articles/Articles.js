@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Loading from '../../shared/Loading';
 import ErrorMessage from '../../shared/ErrorMessage';
+import Button from '../../shared/Button';
 
 /**
  * Component for the homepage of the application
@@ -83,6 +84,13 @@ class Articles extends React.Component {
               ) : (
                 this.renderArticles()
               )
+            )
+          }
+          {
+            !this.state.pending && (
+              <div className="col-12 marg-top-1">
+                <Button />
+              </div>
             )
           }
         </div>
