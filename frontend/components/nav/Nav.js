@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Redirect, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import Sidebar from './Sidebar';
@@ -16,7 +16,6 @@ class Nav extends Component {
 
     // Set the state
     this.state = {
-      redirectToLogin: false,
       search: "",
       active: false,
     };
@@ -40,8 +39,9 @@ class Nav extends Component {
   render() {
     return (
       <nav className="nav">
-        { this.state.redirectToLogin && (<Redirect to="/login"/>) }
+        {/* Render the logo which links to the home page */}
         <Link to="/" className="logo">Nalda</Link>
+
         { /* Render the search bar on the left of the navbar */ }
         <div className="search">
           <i className="fa fa-search" aria-hidden="true" />
@@ -54,6 +54,7 @@ class Nav extends Component {
           />
         </div>
 
+        { /* Render the sidebar */ }
         <Sidebar />
       </nav>
     );

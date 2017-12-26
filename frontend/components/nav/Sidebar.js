@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { logout } from '../../actions/index.js';
@@ -26,6 +26,7 @@ class Sidebar extends Component {
 
   /**
    * Handle when a user clicks the toggle menu button
+   * This hides or shows the sidebar
    */
   toggleMenu() {
     this.setState({
@@ -66,6 +67,10 @@ class Sidebar extends Component {
   render() {
     return (
       <div>
+        {/* Redirect to the login page when the user signs out */}
+        { this.state.redirectToLogin && (<Redirect to="/login"/>) }
+
+        {/* Render the clickable menu bars */}
         <div className="menu">
           <div className="bars" onClick={ this.toggleMenu }>
             <div className="bar" />
@@ -73,12 +78,15 @@ class Sidebar extends Component {
             <div className="bar" />
           </div>
         </div>
+
+        {/* Render the sidebar itself which is hidden by default */}
         <div id="sidebar" style={{ display: !this.state.active && "none" }}>
           <div className="shade" onClick={ this.toggleMenu } />
           <div className="side-menu">
             {
               this.props.userId ? (
                 <div className="links">
+                  {/* If the user is logged in */}
                   <Link to="/" className="link">
                     Home
                   </Link>
@@ -97,6 +105,7 @@ class Sidebar extends Component {
                 </div>
               ) : (
                 <div className="links">
+                  {/* If the user is not logged in */}
                   <Link to="/" className="link">
                     Home
                   </Link>
