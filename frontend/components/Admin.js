@@ -8,8 +8,8 @@ import Thin from './shared/Thin';
 import ErrorMessage from './shared/ErrorMessage';
 
 /**
- * Component for contacting Nalda
- * TODO link this to Sendgrid?
+ * Component for Admin only, allows them to add and remove other admins and content curators
+ * TODO Add removing functionality
  */
 class Admin extends Component {
   // Constructor method
@@ -42,11 +42,18 @@ class Admin extends Component {
   onSubmitAdmin(event) {
     // Prevent the default action
     event.preventDefault();
-    axios.post('/add/admin', {
+    // Posts to routes.js
+    axios.post('/api/admin/new', {
       userToAdd: this.state.email,
     })
     .then((resp) => {
-      console.log('resp', resp.data);
+      // Shows any errors
+      if (resp.data.error) {
+        this.setState({error: resp.data.error});
+      } else {
+        this.setState({error: ''});
+        // TODO: Notify of successful change
+      }
     }).catch((err) => {
       console.log('err', err);
     });
@@ -56,11 +63,19 @@ class Admin extends Component {
   onSubmitCurator(event) {
     // Prevent the default action
     event.preventDefault();
-    axios.post('/add/curator', {
+    // Posts to routes.js
+    axios.post('/api/curator/new', {
       userToAdd: this.state.email,
     })
     .then((resp) => {
       console.log('resp', resp.data);
+      // Shows any errors
+      if (resp.data.error) {
+        this.setState({error: resp.data.error});
+      } else {
+        this.setState({error: ''});
+        // TODO: Notify of successful change
+      }
     }).catch((err) => {
       console.log('err', err);
     });

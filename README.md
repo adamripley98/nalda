@@ -6,8 +6,6 @@ Link to timesheet:
 https://docs.google.com/spreadsheets/d/1FaistICZ-BuORu7YYm5fFpgii2cvxZKgEpxApWQ_3pY/edit?usp=sharing
 
 To start, run "npm start" or concurrently run "npm run frontend" and "npm run backend"
-## Currently Working on:
-Backend for articles and listings
 
 ## TODO
 - [ ] Admin add page (similar look to contact page) where admins can enter email addresses and add both other admins and other content curators. Only admins can add people as content curators and only content curators can create posts.

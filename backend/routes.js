@@ -29,10 +29,9 @@ module.exports = () => {
    * Route to handle adding new admins, admins allowed to add more admins/curators and create content
    * @param userToAdd
    */
-  router.post('/add/admin', (req, res) => {
-    console.log('adding admin');
+  router.post('/admin/new', (req, res) => {
     // finds given user in Mongo
-    User.find({username: req.body.userToAdd}, (err, user) => {
+    User.findOne({username: req.body.userToAdd}, (err, user) => {
       // Lets them know that if there is an error
       if (err) {
         res.send({
@@ -68,8 +67,38 @@ module.exports = () => {
    * Route to handle adding new curators, allowed to create content but not add others
    * @param userToAdd
    */
-  router.post('/add/curator', (req, res) => {
-    res.send({success: true});
+  router.post('/curator/new', (req, res) => {
+    // finds given user in Mongo
+    User.findOne({username: req.body.userToAdd}, (err, user) => {
+      // Lets them know that if there is an error
+      if (err) {
+        res.send({
+          success: false,
+          error: err,
+        });
+      // Makes sure that user exists
+      } else if (!user) {
+        res.send({
+          success: false,
+          error: req.body.userToAdd + ' does not seem to exist!'
+        });
+      } else {
+        // Makes given user an admin
+        user.userType = "curator";
+        user.save((err2) => {
+          if (err2) {
+            res.send({
+              success: false,
+              error: err2,
+            });
+          }
+          // If no error saving new user, returns successfully
+          res.send({
+            success: true,
+          });
+        });
+      }
+    });
   });
 
   /**

@@ -23,11 +23,11 @@ module.exports = (passport) => {
 						 return false;
 		     }
 				 // If no error and user doesn't already exist, create a user
-				 // Default sets userType to regular, admin can change to admin or curator
+				 // Default sets userType to user, admin can change to admin or curator
 				 const newUser = new User({
 					 username: req.body.username,
 					 password: createHash(req.body.password),
-					 userType: 'regular'
+					 userType: 'user'
 				 });
 				 // Saving new user in Mongo
 				 newUser.save((er, usr) => {

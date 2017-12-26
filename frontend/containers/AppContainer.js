@@ -12,6 +12,7 @@ import Footer from '../components/shared/Footer';
 import Login from '../components/auth/Login';
 import Register from '../components/auth/Register';
 import requireAuth from '../components/auth/Authenticate';
+import requireAdmin from '../components/auth/AuthenticateAdmin';
 
 // Content viewing compontents
 import Home from '../components/Home';
@@ -61,7 +62,7 @@ class AppContainer extends Component {
                 <Route exact path="/" component={requireAuth(Home)}/>
 
                 { /* Admin routes */ }
-                <Route exact path="/admin" component={Admin}/>
+                <Route exact path="/admin" component={requireAdmin(Admin)}/>
 
                 { /* Routes for articles */ }
                 <Route exact path="/articles/new" component={requireAuth(ArticleForm)} />
