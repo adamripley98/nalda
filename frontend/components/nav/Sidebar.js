@@ -90,6 +90,15 @@ class Sidebar extends Component {
                   <Link to="/" className="link">
                     Home
                   </Link>
+                  <Link to="/articles" className="link">
+                    Articles
+                  </Link>
+                  <Link to="/listings" className="link">
+                    Listings
+                  </Link>
+                  <Link to="/videos" className="link">
+                    Videos
+                  </Link>
                   <Link to="/account" className="link">
                     Account
                   </Link>
@@ -105,6 +114,15 @@ class Sidebar extends Component {
                   {/* If the user is not logged in */}
                   <Link to="/" className="link">
                     Home
+                  </Link>
+                  <Link to="/articles" className="link">
+                    Articles
+                  </Link>
+                  <Link to="/listings" className="link">
+                    Listings
+                  </Link>
+                  <Link to="/videos" className="link">
+                    Videos
                   </Link>
                   <Link to="/about" className="link">
                     About
