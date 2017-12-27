@@ -3,24 +3,25 @@
 // -----------------------------------------------------------------------------
 
 // Dispatch login action, will call appropriate reducer (authReducer.js)
-export function login(userId) {
+export function login(userId, userType) {
   return {
     type: 'LOGIN',
-    userId
+    userId,
+    userType,
   };
 }
 
 // Dispatch register action, will call appropriate reducer (authReducer.js)
-export function register(userId) {
+export function register(userId, userType) {
   return {
     type: 'REGISTER',
     userId,
+    userType,
   };
 }
 
 // Dispatch logout action, will call appropriate reducer (authReducer.js)
 export function logout() {
-  console.log('enters logout in actions');
   return {
     type: 'LOGOUT'
   };
@@ -31,7 +32,6 @@ export function logout() {
 // -----------------------------------------------------------------------------
 
 export function openArt(article) {
-  console.log('enters openArt in actions');
   return {
     type: 'OPENART',
     article,

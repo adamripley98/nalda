@@ -11,6 +11,7 @@ const router = express.Router();
 const Article = require('./models/article');
 const Listing = require('./models/listing');
 const Video = require('./models/video');
+const User = require('./models/user');
 
 // Export the following methods for routing
 module.exports = () => {
@@ -21,6 +22,82 @@ module.exports = () => {
     res.send({
       success: true,
       data: "API is up and running.",
+    });
+  });
+
+  /**
+   * Route to handle adding new admins, admins allowed to add more admins/curators and create content
+   * @param userToAdd
+   */
+  router.post('/admin/new', (req, res) => {
+    // finds given user in Mongo
+    User.findOne({username: req.body.userToAdd}, (err, user) => {
+      // Lets them know that if there is an error
+      if (err) {
+        res.send({
+          success: false,
+          error: err,
+        });
+      // Makes sure that user exists
+      } else if (!user) {
+        res.send({
+          success: false,
+          error: req.body.userToAdd + 'does not seem to exist!'
+        });
+      } else {
+        // Makes given user an admin
+        user.userType = "admin";
+        user.save((err2) => {
+          if (err2) {
+            res.send({
+              success: false,
+              error: err2,
+            });
+          }
+          // If no error saving new user, returns successfully
+          res.send({
+            success: true,
+          });
+        });
+      }
+    });
+  });
+
+  /**
+   * Route to handle adding new curators, allowed to create content but not add others
+   * @param userToAdd
+   */
+  router.post('/curator/new', (req, res) => {
+    // finds given user in Mongo
+    User.findOne({username: req.body.userToAdd}, (err, user) => {
+      // Lets them know that if there is an error
+      if (err) {
+        res.send({
+          success: false,
+          error: err,
+        });
+      // Makes sure that user exists
+      } else if (!user) {
+        res.send({
+          success: false,
+          error: req.body.userToAdd + ' does not seem to exist!'
+        });
+      } else {
+        // Makes given user an admin
+        user.userType = "curator";
+        user.save((err2) => {
+          if (err2) {
+            res.send({
+              success: false,
+              error: err2,
+            });
+          }
+          // If no error saving new user, returns successfully
+          res.send({
+            success: true,
+          });
+        });
+      }
     });
   });
 

@@ -56,7 +56,7 @@ passport.use('local', new LocalStrategy({
     }
     // if no user present, auth failed
     if (!user) {
-      return done(null, false, { message: 'Incorrect username.' });
+      return done(null, false, { message: 'Incorrect email.' });
     }
       // if passwords do not match, auth failed
     if (!isValidPassword(user, password)) {
@@ -72,6 +72,7 @@ const isValidPassword = (user, password) => {
   return bCrypt.compareSync(password, user.password);
 };
 
+// Routing middleware
 app.use('/', login(passport));
 app.use('/', register(passport));
 app.use('/', logout(passport));

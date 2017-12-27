@@ -10,7 +10,7 @@ module.exports = (passport) => {
         return false;
       } else if (!user) {
         console.log('user doesnt exist');
-        res.send('Invalid username or password.');
+        res.send('Invalid email or password.');
         return false;
       }
       req.logIn(user, (errr) => {

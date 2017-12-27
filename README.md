@@ -54,6 +54,14 @@ Backend for articles and listings
 
 ## Frontend
 
+- [X] Setting up SCSS
+- [ ] Video styling
+- [ ] Login/Register/Reset/Edit Account Form styling
+- [ ] Sendgrid configuration for sending emails
+- [ ] Individual listing view
+- [ ] Ajax search suggestions
+- [ ] Routing 	
+- [ ] User show pages
 - [X] Footer
 - [X] Article form display
 - [X] Video form display
