@@ -15,8 +15,23 @@
  */
 
 // Setting the fonts for the application
-body {
+body,
+.form-control {
   font-family: 'Quicksand', sans-serif;
+}
+
+.subtitle {
+  font-family: 'Quicksand', sans-serif !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.bold {
+  font-family: 'Poppins', sans-serif;
 }
 
 // Make each page take up the full-height of the screen (at least)
