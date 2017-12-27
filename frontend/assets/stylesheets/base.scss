@@ -335,3 +335,20 @@ a {
     }
   }
 }
+
+.popover {
+  display: inherit;
+  position: absolute;
+  top: inherit;
+  padding: 0.5rem;
+  border: 0px solid transparent;
+  box-shadow: 0rem 0.1rem 0.25rem rgba(0, 0, 0, 0.2);
+  color: $dark-gray;
+
+  &.right {
+    left: inherit;
+    right: 3.5rem;
+    text-align: left;
+    transform: translateY(-2rem);
+  }
+}

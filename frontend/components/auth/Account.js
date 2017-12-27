@@ -24,7 +24,11 @@ class Account extends Component {
       profilePicture: '',
       error: '',
       pending: false,
+      adminPopover: false,
     };
+
+    // Bind this to helper methods
+    this.handleAdminClick = this.handleAdminClick.bind(this);
   }
 
   /**
@@ -33,6 +37,15 @@ class Account extends Component {
    */
   componentDidMount() {
     return false;
+  }
+
+  /**
+   * Helper method to trigger popup
+   */
+  handleAdminClick() {
+    this.setState({
+      adminPopover: !this.state.adminPopover,
+    });
   }
 
   /**
@@ -72,7 +85,12 @@ class Account extends Component {
               Admin
             </td>
             <td>
-              <i className="fa fa-question" aria-hidden="true" />
+              <i className="fa fa-question" aria-hidden="true" onClick={ this.handleAdminClick } />
+              <div
+                className="popover right"
+                style={{ display: this.state.adminPopover ? "inherit" : "none" }}>
+                A user can either be an admin, curator, or general user.
+              </div>
             </td>
           </tr>
           <tr>
