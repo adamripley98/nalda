@@ -23,7 +23,7 @@ class Account extends Component {
       email: '',
       profilePicture: '',
       error: '',
-      pending: true,
+      pending: false,
     };
   }
 
@@ -39,7 +39,78 @@ class Account extends Component {
    * Helper function to render a user's information
    */
   renderInfo() {
-    return "info";
+    return (
+      <table className="table account">
+        <tbody>
+          <tr>
+            <td className="bold">
+              Name
+            </td>
+            <td>
+              Cameron Cabo
+            </td>
+            <td>
+              <i className="fa fa-pencil" aria-hidden="true" />
+            </td>
+          </tr>
+          <tr>
+            <td className="bold">
+              Email
+            </td>
+            <td>
+              cameron.cabo@outlook.com
+            </td>
+            <td>
+              <i className="fa fa-pencil" aria-hidden="true" />
+            </td>
+          </tr>
+          <tr>
+            <td className="bold">
+              Type
+            </td>
+            <td>
+              Admin
+            </td>
+            <td>
+              <i className="fa fa-question" aria-hidden="true" />
+            </td>
+          </tr>
+          <tr>
+            <td className="bold">
+              Bio
+            </td>
+            <td>
+              Hello this is my bio. It describes who I am and what I am possionate for.
+            </td>
+            <td>
+              <i className="fa fa-pencil" aria-hidden="true" />
+            </td>
+          </tr>
+          <tr>
+            <td className="bold">
+              Location
+            </td>
+            <td>
+              University City, PA
+            </td>
+            <td>
+              <i className="fa fa-pencil" aria-hidden="true" />
+            </td>
+          </tr>
+          <tr>
+            <td className="bold">
+              Password
+            </td>
+            <td>
+              ********
+            </td>
+            <td>
+              <i className="fa fa-pencil" aria-hidden="true" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    );
   }
 
   /**
@@ -55,12 +126,18 @@ class Account extends Component {
         <div className="container">
           <div className="row">
             <div className="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-              <h3 className="bold marg-top-1 marg-bot-1">
+              <h4 className="bold marg-top-2 marg-bot-1">
                 Account information
-              </h3>
+              </h4>
               { this.state.error && <ErrorMessage error={ this.state.error } /> }
               { this.state.pending ? <Loading /> : this.renderInfo() }
-              <Button />
+              {
+                !this.state.pending && (
+                  <div className="marg-top-1">
+                    <Button />
+                  </div>
+                )
+              }
             </div>
           </div>
         </div>

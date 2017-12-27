@@ -65,6 +65,20 @@ body {
       background: $dark-red;
     }
   }
+
+  &.btn-secondary {
+    font-weight: normal;
+    color: $red;
+    border: 1px solid $red;
+
+    &:hover,
+    &:active,
+    &:focus {
+      background: transparent;
+      color: $dark-red;
+      border: 1px solid $dark-red;
+    }
+  }
 }
 
 // Remove underline on all anchor tags
@@ -268,7 +282,7 @@ a {
 
 .home {
   margin-bottom: 2rem;
-  
+
   .title {
     font-weight: bold;
     margin-bottom: 1rem;
@@ -287,5 +301,22 @@ a {
 
   .title {
     font-weight: bold;
+  }
+}
+
+/**
+ * Styling relating to account information
+ */
+.account.table {
+  .fa {
+    color: $gray;
+    cursor: hand;
+    cursor: pointer;
+
+    &:hover,
+    &:focus,
+    &:active {
+      color: $dark-gray;
+    }
   }
 }
