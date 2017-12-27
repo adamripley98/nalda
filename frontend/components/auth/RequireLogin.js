@@ -3,12 +3,11 @@ import React, {Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
-
 /**
- * Component to ensure that a curator is logged in before creating new content
+ * Component to ensure that a user is logged in before seeing content
  */
 export default function(ComponentToRender) {
-  class RequireCurator extends Component {
+  class RequireLogin extends Component {
     componentWillMount() {
       if (!this.props.userId) {
         return (
@@ -27,7 +26,7 @@ export default function(ComponentToRender) {
 
     render() {
       // Renders component if user is logged in, returns to /login if not.
-      if (this.props.userId && (this.props.userType === 'curator' || this.props.userType === 'admin')) {
+      if (this.props.userId) {
         // Component is returned with all properties it originally had
         return (
             <ComponentToRender {...this.props} />
@@ -39,18 +38,16 @@ export default function(ComponentToRender) {
     }
   }
 
-  RequireCurator.propTypes = {
+  RequireLogin.propTypes = {
     userId: PropTypes.string,
-    userType: PropTypes.string,
   };
 
   const mapStateToProps = (state) => {
     console.log('state', state);
     return {
       userId: state.authState.userId,
-      userType: state.authState.userType,
     };
   };
 
-  return connect(mapStateToProps)(RequireCurator);
+  return connect(mapStateToProps)(RequireLogin);
 }

@@ -45,8 +45,6 @@ class Register extends Component {
    * TODO name
    * TODO profile picture
    * TODO front end validations
-   * TODO change from "username" to "email" (more accurate variable name)
-   *      we will have to change this on the backend
    */
   handleRegisterSubmit(event) {
     // Prevent the default submit action

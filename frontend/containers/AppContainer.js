@@ -13,6 +13,7 @@ import Login from '../components/auth/Login';
 import Register from '../components/auth/Register';
 import requireCurator from '../components/auth/RequireCurator';
 import requireAdmin from '../components/auth/RequireAdmin';
+import requireLogin from '../components/auth/RequireLogin';
 
 // Content viewing compontents
 import Home from '../components/Home';
@@ -59,7 +60,7 @@ class AppContainer extends Component {
                 { /* General routes */ }
                 <Route exact path="/about" component={About}/>
                 <Route exact path="/contact" component={Contact}/>
-                <Route exact path="/" component={requireCurator(Home)}/>
+                <Route exact path="/" component={requireLogin(Home)}/>
 
                 { /* Admin routes */ }
                 <Route exact path="/admin" component={requireAdmin(Admin)}/>

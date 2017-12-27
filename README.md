@@ -8,9 +8,9 @@ https://docs.google.com/spreadsheets/d/1FaistICZ-BuORu7YYm5fFpgii2cvxZKgEpxApWQ_
 To start, run "npm start" or concurrently run "npm run frontend" and "npm run backend"
 
 ## TODO
-- [ ] Admin add page (similar look to contact page) where admins can enter email addresses and add both other admins and other content curators. Only admins can add people as content curators and only content curators can create posts.
-- [ ] Default create users with type “user”. Admin can switch them to “admin” or “curators”
-- [ ] Protect admin, curator, and user routes.
+- [X] Admin add page (similar look to contact page) where admins can enter email addresses and add both other admins and other content curators. Only admins can add people as content curators and only content curators can create posts.
+- [X] Default create users with type “user”. Admin can switch them to “admin” or “curators”
+- [X] Protect admin, curator, and user routes.
 - [ ] Allow admins to remove curators
 - [ ] Add name field to user model in Mongo, population on screen: "Welcome, Adam"
 - [ ] Allow users to leave reviews: comments and ratings.
@@ -38,7 +38,7 @@ To start, run "npm start" or concurrently run "npm run frontend" and "npm run ba
 
 ## Frontend
 
-- [x] Setting up SCSS
+- [X] Setting up SCSS
 - [ ] Video styling
 - [ ] Login/Register/Reset/Edit Account Form styling
 - [ ] Sendgrid configuration for sending emails
@@ -70,4 +70,5 @@ To start, run "npm start" or concurrently run "npm run frontend" and "npm run ba
 - [ ] Storing hours
 - [ ] Domain registration/setup
 - [X] API Routing
+- [X] User, Admin, Curator distinctions
 - [ ] Linking frontend and backend

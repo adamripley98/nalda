@@ -4,6 +4,9 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 
+/**
+ * Component to ensure that an admin is logged in before creating new content or changing user privileges
+ */
 export default function(ComponentToRender) {
   class RequireAdmin extends Component {
     componentWillMount() {
@@ -25,6 +28,7 @@ export default function(ComponentToRender) {
     render() {
       // Renders component if user is logged in, returns to /login if not.
       if (this.props.userId && this.props.userType === 'admin') {
+        // Component is returned with all properties it originally had
         return (
             <ComponentToRender {...this.props} />
         );
