@@ -60,7 +60,6 @@ class Nav extends Component {
             placeholder="Search for activities, places, or curators"
           />
         </div>
-
         { /* Render the user's profile information */ }
         <div className="user-info">
           <div className="user-text">
