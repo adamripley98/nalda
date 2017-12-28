@@ -2,6 +2,8 @@
 import React from 'react';
 import ErrorMessage from '../../shared/ErrorMessage';
 import autosize from 'autosize';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 /**
  * Component to render the form to review applications
@@ -89,8 +91,25 @@ class ReviewForm extends React.Component {
    * Function to render the component
    */
   render() {
+    // If the user is not logged in, they cannot leave a review.
+    // Thus, the form does not display but rather text prompting the user
+    // to log in (or create an account).
+    if (!this.props.userId) {
+      return (
+        <div className="card marg-bot-1 pad-1">
+          <p className="gray">
+            You must be logged in to leave a review.
+          </p>
+        </div>
+      );
+    }
+
+    // Else, if the user is logged in, render the form
     return (
       <form onSubmit={ this.handleSubmit } className="thin-form">
+        {
+          this.state.error && <ErrorMessage error={ this.state.error } />
+        }
         {
           this.state.active ? (
             <div>
@@ -155,5 +174,27 @@ class ReviewForm extends React.Component {
     );
   }
 }
+
+ReviewForm.propTypes = {
+  userId: PropTypes.string,
+};
+
+// Allows us to access redux state as this.props.userId inside component
+const mapStateToProps = state => {
+  return {
+    userId: state.authState.userId,
+  };
+};
+
+// Allows us to dispatch a logout event by calling this.props.onLogout
+const mapDispatchToProps = () => {
+  return {};
+};
+
+// Redux config
+ReviewForm = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(ReviewForm);
 
 export default ReviewForm;

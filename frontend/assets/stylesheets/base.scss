@@ -20,10 +20,12 @@ body,
   font-family: 'Quicksand', sans-serif;
 }
 
+// Subtitles are the lighter font as well
 .subtitle {
   font-family: 'Quicksand', sans-serif !important;
 }
 
+// Using a stronger font on all headers, titles
 h1,
 h2,
 h3,
@@ -34,8 +36,28 @@ h6,
   font-family: 'Poppins', sans-serif;
 }
 
+// Modular class to make some text gray
 .gray {
   color: $gray !important;
+}
+
+// Style placeholders as gray (a lighter color than the default)
+.form-control {
+  &::-webkit-input-placeholder {
+    color: $gray;
+  }
+
+  &::-moz-placeholder {
+    color: $gray;
+  }
+
+  &:-ms-input-placeholder {
+    color: $gray;
+  }
+
+  &:-moz-placeholder {
+    color: $gray;
+  }
 }
 
 // Make each page take up the full-height of the screen (at least)
@@ -58,6 +80,8 @@ h6,
   }
 }
 
+// On phones, parallax scrolling is buggy
+// Thus, we disable the parallax scrolling for smaller screen sizes
 @media screen and (max-device-width: 848px) {
   .background-image.background-fixed {
     background-attachment: inherit;
