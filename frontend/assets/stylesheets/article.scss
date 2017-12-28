@@ -9,6 +9,7 @@
     font-weight: bold !important;
     font-size: 2.5rem !important;
     margin-bottom: 0rem;
+    color: $dark-gray;
   }
 
   img {
@@ -43,10 +44,9 @@
       display: inline-block;
       margin-bottom: 0rem;
 
-      p.name {
+      a.name {
         margin-top: 0.3rem;
         font-weight: bold;
-        color: $dark-gray;
         margin-bottom: 0;
       }
 

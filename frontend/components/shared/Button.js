@@ -7,7 +7,12 @@ import { Link } from 'react-router-dom';
  */
 const Button = ({ to, text }) => (
   <Link className="btn btn-primary marg-bot-15" to={ to ? to : "/" }>
-    { text ? text : "Back to home" }
+    { text ? text : (
+      <span>
+        <i className="fa fa-chevron-left" aria-hidden="true" />
+        Back to home
+      </span>
+    ) }
   </Link>
 );
 

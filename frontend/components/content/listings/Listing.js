@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import uuid from 'uuid-v4';
 import Review from './Review';
+import ReviewForm from './ReviewForm';
 
 /**
  * Component to render a listing
@@ -134,6 +135,7 @@ class Listing extends React.Component {
               <p>
                 There { count === 1 ? ("is 1 review") : (`are ${count} reviews`) } on this listing with an average rating of { average } out of 5.0 stars.
               </p>
+              <ReviewForm />
               { this.renderReviews() }
             </div>
           </div>

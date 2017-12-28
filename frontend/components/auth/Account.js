@@ -16,19 +16,27 @@ import ErrorMessage from '../shared/ErrorMessage';
 class Account extends Component {
   /**
    * Constructor method
+   * TODO replace dummy data
    */
   constructor(props) {
     super(props);
     this.state = {
-      email: '',
+      name: 'Cameron Cabo',
+      email: 'cameron.cabo@outlook.com',
+      type: 'Admin',
+      bio: 'Hello this is my bio. It describes who I am and what I am possionate for.',
+      location: 'University City, PA',
       profilePicture: '',
       error: '',
       pending: false,
       adminPopover: false,
+      editName: false,
     };
 
     // Bind this to helper methods
     this.handleAdminClick = this.handleAdminClick.bind(this);
+    this.handleChangeName = this.handleChangeName.bind(this);
+    this.handleNameClick = this.handleNameClick.bind(this);
   }
 
   /**
@@ -37,6 +45,29 @@ class Account extends Component {
    */
   componentDidMount() {
     return false;
+  }
+
+  /**
+   * Handle change name
+   */
+  handleChangeName(event) {
+    this.setState({
+      name: event.target.value,
+    });
+  }
+
+  /**
+   * Helper method to trigger edit name
+   * TODO autofocus
+   */
+  handleNameClick() {
+    this.setState({
+      editName: !this.state.editName,
+    });
+
+    if (this.state.editName) {
+      document.getElementById('name').focus();
+    }
   }
 
   /**
@@ -60,10 +91,23 @@ class Account extends Component {
               Name
             </td>
             <td>
-              Cameron Cabo
+              <span style={{ display: this.state.editName ? "none" : "inherit" }}>
+                { this.state.name }
+              </span>
+              <input
+                className="form-control"
+                id="name"
+                value={ this.state.name }
+                onChange={ this.handleChangeName }
+                style={{ display: this.state.editName ? "inherit" : "none" }}
+              />
             </td>
             <td>
-              <i className="fa fa-pencil" aria-hidden="true" />
+              <i
+                className="fa fa-pencil"
+                aria-hidden="true"
+                onClick={ this.handleNameClick }
+              />
             </td>
           </tr>
           <tr>
@@ -71,7 +115,7 @@ class Account extends Component {
               Email
             </td>
             <td>
-              cameron.cabo@outlook.com
+              { this.state.email }
             </td>
             <td>
               <i className="fa fa-pencil" aria-hidden="true" />
@@ -82,7 +126,7 @@ class Account extends Component {
               Type
             </td>
             <td>
-              Admin
+              { this.state.type }
             </td>
             <td>
               <i className="fa fa-question" aria-hidden="true" onClick={ this.handleAdminClick } />
@@ -98,7 +142,7 @@ class Account extends Component {
               Bio
             </td>
             <td>
-              Hello this is my bio. It describes who I am and what I am possionate for.
+              { this.state.bio }
             </td>
             <td>
               <i className="fa fa-pencil" aria-hidden="true" />
@@ -109,7 +153,7 @@ class Account extends Component {
               Location
             </td>
             <td>
-              University City, PA
+              { this.state.location }
             </td>
             <td>
               <i className="fa fa-pencil" aria-hidden="true" />

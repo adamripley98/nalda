@@ -34,6 +34,10 @@ h6,
   font-family: 'Poppins', sans-serif;
 }
 
+.gray {
+  color: $gray !important;
+}
+
 // Make each page take up the full-height of the screen (at least)
 .app-content {
   min-height: calc(100vh - 56.27px);
@@ -78,6 +82,17 @@ h6,
     &:active,
     &:focus {
       background: $dark-red;
+    }
+
+    .fa {
+      transition: all 0.2s ease;
+      margin-right: 0.5rem;
+    }
+
+    &:hover {
+      .fa {
+        transform: translateX(-0.2rem);
+      }
     }
   }
 
@@ -152,9 +167,9 @@ a {
   // Style input fields
   .form-control {
     border-radius: 0rem;
-    border-right: 0px solid transparent;
-    border-left: 0px solid transparent;
-    border-top: 0px solid transparent;
+    border-right: 1px solid transparent !important;
+    border-left: 1px solid transparent !important;
+    border-top: 1px solid transparent !important;
     border-bottom: 2px solid $gray;
     border-radius: 0px !important;
     -webkit-appearance: none;
@@ -169,6 +184,20 @@ a {
     &:active {
       border-bottom: 2px solid $blue;
     }
+  }
+}
+
+// General form control styling
+.form-control {
+  border: 1px solid $border;
+
+  &:hover {
+    border: 1px solid $gray;
+  }
+
+  &:active,
+  &:focus {
+    border: 1px solid $blue;
   }
 }
 

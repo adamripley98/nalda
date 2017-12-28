@@ -10,6 +10,7 @@ import Medium from '../../shared/Medium';
 
 /**
  * Component to render the new article form
+ * TODO integrate with website
  */
 class ListingForm extends React.Component {
   // Constructor method
@@ -24,6 +25,7 @@ class ListingForm extends React.Component {
       hours: "",
       error: "",
       redirectToHome: "",
+      website: "",
     };
 
     // Bind this to helper methods
@@ -33,6 +35,7 @@ class ListingForm extends React.Component {
     this.handleChangeHours = this.handleChangeHours.bind(this);
     this.handleChangeRating = this.handleChangeRating.bind(this);
     this.handleChangePrice = this.handleChangePrice.bind(this);
+    this.handleChangeWebsite = this.handleChangeWebsite.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -80,6 +83,13 @@ class ListingForm extends React.Component {
   handleChangeHours(event) {
     this.setState({
       hours: event.target.value,
+    });
+  }
+
+  // Helper method to handle a change to the website state
+  handleChangeWebsite(event) {
+    this.setState({
+      website: event.target.value,
     });
   }
 
@@ -142,8 +152,10 @@ class ListingForm extends React.Component {
     return true;
   }
 
-  // Render the component
-  // TODO: Make Hours, Rating, and Price sliders, not text input
+  /**
+   * Render the component
+   * TODO: Make Hours, Rating, and Price sliders, not text input
+   */
   render() {
     return (
       <div>
@@ -247,7 +259,6 @@ class ListingForm extends React.Component {
                   </label>
                   <select
                     className="form-control marg-bot-1"
-                    id="exampleFormControlSelect1"
                     value={ this.state.rating }
                     onChange={ this.handleChangeRating }
                   >
@@ -282,9 +293,20 @@ class ListingForm extends React.Component {
                 </div>
               </div>
 
+              <label>
+                Website
+              </label>
+              <input
+                name="image"
+                type="url"
+                className="form-control marg-bot-1"
+                value={ this.state.website }
+                onChange={ this.handleChangeWebsite }
+              />
+
               <input
                 type="submit"
-                value="Create Listing"
+                value="Create listing"
                 className={
                   this.state.title && this.state.description && this.state.hours && this.state.rating && this.state.price ? (
                     "btn btn-primary full-width"

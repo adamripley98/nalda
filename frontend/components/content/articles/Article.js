@@ -1,6 +1,7 @@
 // Import frameworks
 import React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Button from '../../shared/Button';
 import axios from 'axios';
@@ -9,16 +10,19 @@ import Loading from '../../shared/Loading';
 /**
  * Component to render an article
  * TODO error handling
+ * TODO remove dummy state
  */
 class Article extends React.Component {
   // Constructor method
   constructor(props) {
     super(props);
+
     // TODO: Remove dummy state
     this.state = {
       error: "",
       user: {
         name: "Adam Ripley",
+        _id: "81493243t90",
         profilePicture: "https://scontent-lga3-1.xx.fbcdn.net/v/t31.0-8/19800933_1555674071163224_6756529645784213707_o.jpg?oh=d3ce5cc19160312229b760b7448d3c67&oe=5A8FEE3B",
       },
       article: {},
@@ -66,9 +70,9 @@ class Article extends React.Component {
       <div className="author">
         <div className="author-img" style={{ backgroundImage: `url(${this.state.user.profilePicture})` }}/>
         <div className="text">
-          <p className="name">
+          <Link className="name" to={`/users/${this.state.user._id}`}>
             { this.state.user.name }
-          </p>
+          </Link>
           <p className="timestamp">
             A few hours ago
           </p>

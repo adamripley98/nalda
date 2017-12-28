@@ -46,6 +46,16 @@ class Footer extends React.Component {
                           Articles
                         </Link>
                       </div>
+                      <div className="link">
+                        <Link to="/listings">
+                          Listings
+                        </Link>
+                      </div>
+                      <div className="link">
+                        <Link to="/videos">
+                          Videos
+                        </Link>
+                      </div>
                     </div>
                   ) : (
                     <div className="pad-1">
