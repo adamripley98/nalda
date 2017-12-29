@@ -31,13 +31,10 @@ class Login extends Component {
 
   // When login button clicked, will attempt to login on backend (login.js)
   handleLoginSubmit(event) {
-    console.log("Submitted");
     // Prevent the default form action
     event.preventDefault();
-
     // Find the needed variables
     const onLogin = this.props.onLogin;
-
     // Frontend validations
     if (!this.state.username) {
       this.setState({
@@ -56,19 +53,16 @@ class Login extends Component {
         password: this.state.password,
       })
         .then((resp) => {
-          console.log('what is resp', resp.data, resp.data._id);
-          console.log('props before', this.props);
           if (!resp.data._id) {
             this.setState({
               error: resp.data,
             });
           } else {
-            onLogin(resp.data._id, resp.data.userType);
+            onLogin(resp.data._id, resp.data.userType, resp.data.name);
             this.setState({
               redirectToHome: true,
             });
           }
-          console.log('props after', this.props);
         })
         .catch((err) => {
           console.log('there was an error', err);
@@ -147,6 +141,8 @@ class Login extends Component {
 
 Login.propTypes = {
   userId: PropTypes.string,
+  userType: PropTypes.string,
+  name: PropTypes.string,
   onLogin: PropTypes.func,
 };
 
@@ -155,13 +151,14 @@ const mapStateToProps = state => {
   return {
     userId: state.authState.userId,
     userType: state.authState.userType,
+    name: state.authState.name,
   };
 };
 
 // Allows us to dispatch a login event by calling this.props.onLogin
 const mapDispatchToProps = dispatch => {
   return {
-    onLogin: (userId, userType) => dispatch(login(userId, userType))
+    onLogin: (userId, userType, name) => dispatch(login(userId, userType, name))
   };
 };
 
