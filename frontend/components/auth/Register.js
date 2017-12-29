@@ -135,7 +135,6 @@ class Register extends Component {
    * Handle when a user types into the password
    */
   handleChangePassword(event) {
-    console.log('what is password', event.target.value);
     this.setState({
       password: event.target.value
     });

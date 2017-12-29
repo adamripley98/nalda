@@ -31,13 +31,10 @@ class Login extends Component {
 
   // When login button clicked, will attempt to login on backend (login.js)
   handleLoginSubmit(event) {
-    console.log("Submitted");
     // Prevent the default form action
     event.preventDefault();
-
     // Find the needed variables
     const onLogin = this.props.onLogin;
-
     // Frontend validations
     if (!this.state.username) {
       this.setState({
@@ -56,8 +53,6 @@ class Login extends Component {
         password: this.state.password,
       })
         .then((resp) => {
-          console.log('what is resp', resp.data, resp.data._id);
-          console.log('props before', this.props);
           if (!resp.data._id) {
             this.setState({
               error: resp.data,
@@ -68,7 +63,6 @@ class Login extends Component {
               redirectToHome: true,
             });
           }
-          console.log('props after', this.props);
         })
         .catch((err) => {
           console.log('there was an error', err);

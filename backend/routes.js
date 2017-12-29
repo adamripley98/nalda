@@ -272,15 +272,18 @@ module.exports = () => {
           success: false,
           error: err,
         });
+      // If the article doesn't exist
       } else if (!article) {
         res.send({
           success: false,
           error: "Article not found",
         });
+        // if no errors, returns article along with the date it was created
       } else {
         res.send({
           success: true,
           data: article,
+          timestamp: article._id.getTimestamp(),
         });
       }
     });

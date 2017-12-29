@@ -61,7 +61,7 @@ Backend for articles and listings
 - [ ] Individual listing view
 - [ ] Ajax search suggestions
 - [ ] Routing 	
-- [X] User show pages
+- [ ] User show pages
 - [X] Footer
 - [X] Article form display
 - [X] Video form display
@@ -98,6 +98,7 @@ Backend for articles and listings
 
 - [ ] Make a check in the `AppContainer` component to ensure that `passport` and `redux` are in sync (`redux persist`) makes it such that this can outlast the backend session
 - [ ] Style about page
+- [ ] General clean up, get rid of console.logs and deal with errors better
 
 ## Bugs
 - [ ] Fix authentication route bug

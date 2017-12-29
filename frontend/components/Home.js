@@ -8,6 +8,8 @@ import Loading from './shared/Loading';
 import ErrorMessage from './shared/ErrorMessage';
 import Button from './shared/Button';
 
+
+// TODO: Should standardize the size of all the pictures
 /**
  * Component for the homepage of the application
  */
@@ -36,6 +38,7 @@ class Home extends React.Component {
    * Load data once the component mounts
    * Pulls articles, listings, and videos simulatneously
    */
+   // TODO: Should probably only pull a few of the articles, otherwise will get slow once there are lots of articles
   componentDidMount() {
     // Pull all articles from the database
     axios.get('/api/articles')
@@ -43,7 +46,7 @@ class Home extends React.Component {
         if (resp.data.success) {
           // Limit to the first four articles
           this.setState({
-            articles: resp.data.data.slice(0, 4),
+            articles: resp.data.data.slice(resp.data.data.length - 4, resp.data.data.length),
             pendingArticles: false,
             articlesError: "",
           });
@@ -67,7 +70,7 @@ class Home extends React.Component {
         if (resp.data.success) {
           // Limit to the first four listings
           this.setState({
-            listings: resp.data.data.slice(0, 4),
+            listings: resp.data.data.slice(resp.data.data.length - 4, resp.data.data.length),
             pendingListings: false,
             listingsError: "",
           });
@@ -91,7 +94,7 @@ class Home extends React.Component {
         if (resp.data.success) {
           // Limit to the first four listings
           this.setState({
-            videos: resp.data.data.slice(0, 4),
+            videos: resp.data.data.slice(resp.data.data.length - 4, resp.data.data.length),
             pendingVideos: false,
             videosError: "",
           });

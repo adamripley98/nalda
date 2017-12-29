@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 import Button from '../../shared/Button';
 import axios from 'axios';
 import Loading from '../../shared/Loading';
@@ -40,11 +41,11 @@ class Article extends React.Component {
     // Find the article
     axios.get(`/api/articles/${id}`)
       .then(res => {
-        console.log(res);
         if (res.data.success) {
           this.setState({
             error: "",
             article: res.data.data,
+            time: moment(res.data.timestamp).fromNow(),
             pending: false,
           });
         } else {
@@ -74,7 +75,7 @@ class Article extends React.Component {
             { this.state.user.name }
           </Link>
           <p className="timestamp">
-            A few hours ago
+            {this.state.time}
           </p>
         </div>
       </div>
