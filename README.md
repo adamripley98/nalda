@@ -71,6 +71,8 @@ Backend for articles and listings
 - [ ] Ajax search suggestions
 - [ ] Incorporate Nalda logo and other advice from Edward
 - [ ] Home page needs to have other ways of sorting: most popular, by category, by author?, etc
+- [ ] Side Nav Bar should close once an option is clicked
+- [ ] Nav bar should only show name and location when a user is logged in
 
 ## Backend
 

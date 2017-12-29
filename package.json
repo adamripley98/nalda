@@ -16,6 +16,7 @@
   "license": "ISC",
   "dependencies": {
     "autosize": "^4.0.0",
+    "aws-sdk": "^2.175.0",
     "axios": "^0.17.1",
     "babel-core": "^6.24.1",
     "babel-loader": "^6.4.1",

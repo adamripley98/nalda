@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
+import axios from 'axios';
 import PropTypes from 'prop-types';
 import Button from '../shared/Button';
 import Loading from '../shared/Loading';
@@ -16,15 +17,16 @@ import ErrorMessage from '../shared/ErrorMessage';
 class Account extends Component {
   /**
    * Constructor method
-   * TODO replace dummy data
+   * TODO replace dummy data: bio, location, prof pic, etc.
+   * TODO allow changing name, profile pic, password, location, and bio
    */
   constructor(props) {
     super(props);
     this.state = {
-      name: 'Cameron Cabo',
-      email: 'cameron.cabo@outlook.com',
-      type: 'Admin',
-      bio: 'Hello this is my bio. It describes who I am and what I am possionate for.',
+      name: '',
+      email: '',
+      type: '',
+      bio: 'Hello this is my bio. It describes who I am and what I am passionate for.',
       location: 'University City, PA',
       profilePicture: '',
       error: '',
@@ -41,10 +43,25 @@ class Account extends Component {
 
   /**
    * Pull the user's information from the database then render it
-   * TODO
    */
   componentDidMount() {
-    return false;
+    axios.get('/api/account', {
+      params: {
+        userId: this.props.userId,
+      }
+    })
+    .then((resp) => {
+      // If successful, will set state with user's information
+      if (resp.data.success) {
+        this.setState({
+          name: resp.data.data.name,
+          email: resp.data.data.username,
+          type: resp.data.data.userType,
+        });
+      }
+    }).catch((err) => {
+      console.log(err);
+    });
   }
 
   /**

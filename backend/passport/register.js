@@ -25,6 +25,7 @@ module.exports = (passport) => {
 				 // If no error and user doesn't already exist, create a user
 				 // Default sets userType to user, admin can change to admin or curator
 				 const newUser = new User({
+					 name: req.body.name,
 					 username: req.body.username,
 					 password: createHash(req.body.password),
 					 userType: 'user'

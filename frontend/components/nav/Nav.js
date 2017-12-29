@@ -63,13 +63,13 @@ class Nav extends Component {
         { /* Render the user's profile information */ }
         <div className="user-info">
           <div className="user-text">
-            { /* Render the user's locaiton information */ }
+            { /* Render the user's location information */ }
             <div className="location">
               University City, PA
             </div>
             <div className="name">
               <p>
-                Hi, <Link to="/account">Cameron</Link>
+                Hi, <Link to="/account">{this.props.name}</Link>
               </p>
             </div>
           </div>
@@ -85,6 +85,7 @@ class Nav extends Component {
 
 Nav.propTypes = {
   userId: PropTypes.string,
+  name: PropTypes.string,
   onLogout: PropTypes.func,
 };
 
@@ -92,6 +93,7 @@ Nav.propTypes = {
 const mapStateToProps = state => {
   return {
     userId: state.authState.userId,
+    name: state.authState.name,
   };
 };
 

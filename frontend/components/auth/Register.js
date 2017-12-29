@@ -58,6 +58,7 @@ class Register extends Component {
     const onRegister = this.props.onRegister;
 
     // Front end error checking
+    // TODO: make sure name is a full name
     if (!name) {
       this.setState({
         error: "Name must be populated.",
@@ -103,7 +104,7 @@ class Register extends Component {
             this.setState({
               redirectToHome: true,
             });
-            onRegister(resp.data._id, resp.data.userType);
+            onRegister(resp.data._id, resp.data.userType, name);
           }
         })
         .catch((err) => {
@@ -238,13 +239,14 @@ const mapStateToProps = state => {
   return {
     userId: state.authState.userId,
     userType: state.authState.userType,
+    name: state.authState.name,
   };
 };
 
 // When we call onRegister now, it will dispatch register event
 const mapDispatchToProps = dispatch => {
   return {
-    onRegister: (userId, userType) => dispatch(register(userId, userType)),
+    onRegister: (userId, userType, name) => dispatch(register(userId, userType, name)),
   };
 };
 
