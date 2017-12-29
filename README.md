@@ -19,9 +19,9 @@ Backend for articles and listings
 
 ## Admins
 
-- [ ] Admin add page (similar look to contact page) where admins can enter email addresses and add both other admins and other content creators. Only admins can add people as content creators and only content creators can create posts.
-- [ ] Allow admins to update a user's privileges (ex. from user to curator)
-- [ ] Protect `admin`, `curator`, and `user` routes.
+- [X] Admin add page (similar look to contact page) where admins can enter email addresses and add both other admins and other content creators. Only admins can add people as content creators and only content creators can create posts.
+- [X] Allow admins to update a user's privileges (ex. from user to curator)
+- [X] Protect `admin`, `curator`, and `user` routes.
 - [ ] Allow `users` to leave reviews: comments and ratings.
 
 ## Users
@@ -36,7 +36,7 @@ Backend for articles and listings
   - [ ] Articles
 - [ ] Curator show pages
   * This should display all of the content a curator has written
-- [ ] Default create users with type `user`. Admin can switch them to `admin` or `curator`
+- [X] Default create users with type `user`. Admin can switch them to `admin` or `curator`
 
 ## Listings
 
@@ -61,13 +61,12 @@ Backend for articles and listings
 - [ ] Individual listing view
 - [ ] Ajax search suggestions
 - [ ] Routing 	
-- [ ] User show pages
+- [X] User show pages
 - [X] Footer
 - [X] Article form display
 - [X] Video form display
 - [X] Listing form display
 - [ ] Login/Register/Reset/Edit Account Form styling
-- [ ] Individual listing view
 - [ ] Ajax search suggestions
 - [ ] Incorporate Nalda logo and other advice from Edward
 - [ ] Home page needs to have other ways of sorting: most popular, by category, by author?, etc
