@@ -7,6 +7,7 @@ import moment from 'moment';
 import Button from '../../shared/Button';
 import axios from 'axios';
 import Loading from '../../shared/Loading';
+import ErrorMessage from '../../shared/ErrorMessage';
 
 /**
  * Component to render an article
@@ -93,6 +94,9 @@ class Article extends React.Component {
                 <Loading />
               ) : (
                 <div>
+                  {
+                    this.state.error && <ErrorMessage error={this.state.error} />
+                  }
                   <h1>
                     { this.state.article.title }
                   </h1>
