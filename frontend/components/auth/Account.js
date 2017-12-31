@@ -1,6 +1,6 @@
 // Import framworks
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import PropTypes from 'prop-types';
@@ -67,6 +67,9 @@ class Account extends Component {
     });
   }
 
+  /**
+   * When the component updates
+   */
   componentDidUpdate() {
     if (this.state.editName) {
       // Focus on the name input upon clicking edit
@@ -194,10 +197,12 @@ class Account extends Component {
               Password
             </td>
             <td>
-              ********
+              ●●●●●●●
             </td>
             <td>
-              <i className="fa fa-pencil" aria-hidden="true" />
+              <Link to="/password">
+                <i className="fa fa-pencil" aria-hidden="true" />
+              </Link>
             </td>
           </tr>
         </tbody>

@@ -189,8 +189,8 @@ const mapDispatchToProps = dispatch => {
 
 // Redux config
 Sidebar = connect(
-    mapStateToProps,
-    mapDispatchToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(Sidebar);
 
 export default Sidebar;
