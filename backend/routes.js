@@ -359,6 +359,54 @@ module.exports = () => {
     }
   });
 
+  /**
+   * Update a user's password
+   * TODO error checking for password strength
+   * TODO update user
+   */
+  router.post('/users/password', (req, res) => {
+    // Isolate variables from the request
+    const oldPassword = req.body.oldPassword;
+    const newPassword = req.body.newPassword;
+    const newPasswordConfirm = req.body.newPasswordConfirm;
+
+    // Error checking
+    if (!oldPassword) {
+      res.send({
+        success: false,
+        error: "Old password must be populated.",
+      });
+    } else if (!newPassword) {
+      res.send({
+        success: false,
+        error: "New password must be populated.",
+      });
+    } else if (!newPasswordConfirm) {
+      res.send({
+        success: false,
+        error: "New password confirmation must be populated.",
+      });
+    } else if (oldPassword === newPassword) {
+      res.send({
+        success: false,
+        error: "New password must be unique from old password.",
+      });
+    } else if (newPassword !== newPasswordConfirm) {
+      res.send({
+        success: false,
+        error: "New password and confirmation password must match.",
+      });
+    } else {
+      /**
+       * TODO perform error checking on password strength
+       */
+      res.send({
+        success: false,
+        error: "Not yet implemented.",
+      });
+    }
+  });
+
   // Return the router for use throughout the application
   return router;
 };

@@ -1,17 +1,17 @@
 // Import framworks
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import Button from '../shared/Button';
-import Loading from '../shared/Loading';
+import axios from 'axios';
 
 // Import components
 import ErrorMessage from '../shared/ErrorMessage';
+import Button from '../shared/Button';
 
 /**
  * Component for a user to edit their password
- * TODO pull user data from the backend
+ * TODO forgot password reset
  */
 class EditPassword extends Component {
   /**
@@ -23,6 +23,8 @@ class EditPassword extends Component {
       oldPassword: '',
       newPassword: '',
       newPasswordConfirm: '',
+      pending: false,
+      redirect: false,
     };
 
     // Bind this to helper methods
@@ -66,6 +68,42 @@ class EditPassword extends Component {
   handleSubmit(event) {
     // Prevent the default submit action
     event.preventDefault();
+
+    // Update the state to pending
+    this.setState({
+      pending: true,
+      error: "",
+    });
+
+    // Create the body object
+    const body = {
+      oldPassword: this.state.oldPassword,
+      newPassword: this.state.newPassword,
+      newPasswordConfirm: this.state.newPasswordConfirm,
+    };
+
+    // Send the request
+    axios.post('/api/users/password', body)
+      .then(res => {
+        if (res.data.success) {
+          this.setState({
+            pending: false,
+            error: "",
+            redirect: true,
+          });
+        } else {
+          this.setState({
+            pending: false,
+            error: res.data.error,
+          });
+        }
+      })
+      .catch(err => {
+        this.setState({
+          pending: false,
+          error: err,
+        });
+      });
   }
 
   /**
@@ -77,63 +115,72 @@ class EditPassword extends Component {
       <div>
         { /* Redirect the user to home if they are not logged in */ }
         { !this.props.userId && <Redirect to="/login" /> }
+        { this.state.redirect && <Redirect to="/account" /> }
 
         <div className="container">
           <div className="row">
             <div className="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-              { this.state.error && <ErrorMessage error={ this.state.error } /> }
-              { this.state.pending ? <Loading /> : (
-                <form className="thin-form" onSubmit={ this.handleSubmit }>
-                  <h4 className="bold marg-bot-1">
-                    Edit password
-                  </h4>
-                  <label>
-                    Old password
-                  </label>
-                  <input
-                    className="form-control marg-bot-1"
-                    value={ this.state.oldPassword }
-                    onChange={ this.handleChangeOldPassword }
-                  />
-                  <label>
-                    New password
-                  </label>
-                  <input
-                    className="form-control marg-bot-1"
-                    value={ this.state.newPassword }
-                    onChange={ this.handleChangeNewPassword }
-                  />
-                  <label>
-                    Confirm new password
-                  </label>
-                  <input
-                    className="form-control marg-bot-1"
-                    value={ this.state.newPasswordConfirm }
-                    onChange={ this.handleChangeNewPasswordConfirm }
-                  />
-                  <input
-                    type="submit"
-                    value="Update password"
-                    className={
+              <form className="thin-form" onSubmit={ this.handleSubmit }>
+                <h4 className="bold marg-bot-1">
+                  Edit password
+                </h4>
+
+                { /* Render an error if there is one */}
+                { this.state.error && <ErrorMessage error={ this.state.error } /> }
+
+                <label>
+                  Old password
+                </label>
+                <input
+                  type="password"
+                  className="form-control marg-bot-1"
+                  value={ this.state.oldPassword }
+                  onChange={ this.handleChangeOldPassword }
+                />
+                <label>
+                  New password
+                </label>
+                <input
+                  type="password"
+                  className="form-control marg-bot-1"
+                  value={ this.state.newPassword }
+                  onChange={ this.handleChangeNewPassword }
+                />
+                <label>
+                  Confirm new password
+                </label>
+                <input
+                  type="password"
+                  className="form-control marg-bot-1"
+                  value={ this.state.newPasswordConfirm }
+                  onChange={ this.handleChangeNewPasswordConfirm }
+                />
+                <input
+                  type="submit"
+                  value={ this.state.pending ? "Updating password..." : "Update password" }
+                  className={
+                    (this.state.pending) || (
                       this.state.oldPassword &&
                       this.state.newPassword &&
                       this.state.oldPassword !== this.state.newPassword &&
-                      this.state.newPassword === this.state.newPasswordConfirm ? (
-                        "btn btn-primary"
-                      ) : (
-                        "btn btn-primary disabled"
-                      )
-                    }
-                  />
-                </form>
-              ) }
-              {
-                !this.state.pending && (
-                  <div className="marg-top-1">
-                    <Button />
-                  </div>
-                )
-              }
+                      this.state.newPassword === this.state.newPasswordConfirm
+                    ) ? (
+                      "btn btn-primary"
+                    ) : (
+                      "btn btn-primary disabled"
+                    )
+                  }
+                />
+                <div className="marg-top-1">
+                  <Link to="/todo">
+                    Forgot your password?
+                  </Link>
+                </div>
+              </form>
+
+              <div className="marg-top-1">
+                <Button />
+              </div>
             </div>
           </div>
         </div>
