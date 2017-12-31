@@ -169,25 +169,23 @@
  * Styling the sidebar which renders triggered by the navbar
  */
 #sidebar {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  z-index: 1300;
-  left: 0;
-  right: 0;
-  overflow: hidden;
-
+  // Clickable shade to the left of the triggered sidebar
+  // Clicking the shade hides the sidebar
   .shade {
+    z-index: 1300;
     background: rgba(0, 0, 0, 0.4);
-    width: 100%;
+    width: 100vw;
     height: 100%;
+    left: 0;
     cursor: hand;
     cursor: pointer;
     top: 0;
     position: fixed;
   }
 
+  // The actual sidebar with links
   #side-menu {
+    z-index: 1301;
     transition: all 0.4s ease;
     position: fixed;
     height: 100%;
@@ -199,6 +197,7 @@
     border-left: 1px solid $border;
   }
 
+  // Links contained within the sidebar
   .links {
     list-style: none;
     margin: 0;
@@ -226,6 +225,7 @@
     }
   }
 
+  // Each individual link
   .link {
     color: $gray;
 

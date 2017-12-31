@@ -57,11 +57,21 @@ class Account extends Component {
           name: resp.data.data.name,
           email: resp.data.data.username,
           type: resp.data.data.userType,
+          error: "",
         });
       }
     }).catch((err) => {
-      console.log(err);
+      this.setState({
+        error: err,
+      });
     });
+  }
+
+  componentDidUpdate() {
+    if (this.state.editName) {
+      // Focus on the name input upon clicking edit
+      this.nameInput.focus();
+    }
   }
 
   /**
@@ -75,16 +85,18 @@ class Account extends Component {
 
   /**
    * Helper method to trigger edit name
-   * TODO autofocus
    */
   handleNameClick() {
+    if (this.state.editName) {
+      /**
+       * TODO save the updated name
+       */
+    }
+
+    // Update the state
     this.setState({
       editName: !this.state.editName,
     });
-
-    if (this.state.editName) {
-      document.getElementById('name').focus();
-    }
   }
 
   /**
@@ -114,6 +126,7 @@ class Account extends Component {
               <input
                 className="form-control"
                 id="name"
+                ref={(input) => { this.nameInput = input; }}
                 value={ this.state.name }
                 onChange={ this.handleChangeName }
                 style={{ display: this.state.editName ? "inherit" : "none" }}
