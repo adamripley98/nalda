@@ -33,12 +33,15 @@ class Account extends Component {
       pending: false,
       adminPopover: false,
       editName: false,
+      editBio: false,
     };
 
     // Bind this to helper methods
     this.handleAdminClick = this.handleAdminClick.bind(this);
     this.handleChangeName = this.handleChangeName.bind(this);
     this.handleNameClick = this.handleNameClick.bind(this);
+    this.handleChangeBio = this.handleChangeBio.bind(this);
+    this.handleBioClick = this.handleBioClick.bind(this);
   }
 
   /**
@@ -74,11 +77,14 @@ class Account extends Component {
     if (this.state.editName) {
       // Focus on the name input upon clicking edit
       this.nameInput.focus();
+    } else if (this.state.editBio) {
+      // Focus on the bio text area upon clicking edit
+      this.bioInput.focus();
     }
   }
 
   /**
-   * Handle change name
+   * Handle a change to the name state
    */
   handleChangeName(event) {
     this.setState({
@@ -103,6 +109,31 @@ class Account extends Component {
   }
 
   /**
+   * Handle a change to the bio state
+   */
+  handleChangeBio(event) {
+    this.setState({
+      bio: event.target.value,
+    });
+  }
+
+  /**
+   * Helper method to trigger edit bio
+   */
+  handleBioClick() {
+    if (this.state.editBio) {
+      /**
+       * TODO save the updated bio
+       */
+    }
+
+    // Update the state
+    this.setState({
+      editBio: !this.state.editBio,
+    });
+  }
+
+  /**
    * Helper method to trigger popup
    */
   handleAdminClick() {
@@ -123,7 +154,7 @@ class Account extends Component {
               Name
             </td>
             <td>
-              <span style={{ display: this.state.editName ? "none" : "inherit" }}>
+              <span style={{ display: this.state.editName && "none" }}>
                 { this.state.name }
               </span>
               <input
@@ -132,7 +163,7 @@ class Account extends Component {
                 ref={(input) => { this.nameInput = input; }}
                 value={ this.state.name }
                 onChange={ this.handleChangeName }
-                style={{ display: this.state.editName ? "inherit" : "none" }}
+                style={{ display: !this.state.editName && "none" }}
               />
             </td>
             <td>
@@ -175,10 +206,24 @@ class Account extends Component {
               Bio
             </td>
             <td>
-              { this.state.bio }
+              <span style={{ display: this.state.editBio && "none" }}>
+                { this.state.bio }
+              </span>
+              <textarea
+                className="form-control"
+                id="bio"
+                ref={(input) => { this.bioInput = input; }}
+                value={ this.state.bio }
+                onChange={ this.handleChangeBio }
+                style={{ display: !this.state.editBio && "none" }}
+              />
             </td>
             <td>
-              <i className="fa fa-pencil" aria-hidden="true" />
+              <i
+                className="fa fa-pencil"
+                aria-hidden="true"
+                onClick={ this.handleBioClick }
+              />
             </td>
           </tr>
           <tr>
