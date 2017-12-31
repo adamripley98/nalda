@@ -99,7 +99,6 @@ class ListingForm extends React.Component {
     event.preventDefault();
     // If request is properly formulated, send request to make a new listing (routes.js)
     if (this.inputValid()) {
-      console.log('input valid');
       axios.post('/listings/new', {
         title: this.state.title,
         image: this.state.image,
@@ -109,7 +108,6 @@ class ListingForm extends React.Component {
         price: this.state.price,
       })
       .then((resp) => {
-        console.log('what is resp', resp.data);
         this.setState({
           redirectToHome: true,
         });

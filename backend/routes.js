@@ -168,6 +168,34 @@ module.exports = () => {
   });
 
   /**
+   * Route to receive user's information from Mongo
+   * @param userID
+   */
+  router.get('/account', (req, res) => {
+    User.findById(req.query.userId, (err, user) => {
+      if (err) {
+        // If there was an error with the request
+        res.send({
+          success: false,
+          error: err,
+        });
+        // If no user exists
+      } else if (!user) {
+        res.send({
+          success: false,
+          error: 'Can not find user',
+        });
+      } else {
+        // If everything went as planned, send back user
+        res.send({
+          success: true,
+          data: user,
+        });
+      }
+    });
+  });
+
+  /**
    * Route to handle a new article submission
    * @param title
    * @param subtitle
@@ -244,15 +272,18 @@ module.exports = () => {
           success: false,
           error: err,
         });
+      // If the article doesn't exist
       } else if (!article) {
         res.send({
           success: false,
           error: "Article not found",
         });
+        // if no errors, returns article along with the date it was created
       } else {
         res.send({
           success: true,
           data: article,
+          timestamp: article._id.getTimestamp(),
         });
       }
     });

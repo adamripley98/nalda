@@ -3,7 +3,6 @@ const articleReducer = (state = {}, action) => {
   switch (action.type) {
     // When specific article is opened
     case 'OPENART': {
-      console.log('enters open article');
       const newState = Object.assign({}, state);
       newState.article = action.article;
       return newState;

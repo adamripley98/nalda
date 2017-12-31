@@ -12,19 +12,18 @@ module.exports = (passport) => {
 				 // Will attempt to find user in database
 				 User.findOne({ 'username': req.body.username }, (err, user) => {
 		     if (err) {
-		         console.log('Error in SignUp: ' + err);
-						 res.send('Unknown registration error');
+						 res.send('Unknown registration error', err);
 						 return false;
 		     }
 	    	// User already exists
 		     if (user) {
-		         console.log('User already exists with username: ' + req.body.username);
-						 res.send('User already exists.');
+						 res.send('User with username' + req.body.username + 'already exists.');
 						 return false;
 		     }
 				 // If no error and user doesn't already exist, create a user
 				 // Default sets userType to user, admin can change to admin or curator
 				 const newUser = new User({
+					 name: req.body.name,
 					 username: req.body.username,
 					 password: createHash(req.body.password),
 					 userType: 'user'
@@ -32,8 +31,7 @@ module.exports = (passport) => {
 				 // Saving new user in Mongo
 				 newUser.save((er, usr) => {
 					 if (er) {
-						 console.log('error registering a user', er);
-						 res.send('Unknown registration error');
+						 res.send('Unknown registration error', er);
 						 return false;
 					 }
 					 req.login(usr, (e) => {
