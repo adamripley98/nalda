@@ -26,6 +26,28 @@ class ListingForm extends React.Component {
       error: "",
       redirectToHome: "",
       website: "",
+      amenities: {
+        foodTrucks: false,
+        lateNights: false,
+        healthy: false,
+        forTheSweetTooth: false,
+        forTheStudyGrind: false,
+        openLate: false,
+        parentsVisiting: false,
+        gotPlasteredLastNight: false,
+        bars: false,
+        byos: false,
+        speakeasies: false,
+        dateNight: false,
+        formals: false,
+        birthdays: false,
+        treatYourself: false,
+        adulting: false,
+        feelingLazy: false,
+        holeInTheWall: false,
+        showoffToYourFriends: false,
+        forTheGram: false,
+      },
     };
 
     // Bind this to helper methods
@@ -107,14 +129,18 @@ class ListingForm extends React.Component {
         rating: this.state.rating,
         price: this.state.price,
       })
-      .then((resp) => {
-        this.setState({
-          redirectToHome: true,
+        .then((resp) => {
+          /**
+           * TODO check for success in the response
+           * ex. resp.data.success
+           */
+          this.setState({
+            redirectToHome: true,
+          });
+        })
+        .catch((err) => {
+          console.log('there was an error', err);
         });
-      })
-      .catch((err) => {
-        console.log('there was an error', err);
-      });
     }
   }
 
@@ -289,6 +315,56 @@ class ListingForm extends React.Component {
                     <option>$$$$</option>
                   </select>
                 </div>
+                <label>
+                  Amenities
+                </label>
+                <strong>
+                  No time, gotta run
+                </strong>
+                a) Food trucks
+                b) Late nights
+                c) Healthy
+
+                <strong>
+                  Hangout spots
+                </strong>
+                a) For the sweet tooth
+                b) For the study grind
+                c) It’s midnight and I’m hungry
+
+                <strong>
+                  Lazy weekend
+                </strong>
+                a) Parents are visiting?!
+                b) Got plastered last night…
+
+                <strong>
+                  Wanna drink?
+                </strong>
+                a) Bars
+                b) BYOs
+                c) Speakeasies
+
+                <strong>
+                  Special occasions
+                </strong>
+                a) Date night
+                b) Formals
+                c) Birthdays
+
+                <strong>
+                  Dinner with friends
+                </strong>
+                a) Treat yourself
+                b) #adulting
+                c) Feeling lazy
+
+                <strong>
+                  Adventure
+                </strong>
+                a) Hole in the wall
+                b) Showoff to your friends
+                c) #forthegram
               </div>
 
               <label>
