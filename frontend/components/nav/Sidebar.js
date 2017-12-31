@@ -80,9 +80,13 @@ class Sidebar extends Component {
         </div>
 
         {/* Render the sidebar itself which is hidden by default */}
-        <div id="sidebar" style={{ display: !this.state.active && "none" }}>
-          <div className="shade" onClick={ this.toggleMenu } />
-          <div className="side-menu">
+        <div id="sidebar">
+          <div
+            className="shade"
+            onClick={ this.toggleMenu }
+            style={{ display: !this.state.active && "none" }}
+          />
+          <div id="side-menu" style={{ right: this.state.active ? "0vw" : "-100vw" }}>
             {
               this.props.userId ? (
                 <div className="links">

@@ -123,7 +123,7 @@ class Listing extends React.Component {
         <div className="container content">
           <div className="row">
             {/* Contains details about the listing */}
-            <div className="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-0 col-xl-9">
+            <div className="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-0">
               <div className="header">
                 <h1 className="title">
                   { this.state.title }
@@ -157,9 +157,9 @@ class Listing extends React.Component {
               id="listing-preview"
               className={
                 this.state.infoTrigger ? (
-                  "col-12 col-lg-4 col-xl-3 listing-preview active"
+                  "col-12 col-lg-4 listing-preview active"
                 ) : (
-                  "col-12 col-lg-4 col-xl-3 listing-preview"
+                  "col-12 col-lg-4 listing-preview"
                 )
               }
               style={{
