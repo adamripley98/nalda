@@ -154,7 +154,7 @@ class Home extends React.Component {
     if (this.state.listings && this.state.listings.length) {
       return this.state.listings.map((listing) => (
         <div className="col-6 col-lg-3" key={ listing._id } >
-          <Link to={ `/articles/${listing._id}` } >
+          <Link to={ `/listings/${listing._id}` } >
             <div className="article-preview">
               <img className="img-fluid" alt={listing.name} src={listing.image} />
               <h2 className="title">
@@ -181,14 +181,14 @@ class Home extends React.Component {
 
   /**
    * Helper method to render each individual video
-   * TODO render perview?
+   * TODO render preview?
    */
   renderVideos() {
     // If there are vidoes to render
     if (this.state.videos && this.state.videos.length) {
       return this.state.videos.map((video) => (
         <div className="col-6 col-lg-3" key={ video._id } >
-          <Link to={ `/articles/${video._id}` } >
+          <Link to={ `/videos/${video._id}` } >
             <div className="article-preview">
               <img className="img-fluid" alt={video.name} src={video.url} />
               <h2 className="title">

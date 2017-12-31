@@ -9,6 +9,8 @@ import Button from '../../shared/Button';
 /**
  * Component for the homepage of the application
  */
+
+ // TODO: Only show first 20 or so articles on a page
 class Articles extends React.Component {
   // Constructor method
   constructor(props) {

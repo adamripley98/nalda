@@ -22,9 +22,9 @@ class Listings extends React.Component {
     };
   }
 
-  // Load articles from Mongo once thre component mounts
+  // Load listings from Mongo once thre component mounts
   componentDidMount() {
-    axios.get('/api/articles')
+    axios.get('/api/listings')
     .then((resp) => {
       if (resp.data.success) {
         this.setState({
@@ -47,7 +47,7 @@ class Listings extends React.Component {
     });
   }
 
-  // Methods renders each individual article
+  // Methods renders each individual listing
   renderListings() {
     return this.state.listings.map((listing) => (
       <div className="col-6 col-lg-4 col-xl-3" key={ listing._id } >
