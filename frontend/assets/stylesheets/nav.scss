@@ -204,6 +204,10 @@
       display: block;
       width: 100%;
 
+      &.line-above {
+        border-top: 1px solid $border;
+      }
+
       &:hover {
         color: $dark-gray;
       }

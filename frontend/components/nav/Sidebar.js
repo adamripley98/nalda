@@ -118,7 +118,7 @@ class Sidebar extends Component {
                   ) : (
                     console.log('admin not logged in')
                   )}
-                  <a onClick={ this.handleLogoutSubmit } className="link cursor">
+                  <a onClick={ this.handleLogoutSubmit } className="link cursor line-above">
                     Logout
                   </a>
                 </div>
@@ -143,7 +143,7 @@ class Sidebar extends Component {
                   <Link to="/contact" className="link">
                     Contact
                   </Link>
-                  <Link to="/register" className="link">
+                  <Link to="/register" className="link line-above">
                     Register
                   </Link>
                   <Link to="/login" className="link">
