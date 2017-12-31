@@ -28,6 +28,28 @@
   }
 
   .listing-preview {
+    transition: all 0.2s ease;
+    top: 0;
+
+    .info-trigger {
+      position: absolute;
+      right: 1rem;
+      cursor: hand;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      color: $gray;
+
+      &:hover,
+      &:focus,
+      &:active {
+        color: $dark-gray;
+      }
+
+      &.active {
+        transform: rotate(180deg);
+      }
+    }
+
     .card {
       padding: 1rem;
     }
@@ -40,6 +62,7 @@
 @media screen and (max-width: 992px) {
   .listing {
     .listing-preview {
+      top: inherit;
       position: fixed;
       width: 100%;
       bottom: 0;
@@ -61,6 +84,7 @@
 @media screen and (max-device-width: 992px) {
   .listing {
     .listing-preview {
+      top: inherit;
       position: fixed;
       width: 100%;
       bottom: 0;

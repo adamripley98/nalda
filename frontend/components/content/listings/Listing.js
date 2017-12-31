@@ -51,10 +51,12 @@ class Listing extends React.Component {
           createdAt: 1513816699243,
         }
       ],
+      infoTrigger: false,
     };
 
     // Bind this to helper methods
     this.renderAmenities = this.renderAmenities.bind(this);
+    this.handleClickInfoTrigger = this.handleClickInfoTrigger.bind(this);
   }
 
   // Helper method to render amenities
@@ -69,6 +71,13 @@ class Listing extends React.Component {
 
     // If there are no amentities return nothing
     return null;
+  }
+
+  // Helper method to handle a user clicking on the info trigger
+  handleClickInfoTrigger() {
+    this.setState({
+      infoTrigger: !this.state.infoTrigger,
+    });
   }
 
   // Helper method to render reviews
@@ -144,8 +153,31 @@ class Listing extends React.Component {
             </div>
 
             {/* Contains overview aboute the listing */}
-            <div className="col-12 col-lg-4 col-xl-3 listing-preview">
+            <div
+              id="listing-preview"
+              className={
+                this.state.infoTrigger ? (
+                  "col-12 col-lg-4 col-xl-3 listing-preview active"
+                ) : (
+                  "col-12 col-lg-4 col-xl-3 listing-preview"
+                )
+              }
+              style={{
+                bottom: this.state.infoTrigger ? (- document.getElementById('listing-preview').offsetHeight + 64) : 0
+              }}
+            >
               <div className="card">
+                <i
+                  className={
+                    this.state.infoTrigger ? (
+                      "fa fa-chevron-down hidden-lg-up fa-lg info-trigger active"
+                    ) : (
+                      "fa fa-chevron-down hidden-lg-up fa-lg info-trigger"
+                    )
+                  }
+                  aria-hidden="true"
+                  onClick={ this.handleClickInfoTrigger }
+                />
                 <h2>
                   { this.state.title }
                 </h2>
