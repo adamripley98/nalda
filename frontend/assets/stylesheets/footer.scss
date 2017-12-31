@@ -2,6 +2,10 @@
  * Styles for the footer at the bottom of every page
  */
 footer {
+  p {
+    margin-bottom: 0rem;
+  }
+  
   .footer-top {
     padding: 1rem 0rem 2rem 0rem;
     border-top: 1px solid $border;

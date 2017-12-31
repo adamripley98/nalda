@@ -21,7 +21,7 @@
   position: fixed;
   width: 100%;
   z-index: 1299;
-  box-shadow: 0.2rem 0rem 0.1rem rgba(0, 0, 0, 0.2);
+  box-shadow: 0rem 0.1rem 0.05rem rgba(0, 0, 0, 0.05);
 
   .logo {
     color: $red !important;
@@ -129,6 +129,9 @@
   }
 }
 
+/**
+ * Styling the menu used to trigger the sidebar
+ */
 .menu {
   padding: 1rem 0.6rem 1rem 1rem;
   z-index: 1301;
@@ -162,6 +165,9 @@
   }
 }
 
+/**
+ * Styling the sidebar which renders triggered by the navbar
+ */
 #sidebar {
   position: fixed;
   width: 100%;

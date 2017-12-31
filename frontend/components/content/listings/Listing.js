@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import uuid from 'uuid-v4';
 import Review from './Review';
 import ReviewForm from './ReviewForm';
+import { Link } from 'react-router-dom';
 
 /**
  * Component to render a listing
@@ -18,6 +19,8 @@ class Listing extends React.Component {
       img: "https://a0.muscache.com/im/pictures/109411642/6fbeaa28_original.jpg?aki_policy=xx_large",
       title: "Name of the listing",
       description: "This is a sample description about the listing that previews what it is all about.",
+      website: "http://cameroncabo.com/",
+      price: "$$",
       type: "RESTAURANT",
       amenities: [
         "Pets allowed",
@@ -110,7 +113,8 @@ class Listing extends React.Component {
         <div className="background-image preview background-fixed" style={{ backgroundImage: `url(${this.state.img})` }}/>
         <div className="container content">
           <div className="row">
-            <div className="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+            {/* Contains details about the listing */}
+            <div className="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-0 col-xl-9">
               <div className="header">
                 <h1 className="title">
                   { this.state.title }
@@ -137,6 +141,43 @@ class Listing extends React.Component {
               </p>
               <ReviewForm />
               { this.renderReviews() }
+            </div>
+
+            {/* Contains overview aboute the listing */}
+            <div className="col-12 col-lg-4 col-xl-3 listing-preview">
+              <div className="card">
+                <h2>
+                  { this.state.title }
+                </h2>
+                {
+                  this.state.website && (
+                    <Link to={ this.state.website }>
+                      <i className="fa fa-globe" aria-hidden="true" />
+                      &nbsp;
+                      {
+                        this.state.website.length > 18 ? (
+                          this.state.website.substring(0, 18) + "..."
+                        ) : (
+                          this.state.website
+                        )
+                      }
+                    </Link>
+                  )
+                }
+                {
+                  this.state.price && (
+                    <p className="price">
+                      <strong>
+                        Price:&nbsp;
+                      </strong>
+                      { this.state.price }
+                    </p>
+                  )
+                }
+                <p className="description">
+                  { this.state.description }
+                </p>
+              </div>
             </div>
           </div>
         </div>
