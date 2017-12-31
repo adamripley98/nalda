@@ -91,7 +91,7 @@ Backend for articles and listings
 - [ ] Give content a timestamp
   - [ ] Videos
   - [ ] Listings
-  - [ ] Articles
+  - [X] Articles
 
 ## Other
 
