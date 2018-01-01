@@ -315,56 +315,98 @@ class ListingForm extends React.Component {
                     <option>$$$$</option>
                   </select>
                 </div>
-                <label>
-                  Amenities
-                </label>
-                <strong>
-                  No time, gotta run
-                </strong>
-                a) Food trucks
-                b) Late nights
-                c) Healthy
+                <div className="amenities-form">
+                  <label>
+                    Amenities
+                  </label>
+                  <strong>
+                    No time, gotta run
+                  </strong>
+                  <p>
+                    Food trucks
+                  </p>
+                  <p>
+                    Late nights
+                  </p>
+                  <p>
+                    Healthy
+                  </p>
 
-                <strong>
-                  Hangout spots
-                </strong>
-                a) For the sweet tooth
-                b) For the study grind
-                c) It’s midnight and I’m hungry
+                  <strong>
+                    Hangout spots
+                  </strong>
+                  <p>
+                    For the sweet tooth
+                  </p>
+                  <p>
+                    For the study grind
+                  </p>
+                  <p>
+                    It’s midnight and I’m hungry
+                  </p>
 
-                <strong>
-                  Lazy weekend
-                </strong>
-                a) Parents are visiting?!
-                b) Got plastered last night…
+                  <strong>
+                    Lazy weekend
+                  </strong>
+                  <p>
+                    Parents are visiting?!
+                  </p>
+                  <p>
+                    Got plastered last night…
+                  </p>
 
-                <strong>
-                  Wanna drink?
-                </strong>
-                a) Bars
-                b) BYOs
-                c) Speakeasies
+                  <strong>
+                    Wanna drink?
+                  </strong>
+                  <p>
+                    Bars
+                  </p>
+                  <p>
+                    BYOs
+                  </p>
+                  <p>
+                    Speakeasies
+                  </p>
 
-                <strong>
-                  Special occasions
-                </strong>
-                a) Date night
-                b) Formals
-                c) Birthdays
+                  <strong>
+                    Special occasions
+                  </strong>
+                  <p>
+                    Date night
+                  </p>
+                  <p>
+                    Formals
+                  </p>
+                  <p>
+                    Birthdays
+                  </p>
 
-                <strong>
-                  Dinner with friends
-                </strong>
-                a) Treat yourself
-                b) #adulting
-                c) Feeling lazy
+                  <strong>
+                    Dinner with friends
+                  </strong>
+                  <p>
+                    Treat yourself
+                  </p>
+                  <p>
+                    #adulting
+                  </p>
+                  <p>
+                    Feeling lazy
+                  </p>
 
-                <strong>
-                  Adventure
-                </strong>
-                a) Hole in the wall
-                b) Showoff to your friends
-                c) #forthegram
+                  <strong>
+                    Adventure
+                  </strong>
+                  <p>
+                    Hole in the wall
+                  </p>
+                  <p>
+                    Showoff to your friends
+                  </p>
+                  <p>
+                    #forthegram
+                  </p>
+                </div>
               </div>
 
               <label>

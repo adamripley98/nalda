@@ -376,6 +376,8 @@ a {
  * Styling relating to account information
  */
 .account.table {
+  font-size: 0.8rem;
+
   .fa {
     color: $gray;
     cursor: hand;
@@ -403,5 +405,20 @@ a {
     right: 3.5rem;
     text-align: left;
     transform: translateY(-2rem);
+  }
+}
+
+.amenities-form {
+  strong {
+    width: 100%;
+  }
+
+  p {
+    width: 100%;
+    color: $gray;
+
+    &.active {
+      color: $dark-gray;
+    }
   }
 }

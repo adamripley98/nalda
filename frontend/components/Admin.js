@@ -100,26 +100,36 @@ class Admin extends Component {
             onChange={ this.handleChangeEmail }
             rows="1"
           />
-          <button
-            onClick={(e) => this.onSubmitAdmin(e)}
-            className={
-              this.state.email ? (
-                "btn btn-primary full-width cursor"
-              ) : (
-                "btn btn-primary full-width disabled"
-              )
-            }
-          >Add as admin</button>
-          <button
-            onClick={(e) => this.onSubmitCurator(e)}
-            className={
-              this.state.email ? (
-                "btn btn-primary full-width cursor"
-              ) : (
-                "btn btn-primary full-width disabled"
-              )
-            }
-          >Add as content curator</button>
+          <div className="row">
+            <div className="col-6">
+              <button
+                onClick={(e) => this.onSubmitAdmin(e)}
+                className={
+                  this.state.email ? (
+                    "btn btn-primary full-width cursor"
+                  ) : (
+                    "btn btn-primary full-width disabled"
+                  )
+                }
+              >
+                Add as admin
+              </button>
+            </div>
+            <div className="col-6">
+              <button
+                onClick={(e) => this.onSubmitCurator(e)}
+                className={
+                  this.state.email ? (
+                    "btn btn-primary full-width cursor"
+                  ) : (
+                    "btn btn-primary full-width disabled"
+                  )
+                }
+              >
+                Add as content curator
+              </button>
+            </div>
+          </div>
         </form>
       </Thin>
     );

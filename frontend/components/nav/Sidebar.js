@@ -109,7 +109,7 @@ class Sidebar extends Component {
 
                   { /* Render create link only if admin or curator */ }
                   {
-                    this.props.userType === 'admin' || this.props.userType === 'curator' && (
+                    (this.props.userType === 'admin' || this.props.userType === 'curator') && (
                       <Link to="/articles/new" className="link">
                         Create
                       </Link>
@@ -118,7 +118,7 @@ class Sidebar extends Component {
 
                   { /* Render admin panel only if admin */ }
                   {
-                    this.props.userType === 'admin' && (
+                    (this.props.userType === 'admin') && (
                       <Link to="admin" className="link">
                         Admin
                       </Link>
