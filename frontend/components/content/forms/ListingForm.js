@@ -59,6 +59,7 @@ class ListingForm extends React.Component {
     this.handleChangePrice = this.handleChangePrice.bind(this);
     this.handleChangeWebsite = this.handleChangeWebsite.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleClickFoodTrucks = this.handleClickFoodTrucks.bind(this);
   }
 
   // Handle resizing textarea
@@ -115,6 +116,16 @@ class ListingForm extends React.Component {
     });
   }
 
+  // Helper method to handle click on food truck amenity
+  handleClickFoodTrucks() {
+    this.setState({
+      amenities: {
+        ...this.state.amenities,
+        foodTrucks: !this.state.amenities.foodTrucks,
+      },
+    });
+  }
+
   // Helper method to handle when the form is submitted
   handleSubmit(event) {
     // Prevent the default submit action
@@ -129,7 +140,7 @@ class ListingForm extends React.Component {
         rating: this.state.rating,
         price: this.state.price,
       })
-        .then((resp) => {
+        .then(() => {
           /**
            * TODO check for success in the response
            * ex. resp.data.success
@@ -315,98 +326,6 @@ class ListingForm extends React.Component {
                     <option>$$$$</option>
                   </select>
                 </div>
-                <div className="amenities-form">
-                  <label>
-                    Amenities
-                  </label>
-                  <strong>
-                    No time, gotta run
-                  </strong>
-                  <p>
-                    Food trucks
-                  </p>
-                  <p>
-                    Late nights
-                  </p>
-                  <p>
-                    Healthy
-                  </p>
-
-                  <strong>
-                    Hangout spots
-                  </strong>
-                  <p>
-                    For the sweet tooth
-                  </p>
-                  <p>
-                    For the study grind
-                  </p>
-                  <p>
-                    It’s midnight and I’m hungry
-                  </p>
-
-                  <strong>
-                    Lazy weekend
-                  </strong>
-                  <p>
-                    Parents are visiting?!
-                  </p>
-                  <p>
-                    Got plastered last night…
-                  </p>
-
-                  <strong>
-                    Wanna drink?
-                  </strong>
-                  <p>
-                    Bars
-                  </p>
-                  <p>
-                    BYOs
-                  </p>
-                  <p>
-                    Speakeasies
-                  </p>
-
-                  <strong>
-                    Special occasions
-                  </strong>
-                  <p>
-                    Date night
-                  </p>
-                  <p>
-                    Formals
-                  </p>
-                  <p>
-                    Birthdays
-                  </p>
-
-                  <strong>
-                    Dinner with friends
-                  </strong>
-                  <p>
-                    Treat yourself
-                  </p>
-                  <p>
-                    #adulting
-                  </p>
-                  <p>
-                    Feeling lazy
-                  </p>
-
-                  <strong>
-                    Adventure
-                  </strong>
-                  <p>
-                    Hole in the wall
-                  </p>
-                  <p>
-                    Showoff to your friends
-                  </p>
-                  <p>
-                    #forthegram
-                  </p>
-                </div>
               </div>
 
               <label>
@@ -419,6 +338,102 @@ class ListingForm extends React.Component {
                 value={ this.state.website }
                 onChange={ this.handleChangeWebsite }
               />
+
+              <label>
+                Amenities
+              </label>
+              <div className="amenities-form">
+                <p className="bold">
+                  No time, gotta run
+                </p>
+                <p
+                  onClick={ this.handleClickFoodTrucks }
+                  className={ this.state.amenities.foodTrucks && "active" }
+                >
+                  Food trucks
+                </p>
+                <p>
+                  Late nights
+                </p>
+                <p>
+                  Healthy
+                </p>
+
+                <p className="bold">
+                  Hangout spots
+                </p>
+                <p>
+                  For the sweet tooth
+                </p>
+                <p>
+                  For the study grind
+                </p>
+                <p>
+                  It’s midnight and I’m hungry
+                </p>
+
+                <p className="bold">
+                  Lazy weekend
+                </p>
+                <p>
+                  Parents are visiting?!
+                </p>
+                <p>
+                  Got plastered last night…
+                </p>
+
+                <p className="bold">
+                  Wanna drink?
+                </p>
+                <p>
+                  Bars
+                </p>
+                <p>
+                  BYOs
+                </p>
+                <p>
+                  Speakeasies
+                </p>
+
+                <p className="bold">
+                  Special occasions
+                </p>
+                <p>
+                  Date night
+                </p>
+                <p>
+                  Formals
+                </p>
+                <p>
+                  Birthdays
+                </p>
+
+                <p className="bold">
+                  Dinner with friends
+                </p>
+                <p>
+                  Treat yourself
+                </p>
+                <p>
+                  #adulting
+                </p>
+                <p>
+                  Feeling lazy
+                </p>
+
+                <p className="bold">
+                  Adventure
+                </p>
+                <p>
+                  Hole in the wall
+                </p>
+                <p>
+                  Showoff to your friends
+                </p>
+                <p>
+                  #forthegram
+                </p>
+              </div>
 
               <input
                 type="submit"
