@@ -293,7 +293,7 @@ module.exports = () => {
    * Route to handle pulling the information for a specific listing
    */
   router.get('/listings/:id', (req, res) => {
-    // Find the id from the url
+    // Find the id from the listing url
     const id = req.params.id;
 
     // Pull specific listing from mongo
