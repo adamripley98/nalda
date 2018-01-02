@@ -73,14 +73,14 @@ class AppContainer extends Component {
                 <Route exact path="/admin" component={requireAdmin(Admin)}/>
 
                 { /* Routes for articles */ }
+                <Route exact path="/articles" component={Articles} />
                 <Route exact path="/articles/new" component={requireCurator(ArticleForm)} />
                 <Route exact path="/articles/:id" component={Article} />
-                <Route exact path="/articles" component={Articles} />
 
                 { /* Routes for listings */ }
+                <Route exact path="/listings" component={Listings} />
                 <Route exact path="/listings/new" component={requireCurator(ListingForm)} />
                 <Route exact path="/listings/:id" component={Listing} />
-                <Route exact path="/listings" components={Listings} />
 
                 { /* Routes for videos */ }
                 <Route exact path="/videos/new" component={requireCurator(VideoForm)} />

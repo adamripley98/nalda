@@ -183,7 +183,7 @@ class Home extends React.Component {
           !this.state.pending && (
             <div>
               <div className="space-1" />
-              <Button to="/articles" text="View all articles" />
+              <Button to="/articles" text="View all articles" right />
             </div>
           )
         }
@@ -205,7 +205,7 @@ class Home extends React.Component {
           !this.state.pending && (
             <div>
               <div className="space-1" />
-              <Button to="/listings" text="View all listings" />
+              <Button to="/listings" text="View all listings" right />
             </div>
           )
         }
@@ -227,7 +227,7 @@ class Home extends React.Component {
           !this.state.pending && (
             <div>
               <div className="space-1" />
-              <Button to="/videos" text="View all videos" />
+              <Button to="/videos" text="View all videos" right />
             </div>
           )
         }

@@ -5,9 +5,19 @@ import { Link } from 'react-router-dom';
 /**
  * Renders an error message to the user
  */
-const Button = ({ to, text }) => (
+const Button = ({ to, text, left, right }) => (
   <Link className="btn btn-primary marg-bot-15" to={ to ? to : "/" }>
-    { text ? text : (
+    { text ? (
+      <span>
+        {
+          left && <i className="fa fa-chevron-left" aria-hidden="true" />
+        }
+        { text }
+        {
+          right && <i className="fa fa-chevron-right" aria-hidden="true" />
+        }
+      </span>
+    ) : (
       <span>
         <i className="fa fa-chevron-left" aria-hidden="true" />
         Back to home
@@ -20,6 +30,8 @@ const Button = ({ to, text }) => (
 Button.propTypes = {
   to: PropTypes.string,
   text: PropTypes.string,
+  right: PropTypes.bool,
+  left: PropTypes.bool,
 };
 
 export default Button;

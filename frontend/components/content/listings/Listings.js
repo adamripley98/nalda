@@ -10,7 +10,9 @@ import Button from '../../shared/Button';
  * Component for the homepage of the application
  */
 class Listings extends React.Component {
-  // Constructor method
+  /**
+   * Constructor method
+   */
   constructor(props) {
     super(props);
 
@@ -22,32 +24,36 @@ class Listings extends React.Component {
     };
   }
 
-  // Load listings from Mongo once thre component mounts
+  /**
+   * Load listings from Mongo once the component mounts
+   */
   componentDidMount() {
     axios.get('/api/listings')
-    .then((resp) => {
-      if (resp.data.success) {
+      .then((resp) => {
+        if (resp.data.success) {
+          this.setState({
+            listings: resp.data.data,
+            pending: false,
+            error: "",
+          });
+        } else {
+          this.setState({
+            pending: false,
+            error: resp.data.error,
+          });
+        }
+      })
+      .catch(err => {
         this.setState({
-          listings: resp.data.data,
           pending: false,
-          error: "",
+          error: err,
         });
-      } else {
-        this.setState({
-          pending: false,
-          error: resp.data.error,
-        });
-      }
-    })
-    .catch(err => {
-      this.setState({
-        pending: false,
-        error: err,
       });
-    });
   }
 
-  // Methods renders each individual listing
+  /**
+   * Method renders each individual listing
+   */
   renderListings() {
     return this.state.listings.map((listing) => (
       <div className="col-6 col-lg-4 col-xl-3" key={ listing._id } >
@@ -66,7 +72,9 @@ class Listings extends React.Component {
     ));
   }
 
-  // Function to render the component
+  /**
+   * Function to render the component
+   */
   render() {
     return (
       <div className="container home">

@@ -110,14 +110,25 @@ h6,
       background: $dark-primary;
     }
 
-    .fa {
+    .fa-chevron-left {
       transition: all 0.2s ease;
       margin-right: 0.5rem;
     }
 
-    &:hover {
-      .fa {
+    .fa-chevron-right {
+      transition: all 0.2s ease;
+      margin-left: 0.5rem;
+    }
+
+    &:hover,
+    &:focus,
+    &:active {
+      .fa-chevron-left {
         transform: translateX(-0.2rem);
+      }
+
+      .fa-chevron-right {
+        transform: translateX(0.2rem);
       }
     }
   }
