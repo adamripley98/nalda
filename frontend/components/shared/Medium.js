@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
  */
 const Medium = ({ children }) => {
   return (
-    <div className="container">
+    <div className="container-fluid">
       <div className="row">
         <div className="col-12 col-md-8 offset-md-2 col-lg-6 offset-lg-3">
           { children }

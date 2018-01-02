@@ -59,7 +59,7 @@ class ListingForm extends React.Component {
     this.handleChangePrice = this.handleChangePrice.bind(this);
     this.handleChangeWebsite = this.handleChangeWebsite.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleClickFoodTrucks = this.handleClickFoodTrucks.bind(this);
+    this.handleClickAmenity = this.handleClickAmenity.bind(this);
   }
 
   // Handle resizing textarea
@@ -117,12 +117,18 @@ class ListingForm extends React.Component {
   }
 
   // Helper method to handle click on food truck amenity
-  handleClickFoodTrucks() {
+  handleClickAmenity(event, name) {
+    // Copy over the existing state
+    const newAmenityState = {
+      ...this.state.amenities,
+    };
+
+    // Update the state for the passed in field
+    newAmenityState[name] = !this.state.amenities[name];
+
+    // Update the component state
     this.setState({
-      amenities: {
-        ...this.state.amenities,
-        foodTrucks: !this.state.amenities.foodTrucks,
-      },
+      amenities: newAmenityState,
     });
   }
 
@@ -343,94 +349,158 @@ class ListingForm extends React.Component {
                 Amenities
               </label>
               <div className="amenities-form">
-                <p className="bold">
-                  No time, gotta run
-                </p>
-                <p
-                  onClick={ this.handleClickFoodTrucks }
-                  className={ this.state.amenities.foodTrucks && "active" }
-                >
-                  Food trucks
-                </p>
-                <p>
-                  Late nights
-                </p>
-                <p>
-                  Healthy
-                </p>
-
-                <p className="bold">
-                  Hangout spots
-                </p>
-                <p>
-                  For the sweet tooth
-                </p>
-                <p>
-                  For the study grind
-                </p>
-                <p>
-                  It’s midnight and I’m hungry
-                </p>
+                {/* Begin first row of amenities */}
+                <div className="row">
+                  <div className="col-12 col-md-6">
+                    <p className="bold">
+                      No time, gotta run
+                    </p>
+                    <p
+                      onClick={ (e) => this.handleClickAmenity(e, "foodTrucks") }
+                      className={ this.state.amenities.foodTrucks && "active" }
+                    >
+                      Food trucks
+                    </p>
+                    <p
+                      onClick={ (e) => this.handleClickAmenity(e, "lateNights") }
+                      className={ this.state.amenities.lateNights && "active" }
+                    >
+                      Late nights
+                    </p>
+                    <p
+                      onClick={ (e) => this.handleClickAmenity(e, "healthy") }
+                      className={ this.state.amenities.healthy && "active" }
+                    >
+                      Healthy
+                    </p>
+                  </div>
+                  <div className="col-12 col-md-6">
+                    <p className="bold">
+                      Hangout spots
+                    </p>
+                    <p
+                      onClick={ (e) => this.handleClickAmenity(e, "forTheSweetTooth") }
+                      className={ this.state.amenities.forTheSweetTooth && "active" }
+                    >
+                      For the sweet tooth
+                    </p>
+                    <p
+                      onClick={ (e) => this.handleClickAmenity(e, "forTheStudyGrind") }
+                      className={ this.state.amenities.forTheStudyGrind && "active" }
+                    >
+                      For the study grind
+                    </p>
+                    <p
+                      onClick={ (e) => this.handleClickAmenity(e, "openLate") }
+                      className={ this.state.amenities.openLate && "active" }
+                    >
+                      It’s midnight and I’m hungry
+                    </p>
+                  </div>
+                </div>
+                {/* Close first row of amenities */}
 
                 <p className="bold">
                   Lazy weekend
                 </p>
-                <p>
+                <p
+                  onClick={ (e) => this.handleClickAmenity(e, "parentsVisiting") }
+                  className={ this.state.amenities.parentsVisiting && "active" }
+                >
                   Parents are visiting?!
                 </p>
-                <p>
+                <p
+                  onClick={ (e) => this.handleClickAmenity(e, "gotPlasteredLastNight") }
+                  className={ this.state.amenities.gotPlasteredLastNight && "active" }
+                >
                   Got plastered last night…
                 </p>
 
                 <p className="bold">
                   Wanna drink?
                 </p>
-                <p>
+                <p
+                  onClick={ (e) => this.handleClickAmenity(e, "bars") }
+                  className={ this.state.amenities.bars && "active" }
+                >
                   Bars
                 </p>
-                <p>
+                <p
+                  onClick={ (e) => this.handleClickAmenity(e, "byos") }
+                  className={ this.state.amenities.byos && "active" }
+                >
                   BYOs
                 </p>
-                <p>
+                <p
+                  onClick={ (e) => this.handleClickAmenity(e, "speakeasies") }
+                  className={ this.state.amenities.speakeasies && "active" }
+                >
                   Speakeasies
                 </p>
 
                 <p className="bold">
                   Special occasions
                 </p>
-                <p>
+                <p
+                  onClick={ (e) => this.handleClickAmenity(e, "dateNight") }
+                  className={ this.state.amenities.dateNight && "active" }
+                >
                   Date night
                 </p>
-                <p>
+                <p
+                  onClick={ (e) => this.handleClickAmenity(e, "formals") }
+                  className={ this.state.amenities.formals && "active" }
+                >
                   Formals
                 </p>
-                <p>
+                <p
+                  onClick={ (e) => this.handleClickAmenity(e, "birthdays") }
+                  className={ this.state.amenities.birthdays && "active" }
+                >
                   Birthdays
                 </p>
 
                 <p className="bold">
                   Dinner with friends
                 </p>
-                <p>
+                <p
+                  onClick={ (e) => this.handleClickAmenity(e, "treatYourself") }
+                  className={ this.state.amenities.treatYourself && "active" }
+                >
                   Treat yourself
                 </p>
-                <p>
+                <p
+                  onClick={ (e) => this.handleClickAmenity(e, "adulting") }
+                  className={ this.state.amenities.adulting && "active" }
+                >
                   #adulting
                 </p>
-                <p>
+                <p
+                  onClick={ (e) => this.handleClickAmenity(e, "feelingLazy") }
+                  className={ this.state.amenities.feelingLazy && "active" }
+                >
                   Feeling lazy
                 </p>
 
                 <p className="bold">
                   Adventure
                 </p>
-                <p>
+                <p
+                  onClick={ (e) => this.handleClickAmenity(e, "holeInTheWall") }
+                  className={ this.state.amenities.holeInTheWall && "active" }
+                >
                   Hole in the wall
                 </p>
-                <p>
+                <p
+                  onClick={ (e) => this.handleClickAmenity(e, "showoffToYourFriends") }
+                  className={ this.state.amenities.showoffToYourFriends && "active" }
+                >
                   Showoff to your friends
                 </p>
-                <p>
+                <p
+                  onClick={ (e) => this.handleClickAmenity(e, "forTheGram") }
+                  className={ this.state.amenities.forTheGram && "active" }
+                >
                   #forthegram
                 </p>
               </div>

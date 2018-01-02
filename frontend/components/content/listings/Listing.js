@@ -22,11 +22,28 @@ class Listing extends React.Component {
       website: "http://cameroncabo.com/",
       price: "$$",
       type: "RESTAURANT",
-      amenities: [
-        "Pets allowed",
-        "Family/kid friendly",
-        "Wifi",
-      ],
+      amenities: {
+        foodTrucks: false,
+        lateNights: true,
+        healthy: false,
+        forTheSweetTooth: false,
+        forTheStudyGrind: true,
+        openLate: true,
+        parentsVisiting: false,
+        gotPlasteredLastNight: false,
+        bars: false,
+        byos: false,
+        speakeasies: false,
+        dateNight: false,
+        formals: false,
+        birthdays: false,
+        treatYourself: false,
+        adulting: true,
+        feelingLazy: false,
+        holeInTheWall: false,
+        showoffToYourFriends: false,
+        forTheGram: false,
+      },
       location: {
         lat: 59.95,
         lng: 30.33,
@@ -61,11 +78,43 @@ class Listing extends React.Component {
 
   // Helper method to render amenities
   renderAmenities() {
+    // If amenities are in the state (this should always be the case)
     if (this.state.amenities) {
-      return this.state.amenities.map(amenity => (
-        <div className="amenity" key={ uuid() }>
-          { amenity }
-        </div>
+      // Get all keys from the amenities object
+      const keys = Object.keys(this.state.amenities);
+
+      // Map from amenities to properly formatted text
+      const map = {
+        foodTrucks: "Food truck",
+        lateNights: "Late nights",
+        healthy: "Healthy",
+        forTheSweetTooth: "For the sweet tooth",
+        forTheStudyGrind: "For the study grind",
+        openLate: "It's midnight and I'm hungry",
+        parentsVisiting: "Parents visiting!!??",
+        gotPlasteredLastNight: "Got plastered last night",
+        bars: "Bars",
+        byos: "BYO",
+        speakeasies: "Speakeasies",
+        dateNight: "Date night",
+        formals: "Formals",
+        birthdays: "Birthdays",
+        treatYourself: "Treat yourself",
+        adulting: "#adulting",
+        feelingLazy: "Feeling lazy",
+        holeInTheWall: "Hole in the wall",
+        showoffToYourFriends: "Show off to your friends",
+        forTheGram: "#forTheGram",
+      };
+
+      // Return an amenity div tag for each amenity which is true in the state
+      // That is, if the curator marked that the listing has said amenity
+      return keys.map(amenity => (
+        this.state.amenities[amenity] ? (
+          <div className="amenity" key={ amenity }>
+            { map[amenity] }
+          </div>
+        ) : null
       ));
     }
 
