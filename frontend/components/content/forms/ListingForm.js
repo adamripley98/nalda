@@ -22,7 +22,36 @@ class ListingForm extends React.Component {
       image: "",
       rating: 0.0,
       price: "$",
-      hours: "",
+      hours: {
+        monday: {
+          start: '',
+          finish: '',
+        },
+        tuesday: {
+          start: '',
+          finish: '',
+        },
+        wednesday: {
+          start: '',
+          finish: '',
+        },
+        thursday: {
+          start: '',
+          finish: '',
+        },
+        friday: {
+          start: '',
+          finish: '',
+        },
+        saturday: {
+          start: '',
+          finish: '',
+        },
+        sunday: {
+          start: '',
+          finish: '',
+        },
+      },
       error: "",
       redirectToHome: "",
       website: "",
@@ -103,9 +132,12 @@ class ListingForm extends React.Component {
   }
 
   // Helper method to handle a change to the hours state
-  handleChangeHours(event) {
+  // day parameter is monday - friday, startOrFinish denotes whether it is open or close hours being entered
+  handleChangeHours(event, startOrFinish, day) {
+    const currentHours = this.state.hours;
+    currentHours[day][startOrFinish] = event.target.value;
     this.setState({
-      hours: event.target.value,
+      hours: currentHours,
     });
   }
 
@@ -132,13 +164,14 @@ class ListingForm extends React.Component {
     event.preventDefault();
     // If request is properly formulated, send request to make a new listing (routes.js)
     if (this.inputValid()) {
-      axios.post('/listings/new', {
+      axios.post('/api/listings/new', {
         title: this.state.title,
         image: this.state.image,
         description: this.state.description,
         hours: this.state.hours,
         rating: this.state.rating,
         price: this.state.price,
+        website: this.state.website,
       })
         .then(() => {
           /**
@@ -159,6 +192,7 @@ class ListingForm extends React.Component {
   inputValid() {
     // Begin error checking
     // TODO: Error check for url
+    // TODO: Error check for other fields
     if (!this.state.title) {
       this.setState({
         error: "Title must be populated.",
@@ -242,50 +276,50 @@ class ListingForm extends React.Component {
                 <p>
                   Monday
                 </p>
-                <input type="time" className="form-control" />
-                <input type="time" className="form-control" />
+                <input type="time" onChange={(e) => { this.handleChangeHours(e, "start", "monday");}} className="form-control" />
+                <input type="time" onChange={(e) => { this.handleChangeHours(e, "finish", "monday");}} className="form-control" />
               </div>
               <div className="time-select">
                 <p>
                   Tuesday
                 </p>
-                <input type="time" className="form-control" />
-                <input type="time" className="form-control" />
+                <input type="time" onChange={(e) => { this.handleChangeHours(e, "start", "tuesday");}} className="form-control" />
+                <input type="time" onChange={(e) => { this.handleChangeHours(e, "finish", "tuesday");}} className="form-control" />
               </div>
               <div className="time-select">
                 <p>
                   Wednesday
                 </p>
-                <input type="time" className="form-control" />
-                <input type="time" className="form-control" />
+                <input type="time" onChange={(e) => { this.handleChangeHours(e, "start", "wednesday");}} className="form-control" />
+                <input type="time" onChange={(e) => { this.handleChangeHours(e, "finish", "wednesday");}} className="form-control" />
               </div>
               <div className="time-select">
                 <p>
                   Thursday
                 </p>
-                <input type="time" className="form-control" />
-                <input type="time" className="form-control" />
+                <input type="time" onChange={(e) => { this.handleChangeHours(e, "start", "thursday");}} className="form-control" />
+                <input type="time" onChange={(e) => { this.handleChangeHours(e, "finish", "thursday");}} className="form-control" />
               </div>
               <div className="time-select">
                 <p>
                   Friday
                 </p>
-                <input type="time" className="form-control" />
-                <input type="time" className="form-control" />
+                <input type="time" onChange={(e) => { this.handleChangeHours(e, "start", "friday");}} className="form-control" />
+                <input type="time" onChange={(e) => { this.handleChangeHours(e, "finish", "friday");}} className="form-control" />
               </div>
               <div className="time-select">
                 <p>
                   Saturday
                 </p>
-                <input type="time" className="form-control" />
-                <input type="time" className="form-control" />
+                <input type="time" onChange={(e) => { this.handleChangeHours(e, "start", "saturday");}} className="form-control" />
+                <input type="time" onChange={(e) => { this.handleChangeHours(e, "finish", "saturday");}} className="form-control" />
               </div>
               <div className="time-select marg-bot-1">
                 <p>
                   Sunday
                 </p>
-                <input type="time" className="form-control" />
-                <input type="time" className="form-control" />
+                <input type="time" onChange={(e) => { this.handleChangeHours(e, "start", "sunday");}} className="form-control" />
+                <input type="time" onChange={(e) => { this.handleChangeHours(e, "finish", "sunday");}} className="form-control" />
               </div>
               <div className="row">
                 <div className="col-12 col-md-6">
@@ -439,7 +473,7 @@ class ListingForm extends React.Component {
                 type="submit"
                 value="Create listing"
                 className={
-                  this.state.title && this.state.description && this.state.hours && this.state.rating && this.state.price ? (
+                  this.state.title && this.state.description && this.state.website && this.state.image && this.state.rating && this.state.price ? (
                     "btn btn-primary full-width"
                   ) : (
                     "btn btn-primary disabled full-width"

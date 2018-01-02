@@ -5,7 +5,8 @@ module.exports = mongoose.model('Listing', {
   title: String,
   description: String,
   image: String,
-  rating: String,
-  hours: String,
+  rating: Number,
+  hours: {},
   price: String,
+  website: String,
 });
