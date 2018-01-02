@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import Loading from '../../shared/Loading';
 import ErrorMessage from '../../shared/ErrorMessage';
 import Button from '../../shared/Button';
+import ArticlePreview from './ArticlePreview';
 
 /**
  * Component for the homepage of the application
@@ -51,21 +52,26 @@ class Articles extends React.Component {
 
   // Methods renders each individual article
   renderArticles() {
-    return this.state.articles.map((art) => (
-      <div className="col-6 col-lg-4 col-xl-3" key={ art._id } >
-        <Link to={ `/articles/${art._id}` } >
-          <div className="article-preview">
-            <img className="img-fluid" alt={art.title} src={art.image} />
-            <h2 className="title">
-              {art.title}
-            </h2>
-            <h6 className="subtitle">
-              {art.subtitle}
-            </h6>
-          </div>
-        </Link>
+    // If articles are pulled from the database
+    if (this.state.articles && this.state.articles.length) {
+      return this.state.articles.map((art) => (
+        <ArticlePreview
+          _id={ art._id }
+          title={ art.title }
+          subtitle={ art.subtitle }
+          imag={ art.image }
+        />
+      ));
+    }
+
+    // If no listings were found
+    return (
+      <div className="col-12">
+        <div className="card pad-1 marg-bot-1">
+          No listings were found. Check back soon for more content!
+        </div>
       </div>
-    ));
+    );
   }
 
   // Function to render the component

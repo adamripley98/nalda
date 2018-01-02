@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import Loading from './shared/Loading';
 import ErrorMessage from './shared/ErrorMessage';
 import Button from './shared/Button';
+import ArticlePreview from './content/articles/ArticlPreview';
 
 
 // TODO: Should standardize the size of all the pictures
@@ -23,14 +24,10 @@ class Home extends React.Component {
     // Set the state
     this.state = {
       articles: [],
-      pendingArticles: true,
-      articlesError: "",
       listings: [],
-      pendingListings: true,
-      listingsError: "",
       videos: [],
-      pendingVideos: true,
-      videosError: "",
+      pending: true,
+      error: "",
     };
   }
 
@@ -41,74 +38,26 @@ class Home extends React.Component {
    */
   componentDidMount() {
     // Pull all articles from the database
-    axios.get('/api/articles')
+    axios.get('/api/home')
       .then((resp) => {
         if (resp.data.success) {
           // Limit to the first four articles
           this.setState({
-            articles: resp.data.data.slice(resp.data.data.length - 4, resp.data.data.length),
-            pendingArticles: false,
-            articlesError: "",
+            ...resp.data.data,
+            pending: false,
+            error: "",
           });
         } else {
           this.setState({
-            pendingArticles: false,
-            articlesError: resp.data.error,
+            pending: false,
+            error: resp.data.error,
           });
         }
       })
       .catch(err => {
         this.setState({
-          pendingArticles: false,
-          articlesError: err,
-        });
-      });
-
-    // Pull all listings from the database
-    axios.get('/api/listings')
-      .then((resp) => {
-        if (resp.data.success) {
-          // Limit to the first four listings
-          this.setState({
-            listings: resp.data.data.slice(resp.data.data.length - 4, resp.data.data.length),
-            pendingListings: false,
-            listingsError: "",
-          });
-        } else {
-          this.setState({
-            pendingListings: false,
-            listingsError: resp.data.error,
-          });
-        }
-      })
-      .catch(err => {
-        this.setState({
-          pendingListings: false,
-          listingsError: err,
-        });
-      });
-
-    // Pull all videos from the database
-    axios.get('/api/videos')
-      .then((resp) => {
-        if (resp.data.success) {
-          // Limit to the first four listings
-          this.setState({
-            videos: resp.data.data.slice(resp.data.data.length - 4, resp.data.data.length),
-            pendingVideos: false,
-            videosError: "",
-          });
-        } else {
-          this.setState({
-            pendingVideos: false,
-            videosError: resp.data.error,
-          });
-        }
-      })
-      .catch(err => {
-        this.setState({
-          pendingVideos: false,
-          videosError: err,
+          pending: false,
+          error: err,
         });
       });
   }
@@ -120,19 +69,12 @@ class Home extends React.Component {
     // If there are articles to render
     if (this.state.articles && this.state.articles.length) {
       return this.state.articles.map((art) => (
-        <div className="col-6 col-lg-3" key={ art._id } >
-          <Link to={ `/articles/${art._id}` } >
-            <div className="article-preview">
-              <img className="img-fluid" alt={art.title} src={art.image} />
-              <h2 className="title">
-                {art.title}
-              </h2>
-              <h6 className="subtitle">
-                {art.subtitle}
-              </h6>
-            </div>
-          </Link>
-        </div>
+        <ArticlePreview
+          _id={ art._id }
+          title={ art.title }
+          subtitle={ art.subtitle }
+          imag={ art.image }
+        />
       ));
     }
 
@@ -158,7 +100,7 @@ class Home extends React.Component {
             <div className="article-preview">
               <img className="img-fluid" alt={listing.name} src={listing.image} />
               <h2 className="title">
-                {listing.name}
+                {listing.title}
               </h2>
               <h6 className="subtitle">
                 {listing.description}
@@ -218,27 +160,24 @@ class Home extends React.Component {
     return (
       <div className="container home">
         <div className="space-1"/>
+        { this.state.error && <ErrorMessage error={ this.state.error } /> }
         <h3 className="title">
           Recent articles
         </h3>
         <div className="row">
           {
-            this.state.pendingArticles ? (
+            this.state.pending ? (
               <Loading />
             ) : (
-              this.state.articlesError ? (
-                <ErrorMessage error={ this.state.articlesError } />
-              ) : (
-                this.renderArticles()
-              )
+              this.renderArticles()
             )
           }
         </div>
         {
-          !this.state.pendingArticles && (
+          !this.state.pending && (
             <div>
               <div className="space-1" />
-              <Button to="/articles" text="View all articles" />
+              <Button to="/articles" text="View all articles" right />
             </div>
           )
         }
@@ -249,22 +188,18 @@ class Home extends React.Component {
         </h3>
         <div className="row">
           {
-            this.state.pendingListings ? (
+            this.state.pending ? (
               <Loading />
             ) : (
-              this.state.listingsError ? (
-                <ErrorMessage error={ this.state.listingsError } />
-              ) : (
-                this.renderListings()
-              )
+              this.renderListings()
             )
           }
         </div>
         {
-          !this.state.pendingListings && (
+          !this.state.pending && (
             <div>
               <div className="space-1" />
-              <Button to="/listings" text="View all listings" />
+              <Button to="/listings" text="View all listings" right />
             </div>
           )
         }
@@ -275,22 +210,18 @@ class Home extends React.Component {
         </h3>
         <div className="row">
           {
-            this.state.pendingVideos ? (
+            this.state.pending ? (
               <Loading />
             ) : (
-              this.state.videosError ? (
-                <ErrorMessage error={ this.state.videosError } />
-              ) : (
-                this.renderVideos()
-              )
+              this.renderVideos()
             )
           }
         </div>
         {
-          !this.state.pendingVideos && (
+          !this.state.pending && (
             <div>
               <div className="space-1" />
-              <Button to="/videos" text="View all videos" />
+              <Button to="/videos" text="View all videos" right />
             </div>
           )
         }

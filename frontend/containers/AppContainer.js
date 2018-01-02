@@ -17,13 +17,14 @@ import requireLogin from '../components/auth/RequireLogin';
 import Account from '../components/auth/Account';
 import EditPassword from '../components/auth/EditPassword';
 
-// Content viewing compontents
+// Content viewing components
 import Home from '../components/Home';
 import Article from '../components/content/articles/Article';
 import Articles from '../components/content/articles/Articles';
 import Listing from '../components/content/listings/Listing';
 import Listings from '../components/content/listings/Listings';
 import Video from '../components/content/videos/Video';
+import Videos from '../components/content/videos/Videos';
 
 // Content editing components
 import ArticleForm from '../components/content/forms/ArticleForm';
@@ -73,16 +74,17 @@ class AppContainer extends Component {
                 <Route exact path="/admin" component={requireAdmin(Admin)}/>
 
                 { /* Routes for articles */ }
+                <Route exact path="/articles" component={Articles} />
                 <Route exact path="/articles/new" component={requireCurator(ArticleForm)} />
                 <Route exact path="/articles/:id" component={Article} />
-                <Route exact path="/articles" component={Articles} />
 
                 { /* Routes for listings */ }
+                <Route exact path="/listings" component={Listings} />
                 <Route exact path="/listings/new" component={requireCurator(ListingForm)} />
                 <Route exact path="/listings/:id" component={Listing} />
-                <Route exact path="/listings" components={Listings} />
 
                 { /* Routes for videos */ }
+                <Route exact path="/videos" component={Videos} />
                 <Route exact path="/videos/new" component={requireCurator(VideoForm)} />
                 <Route exact path="/videos/:id" component={Video} />
 

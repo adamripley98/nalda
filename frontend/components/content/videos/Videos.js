@@ -9,7 +9,7 @@ import Button from '../../shared/Button';
 /**
  * Component for the homepage of the application
  */
-class Listings extends React.Component {
+class Videos extends React.Component {
   /**
    * Constructor method
    */
@@ -18,7 +18,7 @@ class Listings extends React.Component {
 
     // Set the state
     this.state = {
-      listings: [],
+      videos: [],
       pending: true,
       error: "",
     };
@@ -28,11 +28,11 @@ class Listings extends React.Component {
    * Load listings from Mongo once the component mounts
    */
   componentDidMount() {
-    axios.get('/api/listings')
+    axios.get('/api/videos')
       .then((resp) => {
         if (resp.data.success) {
           this.setState({
-            listings: resp.data.data,
+            videos: resp.data.data,
             pending: false,
             error: "",
           });
@@ -52,21 +52,21 @@ class Listings extends React.Component {
   }
 
   /**
-   * Method renders each individual listing
+   * Method renders each individual video
    */
-  renderListings() {
-    // If listings were pulled from the database
-    if (this.state.listings && this.state.listings.length) {
-      return this.state.listings.map((listing) => (
-        <div className="col-6 col-lg-4 col-xl-3" key={ listing._id } >
-          <Link to={ `/listings/${listing._id}` } >
+  renderVideos() {
+    // If there were videos pulled from the backend
+    if (this.state.videos && this.state.videos.length) {
+      return this.state.videos.map((video) => (
+        <div className="col-6 col-lg-4 col-xl-3" key={ video._id } >
+          <Link to={ `/videos/${video._id}` } >
             <div className="article-preview">
-              <img className="img-fluid" alt={listing.title} src={listing.image} />
+              <img className="img-fluid" alt={video.title} src={video.image} />
               <h2 className="title">
-                {listing.title}
+                {video.title}
               </h2>
               <h6 className="subtitle">
-                {listing.description}
+                {video.description}
               </h6>
             </div>
           </Link>
@@ -74,11 +74,11 @@ class Listings extends React.Component {
       ));
     }
 
-    // If no listings were found
+    // If there were no videos found
     return (
       <div className="col-12">
         <div className="card pad-1 marg-bot-1">
-          No listings were found. Check back soon for more content!
+          No videos were found. Check back soon for more content!
         </div>
       </div>
     );
@@ -92,7 +92,7 @@ class Listings extends React.Component {
       <div className="container home">
         <div className="space-1"/>
         <h3 className="title">
-          Listings
+          Videos
         </h3>
         <div className="row">
           {
@@ -102,7 +102,7 @@ class Listings extends React.Component {
               this.state.error ? (
                 <ErrorMessage error={ this.state.error } />
               ) : (
-                this.renderListings()
+                this.renderVideos()
               )
             )
           }
@@ -119,4 +119,4 @@ class Listings extends React.Component {
   }
 }
 
-export default Listings;
+export default Videos;

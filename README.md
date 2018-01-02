@@ -73,6 +73,7 @@ Backend for articles and listings
 - [ ] Side Nav Bar should close once an option is clicked
 - [ ] Nav bar should only show name and location when a user is logged in
 - [ ] Make it easier for an admin to enter hours (some sort of autofill)
+- [ ] Icons for all amenities
 
 ## Backend
 
@@ -100,6 +101,7 @@ Backend for articles and listings
 - [ ] Make a check in the `AppContainer` component to ensure that `passport` and `redux` are in sync (`redux persist`) makes it such that this can outlast the backend session
 - [ ] Style about page
 - [ ] General clean up, get rid of console.logs and deal with errors better
+- [ ] Change title tag, description, other meta tags depending on the page
 
 ## Bugs
 - [ ] Fix authentication route bug
