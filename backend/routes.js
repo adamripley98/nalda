@@ -103,6 +103,86 @@ module.exports = () => {
   });
 
   /**
+   * Get content for the homepage
+   * 4 most recent articles, listings, and videos
+   * TODO pull content from the user's location
+   */
+  router.get('/home', (req, res) => {
+    // Start by finding articles
+    Article.find((articleErr, articles) => {
+      if (articleErr) {
+        res.send({
+          success: false,
+          error: articleErr,
+        });
+      } else {
+        /**
+         * Find the four most recent articles
+         * TODO leverage timestamps
+         */
+        let recentArticles;
+        if (articles.length <= 4) {
+          recentArticles = articles;
+        } else {
+          recentArticles = articles.slice(articles.length - 4);
+        }
+
+        // Find listings
+        Listing.find((listingErr, listings) => {
+          if (listingErr) {
+            res.send({
+              success: false,
+              error: listingErr,
+            });
+          } else {
+            /**
+             * Find the four most recent listings
+             * TODO leverage timestamps
+             */
+            let recentListings;
+            if (listings.length <= 4) {
+              recentListings = listings;
+            } else {
+              recentListings = listings.slice(listings.length - 4);
+            }
+
+            // Find videos
+            Video.find((videoErr, videos) => {
+              if (videoErr) {
+                res.send({
+                  success: false,
+                  error: videoErr,
+                });
+              } else {
+                /**
+                 * Find the four most recent videos
+                 * TODO leverage timestamps
+                 */
+                let recentVideos;
+                if (videos.length <= 4) {
+                  recentVideos = videos;
+                } else {
+                  recentVideos = videos.slice(videos.length - 4);
+                }
+
+                // Send the articles, listings, and videos
+                res.send({
+                  success: true,
+                  data: {
+                    articles: recentArticles,
+                    listings: recentListings,
+                    videos: recentVideos,
+                  },
+                });
+              }
+            });
+          }
+        });
+      }
+    });
+  });
+
+  /**
    * Pull all videos from the database
    */
   router.get('/videos', (req, res) => {
