@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import Loading from './shared/Loading';
 import ErrorMessage from './shared/ErrorMessage';
 import Button from './shared/Button';
+import ArticlePreview from './content/articles/ArticlPreview';
 
 
 // TODO: Should standardize the size of all the pictures
@@ -68,19 +69,12 @@ class Home extends React.Component {
     // If there are articles to render
     if (this.state.articles && this.state.articles.length) {
       return this.state.articles.map((art) => (
-        <div className="col-6 col-lg-3" key={ art._id } >
-          <Link to={ `/articles/${art._id}` } >
-            <div className="article-preview">
-              <img className="img-fluid" alt={art.title} src={art.image} />
-              <h2 className="title">
-                {art.title}
-              </h2>
-              <h6 className="subtitle">
-                {art.subtitle}
-              </h6>
-            </div>
-          </Link>
-        </div>
+        <ArticlePreview
+          _id={ art._id }
+          title={ art.title }
+          subtitle={ art.subtitle }
+          imag={ art.image }
+        />
       ));
     }
 
