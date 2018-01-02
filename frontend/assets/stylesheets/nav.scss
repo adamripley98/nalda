@@ -21,7 +21,7 @@
   position: fixed;
   width: 100%;
   z-index: 1299;
-  box-shadow: 0.2rem 0rem 0.1rem rgba(0, 0, 0, 0.2);
+  box-shadow: 0rem 0.1rem 0.05rem rgba(0, 0, 0, 0.05);
 
   .logo {
     color: $red !important;
@@ -129,6 +129,9 @@
   }
 }
 
+/**
+ * Styling the menu used to trigger the sidebar
+ */
 .menu {
   padding: 1rem 0.6rem 1rem 1rem;
   z-index: 1301;
@@ -162,26 +165,28 @@
   }
 }
 
+/**
+ * Styling the sidebar which renders triggered by the navbar
+ */
 #sidebar {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  z-index: 1300;
-  left: 0;
-  right: 0;
-  overflow: hidden;
-
+  // Clickable shade to the left of the triggered sidebar
+  // Clicking the shade hides the sidebar
   .shade {
+    z-index: 1300;
     background: rgba(0, 0, 0, 0.4);
-    width: 100%;
+    width: 100vw;
     height: 100%;
+    left: 0;
     cursor: hand;
     cursor: pointer;
     top: 0;
     position: fixed;
   }
 
-  .side-menu {
+  // The actual sidebar with links
+  #side-menu {
+    z-index: 1301;
+    transition: all 0.4s ease;
     position: fixed;
     height: 100%;
     background: white;
@@ -192,6 +197,7 @@
     border-left: 1px solid $border;
   }
 
+  // Links contained within the sidebar
   .links {
     list-style: none;
     margin: 0;
@@ -204,6 +210,10 @@
       display: block;
       width: 100%;
 
+      &.line-above {
+        border-top: 1px solid $border;
+      }
+
       &:hover {
         color: $dark-gray;
       }
@@ -215,6 +225,7 @@
     }
   }
 
+  // Each individual link
   .link {
     color: $gray;
 

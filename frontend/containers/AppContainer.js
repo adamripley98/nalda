@@ -15,7 +15,7 @@ import requireCurator from '../components/auth/RequireCurator';
 import requireAdmin from '../components/auth/RequireAdmin';
 import requireLogin from '../components/auth/RequireLogin';
 import Account from '../components/auth/Account';
-
+import EditPassword from '../components/auth/EditPassword';
 
 // Content viewing compontents
 import Home from '../components/Home';
@@ -62,6 +62,7 @@ class AppContainer extends Component {
 
                 { /* Other user routes */ }
                 <Route exact path="/account" component={Account} />
+                <Route exact path="/password" component={EditPassword} />
 
                 { /* General routes */ }
                 <Route exact path="/about" component={About}/>

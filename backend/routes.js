@@ -1,6 +1,7 @@
 /**
  * Handles all backend routes
  * NOTE all of these routes are prefixed with "/api"
+ * NOTE these routes serve and accept JSON-formatted data
  */
 
 // Import frameworks
@@ -146,28 +147,6 @@ module.exports = () => {
   });
 
   /**
-   * Pull all articles from the database
-   */
-  router.get('/articles', (req, res) => {
-    // Pulls articles from mongo
-    Article.find((err, articles) => {
-      if (err) {
-        // If there was an error with the request
-        res.send({
-          success: false,
-          error: err,
-        });
-      } else {
-        // If everything went as planned
-        res.send({
-          success: true,
-          data: articles,
-        });
-      }
-    });
-  });
-
-  /**
    * Route to receive user's information from Mongo
    * @param userID
    */
@@ -190,6 +169,28 @@ module.exports = () => {
         res.send({
           success: true,
           data: user,
+        });
+      }
+    });
+  });
+
+  /**
+   * Pull all articles from the database
+   */
+  router.get('/articles', (req, res) => {
+    // Pulls articles from mongo
+    Article.find((err, articles) => {
+      if (err) {
+        // If there was an error with the request
+        res.send({
+          success: false,
+          error: err,
+        });
+      } else {
+        // If everything went as planned
+        res.send({
+          success: true,
+          data: articles,
         });
       }
     });
@@ -390,6 +391,104 @@ module.exports = () => {
             data: listing,
           });
         }
+      });
+    }
+  });
+
+  /**
+   * Update a user's name
+   * TODO update the user
+   */
+  router.post('/users/name', (req, res) => {
+    // Isolate variables from the request
+    const name = req.body.name;
+
+    // Error checking
+    if (!name) {
+      res.send({
+        success: false,
+        error: "Name must be populated",
+      });
+    } else if (!name.indexOf(" ")) {
+      res.send({
+        success: false,
+        error: "Name must contain at least 1 space",
+      });
+    } else {
+      // The name is properly formatted
+      /**
+       * TODO update the user
+       */
+    }
+  });
+
+  /**
+   * Update a user's bio
+   */
+  router.post('/users/bio', (req, res) => {
+    // Isolate variables from the request
+    const bio = req.body.bio;
+
+    // Error checking
+    if (bio.length > 500) {
+      res.send({
+        success: false,
+        error: "Bio length cannot exceed 500 characters.",
+      });
+    } else {
+      /**
+       * TODO make the request
+       */
+    }
+  });
+
+  /**
+   * Update a user's password
+   * @param String oldPassword
+   * @param String newPassword
+   * @param String newPasswordConfirm
+   * TODO error checking for password strength
+   * TODO update user
+   */
+  router.post('/users/password', (req, res) => {
+    // Isolate variables from the request
+    const oldPassword = req.body.oldPassword;
+    const newPassword = req.body.newPassword;
+    const newPasswordConfirm = req.body.newPasswordConfirm;
+
+    // Error checking
+    if (!oldPassword) {
+      res.send({
+        success: false,
+        error: "Old password must be populated.",
+      });
+    } else if (!newPassword) {
+      res.send({
+        success: false,
+        error: "New password must be populated.",
+      });
+    } else if (!newPasswordConfirm) {
+      res.send({
+        success: false,
+        error: "New password confirmation must be populated.",
+      });
+    } else if (oldPassword === newPassword) {
+      res.send({
+        success: false,
+        error: "New password must be unique from old password.",
+      });
+    } else if (newPassword !== newPasswordConfirm) {
+      res.send({
+        success: false,
+        error: "New password and confirmation password must match.",
+      });
+    } else {
+      /**
+       * TODO perform error checking on password strength
+       */
+      res.send({
+        success: false,
+        error: "Not yet implemented.",
       });
     }
   });

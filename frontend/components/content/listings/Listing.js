@@ -7,6 +7,7 @@ import moment from 'moment';
 import uuid from 'uuid-v4';
 import Review from './Review';
 import ReviewForm from './ReviewForm';
+import { Link } from 'react-router-dom';
 
 /**
  * Component to render a listing
@@ -19,7 +20,11 @@ class Listing extends React.Component {
 
     // Set the state with dummy data
     this.state = {
-      // img: "https://a0.muscache.com/im/pictures/109411642/6fbeaa28_original.jpg?aki_policy=xx_large",
+      img: "https://a0.muscache.com/im/pictures/109411642/6fbeaa28_original.jpg?aki_policy=xx_large",
+      title: "Name of the listing",
+      description: "This is a sample description about the listing that previews what it is all about.",
+      website: "http://cameroncabo.com/",
+      price: "$$",
       type: "RESTAURANT",
       // amenities: [
       //   "Pets allowed",
@@ -58,10 +63,12 @@ class Listing extends React.Component {
       },
       listing: {},
       pending: true,
+      infoTrigger: false,
     };
 
     // Bind this to helper methods
     this.renderAmenities = this.renderAmenities.bind(this);
+    this.handleClickInfoTrigger = this.handleClickInfoTrigger.bind(this);
   }
 
   // Pull the listing data from the database
@@ -111,6 +118,13 @@ class Listing extends React.Component {
     return null;
   }
 
+  // Helper method to handle a user clicking on the info trigger
+  handleClickInfoTrigger() {
+    this.setState({
+      infoTrigger: !this.state.infoTrigger,
+    });
+  }
+
   // Helper method to render reviews
   renderReviews() {
     // Check if there are reviews to return
@@ -153,7 +167,8 @@ class Listing extends React.Component {
         <div className="background-image preview background-fixed" style={{ backgroundImage: `url(${this.state.listing.image})` }}/>
         <div className="container content">
           <div className="row">
-            <div className="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+            {/* Contains details about the listing */}
+            <div className="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-0">
               <div className="header">
                 <h1 className="title">
                   { this.state.listing.title }
@@ -180,6 +195,66 @@ class Listing extends React.Component {
               </p>
               <ReviewForm />
               { this.renderReviews() }
+            </div>
+
+            {/* Contains overview aboute the listing */}
+            <div
+              id="listing-preview"
+              className={
+                this.state.infoTrigger ? (
+                  "col-12 col-lg-4 listing-preview active"
+                ) : (
+                  "col-12 col-lg-4 listing-preview"
+                )
+              }
+              style={{
+                bottom: this.state.infoTrigger ? (- document.getElementById('listing-preview').offsetHeight + 64) : 0
+              }}
+            >
+              <div className="card">
+                <i
+                  className={
+                    this.state.infoTrigger ? (
+                      "fa fa-chevron-down hidden-lg-up fa-lg info-trigger active"
+                    ) : (
+                      "fa fa-chevron-down hidden-lg-up fa-lg info-trigger"
+                    )
+                  }
+                  aria-hidden="true"
+                  onClick={ this.handleClickInfoTrigger }
+                />
+                <h2>
+                  { this.state.title }
+                </h2>
+                {
+                  this.state.website && (
+                    <Link to={ this.state.website }>
+                      <i className="fa fa-globe" aria-hidden="true" />
+                      &nbsp;
+                      {
+                        this.state.website.length > 18 ? (
+                          this.state.website.substring(0, 18) + "..."
+                        ) : (
+                          this.state.website
+                        )
+                      }
+                    </Link>
+                  )
+                }
+                {
+                  this.state.price && (
+                    <p className="price">
+                      <strong>
+                        Price:&nbsp;
+                      </strong>
+                      { this.state.price }
+                    </p>
+                  )
+                }
+                <p className="description">
+                  { this.state.description }
+                </p>
+              </div>
             </div>
           </div>
         </div>

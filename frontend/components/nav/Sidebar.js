@@ -80,9 +80,13 @@ class Sidebar extends Component {
         </div>
 
         {/* Render the sidebar itself which is hidden by default */}
-        <div id="sidebar" style={{ display: !this.state.active && "none" }}>
-          <div className="shade" onClick={ this.toggleMenu } />
-          <div className="side-menu">
+        <div id="sidebar">
+          <div
+            className="shade"
+            onClick={ this.toggleMenu }
+            style={{ display: !this.state.active && "none" }}
+          />
+          <div id="side-menu" style={{ right: this.state.active ? "0vw" : "-100vw" }}>
             {
               this.props.userId ? (
                 <div className="links">
@@ -102,23 +106,26 @@ class Sidebar extends Component {
                   <Link to="/account" className="link">
                     Account
                   </Link>
-                  { /* render create link only if admin or curator */ }
-                  { this.props.userType === 'admin' || this.props.userType === 'curator' ? (
-                    <Link to="/articles/new" className="link">
-                      Create
-                    </Link>
-                  ) : (
-                    console.log('general user logged in')
-                  )}
-                  { /* render admin panel only if admin */ }
-                  { this.props.userType === 'admin' ? (
-                    <Link to="admin" className="link">
-                      Admin
-                    </Link>
-                  ) : (
-                    console.log('admin not logged in')
-                  )}
-                  <a onClick={ this.handleLogoutSubmit } className="link cursor">
+
+                  { /* Render create link only if admin or curator */ }
+                  {
+                    (this.props.userType === 'admin' || this.props.userType === 'curator') && (
+                      <Link to="/articles/new" className="link">
+                        Create
+                      </Link>
+                    )
+                  }
+
+                  { /* Render admin panel only if admin */ }
+                  {
+                    (this.props.userType === 'admin') && (
+                      <Link to="admin" className="link">
+                        Admin
+                      </Link>
+                    )
+                  }
+
+                  <a onClick={ this.handleLogoutSubmit } className="link cursor line-above">
                     Logout
                   </a>
                 </div>
@@ -143,7 +150,7 @@ class Sidebar extends Component {
                   <Link to="/contact" className="link">
                     Contact
                   </Link>
-                  <Link to="/register" className="link">
+                  <Link to="/register" className="link line-above">
                     Register
                   </Link>
                   <Link to="/login" className="link">
@@ -176,14 +183,14 @@ const mapStateToProps = state => {
 // Allows us to dispatch a logout event by calling this.props.onLogout
 const mapDispatchToProps = dispatch => {
   return {
-    onLogout: () => dispatch(logout())
+    onLogout: () => dispatch(logout()),
   };
 };
 
 // Redux config
 Sidebar = connect(
-    mapStateToProps,
-    mapDispatchToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(Sidebar);
 
 export default Sidebar;

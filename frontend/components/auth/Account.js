@@ -1,6 +1,6 @@
 // Import framworks
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import PropTypes from 'prop-types';
@@ -33,12 +33,15 @@ class Account extends Component {
       pending: false,
       adminPopover: false,
       editName: false,
+      editBio: false,
     };
 
     // Bind this to helper methods
     this.handleAdminClick = this.handleAdminClick.bind(this);
     this.handleChangeName = this.handleChangeName.bind(this);
     this.handleNameClick = this.handleNameClick.bind(this);
+    this.handleChangeBio = this.handleChangeBio.bind(this);
+    this.handleBioClick = this.handleBioClick.bind(this);
   }
 
   /**
@@ -57,15 +60,31 @@ class Account extends Component {
           name: resp.data.data.name,
           email: resp.data.data.username,
           type: resp.data.data.userType,
+          error: "",
         });
       }
     }).catch((err) => {
-      console.log(err);
+      this.setState({
+        error: err,
+      });
     });
   }
 
   /**
-   * Handle change name
+   * When the component updates
+   */
+  componentDidUpdate() {
+    if (this.state.editName) {
+      // Focus on the name input upon clicking edit
+      this.nameInput.focus();
+    } else if (this.state.editBio) {
+      // Focus on the bio text area upon clicking edit
+      this.bioInput.focus();
+    }
+  }
+
+  /**
+   * Handle a change to the name state
    */
   handleChangeName(event) {
     this.setState({
@@ -75,16 +94,43 @@ class Account extends Component {
 
   /**
    * Helper method to trigger edit name
-   * TODO autofocus
    */
   handleNameClick() {
+    if (this.state.editName) {
+      /**
+       * TODO save the updated name
+       */
+    }
+
+    // Update the state
     this.setState({
       editName: !this.state.editName,
     });
+  }
 
-    if (this.state.editName) {
-      document.getElementById('name').focus();
+  /**
+   * Handle a change to the bio state
+   */
+  handleChangeBio(event) {
+    this.setState({
+      bio: event.target.value,
+    });
+  }
+
+  /**
+   * Helper method to trigger edit bio
+   */
+  handleBioClick() {
+    if (this.state.editBio) {
+      /**
+       * TODO save the updated bio
+       */
     }
+
+    // Update the state
+    this.setState({
+      editBio: !this.state.editBio,
+    });
   }
 
   /**
@@ -108,15 +154,16 @@ class Account extends Component {
               Name
             </td>
             <td>
-              <span style={{ display: this.state.editName ? "none" : "inherit" }}>
+              <span style={{ display: this.state.editName && "none" }}>
                 { this.state.name }
               </span>
               <input
                 className="form-control"
                 id="name"
+                ref={(input) => { this.nameInput = input; }}
                 value={ this.state.name }
                 onChange={ this.handleChangeName }
-                style={{ display: this.state.editName ? "inherit" : "none" }}
+                style={{ display: !this.state.editName && "none" }}
               />
             </td>
             <td>
@@ -159,10 +206,24 @@ class Account extends Component {
               Bio
             </td>
             <td>
-              { this.state.bio }
+              <span style={{ display: this.state.editBio && "none" }}>
+                { this.state.bio }
+              </span>
+              <textarea
+                className="form-control"
+                id="bio"
+                ref={(input) => { this.bioInput = input; }}
+                value={ this.state.bio }
+                onChange={ this.handleChangeBio }
+                style={{ display: !this.state.editBio && "none" }}
+              />
             </td>
             <td>
-              <i className="fa fa-pencil" aria-hidden="true" />
+              <i
+                className="fa fa-pencil"
+                aria-hidden="true"
+                onClick={ this.handleBioClick }
+              />
             </td>
           </tr>
           <tr>
@@ -181,10 +242,12 @@ class Account extends Component {
               Password
             </td>
             <td>
-              ********
+              ●●●●●●●
             </td>
             <td>
-              <i className="fa fa-pencil" aria-hidden="true" />
+              <Link to="/password">
+                <i className="fa fa-pencil" aria-hidden="true" />
+              </Link>
             </td>
           </tr>
         </tbody>

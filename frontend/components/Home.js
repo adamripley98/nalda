@@ -37,8 +37,8 @@ class Home extends React.Component {
   /**
    * Load data once the component mounts
    * Pulls articles, listings, and videos simulatneously
+   * TODO custom route to pull all of this data
    */
-   // TODO: Should probably only pull a few of the articles, otherwise will get slow once there are lots of articles
   componentDidMount() {
     // Pull all articles from the database
     axios.get('/api/articles')
