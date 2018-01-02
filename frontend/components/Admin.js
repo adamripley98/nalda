@@ -10,6 +10,7 @@ import ErrorMessage from './shared/ErrorMessage';
 /**
  * Component for Admin only, allows them to add and remove other admins and content curators
  * TODO Add removing functionality
+ // TODO make text not extend button
  */
 class Admin extends Component {
   // Constructor method

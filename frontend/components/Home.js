@@ -7,10 +7,11 @@ import { Link } from 'react-router-dom';
 import Loading from './shared/Loading';
 import ErrorMessage from './shared/ErrorMessage';
 import Button from './shared/Button';
-import ArticlePreview from './content/articles/ArticlPreview';
+import ArticlePreview from './content/articles/ArticlePreview';
 
 
 // TODO: Should standardize the size of all the pictures
+// TODO: Figure out why article pictures no longer show up
 /**
  * Component for the homepage of the application
  */
