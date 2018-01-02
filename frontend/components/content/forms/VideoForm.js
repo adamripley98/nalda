@@ -7,12 +7,14 @@ import { Link } from 'react-router-dom';
  * Component to render the new article form
  */
 class ArticleForm extends React.Component {
-  // Constructor method
+  /**
+   * Constructor method
+   */
   constructor(props) {
     super(props);
     this.state = {
       title: "",
-      video: "",
+      url: "",
       description: "",
       error: "",
     };
@@ -24,33 +26,43 @@ class ArticleForm extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  // Handle resizing textarea
+  /**
+   * Handle resizing textarea
+   */
   componentDidMount() {
     autosize(document.querySelectorAll('textarea'));
   }
 
-  // Helper method to handle a change to the title state
+  /**
+   * Helper method to handle a change to the title state
+   */
   handleChangeTitle(event) {
     this.setState({
       title: event.target.value,
     });
   }
 
-  // Helper method to handle a change to the video state
+  /**
+   * Helper method to handle a change to the video state
+   */
   handleChangeVideo(event) {
     this.setState({
-      image: event.target.value,
+      url: event.target.value,
     });
   }
 
-  // Helper method to handle a change to the description state
+  /**
+   * Helper method to handle a change to the description state
+   */
   handleChangeDescription(event) {
     this.setState({
       description: event.target.value,
     });
   }
 
-  // Helper method to handle when the form is submitted
+  /**
+   * Helper method to handle when the form is submitted
+   */
   handleSubmit(event) {
     // Prevent the default submit action
     event.preventDefault();
@@ -68,9 +80,9 @@ class ArticleForm extends React.Component {
       this.setState({
         error: "Body must be populated.",
       });
-    } else if (!this.state.video) {
+    } else if (!this.state.url) {
       this.setState({
-        error: "Video must be populated",
+        error: "Video url must be populated",
       });
     } else if (this.state.title.length < 4 || this.state.title.length > 100) {
       this.setState({
@@ -79,6 +91,14 @@ class ArticleForm extends React.Component {
     } else if (this.state.description.length < 4) {
       this.setState({
         error: "Description must be at least 4 characters long",
+      });
+    } else if (this.state.description.length > 10000) {
+      this.setState({
+        error: "Description must be less than 10000 characters long.",
+      });
+    } else if (!this.state.url.startsWith("https://www.youtube.com/watch?v=")) {
+      this.setState({
+        error: "Video URL must be properly formatted. That is, it must begin with \"https://www.youtube.com/watch?v=\" followed by the video ID.",
       });
     } else {
       // Set the error to the empty string
@@ -93,7 +113,9 @@ class ArticleForm extends React.Component {
     }
   }
 
-  // Render the component
+  /**
+   * Render the component
+   */
   render() {
     return (
       <div>

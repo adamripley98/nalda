@@ -73,6 +73,7 @@ Backend for articles and listings
 - [ ] Side Nav Bar should close once an option is clicked
 - [ ] Nav bar should only show name and location when a user is logged in
 - [ ] Make it easier for an admin to enter hours (some sort of autofill)
+- [ ] Icons for all amenities
 
 ## Backend
 

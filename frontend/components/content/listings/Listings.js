@@ -55,21 +55,33 @@ class Listings extends React.Component {
    * Method renders each individual listing
    */
   renderListings() {
-    return this.state.listings.map((listing) => (
-      <div className="col-6 col-lg-4 col-xl-3" key={ listing._id } >
-        <Link to={ `/listings/${listing._id}` } >
-          <div className="article-preview">
-            <img className="img-fluid" alt={listing.name} src={listing.image} />
-            <h2 className="title">
-              {listing.name}
-            </h2>
-            <h6 className="subtitle">
-              {listing.description}
-            </h6>
-          </div>
-        </Link>
+    // If listings were pulled from the database
+    if (this.state.listings && this.state.listings.length) {
+      return this.state.listings.map((listing) => (
+        <div className="col-6 col-lg-4 col-xl-3" key={ listing._id } >
+          <Link to={ `/listings/${listing._id}` } >
+            <div className="article-preview">
+              <img className="img-fluid" alt={listing.title} src={listing.image} />
+              <h2 className="title">
+                {listing.title}
+              </h2>
+              <h6 className="subtitle">
+                {listing.description}
+              </h6>
+            </div>
+          </Link>
+        </div>
+      ));
+    }
+
+    // If no listings were found
+    return (
+      <div className="col-12">
+        <div className="card pad-1 marg-bot-1">
+          No listings were found. Check back soon for more content!
+        </div>
       </div>
-    ));
+    );
   }
 
   /**

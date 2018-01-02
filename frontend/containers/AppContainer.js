@@ -24,6 +24,7 @@ import Articles from '../components/content/articles/Articles';
 import Listing from '../components/content/listings/Listing';
 import Listings from '../components/content/listings/Listings';
 import Video from '../components/content/videos/Video';
+import Videos from '../components/content/videos/Videos';
 
 // Content editing components
 import ArticleForm from '../components/content/forms/ArticleForm';
@@ -83,6 +84,7 @@ class AppContainer extends Component {
                 <Route exact path="/listings/:id" component={Listing} />
 
                 { /* Routes for videos */ }
+                <Route exact path="/videos" component={Videos} />
                 <Route exact path="/videos/new" component={requireCurator(VideoForm)} />
                 <Route exact path="/videos/:id" component={Video} />
 
