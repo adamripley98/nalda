@@ -134,8 +134,20 @@ class ListingForm extends React.Component {
   // Helper method to handle a change to the hours state
   // day parameter is monday - friday, startOrFinish denotes whether it is open or close hours being entered
   handleChangeHours(event, startOrFinish, day) {
+    // Get the object for current hours before the update
     const currentHours = this.state.hours;
+
+    // Update the passed in value
     currentHours[day][startOrFinish] = event.target.value;
+
+    // Update the finish if the start is now later than the finish
+    if (startOrFinish === "start" && (
+          !currentHours[day].finish ||
+          currentHours[day].finish < event.target.value
+        )) {
+      console.log(event.target.value);
+      currentHours[day].finish = event.target.value;
+    }
     this.setState({
       hours: currentHours,
     });
@@ -282,50 +294,106 @@ class ListingForm extends React.Component {
                 <p>
                   Monday
                 </p>
-                <input type="time" onChange={(e) => { this.handleChangeHours(e, "start", "monday");}} className="form-control" />
-                <input type="time" onChange={(e) => { this.handleChangeHours(e, "finish", "monday");}} className="form-control" />
+                <input
+                  type="time"
+                  onChange={(e) => { this.handleChangeHours(e, "start", "monday");}}
+                  className="form-control"
+                />
+                <input
+                  type="time"
+                  onChange={(e) => { this.handleChangeHours(e, "finish", "monday");}}
+                  className="form-control"
+                />
               </div>
               <div className="time-select">
                 <p>
                   Tuesday
                 </p>
-                <input type="time" onChange={(e) => { this.handleChangeHours(e, "start", "tuesday");}} className="form-control" />
-                <input type="time" onChange={(e) => { this.handleChangeHours(e, "finish", "tuesday");}} className="form-control" />
+                <input
+                type="time"
+                onChange={(e) => { this.handleChangeHours(e, "start", "tuesday");}}
+                className="form-control"
+              />
+                <input
+                type="time"
+                onChange={(e) => { this.handleChangeHours(e, "finish", "tuesday");}}
+                className="form-control"
+              />
               </div>
               <div className="time-select">
                 <p>
                   Wednesday
                 </p>
-                <input type="time" onChange={(e) => { this.handleChangeHours(e, "start", "wednesday");}} className="form-control" />
-                <input type="time" onChange={(e) => { this.handleChangeHours(e, "finish", "wednesday");}} className="form-control" />
+                <input
+                  type="time"
+                  onChange={(e) => { this.handleChangeHours(e, "start", "wednesday");}}
+                  className="form-control"
+                />
+                <input
+                  type="time"
+                  onChange={(e) => { this.handleChangeHours(e, "finish", "wednesday");}}
+                  className="form-control"
+                />
               </div>
               <div className="time-select">
                 <p>
                   Thursday
                 </p>
-                <input type="time" onChange={(e) => { this.handleChangeHours(e, "start", "thursday");}} className="form-control" />
-                <input type="time" onChange={(e) => { this.handleChangeHours(e, "finish", "thursday");}} className="form-control" />
+                <input
+                  type="time"
+                  onChange={(e) => { this.handleChangeHours(e, "start", "thursday");}}
+                  className="form-control"
+                />
+                <input
+                  type="time"
+                  onChange={(e) => { this.handleChangeHours(e, "finish", "thursday");}}
+                  className="form-control"
+                />
               </div>
               <div className="time-select">
                 <p>
                   Friday
                 </p>
-                <input type="time" onChange={(e) => { this.handleChangeHours(e, "start", "friday");}} className="form-control" />
-                <input type="time" onChange={(e) => { this.handleChangeHours(e, "finish", "friday");}} className="form-control" />
+                <input
+                  type="time"
+                  onChange={(e) => { this.handleChangeHours(e, "start", "friday");}}
+                  className="form-control"
+                />
+                <input
+                  type="time"
+                  onChange={(e) => { this.handleChangeHours(e, "finish", "friday");}}
+                  className="form-control"
+                />
               </div>
               <div className="time-select">
                 <p>
                   Saturday
                 </p>
-                <input type="time" onChange={(e) => { this.handleChangeHours(e, "start", "saturday");}} className="form-control" />
-                <input type="time" onChange={(e) => { this.handleChangeHours(e, "finish", "saturday");}} className="form-control" />
+                <input
+                  type="time"
+                  onChange={(e) => { this.handleChangeHours(e, "start", "saturday");}}
+                  className="form-control"
+                />
+                <input
+                  type="time"
+                  onChange={(e) => { this.handleChangeHours(e, "finish", "saturday");}}
+                  className="form-control"
+                />
               </div>
               <div className="time-select marg-bot-1">
                 <p>
                   Sunday
                 </p>
-                <input type="time" onChange={(e) => { this.handleChangeHours(e, "start", "sunday");}} className="form-control" />
-                <input type="time" onChange={(e) => { this.handleChangeHours(e, "finish", "sunday");}} className="form-control" />
+                <input
+                  type="time"
+                  onChange={(e) => { this.handleChangeHours(e, "start", "sunday");}}
+                  className="form-control"
+                />
+                <input
+                  type="time"
+                  onChange={(e) => { this.handleChangeHours(e, "finish", "sunday");}}
+                  className="form-control"
+                />
               </div>
               <div className="row">
                 <div className="col-12 col-md-6">
@@ -382,7 +450,7 @@ class ListingForm extends React.Component {
               <label>
                 Amenities
               </label>
-              <div className="amenities-form">
+              <div className="amenities-form marg-bot-1">
                 {/* Begin first row of amenities */}
                 <div className="row">
                   <div className="col-12 col-md-6">
@@ -434,87 +502,101 @@ class ListingForm extends React.Component {
                 </div>
                 {/* Close first row of amenities */}
 
-                <p className="bold">
-                  Lazy weekend
-                </p>
-                <p
-                  onClick={ (e) => this.handleClickAmenity(e, "parentsVisiting") }
-                  className={ this.state.amenities.parentsVisiting && "active" }
-                >
-                  Parents are visiting?!
-                </p>
-                <p
-                  onClick={ (e) => this.handleClickAmenity(e, "gotPlasteredLastNight") }
-                  className={ this.state.amenities.gotPlasteredLastNight && "active" }
-                >
-                  Got plastered last night…
-                </p>
+                {/* Start second row of amenities */}
+                <div className="row">
+                  <div className="col-12 col-md-6">
+                    <p className="bold">
+                      Wanna drink?
+                    </p>
+                    <p
+                      onClick={ (e) => this.handleClickAmenity(e, "bars") }
+                      className={ this.state.amenities.bars && "active" }
+                    >
+                      Bars
+                    </p>
+                    <p
+                      onClick={ (e) => this.handleClickAmenity(e, "byos") }
+                      className={ this.state.amenities.byos && "active" }
+                    >
+                      BYOs
+                    </p>
+                    <p
+                      onClick={ (e) => this.handleClickAmenity(e, "speakeasies") }
+                      className={ this.state.amenities.speakeasies && "active" }
+                    >
+                      Speakeasies
+                    </p>
+                  </div>
+                  <div className="col-12 col-md-6">
+                    <p className="bold">
+                      Lazy weekend
+                    </p>
+                    <p
+                      onClick={ (e) => this.handleClickAmenity(e, "parentsVisiting") }
+                      className={ this.state.amenities.parentsVisiting && "active" }
+                    >
+                      Parents are visiting?!
+                    </p>
+                    <p
+                      onClick={ (e) => this.handleClickAmenity(e, "gotPlasteredLastNight") }
+                      className={ this.state.amenities.gotPlasteredLastNight && "active" }
+                    >
+                      Got plastered last night…
+                    </p>
+                  </div>
+                </div>
+                {/* End second row of amenities */}
 
-                <p className="bold">
-                  Wanna drink?
-                </p>
-                <p
-                  onClick={ (e) => this.handleClickAmenity(e, "bars") }
-                  className={ this.state.amenities.bars && "active" }
-                >
-                  Bars
-                </p>
-                <p
-                  onClick={ (e) => this.handleClickAmenity(e, "byos") }
-                  className={ this.state.amenities.byos && "active" }
-                >
-                  BYOs
-                </p>
-                <p
-                  onClick={ (e) => this.handleClickAmenity(e, "speakeasies") }
-                  className={ this.state.amenities.speakeasies && "active" }
-                >
-                  Speakeasies
-                </p>
-
-                <p className="bold">
-                  Special occasions
-                </p>
-                <p
-                  onClick={ (e) => this.handleClickAmenity(e, "dateNight") }
-                  className={ this.state.amenities.dateNight && "active" }
-                >
-                  Date night
-                </p>
-                <p
-                  onClick={ (e) => this.handleClickAmenity(e, "formals") }
-                  className={ this.state.amenities.formals && "active" }
-                >
-                  Formals
-                </p>
-                <p
-                  onClick={ (e) => this.handleClickAmenity(e, "birthdays") }
-                  className={ this.state.amenities.birthdays && "active" }
-                >
-                  Birthdays
-                </p>
-
-                <p className="bold">
-                  Dinner with friends
-                </p>
-                <p
-                  onClick={ (e) => this.handleClickAmenity(e, "treatYourself") }
-                  className={ this.state.amenities.treatYourself && "active" }
-                >
-                  Treat yourself
-                </p>
-                <p
-                  onClick={ (e) => this.handleClickAmenity(e, "adulting") }
-                  className={ this.state.amenities.adulting && "active" }
-                >
-                  #adulting
-                </p>
-                <p
-                  onClick={ (e) => this.handleClickAmenity(e, "feelingLazy") }
-                  className={ this.state.amenities.feelingLazy && "active" }
-                >
-                  Feeling lazy
-                </p>
+                {/* Begin third row of amenities */}
+                <div className="row">
+                  <div className="col-12 col-md-6">
+                    <p className="bold">
+                      Special occasions
+                    </p>
+                    <p
+                      onClick={ (e) => this.handleClickAmenity(e, "dateNight") }
+                      className={ this.state.amenities.dateNight && "active" }
+                    >
+                      Date night
+                    </p>
+                    <p
+                      onClick={ (e) => this.handleClickAmenity(e, "formals") }
+                      className={ this.state.amenities.formals && "active" }
+                    >
+                      Formals
+                    </p>
+                    <p
+                      onClick={ (e) => this.handleClickAmenity(e, "birthdays") }
+                      className={ this.state.amenities.birthdays && "active" }
+                    >
+                      Birthdays
+                    </p>
+                    </div>
+                    <div className="col-12 col-md-6">
+                    <p className="bold">
+                      Dinner with friends
+                    </p>
+                    <p
+                      onClick={ (e) => this.handleClickAmenity(e, "treatYourself") }
+                      className={ this.state.amenities.treatYourself && "active" }
+                    >
+                      Treat yourself
+                    </p>
+                    <p
+                      onClick={ (e) => this.handleClickAmenity(e, "adulting") }
+                      className={ this.state.amenities.adulting && "active" }
+                    >
+                      #adulting
+                    </p>
+                    <p
+                      onClick={ (e) => this.handleClickAmenity(e, "feelingLazy") }
+                      className={ this.state.amenities.feelingLazy && "active" }
+                    >
+                      Feeling lazy
+                    </p>
+                  </div>
+                </div>
+                {/* End third row of amenities */}
 
                 <p className="bold">
                   Adventure
