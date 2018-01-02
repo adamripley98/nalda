@@ -1,6 +1,9 @@
 // Import frameworks
 import React from 'react';
 import { connect } from 'react-redux';
+import axios from 'axios';
+import PropTypes from 'prop-types';
+import moment from 'moment';
 import uuid from 'uuid-v4';
 import Review from './Review';
 import ReviewForm from './ReviewForm';
@@ -9,6 +12,7 @@ import { Link } from 'react-router-dom';
 /**
  * Component to render a listing
  */
+ // TODO: Remove dummy data for amenities, location, reviews
 class Listing extends React.Component {
   // Constructor method
   constructor(props) {
@@ -68,12 +72,48 @@ class Listing extends React.Component {
           createdAt: 1513816699243,
         }
       ],
+      error: "",
+      listing: {},
+      pending: true,
       infoTrigger: false,
     };
 
     // Bind this to helper methods
     this.renderAmenities = this.renderAmenities.bind(this);
     this.handleClickInfoTrigger = this.handleClickInfoTrigger.bind(this);
+  }
+
+  // Pull the listing data from the database
+  componentDidMount() {
+    // Find the id in the url
+    const id = this.props.match.params.id;
+
+    // Find the listing
+    axios.get(`/api/listings/${id}`)
+      .then(res => {
+        console.log('res data', res.data);
+        if (res.data.success) {
+          this.setState({
+            error: "",
+            listing: res.data.data,
+            time: moment(res.data.timestamp).fromNow(),
+            pending: false,
+          });
+        } else {
+          // If there was an error with the request
+          this.setState({
+            error: res.data.error,
+            pending: false,
+          });
+        }
+      })
+      .catch(err => {
+        // If there was an error making the request
+        this.setState({
+          error: err,
+          pending: false,
+        });
+      });
   }
 
   // Helper method to render amenities
@@ -157,7 +197,7 @@ class Listing extends React.Component {
   render() {
     // Count the number of reviews
     const count = this.state.reviews.length;
-
+    console.log('state', this.state);
     // Compute the average rating for all reviews
     let average = 0.0;
     this.state.reviews.forEach(review => {
@@ -168,18 +208,18 @@ class Listing extends React.Component {
     // Return the component
     return (
       <div className="listing">
-        <div className="background-image preview background-fixed" style={{ backgroundImage: `url(${this.state.img})` }}/>
+        <div className="background-image preview background-fixed" style={{ backgroundImage: `url(${this.state.listing.image})` }}/>
         <div className="container content">
           <div className="row">
             {/* Contains details about the listing */}
             <div className="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-0">
               <div className="header">
                 <h1 className="title">
-                  { this.state.title }
+                  { this.state.listing.title }
                 </h1>
               </div>
               <p className="description">
-                { this.state.description }
+                { this.state.listing.description }
               </p>
               <div className="line" />
               <h5 className="subtitle">
@@ -269,6 +309,7 @@ class Listing extends React.Component {
 }
 
 Listing.propTypes = {
+  match: PropTypes.object,
 };
 
 const mapStateToProps = () => {

@@ -72,6 +72,7 @@ Backend for articles and listings
 - [ ] Home page needs to have other ways of sorting: most popular, by category, by author?, etc
 - [ ] Side Nav Bar should close once an option is clicked
 - [ ] Nav bar should only show name and location when a user is logged in
+- [ ] Make it easier for an admin to enter hours (some sort of autofill)
 
 ## Backend
 

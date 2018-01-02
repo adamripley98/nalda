@@ -291,13 +291,45 @@ module.exports = () => {
   });
 
   /**
-   * Route to handle creating new listings
-   * @param title
-   * @param description
+   * Route to handle pulling the information for a specific listing
+   */
+  router.get('/listings/:id', (req, res) => {
+    // Find the id from the url
+    const id = req.params.id;
+
+    // Pull specific listing from mongo
+    Listing.findById(id, (err, listing) => {
+      if (err) {
+        res.send({
+          success: false,
+          error: err,
+        });
+      // If the listing doesn't exist
+      } else if (!listing) {
+        res.send({
+          success: false,
+          error: "Article not found",
+        });
+      // if no errors, returns article along with the date it was created
+      } else {
+        res.send({
+          success: true,
+          data: listing,
+          timestamp: listing._id.getTimestamp(),
+        });
+      }
+    });
+  });
+
+/**
+ * Route to handle creating new listings
+ * @param title
+ * @param description
    * @param image
-   * @param hours (TODO update the structure for this)
+   * @param hours
    * @param rating (0.5 increments from 0 to 5)
    * @param price
+   * @param website
    */
   router.post('/listings/new', (req, res) => {
     // Isolate variables from the body
@@ -307,21 +339,23 @@ module.exports = () => {
     const hours = req.body.hours;
     const rating = req.body.rating;
     const price = req.body.price;
+    const website = req.body.website;
     let error = "";
 
     // Error checking
+    // TODO: error check for hours
     if (!title) {
       error = "Title must be populated.";
     } else if (!description) {
       error = "Description must be populated.";
     } else if (!image) {
       error = "Image must be populated.";
-    } else if (!hours) {
-      error = "Hours must be populated.";
     } else if (!rating) {
       error = "Rating must be populated.";
     } else if (!price) {
       error = "Price must be populated.";
+    } else if (!website) {
+      error = "Website must be populated.";
     }
 
     // Handle error if there is one
@@ -339,6 +373,7 @@ module.exports = () => {
         hours,
         rating,
         price,
+        website,
       });
 
       // Save the new article in mongo
