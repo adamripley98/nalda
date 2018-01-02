@@ -137,6 +137,12 @@ h6,
   }
 }
 
+// Modular helper class to denote that the element is clickable
+.cursor {
+  cursor: hand;
+  cursor: pointer;
+}
+
 // Remove underline on all anchor tags
 a {
   text-decoration: none !important;

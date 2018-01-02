@@ -163,7 +163,7 @@ class ReviewForm extends React.Component {
               />
             </div>
           ) : (
-            <div onClick={ this.handleClickForm }>
+            <div onClick={ this.handleClickForm } className="cursor">
               <p className="gray">
                 Leave your own review...
               </p>

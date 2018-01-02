@@ -17,7 +17,7 @@ import requireLogin from '../components/auth/RequireLogin';
 import Account from '../components/auth/Account';
 import EditPassword from '../components/auth/EditPassword';
 
-// Content viewing compontents
+// Content viewing components
 import Home from '../components/Home';
 import Article from '../components/content/articles/Article';
 import Articles from '../components/content/articles/Articles';

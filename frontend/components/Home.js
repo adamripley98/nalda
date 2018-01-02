@@ -106,7 +106,7 @@ class Home extends React.Component {
             <div className="article-preview">
               <img className="img-fluid" alt={listing.name} src={listing.image} />
               <h2 className="title">
-                {listing.name}
+                {listing.title}
               </h2>
               <h6 className="subtitle">
                 {listing.description}

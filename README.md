@@ -100,6 +100,7 @@ Backend for articles and listings
 - [ ] Make a check in the `AppContainer` component to ensure that `passport` and `redux` are in sync (`redux persist`) makes it such that this can outlast the backend session
 - [ ] Style about page
 - [ ] General clean up, get rid of console.logs and deal with errors better
+- [ ] Change title tag, description, other meta tags depending on the page
 
 ## Bugs
 - [ ] Fix authentication route bug

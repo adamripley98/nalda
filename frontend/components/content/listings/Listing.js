@@ -7,6 +7,8 @@ import moment from 'moment';
 import uuid from 'uuid-v4';
 import Review from './Review';
 import ReviewForm from './ReviewForm';
+import Loading from '../../shared/Loading';
+import NotFoundSection from '../../NotFoundSection';
 import { Link } from 'react-router-dom';
 
 /**
@@ -20,38 +22,13 @@ class Listing extends React.Component {
 
     // Set the state with dummy data
     this.state = {
-      img: "https://a0.muscache.com/im/pictures/109411642/6fbeaa28_original.jpg?aki_policy=xx_large",
-      title: "Name of the listing",
-      description: "This is a sample description about the listing that previews what it is all about.",
-      website: "http://cameroncabo.com/",
-      price: "$$",
-      type: "RESTAURANT",
-      amenities: {
-        foodTrucks: false,
-        lateNights: true,
-        healthy: false,
-        forTheSweetTooth: false,
-        forTheStudyGrind: true,
-        openLate: true,
-        parentsVisiting: false,
-        gotPlasteredLastNight: false,
-        bars: false,
-        byos: false,
-        speakeasies: false,
-        dateNight: false,
-        formals: false,
-        birthdays: false,
-        treatYourself: false,
-        adulting: true,
-        feelingLazy: false,
-        holeInTheWall: false,
-        showoffToYourFriends: false,
-        forTheGram: false,
-      },
-      location: {
-        lat: 59.95,
-        lng: 30.33,
-      },
+      img: "",
+      title: "",
+      description: "",
+      website: "",
+      price: "",
+      amenities: {},
+      location: {},
       user: {
         name: "Adam Ripley",
         profilePicture: "https://scontent-lga3-1.xx.fbcdn.net/v/t31.0-8/19800933_1555674071163224_6756529645784213707_o.jpg?oh=d3ce5cc19160312229b760b7448d3c67&oe=5A8FEE3B",
@@ -73,13 +50,14 @@ class Listing extends React.Component {
         }
       ],
       error: "",
-      listing: {},
       pending: true,
       infoTrigger: false,
     };
 
     // Bind this to helper methods
     this.renderAmenities = this.renderAmenities.bind(this);
+    this.renderReviewsSection = this.renderReviewsSection.bind(this);
+    this.renderReview = this.renderReviews.bind(this);
     this.handleClickInfoTrigger = this.handleClickInfoTrigger.bind(this);
   }
 
@@ -95,7 +73,7 @@ class Listing extends React.Component {
         if (res.data.success) {
           this.setState({
             error: "",
-            listing: res.data.data,
+            ...res.data.data,
             time: moment(res.data.timestamp).fromNow(),
             pending: false,
           });
@@ -119,7 +97,7 @@ class Listing extends React.Component {
   // Helper method to render amenities
   renderAmenities() {
     // If amenities are in the state (this should always be the case)
-    if (this.state.amenities) {
+    if (this.state.amenities && Object.keys(this.state.amenities).length) {
       // Get all keys from the amenities object
       const keys = Object.keys(this.state.amenities);
 
@@ -159,7 +137,11 @@ class Listing extends React.Component {
     }
 
     // If there are no amentities return nothing
-    return null;
+    return (
+      <div className="card pad-1 marg-bot-1">
+        No amenities have been marked for this listing.
+      </div>
+    );
   }
 
   // Helper method to handle a user clicking on the info trigger
@@ -167,6 +149,34 @@ class Listing extends React.Component {
     this.setState({
       infoTrigger: !this.state.infoTrigger,
     });
+  }
+
+  // Helper method to render the entire reviews section
+  renderReviewsSection() {
+    // Count the number of reviews
+    const count = this.state.reviews.length;
+    console.log('state', this.state);
+
+    // Compute the average rating for all reviews
+    let average = 0.0;
+    this.state.reviews.forEach(review => {
+      average += review.rating;
+    });
+    average = average / count;
+
+    // Return the section
+    return (
+      <div>
+        <h5 className="subtitle">
+          Reviews
+        </h5>
+        <p>
+          There { count === 1 ? ("is 1 review") : (`are ${count} reviews`) } on this listing with an average rating of { average } out of 5.0 stars.
+        </p>
+        <ReviewForm />
+        { this.renderReviews() }
+      </div>
+    );
   }
 
   // Helper method to render reviews
@@ -195,115 +205,114 @@ class Listing extends React.Component {
 
   // Render the component
   render() {
-    // Count the number of reviews
-    const count = this.state.reviews.length;
-    console.log('state', this.state);
-    // Compute the average rating for all reviews
-    let average = 0.0;
-    this.state.reviews.forEach(review => {
-      average += review.rating;
-    });
-    average = average / count;
-
     // Return the component
     return (
-      <div className="listing">
-        <div className="background-image preview background-fixed" style={{ backgroundImage: `url(${this.state.listing.image})` }}/>
-        <div className="container content">
-          <div className="row">
-            {/* Contains details about the listing */}
-            <div className="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-0">
-              <div className="header">
-                <h1 className="title">
-                  { this.state.listing.title }
-                </h1>
-              </div>
-              <p className="description">
-                { this.state.listing.description }
-              </p>
-              <div className="line" />
-              <h5 className="subtitle">
-                Amenities
-              </h5>
-              { this.renderAmenities() }
-              <div className="line" />
-              <h5 className="subtitle">
-                Location
-              </h5>
-              <div className="line" />
-              <h5 className="subtitle">
-                Reviews
-              </h5>
-              <p>
-                There { count === 1 ? ("is 1 review") : (`are ${count} reviews`) } on this listing with an average rating of { average } out of 5.0 stars.
-              </p>
-              <ReviewForm />
-              { this.renderReviews() }
-            </div>
-
-            {/* Contains overview aboute the listing */}
+      this.state.pending ? (
+        <Loading />
+      ) : (
+        this.state.error ? (
+          <NotFoundSection
+            title="Listing not found"
+            content="Uh-oh! Looks like the listing you were looking for was either removed or does not exist."
+            url="/listings"
+            urlText="Back to all listings"
+          />
+        ) : (
+          <div className="listing">
             <div
-              id="listing-preview"
-              className={
-                this.state.infoTrigger ? (
-                  "col-12 col-lg-4 listing-preview active"
-                ) : (
-                  "col-12 col-lg-4 listing-preview"
-                )
-              }
-              style={{
-                bottom: this.state.infoTrigger ? (- document.getElementById('listing-preview').offsetHeight + 64) : 0
-              }}
-            >
-              <div className="card">
-                <i
+              className="background-image preview background-fixed"
+              style={{ backgroundImage: `url(${this.state.image})` }}
+            />
+            <div className="container content">
+              <div className="row">
+                {/* Contains details about the listing */}
+                <div className="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-0">
+                  <div className="header">
+                    <h1 className="title">
+                      { this.state.title }
+                    </h1>
+                  </div>
+                  <p className="description">
+                    { this.state.description }
+                  </p>
+                  <div className="line" />
+                  <h5 className="subtitle">
+                    Amenities
+                  </h5>
+                  { this.renderAmenities() }
+                  <div className="line" />
+                  <h5 className="subtitle">
+                    Location
+                  </h5>
+                  <div className="line" />
+                  { this.renderReviewsSection() }
+                </div>
+
+                {/* Contains overview aboute the listing */}
+                <div
+                  id="listing-preview"
                   className={
                     this.state.infoTrigger ? (
-                      "fa fa-chevron-down hidden-lg-up fa-lg info-trigger active"
+                      "col-12 col-lg-4 listing-preview active"
                     ) : (
-                      "fa fa-chevron-down hidden-lg-up fa-lg info-trigger"
+                      "col-12 col-lg-4 listing-preview"
                     )
                   }
-                  aria-hidden="true"
-                  onClick={ this.handleClickInfoTrigger }
-                />
-                <h2>
-                  { this.state.title }
-                </h2>
-                {
-                  this.state.website && (
-                    <Link to={ this.state.website }>
-                      <i className="fa fa-globe" aria-hidden="true" />
-                      &nbsp;
-                      {
-                        this.state.website.length > 18 ? (
-                          this.state.website.substring(0, 18) + "..."
+                  style={{
+                    bottom: this.state.infoTrigger ? (- document.getElementById('listing-preview').offsetHeight + 64) : 0
+                  }}
+                >
+                  <div className="card">
+                    <i
+                      className={
+                        this.state.infoTrigger ? (
+                          "fa fa-chevron-down hidden-lg-up fa-lg info-trigger active"
                         ) : (
-                          this.state.website
+                          "fa fa-chevron-down hidden-lg-up fa-lg info-trigger"
                         )
                       }
-                    </Link>
-                  )
-                }
-                {
-                  this.state.price && (
-                    <p className="price">
-                      <strong>
-                        Price:&nbsp;
-                      </strong>
-                      { this.state.price }
+                      aria-hidden="true"
+                      onClick={ this.handleClickInfoTrigger }
+                    />
+                    <h2>
+                      { this.state.title }
+                    </h2>
+                    {
+                      this.state.website && (
+                        <Link to={ this.state.website }>
+                          <i className="fa fa-globe" aria-hidden="true" />
+                          &nbsp;
+                          {
+                            this.state.website.length > 18 ? (
+                              this.state.website.substring(0, 18) + "..."
+                            ) : (
+                              this.state.website
+                            )
+                          }
+                        </Link>
+                      )
+                    }
+                    {
+                      this.state.price && (
+                        <p className="price">
+                          <strong>
+                            Price:&nbsp;
+                          </strong>
+                          { this.state.price }
+                        </p>
+                      )
+                    }
+                    <p className="description">
+                      { this.state.description }
                     </p>
-                  )
-                }
-                <p className="description">
-                  { this.state.description }
-                </p>
+                  </div>
+                </div>
               </div>
             </div>
+            <div className="space-2" />
           </div>
-        </div>
-        <div className="space-2" />
-      </div>
+        )
+      )
     );
   }
 }
