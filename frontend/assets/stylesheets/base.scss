@@ -17,12 +17,13 @@
 // Setting the fonts for the application
 body,
 .form-control {
-  font-family: 'Quicksand', sans-serif;
+  font-family: 'adelle-sans', sans-serif;
 }
 
 // Subtitles are the lighter font as well
 .subtitle {
-  font-family: 'Quicksand', sans-serif !important;
+  font-family: 'adelle-sans', sans-serif !important;
+  font-weight: 400;
 }
 
 // Using a stronger font on all headers, titles
@@ -33,7 +34,8 @@ h4,
 h5,
 h6,
 .bold {
-  font-family: 'Poppins', sans-serif;
+  font-family: 'adelle-sans', sans-serif;
+  font-weight: 600;
 }
 
 // Modular class to make some text gray
@@ -100,12 +102,12 @@ h6,
   }
 
   &.btn-primary {
-    background: $red;
+    background: $primary;
 
     &:hover,
     &:active,
     &:focus {
-      background: $dark-red;
+      background: $dark-primary;
     }
 
     .fa {
@@ -122,15 +124,15 @@ h6,
 
   &.btn-secondary {
     font-weight: normal;
-    color: $red;
-    border: 1px solid $red;
+    color: $primary;
+    border: 1px solid $primary;
 
     &:hover,
     &:active,
     &:focus {
       background: transparent;
-      color: $dark-red;
-      border: 1px solid $dark-red;
+      color: $dark-primary;
+      border: 1px solid $dark-primary;
     }
   }
 }
@@ -138,12 +140,12 @@ h6,
 // Remove underline on all anchor tags
 a {
   text-decoration: none !important;
-  color: $blue;
+  color: $secondary;
 
   &:active,
   &:focus,
   &:hover {
-    color: $dark-blue;
+    color: $dark-secondary;
   }
 
   &:active,
@@ -206,7 +208,7 @@ a {
 
     &:focus,
     &:active {
-      border-bottom: 2px solid $blue;
+      border-bottom: 2px solid $secondary;
     }
   }
 }
@@ -221,7 +223,7 @@ a {
 
   &:active,
   &:focus {
-    border: 1px solid $blue;
+    border: 1px solid $secondary;
   }
 }
 

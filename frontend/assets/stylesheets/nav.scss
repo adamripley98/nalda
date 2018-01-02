@@ -24,7 +24,7 @@
   box-shadow: 0rem 0.1rem 0.05rem rgba(0, 0, 0, 0.05);
 
   .logo {
-    color: $red !important;
+    color: $primary !important;
     font-size: 1.5rem;
     padding: 0.5rem 1rem;
     border-right: 1px solid $border;
@@ -64,7 +64,7 @@
 
       &:focus,
       &:active {
-        border-bottom: 2px solid $blue;
+        border-bottom: 2px solid $secondary;
       }
 
       &::-webkit-input-placeholder {
@@ -220,7 +220,7 @@
 
       &:focus,
       &:active {
-        color: $blue;
+        color: $secondary;
       }
     }
   }
