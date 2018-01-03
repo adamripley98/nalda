@@ -189,6 +189,7 @@ class ListingForm extends React.Component {
         rating: this.state.rating,
         price: this.state.price,
         website: this.state.website,
+        amenities: this.state.amenities,
       })
         .then(() => {
           /**

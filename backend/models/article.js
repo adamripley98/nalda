@@ -6,4 +6,9 @@ module.exports = mongoose.model('Article', {
   subtitle: String,
   image: String,
   body: String,
+  author: {
+    name: String,
+    _id: String,
+    profilePicture: String,
+  },
 });

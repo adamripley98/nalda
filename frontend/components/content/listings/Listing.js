@@ -14,7 +14,7 @@ import { Link } from 'react-router-dom';
 /**
  * Component to render a listing
  */
- // TODO: Remove dummy data for amenities, location, reviews
+ // TODO: Remove dummy data for location
 class Listing extends React.Component {
   // Constructor method
   constructor(props) {
@@ -22,6 +22,7 @@ class Listing extends React.Component {
 
     // Set the state with dummy data
     this.state = {
+      listingId: '',
       img: "",
       title: "",
       description: "",
@@ -29,10 +30,6 @@ class Listing extends React.Component {
       price: "",
       amenities: {},
       location: {},
-      user: {
-        name: "Adam Ripley",
-        profilePicture: "https://scontent-lga3-1.xx.fbcdn.net/v/t31.0-8/19800933_1555674071163224_6756529645784213707_o.jpg?oh=d3ce5cc19160312229b760b7448d3c67&oe=5A8FEE3B",
-      },
       reviews: [
         {
           name: "Cameron Cabo",
@@ -59,6 +56,7 @@ class Listing extends React.Component {
     this.renderReviewsSection = this.renderReviewsSection.bind(this);
     this.renderReview = this.renderReviews.bind(this);
     this.handleClickInfoTrigger = this.handleClickInfoTrigger.bind(this);
+    this.updateReviews = this.updateReviews.bind(this);
   }
 
   // Pull the listing data from the database
@@ -71,6 +69,7 @@ class Listing extends React.Component {
       .then(res => {
         if (res.data.success) {
           this.setState({
+            listingId: id,
             error: "",
             ...res.data.data,
             time: moment(res.data.timestamp).fromNow(),
@@ -79,6 +78,7 @@ class Listing extends React.Component {
         } else {
           // If there was an error with the request
           this.setState({
+            listingId: id,
             error: res.data.error,
             pending: false,
           });
@@ -86,6 +86,38 @@ class Listing extends React.Component {
       })
       .catch(err => {
         // If there was an error making the request
+        this.setState({
+          error: err,
+          pending: false,
+        });
+      });
+  }
+
+  // Helper method which will be called by child component (ReviewForm) to update state
+  updateReviews() {
+    // Find the listing
+    axios.get(`/api/listings/${this.state.listingId}`)
+      .then(res => {
+        if (res.data.success) {
+          // Update state with new review
+          this.setState({
+            error: "",
+            ...res.data.data,
+            time: moment(res.data.timestamp).fromNow(),
+            pending: false,
+          });
+        } else {
+          // If there was an error with the request
+          console.log('what is the error', res.data.error);
+          this.setState({
+            error: res.data.error,
+            pending: false,
+          });
+        }
+      })
+      .catch(err => {
+        // If there was an error making the request
+        console.log('what is the error', err);
         this.setState({
           error: err,
           pending: false,
@@ -154,14 +186,18 @@ class Listing extends React.Component {
   renderReviewsSection() {
     // Count the number of reviews
     const count = this.state.reviews.length;
-    console.log('state', this.state);
 
     // Compute the average rating for all reviews
     let average = 0.0;
     this.state.reviews.forEach(review => {
       average += review.rating;
     });
-    average = average / count;
+    if (count !== 0) {
+      average = average / count;
+    }
+
+    // Isolate listingId to pass to ReviewForm
+    const listingId = this.props.match.params.id;
 
     // Return the section
     return (
@@ -170,9 +206,9 @@ class Listing extends React.Component {
           Reviews
         </h5>
         <p>
-          There { count === 1 ? ("is 1 review") : (`are ${count} reviews`) } on this listing with an average rating of { average } out of 5.0 stars.
+          There { count === 1 ? ("is 1 review") : (`are ${count} reviews`) } on this listing with an average rating of { average.toFixed(1) } out of 5.0 stars.
         </p>
-        <ReviewForm />
+        <ReviewForm listingId={listingId} updateReviews={this.updateReviews}/>
         { this.renderReviews() }
       </div>
     );
@@ -182,7 +218,10 @@ class Listing extends React.Component {
   renderReviews() {
     // Check if there are reviews to return
     if (this.state.reviews) {
-      return this.state.reviews.map(review => (
+      // Reverse reviews so they appear newest to oldest
+      const reviews = this.state.reviews.slice(0).reverse();
+      // Map each review to be its own component
+      return reviews.map(review => (
         <Review
           title={ review.title }
           content={ review.content }
@@ -195,9 +234,41 @@ class Listing extends React.Component {
     }
 
     // If there are no reviews
+    // TODO: Why isn't this showing up?
     return (
       <div className="card marg-bot-1">
         No one has reviewed this listing yet! You could be the first.
+      </div>
+    );
+  }
+
+  // Helper method to convert from military to normal time
+  formatHours(hour) {
+    return moment(hour, 'HH:mm').format('h:mm a');
+  }
+
+  // Helper method to render Hours
+  renderHours() {
+    if (this.state.hours) {
+      // Isolate variable
+      const hours = this.state.hours;
+      return (
+        // If a date has a start and end time, it will be displayed
+        <div>
+          {hours.monday.start && hours.monday.finish && <div>Monday: {this.formatHours(hours.monday.start)} - {this.formatHours(hours.monday.finish)}</div>}
+          {hours.tuesday.start && hours.tuesday.finish && <div>Tuesday: {this.formatHours(hours.tuesday.start)} - {this.formatHours(hours.tuesday.finish)}</div>}
+          {hours.wednesday.start && hours.wednesday.finish && <div>Wednesday: {this.formatHours(hours.wednesday.start)} - {this.formatHours(hours.wednesday.finish)}</div>}
+          {hours.thursday.start && hours.thursday.finish && <div>Thursday: {this.formatHours(hours.thursday.start)} - {this.formatHours(hours.thursday.finish)}</div>}
+          {hours.friday.start && hours.friday.finish && <div>Friday: {this.formatHours(hours.friday.start)} - {this.formatHours(hours.friday.finish)}</div>}
+          {hours.saturday.start && hours.saturday.finish && <div>Saturday: {this.formatHours(hours.saturday.start)} - {this.formatHours(hours.saturday.finish)}</div>}
+          {hours.sunday.start && hours.sunday.finish && <div>Sunday: {this.formatHours(hours.sunday.start)} - {this.formatHours(hours.sunday.finish)}</div>}
+        </div>
+      );
+    }
+    // If there are no hours
+    return (
+      <div>
+        Unfortunately, hours are not published for this listing.
       </div>
     );
   }
@@ -298,6 +369,28 @@ class Listing extends React.Component {
                             Price:&nbsp;
                           </strong>
                           { this.state.price }
+                        </p>
+                      )
+                    }
+                    {
+                      // TODO: Style rating better, perhaps stars
+                      this.state.rating && (
+                        <p className="price">
+                          <strong>
+                            Rating:&nbsp;
+                          </strong>
+                          { this.state.rating }/5
+                        </p>
+                      )
+                    }
+                    {
+                      // TODO: Style hours better, perhaps in its own section
+                      this.state.hours && (
+                        <p className="price">
+                          <strong>
+                            Hours:&nbsp;
+                          </strong>
+                          {this.renderHours()}
                         </p>
                       )
                     }

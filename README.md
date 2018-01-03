@@ -37,6 +37,8 @@ Backend for articles and listings
 - [ ] Curator show pages
   * This should display all of the content a curator has written
 - [X] Default create users with type `user`. Admin can switch them to `admin` or `curator`
+- [ ] Give users ability to set and change profile pictures, update this in new article/listing/video backend
+- [ ] Make it so you can click and view author pages, author page should also list all their articles
 
 ## Listings
 
@@ -44,7 +46,7 @@ Backend for articles and listings
 - [ ] Store reviews / comments on listings
 - [ ] Form for adding reviews
 - [ ] Complete listing view
-- [ ] Complete listing backend (already stores listing in Mongo, just need to populate to home screen.
+- [X] Complete listing backend (already stores listing in Mongo, just need to populate to home screen.
 - [X] Figure out why listings page is not displaying
 
 ## Videos
@@ -96,18 +98,25 @@ Backend for articles and listings
   - [ ] Videos
   - [ ] Listings
   - [X] Articles
+- [ ] Split up `routes.js` into many smaller files
+- [ ] Sort reviews functionality (time, rating)
 
 ## Other
 
-- [ ] Make a check in the `AppContainer` component to ensure that `passport` and `redux` are in sync (`redux persist`) makes it such that this can outlast the backend session
+- [X] Make a check in the `AppContainer` component to ensure that `passport` and `redux` are in sync (`redux persist`) makes it such that this can outlast the backend session
 - [ ] Style about page
 - [ ] General clean up, get rid of console.logs and deal with errors better
 - [ ] Change title tag, description, other meta tags depending on the page
 - [ ] Get rid of redux capabilities of all components that don't use redux
+- [ ] Go back and take care of all TODO's
+- [ ] Make sure all form submissions check for empty fields on frontend and/or backend
 
 ## Bugs
 - [ ] Fix authentication route bug
   * When you refresh on a page that requires authentication it redirects to the home page (this should not be the case if the session persists)
+- [ ] Bug where login error crashes app instead of displaying error
+  - [ ] 'Cannot set headers after they are sent' error crashes app
+- [X] Persist issue, now it makes you log back in all the time. Perhaps passport session is very short?
 
 ## Questions
 

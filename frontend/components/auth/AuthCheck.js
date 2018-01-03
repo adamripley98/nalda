@@ -7,27 +7,28 @@ import { Redirect } from 'react-router-dom';
  * Component to ensure that a user is logged in before seeing content
  */
 class AuthCheck extends Component {
-  // constructor(props) {
-  //   super(props);
-  //   console.log('proppppp', this.props.userId);
-  //   this.state = {
-  //     userLoggedIn: !!this.props.userId
-  //   };
-  // }
-  componentWillMount() {
-    this.state = {
-      userLoggedIn: !!this.props.userId
-    };
+
+  componentDidMount() {
+    var delayInMilliseconds = 5000;
+    setTimeout(() => {
+      this.checkAuth();
+    }, delayInMilliseconds);
   }
-  render() {
-    console.log('userLoggedin', this.props.userId);
-    // Renders component if user is logged in, returns to /login if not.
-    if (this.state.userLoggedIn) {
-      // Component is returned with all properties it originally had
-      return <h1>hi</h1>;
+
+  checkAuth() {
+    if (this.props.userId) {
+      return (
+        <h1>hi</h1>
+      );
     }
     return (
       <Redirect to="/login"/>
+    );
+  }
+
+  render() {
+    return (
+      <h2>testing</h2>
     );
   }
 }
