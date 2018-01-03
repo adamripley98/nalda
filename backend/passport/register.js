@@ -3,22 +3,30 @@ var bCrypt = require('bcrypt-nodejs');
 const express = require('express');
 var router = express.Router();
 
+// Backend file for registering new users
 module.exports = (passport) => {
 		 router.post('/register', (req, res) => {
 			 // Ensure password meets validity conditions
 			 if (isValidPassword(req.body.password, req.body.verPassword) !== 'success') {
-				 res.send(isValidPassword(req.body.password, req.body.verPassword));
+				 res.send({
+					 success: false,
+					 error: isValidPassword(req.body.password, req.body.verPassword)
+				 });
 			 } else {
 				 // Will attempt to find user in database
 				 User.findOne({ 'username': req.body.username }, (err, user) => {
 		     if (err) {
-						 res.send('Unknown registration error', err);
-						 return false;
+					 	 res.send({
+							 success: false,
+							 error: 'Unknown registration error' + err,
+						 });
 		     }
-	    	// User already exists
+	    	// Error if the user already exists
 		     if (user) {
-						 res.send('User with username' + req.body.username + 'already exists.');
-						 return false;
+						 res.send({
+							 success: false,
+							 error: 'User with username' + req.body.username + 'already exists',
+						 });
 		     }
 				 // If no error and user doesn't already exist, create a user
 				 // Default sets userType to user, admin can change to admin or curator
@@ -31,14 +39,26 @@ module.exports = (passport) => {
 				 // Saving new user in Mongo
 				 newUser.save((er, usr) => {
 					 if (er) {
-						 res.send('Unknown registration error', er);
-						 return false;
+						 res.send({
+							 success: false,
+							 error: 'Unknown registration error' + er,
+						 });
 					 }
+					 // Built in passport method for logging in
 					 req.login(usr, (e) => {
-						 if (e) console.log('error', e);
-						 res.send(usr);
+						 if (e) {
+							 res.send({
+								 success: false,
+								 error: 'Error logging in new user' + e
+							 });
+						 }
+						 // Finally, if registration is successful, send back user
+						 res.send({
+							 success: true,
+							 error: '',
+							 user: usr,
+						 });
 					 });
-					 return true;
 				 });
 		 });
  }

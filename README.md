@@ -45,7 +45,7 @@ Backend for articles and listings
 - [ ] Form for adding reviews
 - [ ] Complete listing view
 - [ ] Complete listing backend (already stores listing in Mongo, just need to populate to home screen.
-- [ ] Figure out why listings page is not displaying
+- [X] Figure out why listings page is not displaying
 
 ## Videos
 
@@ -58,7 +58,7 @@ Backend for articles and listings
 - [ ] Video styling
 - [ ] Login/Register/Reset/Edit Account Form styling
 - [ ] Sendgrid configuration for sending emails
-- [ ] Individual listing view
+- [X] Individual listing view
 - [ ] Ajax search suggestions
 - [ ] Routing 	
 - [ ] User show pages
@@ -74,6 +74,7 @@ Backend for articles and listings
 - [ ] Nav bar should only show name and location when a user is logged in
 - [ ] Make it easier for an admin to enter hours (some sort of autofill)
 - [ ] Icons for all amenities
+- [X] Get rid of article reducer
 
 ## Backend
 
@@ -102,6 +103,7 @@ Backend for articles and listings
 - [ ] Style about page
 - [ ] General clean up, get rid of console.logs and deal with errors better
 - [ ] Change title tag, description, other meta tags depending on the page
+- [ ] Get rid of redux capabilities of all components that don't use redux
 
 ## Bugs
 - [ ] Fix authentication route bug

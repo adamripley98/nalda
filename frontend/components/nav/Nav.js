@@ -8,7 +8,7 @@ import { logout } from '../../actions/index.js';
 /**
  * Renders the navbar at the top of the screen on all pages.
  * TODO search functionality
- * TODO populate this with user name
+ * TODO populate this with user name CONDITIONALLY (if user isnt logged in, nothing)
  * TODO pull location from the database
  */
 class Nav extends Component {
@@ -86,10 +86,8 @@ class Nav extends Component {
 Nav.propTypes = {
   userId: PropTypes.string,
   name: PropTypes.string,
-  onLogout: PropTypes.func,
 };
 
-// Allows us to access redux state as this.props.userId inside component
 const mapStateToProps = state => {
   return {
     userId: state.authState.userId,
@@ -97,10 +95,8 @@ const mapStateToProps = state => {
   };
 };
 
-// Allows us to dispatch a logout event by calling this.props.onLogout
 const mapDispatchToProps = dispatch => {
   return {
-    onLogout: () => dispatch(logout())
   };
 };
 

@@ -8,6 +8,7 @@ const naldaBio = "Nalda is a centralized source for information, food, activitie
 
 class About extends Component {
   // Renders about component
+  // TODO: Nalda needs to send us the information for this component
   render() {
     return (
       <Thin>

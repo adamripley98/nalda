@@ -26,6 +26,23 @@ module.exports = () => {
     });
   });
 
+  router.get('/sync', (req, res) => {
+    // If passport state is not present, user is not logged in on the backend
+    if (!req.session.passport) {
+      // States are NOT synced!
+      res.send({
+        success: false,
+        data: 'States are not synced!'
+      });
+    } else {
+      // States are synced!
+      res.send({
+        success: true,
+        data: 'States are synced!',
+      });
+    }
+  });
+
   /**
    * Route to handle adding new admins, admins allowed to add more admins/curators and create content
    * @param userToAdd
