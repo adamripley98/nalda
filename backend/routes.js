@@ -457,6 +457,7 @@ module.exports = () => {
     const rating = req.body.rating;
     const price = req.body.price;
     const website = req.body.website;
+    const amenities = req.body.amenities;
     let error = "";
 
     // Error checking
@@ -491,6 +492,7 @@ module.exports = () => {
         rating,
         price,
         website,
+        amenities,
       });
 
       // Save the new article in mongo

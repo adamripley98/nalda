@@ -5,9 +5,4 @@ module.exports = mongoose.model('Video', {
   title: String,
   description: String,
   id: String,
-  author: {
-    name: String,
-    _id: String,
-    profilePicture: String,
-  },
 });

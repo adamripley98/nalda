@@ -46,7 +46,7 @@ Backend for articles and listings
 - [ ] Store reviews / comments on listings
 - [ ] Form for adding reviews
 - [ ] Complete listing view
-- [ ] Complete listing backend (already stores listing in Mongo, just need to populate to home screen.
+- [X] Complete listing backend (already stores listing in Mongo, just need to populate to home screen.
 - [X] Figure out why listings page is not displaying
 
 ## Videos

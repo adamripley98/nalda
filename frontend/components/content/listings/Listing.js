@@ -29,10 +29,6 @@ class Listing extends React.Component {
       price: "",
       amenities: {},
       location: {},
-      user: {
-        name: "Adam Ripley",
-        profilePicture: "https://scontent-lga3-1.xx.fbcdn.net/v/t31.0-8/19800933_1555674071163224_6756529645784213707_o.jpg?oh=d3ce5cc19160312229b760b7448d3c67&oe=5A8FEE3B",
-      },
       reviews: [
         {
           name: "Cameron Cabo",
@@ -202,6 +198,37 @@ class Listing extends React.Component {
     );
   }
 
+  // Helper method to convert from military to normal time
+  formatHours(hour) {
+    return moment(hour, 'HH:mm').format('h:mm a');
+  }
+
+  // Helper method to render Hours
+  renderHours() {
+    if (this.state.hours) {
+      // Isolate variable
+      const hours = this.state.hours;
+      return (
+        // If a date has a start and end time, it will be displayed
+        <div>
+          {hours.monday.start && hours.monday.finish && <div>Monday: {this.formatHours(hours.monday.start)} - {this.formatHours(hours.monday.finish)}</div>}
+          {hours.tuesday.start && hours.tuesday.finish && <div>Tuesday: {this.formatHours(hours.tuesday.start)} - {this.formatHours(hours.tuesday.finish)}</div>}
+          {hours.wednesday.start && hours.wednesday.finish && <div>Wednesday: {this.formatHours(hours.wednesday.start)} - {this.formatHours(hours.wednesday.finish)}</div>}
+          {hours.thursday.start && hours.thursday.finish && <div>Thursday: {this.formatHours(hours.thursday.start)} - {this.formatHours(hours.thursday.finish)}</div>}
+          {hours.friday.start && hours.friday.finish && <div>Friday: {this.formatHours(hours.friday.start)} - {this.formatHours(hours.friday.finish)}</div>}
+          {hours.saturday.start && hours.saturday.finish && <div>Saturday: {this.formatHours(hours.saturday.start)} - {this.formatHours(hours.saturday.finish)}</div>}
+          {hours.sunday.start && hours.sunday.finish && <div>Sunday: {this.formatHours(hours.sunday.start)} - {this.formatHours(hours.sunday.finish)}</div>}
+        </div>
+      );
+    }
+    // If there are no hours
+    return (
+      <div>
+        Unfortunately, hours are not published for this listing.
+      </div>
+    );
+  }
+
   // Render the component
   render() {
     // Return the component
@@ -298,6 +325,29 @@ class Listing extends React.Component {
                             Price:&nbsp;
                           </strong>
                           { this.state.price }
+                        </p>
+                      )
+                    }
+                    {
+                      // TODO: Style rating better, perhaps stars
+                      this.state.rating && (
+                        <p className="price">
+                          <strong>
+                            Rating:&nbsp;
+                          </strong>
+                          { this.state.rating }/5
+                        </p>
+                      )
+                    }
+                    {
+                      // TODO: Style hours better, perhaps in its own section
+                      this.state.hours && (
+                        <p className="price">
+                          <strong>
+                            Hours:&nbsp;
+                          </strong>
+                          {this.renderHours()}
+                          {/* { this.state.hours } */}
                         </p>
                       )
                     }
