@@ -74,7 +74,7 @@ Backend for articles and listings
 - [ ] Nav bar should only show name and location when a user is logged in
 - [ ] Make it easier for an admin to enter hours (some sort of autofill)
 - [ ] Icons for all amenities
-- [ ] Get rid of article reducer
+- [X] Get rid of article reducer
 
 ## Backend
 
@@ -103,6 +103,7 @@ Backend for articles and listings
 - [ ] Style about page
 - [ ] General clean up, get rid of console.logs and deal with errors better
 - [ ] Change title tag, description, other meta tags depending on the page
+- [ ] Get rid of redux capabilities of all components that don't use redux
 
 ## Bugs
 - [ ] Fix authentication route bug

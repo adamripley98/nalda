@@ -124,9 +124,8 @@ Article.propTypes = {
   match: PropTypes.object,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = () => {
   return {
-    article: state.articleState.article
   };
 };
 
