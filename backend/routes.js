@@ -307,6 +307,8 @@ module.exports = () => {
     const subtitle = req.body.subtitle;
     const image = req.body.image;
     const body = req.body.body;
+    const userId = req.body.userId;
+
     let error = "";
     const urlRegexp = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
 
@@ -330,26 +332,44 @@ module.exports = () => {
         error,
       });
     } else {
-      // Creates a new article with given params
-      const newArticle = new Article({
-        title,
-        subtitle,
-        image,
-        body,
-      });
-
-      // Save the new article in Mongo
-      newArticle.save((err, article) => {
+      const author = {};
+      User.findById(userId, (err, user) => {
         if (err) {
-          // If there was an error saving the article
+          console.log('err finding user', err);
           res.send({
             success: false,
-            error: err,
+            error: 'Error finding author ' + err
           });
+        } else if (!user) {
+          console.log('cant find user');
         } else {
-          res.send({
-            success: true,
-            data: article,
+          author._id = userId;
+          author.profilePicture = user.profilePicture;
+          author.name = user.name;
+          console.log('wnhat is author', author);
+          // Creates a new article with given params
+          const newArticle = new Article({
+            title,
+            subtitle,
+            image,
+            body,
+            author,
+          });
+          console.log('newArticle', newArticle);
+          // Save the new article in Mongo
+          newArticle.save((errr, article) => {
+            if (errr) {
+              // If there was an error saving the article
+              res.send({
+                success: false,
+                error: errr,
+              });
+            } else {
+              res.send({
+                success: true,
+                data: article,
+              });
+            }
           });
         }
       });

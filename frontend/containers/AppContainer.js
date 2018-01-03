@@ -74,6 +74,7 @@ class AppContainer extends Component {
       // Redux persist and backend state are NOT synced. Need to wipe redux state and redirect to login
       if (!resp.data.success) {
         // Dispatch the action
+        console.log("Redux and backend not synced");
         onLogout();
         // Set the state to redirect to login
         this.setState({

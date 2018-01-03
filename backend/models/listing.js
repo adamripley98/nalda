@@ -9,4 +9,9 @@ module.exports = mongoose.model('Listing', {
   hours: {},
   price: String,
   website: String,
+  author: {
+    name: String,
+    _id: String,
+    profilePicture: String,
+  },
 });
