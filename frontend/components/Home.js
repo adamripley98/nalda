@@ -4,10 +4,13 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+
+// Import components
 import Loading from './shared/Loading';
 import ErrorMessage from './shared/ErrorMessage';
 import Button from './shared/Button';
 import ArticlePreview from './content/articles/ArticlePreview';
+import AuthCheck from './auth/authCheck';
 
 
 // TODO: Should standardize the size of all the pictures
@@ -158,6 +161,7 @@ class Home extends React.Component {
   render() {
     return (
       <div className="container home">
+        <AuthCheck/>
         <div className="space-1"/>
         { this.state.error && <ErrorMessage error={ this.state.error } /> }
         <h3 className="title">
