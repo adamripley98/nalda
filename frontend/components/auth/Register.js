@@ -95,16 +95,16 @@ class Register extends Component {
       })
         .then((resp) => {
           // If issue with register, error message will display
-          if (!resp.data._id) {
+          if (!resp.data.success) {
             this.setState({
-              error: resp.data,
+              error: resp.data.error,
             });
           } else {
             // If successful, redirect to home page and dispatch a register event
             this.setState({
               redirectToHome: true,
             });
-            onRegister(resp.data._id, resp.data.userType, name);
+            onRegister(resp.data.user._id, resp.data.user.userType, name);
           }
         })
         .catch((err) => {

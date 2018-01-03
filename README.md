@@ -45,7 +45,7 @@ Backend for articles and listings
 - [ ] Form for adding reviews
 - [ ] Complete listing view
 - [ ] Complete listing backend (already stores listing in Mongo, just need to populate to home screen.
-- [ ] Figure out why listings page is not displaying
+- [X] Figure out why listings page is not displaying
 
 ## Videos
 
@@ -58,7 +58,7 @@ Backend for articles and listings
 - [ ] Video styling
 - [ ] Login/Register/Reset/Edit Account Form styling
 - [ ] Sendgrid configuration for sending emails
-- [ ] Individual listing view
+- [X] Individual listing view
 - [ ] Ajax search suggestions
 - [ ] Routing 	
 - [ ] User show pages

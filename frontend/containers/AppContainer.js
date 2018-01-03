@@ -3,6 +3,9 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { Redirect } from 'react-router-dom';
+import axios from 'axios';
+import { logout } from '../actions/index.js';
 
 // Shared and general components
 import Nav from '../components/nav/Nav';
@@ -46,9 +49,50 @@ import NotFoundSection from '../components/NotFoundSection';
  * session. This can be on component did mount or component did update
  */
 class AppContainer extends Component {
+  // Constructor method
+  constructor(props) {
+    super(props);
+
+    // Set the state
+    this.state = {
+      redirectToLogin: false,
+    };
+  }
+  /**
+    * This method ensures that the state stored in redux persist does not outlast the backend setState.
+    * If the backend and frontend states aren't synced, redirects to login and wipes redux state
+    * Note: could not be done in componentDidMount because this fired before this.props.userId was set
+   */
+  checkSynced(userId) {
+    // Call to backend (routes.js)
+    const onLogout = this.props.onLogout;
+    axios.get('/api/sync', {
+      params: {
+        userId,
+      }
+    })
+    .then((resp) => {
+      if (!resp.data.success) {
+        // Redux persist and backend state are NOT synced. Need to wipe redux state and redirect to login
+        // Dispatch the action
+        onLogout();
+        // Set the state to redirect to login
+        this.setState({
+          redirectToLogin: true,
+        });
+      }
+    })
+    .catch((err) => {
+      console.log('Error with syncing state', err);
+    });
+  }
+
   // Render the application
   render() {
-    // Some routes require authentication, others don't
+    // Waits to call this until this.props has been populated (not immediate with redux persist)
+    if (this.props.userId) {
+      this.checkSynced(this.props.userId);
+    }
     return (
       <div>
         <Router>
@@ -57,6 +101,9 @@ class AppContainer extends Component {
             <div className="nav-space" />
             <div className="app-content">
               <Switch>
+                {/* Redirect to the login page when the user signs out */}
+                { this.state.redirectToLogin && (<Redirect to="/login"/>) }
+
                 { /* User registration routes */ }
                 <Route exact path="/login" component={Login}/>
                 <Route exact path="/register" component={Register}/>
@@ -103,6 +150,7 @@ class AppContainer extends Component {
 AppContainer.propTypes = {
   userId: PropTypes.string,
   userType: PropTypes.string,
+  onLogout: PropTypes.func,
 };
 
 const mapStateToProps = (state) => {
@@ -112,8 +160,10 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (/* dispatch */) => {
-  return {};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onLogout: () => dispatch(logout()),
+  };
 };
 
 export default connect(

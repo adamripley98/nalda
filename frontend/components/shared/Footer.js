@@ -101,14 +101,12 @@ Footer.propTypes = {
   userId: PropTypes.string,
 };
 
-// Allows us to access redux state as this.props.userId inside component
 const mapStateToProps = state => {
   return {
     userId: state.authState.userId,
   };
 };
 
-// Allows us to dispatch a logout event by calling this.props.onLogout
 const mapDispatchToProps = () => {
   return {};
 };

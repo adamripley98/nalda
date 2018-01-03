@@ -74,7 +74,7 @@ class Home extends React.Component {
           _id={ art._id }
           title={ art.title }
           subtitle={ art.subtitle }
-          imag={ art.image }
+          image={ art.image }
         />
       ));
     }

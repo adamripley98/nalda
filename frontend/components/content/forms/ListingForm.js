@@ -145,7 +145,6 @@ class ListingForm extends React.Component {
           !currentHours[day].finish ||
           currentHours[day].finish < event.target.value
         )) {
-      console.log(event.target.value);
       currentHours[day].finish = event.target.value;
     }
     this.setState({

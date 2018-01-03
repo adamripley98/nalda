@@ -86,10 +86,8 @@ class Nav extends Component {
 Nav.propTypes = {
   userId: PropTypes.string,
   name: PropTypes.string,
-  onLogout: PropTypes.func,
 };
 
-// Allows us to access redux state as this.props.userId inside component
 const mapStateToProps = state => {
   return {
     userId: state.authState.userId,
@@ -97,10 +95,8 @@ const mapStateToProps = state => {
   };
 };
 
-// Allows us to dispatch a logout event by calling this.props.onLogout
 const mapDispatchToProps = dispatch => {
   return {
-    onLogout: () => dispatch(logout())
   };
 };
 
