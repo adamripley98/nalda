@@ -48,7 +48,7 @@ class Login extends Component {
       // Make the login request to axios
       // If successful, will send back userId. If redux state contains userId,
       // will redirect to home
-      axios.post('/login', {
+      axios.post('/api/login', {
         username: this.state.username,
         password: this.state.password,
       })

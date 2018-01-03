@@ -87,7 +87,7 @@ class Register extends Component {
       });
 
       // Post to register, will check on backend in mongo for issues
-      axios.post('/register', {
+      axios.post('/api/register', {
         name,
         username: email,
         password,

@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
+
+// Import actions
 import { logout } from '../actions/index.js';
 
 // Shared and general components
@@ -29,7 +31,7 @@ import Listings from '../components/content/listings/Listings';
 import Video from '../components/content/videos/Video';
 import Videos from '../components/content/videos/Videos';
 
-// Content editing components
+// Content creation components
 import ArticleForm from '../components/content/forms/ArticleForm';
 import ListingForm from '../components/content/forms/ListingForm';
 import VideoForm from '../components/content/forms/VideoForm';
@@ -45,14 +47,11 @@ import NotFoundSection from '../components/NotFoundSection';
  * When necessary, these components will pull data from the backend
  * Backend routes are prefixed with 'api/' and reside in '../backend/routes.js'
  *
- * TODO make a call to the backend to sync the backend session with the frontend
- * session. This can be on component did mount or component did update
  */
 class AppContainer extends Component {
   // Constructor method
   constructor(props) {
     super(props);
-
     // Set the state
     this.state = {
       redirectToLogin: false,
@@ -60,20 +59,20 @@ class AppContainer extends Component {
   }
   /**
     * This method ensures that the state stored in redux persist does not outlast the backend setState.
-    * If the backend and frontend states aren't synced, redirects to login and wipes redux state
-    * Note: could not be done in componentDidMount because this fired before this.props.userId was set
+    * If the backend and frontend states aren't synced, redirects to login and wipes redux state.
+    * Note: could not be done in componentDidMount because this fired before this.props.userId was set (redux persist issue)
    */
   checkSynced(userId) {
-    // Call to backend (routes.js)
     const onLogout = this.props.onLogout;
+    // Call to backend (routes.js)
     axios.get('/api/sync', {
       params: {
         userId,
       }
     })
     .then((resp) => {
+      // Redux persist and backend state are NOT synced. Need to wipe redux state and redirect to login
       if (!resp.data.success) {
-        // Redux persist and backend state are NOT synced. Need to wipe redux state and redirect to login
         // Dispatch the action
         onLogout();
         // Set the state to redirect to login
@@ -101,6 +100,7 @@ class AppContainer extends Component {
             <div className="nav-space" />
             <div className="app-content">
               <Switch>
+
                 {/* Redirect to the login page when the user signs out */}
                 { this.state.redirectToLogin && (<Redirect to="/login"/>) }
 
@@ -153,6 +153,7 @@ AppContainer.propTypes = {
   onLogout: PropTypes.func,
 };
 
+// Necessary so we can access this.props.userId and this.props.userType
 const mapStateToProps = (state) => {
   return {
     userId: state.authState.userId,
@@ -160,12 +161,14 @@ const mapStateToProps = (state) => {
   };
 };
 
+// Necessary so we can access this.props.onLogout()
 const mapDispatchToProps = (dispatch) => {
   return {
     onLogout: () => dispatch(logout()),
   };
 };
 
+// Redux config
 export default connect(
   mapStateToProps,
   mapDispatchToProps

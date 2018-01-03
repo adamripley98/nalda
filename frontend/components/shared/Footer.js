@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 
 /**
- * Renders the navbar at the top of the screen on all pages.
+ * Renders the footer at the bottom of the screen on all pages.
  */
 class Footer extends React.Component {
   // Render the component

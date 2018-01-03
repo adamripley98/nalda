@@ -74,6 +74,7 @@ Backend for articles and listings
 - [ ] Nav bar should only show name and location when a user is logged in
 - [ ] Make it easier for an admin to enter hours (some sort of autofill)
 - [ ] Icons for all amenities
+- [ ] Get rid of article reducer
 
 ## Backend
 

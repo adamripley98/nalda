@@ -42,7 +42,7 @@ class Sidebar extends Component {
     event.preventDefault();
 
     const onLogout = this.props.onLogout;
-    axios.post('/logout')
+    axios.post('/api/logout')
       // If successful, will dispatch logout event which will clear user from redux state
       .then((resp) => {
         if (resp.data.success) {

@@ -10,7 +10,7 @@ import ErrorMessage from './shared/ErrorMessage';
 /**
  * Component for Admin only, allows them to add and remove other admins and content curators
  * TODO Add removing functionality
- // TODO make text not extend button
+ // TODO make text not extend button, styling issue
  */
 class Admin extends Component {
   // Constructor method
@@ -53,7 +53,7 @@ class Admin extends Component {
         this.setState({error: resp.data.error});
       } else {
         this.setState({error: ''});
-        // TODO: Notify of successful change
+        // TODO: Notify on frontend of successful change
       }
     }).catch((err) => {
       console.log('err', err);
@@ -74,7 +74,7 @@ class Admin extends Component {
         this.setState({error: resp.data.error});
       } else {
         this.setState({error: ''});
-        // TODO: Notify of successful change
+        // TODO: Notify on frontend of successful change
       }
     }).catch((err) => {
       console.log('err', err);

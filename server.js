@@ -49,33 +49,34 @@ passport.use('local', new LocalStrategy({
 }, (username, password, done) => {
   // Find the user with the given username
   User.findOne({ username: username }, (err, user) =>{
-    // if there's an error, finish trying to authenticate (auth failed)
+    // If there's an error, finish trying to authenticate (auth failed)
     if (err) {
       console.error('Error fetching user in LocalStrategy', err);
       return done(err);
     }
-    // if no user present, auth failed
+    // If no user is present, authentication failed
     if (!user) {
       return done(null, false, { message: 'Incorrect email.' });
     }
-      // if passwords do not match, auth failed
+    // If passwords do not match, auth failed
     if (!isValidPassword(user, password)) {
       return done(null, false, { message: 'Incorrect password.' });
     }
-      // auth has has succeeded
+    // Authentication is successful
     return done(null, user);
   });
 }
 ));
 
+// Method to check encrypted password
 const isValidPassword = (user, password) => {
   return bCrypt.compareSync(password, user.password);
 };
 
-// Routing middleware
-app.use('/', login(passport));
-app.use('/', register(passport));
-app.use('/', logout(passport));
+// Routing backend middleware
+app.use('/api/', login(passport));
+app.use('/api/', register(passport));
+app.use('/api/', logout(passport));
 app.use('/api/', routes);
 
 app.get('*', (request, response) => {

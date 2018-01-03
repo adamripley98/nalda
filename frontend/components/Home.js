@@ -11,7 +11,6 @@ import ArticlePreview from './content/articles/ArticlePreview';
 
 
 // TODO: Should standardize the size of all the pictures
-// TODO: Figure out why article pictures no longer show up
 /**
  * Component for the homepage of the application
  */
@@ -35,7 +34,6 @@ class Home extends React.Component {
   /**
    * Load data once the component mounts
    * Pulls articles, listings, and videos simulatneously
-   * TODO custom route to pull all of this data
    */
   componentDidMount() {
     // Pull all articles from the database
