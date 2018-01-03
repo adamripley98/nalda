@@ -102,9 +102,6 @@ class AppContainer extends Component {
             <div className="app-content">
               <Switch>
 
-                {/* Redirect to the login page when the user signs out */}
-                { this.state.redirectToLogin && (<Redirect to="/login"/>) }
-
                 { /* User registration routes */ }
                 <Route exact path="/login" component={Login}/>
                 <Route exact path="/register" component={Register}/>
@@ -138,6 +135,9 @@ class AppContainer extends Component {
 
                 { /* 404 if no other route was matched */ }
                 <Route exact path="/*" component={NotFoundSection}/>
+
+                {/* Redirect to the login page when the user signs out */}
+                { this.state.redirectToLogin && (<Redirect to="/login"/>) }
               </Switch>
             </div>
             <Footer />
