@@ -14,7 +14,7 @@ import { Link } from 'react-router-dom';
 /**
  * Component to render a listing
  */
- // TODO: Remove dummy data for amenities, location, reviews
+ // TODO: Remove dummy data for location
 class Listing extends React.Component {
   // Constructor method
   constructor(props) {
@@ -22,6 +22,7 @@ class Listing extends React.Component {
 
     // Set the state with dummy data
     this.state = {
+      listingId: '',
       img: "",
       title: "",
       description: "",
@@ -55,6 +56,7 @@ class Listing extends React.Component {
     this.renderReviewsSection = this.renderReviewsSection.bind(this);
     this.renderReview = this.renderReviews.bind(this);
     this.handleClickInfoTrigger = this.handleClickInfoTrigger.bind(this);
+    this.updateReviews = this.updateReviews.bind(this);
   }
 
   // Pull the listing data from the database
@@ -67,6 +69,7 @@ class Listing extends React.Component {
       .then(res => {
         if (res.data.success) {
           this.setState({
+            listingId: id,
             error: "",
             ...res.data.data,
             time: moment(res.data.timestamp).fromNow(),
@@ -75,6 +78,7 @@ class Listing extends React.Component {
         } else {
           // If there was an error with the request
           this.setState({
+            listingId: id,
             error: res.data.error,
             pending: false,
           });
@@ -82,6 +86,38 @@ class Listing extends React.Component {
       })
       .catch(err => {
         // If there was an error making the request
+        this.setState({
+          error: err,
+          pending: false,
+        });
+      });
+  }
+
+  // Helper method which will be called by child component (ReviewForm) to update state
+  updateReviews() {
+    // Find the listing
+    axios.get(`/api/listings/${this.state.listingId}`)
+      .then(res => {
+        if (res.data.success) {
+          // Update state with new review
+          this.setState({
+            error: "",
+            ...res.data.data,
+            time: moment(res.data.timestamp).fromNow(),
+            pending: false,
+          });
+        } else {
+          // If there was an error with the request
+          console.log('what is the error', res.data.error);
+          this.setState({
+            error: res.data.error,
+            pending: false,
+          });
+        }
+      })
+      .catch(err => {
+        // If there was an error making the request
+        console.log('what is the error', err);
         this.setState({
           error: err,
           pending: false,
@@ -150,14 +186,18 @@ class Listing extends React.Component {
   renderReviewsSection() {
     // Count the number of reviews
     const count = this.state.reviews.length;
-    console.log('state', this.state);
 
     // Compute the average rating for all reviews
     let average = 0.0;
     this.state.reviews.forEach(review => {
       average += review.rating;
     });
-    average = average / count;
+    if (count !== 0) {
+      average = average / count;
+    }
+
+    // Isolate listingId to pass to ReviewForm
+    const listingId = this.props.match.params.id;
 
     // Return the section
     return (
@@ -166,9 +206,9 @@ class Listing extends React.Component {
           Reviews
         </h5>
         <p>
-          There { count === 1 ? ("is 1 review") : (`are ${count} reviews`) } on this listing with an average rating of { average } out of 5.0 stars.
+          There { count === 1 ? ("is 1 review") : (`are ${count} reviews`) } on this listing with an average rating of { average.toFixed(1) } out of 5.0 stars.
         </p>
-        <ReviewForm />
+        <ReviewForm listingId={listingId} updateReviews={this.updateReviews}/>
         { this.renderReviews() }
       </div>
     );
@@ -178,7 +218,10 @@ class Listing extends React.Component {
   renderReviews() {
     // Check if there are reviews to return
     if (this.state.reviews) {
-      return this.state.reviews.map(review => (
+      // Reverse reviews so they appear newest to oldest
+      const reviews = this.state.reviews.slice(0).reverse();
+      // Map each review to be its own component
+      return reviews.map(review => (
         <Review
           title={ review.title }
           content={ review.content }
@@ -191,6 +234,7 @@ class Listing extends React.Component {
     }
 
     // If there are no reviews
+    // TODO: Why isn't this showing up?
     return (
       <div className="card marg-bot-1">
         No one has reviewed this listing yet! You could be the first.
@@ -347,7 +391,6 @@ class Listing extends React.Component {
                             Hours:&nbsp;
                           </strong>
                           {this.renderHours()}
-                          {/* { this.state.hours } */}
                         </p>
                       )
                     }

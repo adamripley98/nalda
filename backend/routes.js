@@ -2,6 +2,7 @@
  * Handles all backend routes
  * NOTE all of these routes are prefixed with "/api"
  * NOTE these routes serve and accept JSON-formatted data
+ * TODO: file should be split up into many smaller files
  */
 
 // Import frameworks
@@ -512,6 +513,103 @@ module.exports = () => {
         }
       });
     }
+  });
+
+  /**
+   * Route to add a new review
+   * @param userId
+   * @param listingId
+   * @param rating
+   * @param title
+   * @param content
+   */
+  router.post('/reviews/new', (req, res) => {
+    // Ensure that a user is logged in before reviewing
+    if (!req.body.userId) {
+      res.send({
+        success: false,
+        error: 'Must be logged in to post reviews!'
+      });
+    }
+
+    // Ensure all fields are populated before leaving review
+    if (!req.body.rating || !req.body.title || !req.body.content) {
+      res.send({
+        success: false,
+        error: 'All fields must be populated.'
+      });
+    }
+
+    // If user is logged in, first find author in MongoDB
+    User.findById(req.body.userId, (err, user) => {
+      // Error finding user
+      if (err) {
+        res.send({
+          success: false,
+          error: 'Error finding user' + err,
+        });
+      }
+
+      // If user doesn't exist
+      if (!user) {
+        res.send({
+          success: false,
+          error: 'User does not exist.'
+        });
+      }
+
+      // If no errors can now save new reviews
+      // First find given listing
+      Listing.findById(req.body.listingId, (errr, listing) => {
+        // Error finding listing
+        if (errr) {
+          res.send({
+            success: false,
+            error: errr
+          });
+        }
+
+        // Listing doesn't exist for some reason
+        if (!listing) {
+          res.send({
+            success: false,
+            error: 'Cannot find listing.',
+          });
+        }
+
+        // If listing has been found, update it with review
+        const currentReviews = listing.reviews;
+
+        // Add new review to array of current reviews
+        currentReviews.push({
+          rating: req.body.rating,
+          title: req.body.title,
+          content: req.body.content,
+          createdAt: new Date().getTime(),
+          name: user.name,
+        });
+
+        // Update listing with new review
+        listing.reviews = currentReviews;
+
+        // Resave listing in Mongo
+        listing.save((er) => {
+          // Error saving listing
+          if (err) {
+            res.send({
+              success: false,
+              error: 'Error saving review' + er,
+            });
+          }
+
+          // Finally, if review is saved successfully
+          res.send({
+            success: true,
+            error: '',
+          });
+        });
+      });
+    });
   });
 
   /**

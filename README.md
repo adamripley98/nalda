@@ -98,6 +98,8 @@ Backend for articles and listings
   - [ ] Videos
   - [ ] Listings
   - [X] Articles
+- [ ] Split up `routes.js` into many smaller files
+- [ ] Sort reviews functionality (time, rating)
 
 ## Other
 
@@ -106,12 +108,15 @@ Backend for articles and listings
 - [ ] General clean up, get rid of console.logs and deal with errors better
 - [ ] Change title tag, description, other meta tags depending on the page
 - [ ] Get rid of redux capabilities of all components that don't use redux
+- [ ] Go back and take care of all TODO's
+- [ ] Make sure all form submissions check for empty fields on frontend and/or backend
 
 ## Bugs
 - [ ] Fix authentication route bug
   * When you refresh on a page that requires authentication it redirects to the home page (this should not be the case if the session persists)
 - [ ] Bug where login error crashes app instead of displaying error
-- [ ] Persist issue, now it makes you log back in all the time. Perhaps passport session is very short?
+  - [ ] 'Cannot set headers after they are sent' error crashes app
+- [X] Persist issue, now it makes you log back in all the time. Perhaps passport session is very short?
 
 ## Questions
 

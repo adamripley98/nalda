@@ -30,5 +30,14 @@ module.exports = mongoose.model('Listing', {
     holeInTheWall: Boolean,
     showoffToYourFriends: Boolean,
     forTheGram: Boolean,
-  }
+  },
+  reviews: [
+    {
+      rating: Number,
+      title: String,
+      content: String,
+      createdAt: Number,
+      name: String,
+    }
+  ],
 });
