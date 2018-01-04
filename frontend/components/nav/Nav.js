@@ -60,22 +60,25 @@ class Nav extends Component {
             placeholder="Search for activities, places, or curators"
           />
         </div>
-        { /* Render the user's profile information */ }
-        <div className="user-info">
-          <div className="user-text">
-            { /* Render the user's location information */ }
-            <div className="location">
-              University City, PA
+        { /* Render the user's profile information IF USER IS LOGGED IN */ }
+        {/* TODO: Style this better if the user is not logged in */}
+        {this.props.userId ? (
+          <div className="user-info">
+            <div className="user-text">
+              { /* Render the user's location information */ }
+              <div className="location">
+                University City, PA
+              </div>
+              <div className="name">
+                <p>
+                  Hi, <Link to="/account">{this.props.name}</Link>
+                </p>
+              </div>
             </div>
-            <div className="name">
-              <p>
-                Hi, <Link to="/account">{this.props.name}</Link>
-              </p>
-            </div>
+            <div className="user-img" />
           </div>
-          <div className="user-img" />
-        </div>
-
+        ) :
+      <div/>}
         { /* Render the sidebar */ }
         <Sidebar />
       </nav>

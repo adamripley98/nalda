@@ -77,6 +77,8 @@ Backend for articles and listings
 - [ ] Make it easier for an admin to enter hours (some sort of autofill)
 - [ ] Icons for all amenities
 - [X] Get rid of article reducer
+- [ ] Style nav bar so it looks okay when no user is logged in (no user or location)
+- [ ] Create a curator profile view (Should show name, location, bio, contact info, and all content created)
 
 ## Backend
 
@@ -100,6 +102,17 @@ Backend for articles and listings
   - [X] Articles
 - [ ] Split up `routes.js` into many smaller files
 - [ ] Sort reviews functionality (time, rating)
+- [ ] Deal with location
+- [ ] Curator profile view
+- [ ] Change/forgot password backend
+- [ ] Replace dummy location, profile picture, and bio data
+- [ ] Replace dummy data in `Account.js`
+- [ ] Add bio and content to `user` schema
+
+## Cam
+- [ ] Nav bar style when no one is logged in
+- [ ] Style curator profile view (`Profile.js`). Add profile picture spot!
+- [ ] Make it so nav bar closes when user clicks something
 
 ## Other
 

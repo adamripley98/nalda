@@ -710,6 +710,38 @@ module.exports = () => {
     }
   });
 
+  /**
+   * Show a given users profile
+   */
+  router.get('/users/:id', (req, res) => {
+    // Find the id from the url
+    const id = req.params.id;
+
+    // Find user's profile in Mongo
+    User.findById(id, (err, user) => {
+      // Error finding user
+      if (err) {
+        res.send({
+          success: false,
+          error: err,
+        });
+      } else if (!user) {
+        // User doesn't exist in mongo
+        res.send({
+          success: false,
+          error: 'User does not exist.'
+        });
+      // Otherwise render user data
+      } else {
+        res.send({
+          success: true,
+          error: '',
+          data: user
+        });
+      }
+    });
+  });
+
   // Return the router for use throughout the application
   return router;
 };
