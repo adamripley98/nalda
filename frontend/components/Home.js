@@ -161,7 +161,6 @@ class Home extends React.Component {
   render() {
     return (
       <div className="container home">
-        <AuthCheck/>
         <div className="space-1"/>
         { this.state.error && <ErrorMessage error={ this.state.error } /> }
         <h3 className="title">

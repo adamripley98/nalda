@@ -2,6 +2,10 @@
 import React, { Component } from 'react';
 import autosize from 'autosize';
 import axios from 'axios';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { Redirect } from 'react-router-dom';
+
 
 // Import components
 import Thin from './shared/Thin';
@@ -85,6 +89,9 @@ class Admin extends Component {
   render() {
     return (
       <Thin>
+        { /* Redirect the user to home if they are not logged in */ }
+        { (!this.props.userId || this.props.userType !== 'admin') && <Redirect to="/login" /> }
+
         <form className="thin-form">
           <h2 className="bold marg-bot-1">Admin panel</h2>
           <p className="marg-bot-1">
@@ -136,5 +143,27 @@ class Admin extends Component {
     );
   }
 }
+
+Admin.propTypes = {
+  userType: PropTypes.string,
+  userId: PropTypes.string,
+};
+
+const mapStateToProps = (state) => {
+  return {
+    userId: state.authState.userId,
+    userType: state.authState.userType,
+  };
+};
+
+const mapDispatchToProps = () => {
+  return {};
+};
+
+// Redux config
+Admin = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Admin);
 
 export default Admin;

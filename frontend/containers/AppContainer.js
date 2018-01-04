@@ -109,6 +109,7 @@ class AppContainer extends Component {
 
                 { /* Other user routes */ }
                 <Route exact path="/account" component={Account} />
+                {/* TODO: Protect this route */}
                 <Route exact path="/password" component={EditPassword} />
 
                 { /* Routes for viewing profiles */ }
@@ -117,10 +118,11 @@ class AppContainer extends Component {
                 { /* General routes */ }
                 <Route exact path="/about" component={About}/>
                 <Route exact path="/contact" component={Contact}/>
-                <Route exact path="/" component={requireLogin(Home)}/>
+                <Route exact path="/" component={Home}/>
 
                 { /* Admin routes */ }
-                <Route exact path="/admin" component={requireAdmin(Admin)}/>
+                {/* TODO: Route protecting still doesn't completely work */}
+                <Route exact path="/admin" component={Admin}/>
 
                 { /* Routes for articles */ }
                 <Route exact path="/articles" component={Articles} />
