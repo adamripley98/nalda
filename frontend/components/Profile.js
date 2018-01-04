@@ -38,10 +38,9 @@ class Profile extends Component {
   componentDidMount() {
     // Find the id in the url
     const id = this.props.match.params.id;
-
+    // Call to backend to get profile information
     axios.get(`/api/users/${id}`)
     .then((resp) => {
-      console.log('responds', resp.data);
       // If successful, will set state with user's information
       if (resp.data.success) {
         console.log('ddata', resp.data);

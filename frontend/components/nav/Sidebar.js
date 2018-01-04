@@ -46,6 +46,8 @@ class Sidebar extends Component {
       // If successful, will dispatch logout event which will clear user from redux state
       .then((resp) => {
         if (resp.data.success) {
+          // Close side menu
+          this.toggleMenu();
           // Dispatch the action
           onLogout();
           // Set the state to redirect to login
@@ -97,26 +99,26 @@ class Sidebar extends Component {
               this.props.userId ? (
                 <div className="links">
                   {/* If the user is logged in */}
-                  <Link to="/" className="link">
+                  <Link onClick={this.toggleMenu} to="/" className="link">
                     Home
                   </Link>
-                  <Link to="/articles" className="link">
+                  <Link onClick={this.toggleMenu} to="/articles" className="link">
                     Articles
                   </Link>
-                  <Link to="/listings" className="link">
+                  <Link onClick={this.toggleMenu} to="/listings" className="link">
                     Listings
                   </Link>
-                  <Link to="/videos" className="link">
+                  <Link onClick={this.toggleMenu} to="/videos" className="link">
                     Videos
                   </Link>
-                  <Link to="/account" className="link">
+                  <Link onClick={this.toggleMenu} to="/account" className="link">
                     Account
                   </Link>
 
                   { /* Render create link only if admin or curator */ }
                   {
                     (this.props.userType === 'admin' || this.props.userType === 'curator') && (
-                      <Link to="/articles/new" className="link">
+                      <Link onClick={this.toggleMenu} to="/articles/new" className="link">
                         Create
                       </Link>
                     )
@@ -125,7 +127,7 @@ class Sidebar extends Component {
                   { /* Render admin panel only if admin */ }
                   {
                     (this.props.userType === 'admin') && (
-                      <Link to="admin" className="link">
+                      <Link onClick={this.toggleMenu} to="admin" className="link">
                         Admin
                       </Link>
                     )
@@ -138,28 +140,28 @@ class Sidebar extends Component {
               ) : (
                 <div className="links">
                   {/* If the user is not logged in */}
-                  <Link to="/" className="link">
+                  <Link onClick={this.toggleMenu} to="/" className="link">
                     Home
                   </Link>
-                  <Link to="/articles" className="link">
+                  <Link onClick={this.toggleMenu} to="/articles" className="link">
                     Articles
                   </Link>
-                  <Link to="/listings" className="link">
+                  <Link onClick={this.toggleMenu} to="/listings" className="link">
                     Listings
                   </Link>
-                  <Link to="/videos" className="link">
+                  <Link onClick={this.toggleMenu} to="/videos" className="link">
                     Videos
                   </Link>
-                  <Link to="/about" className="link">
+                  <Link onClick={this.toggleMenu} to="/about" className="link">
                     About
                   </Link>
-                  <Link to="/contact" className="link">
+                  <Link onClick={this.toggleMenu} to="/contact" className="link">
                     Contact
                   </Link>
-                  <Link to="/register" className="link line-above">
+                  <Link onClick={this.toggleMenu} to="/register" className="link line-above">
                     Register
                   </Link>
-                  <Link to="/login" className="link">
+                  <Link onClick={this.toggleMenu} to="/login" className="link">
                     Login
                   </Link>
                 </div>

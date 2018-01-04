@@ -33,7 +33,7 @@ Backend for articles and listings
 - [ ] Add author field to every form of content
   - [ ] Videos
   - [ ] Listings
-  - [ ] Articles
+  - [X] Articles
 - [ ] Curator show pages
   * This should display all of the content a curator has written
 - [X] Default create users with type `user`. Admin can switch them to `admin` or `curator`
@@ -72,7 +72,7 @@ Backend for articles and listings
 - [ ] Ajax search suggestions
 - [ ] Incorporate Nalda logo and other advice from Edward
 - [ ] Home page needs to have other ways of sorting: most popular, by category, by author?, etc
-- [ ] Side Nav Bar should close once an option is clicked
+- [X] Side Nav Bar should close once an option is clicked
 - [ ] Nav bar should only show name and location when a user is logged in
 - [ ] Make it easier for an admin to enter hours (some sort of autofill)
 - [ ] Icons for all amenities
@@ -112,7 +112,6 @@ Backend for articles and listings
 ## Cam
 - [ ] Nav bar style when no one is logged in
 - [ ] Style curator profile view (`Profile.js`). Add profile picture spot!
-- [ ] Make it so nav bar closes when user clicks something
 
 ## Other
 
