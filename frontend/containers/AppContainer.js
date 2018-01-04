@@ -41,6 +41,7 @@ import About from '../components/About';
 import Contact from '../components/Contact';
 import Admin from '../components/Admin';
 import NotFoundSection from '../components/NotFoundSection';
+import Profile from '../components/Profile';
 
 /**
  * Component to handle routing on the frontend
@@ -109,6 +110,9 @@ class AppContainer extends Component {
                 { /* Other user routes */ }
                 <Route exact path="/account" component={Account} />
                 <Route exact path="/password" component={EditPassword} />
+
+                { /* Routes for viewing profiles */ }
+                <Route exact path="/users/:id" component={Profile} />
 
                 { /* General routes */ }
                 <Route exact path="/about" component={About}/>
