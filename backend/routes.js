@@ -342,12 +342,14 @@ module.exports = () => {
             error: 'Error finding author ' + err
           });
         } else if (!user) {
-          console.log('cant find user');
+          res.send({
+            success: false,
+            error: 'Can not find user.'
+          });
         } else {
           author._id = userId;
           author.profilePicture = user.profilePicture;
           author.name = user.name;
-          console.log('wnhat is author', author);
           // Creates a new article with given params
           const newArticle = new Article({
             title,
@@ -614,11 +616,12 @@ module.exports = () => {
 
   /**
    * Update a user's name
-   * TODO update the user
+   * TODO: Error check and ensure full name was entered
    */
   router.post('/users/name', (req, res) => {
     // Isolate variables from the request
     const name = req.body.name;
+    const userId = req.body.userId;
 
     // Error checking
     if (!name) {
@@ -633,9 +636,42 @@ module.exports = () => {
       });
     } else {
       // The name is properly formatted
-      /**
-       * TODO update the user
-       */
+      // Search for user in Mongo
+      User.findById(userId, (err, user) => {
+        // Error finding user
+        if (err) {
+          res.send({
+            success: false,
+            error: err,
+          });
+        // User doesn't exist in Mongo
+        } else if (!user) {
+          res.send({
+            success: false,
+            error: 'Cannot find user.'
+          });
+        } else {
+          // Update user with new name
+          user.name = name;
+
+          // Save in Mongo
+          user.save((errr) => {
+            // Error saving user
+            if (err) {
+              res.send({
+                success: false,
+                error: errr,
+              });
+            } else {
+              // User name updated successfully
+              res.send({
+                success: true,
+                error: '',
+              });
+            }
+          });
+        }
+      });
     }
   });
 

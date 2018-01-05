@@ -23,7 +23,7 @@ class Profile extends Component {
     this.state = {
       name: '',
       email: '',
-      bio: 'Hello this is my bio. It describes who I am and what I am passionate for.',
+      bio: '',
       location: 'University City, PA',
       profilePicture: '',
       error: '',
@@ -46,6 +46,7 @@ class Profile extends Component {
         this.setState({
           name: resp.data.data.name,
           email: resp.data.data.username,
+          bio: resp.data.data.bio,
           error: "",
         });
       } else {
@@ -91,7 +92,7 @@ class Profile extends Component {
             </td>
             <td>
               <span style={{ display: this.state.editBio && "none" }}>
-                { this.state.bio }
+                { this.state.bio || `${this.state.name} has not entered a bio`}
               </span>
             </td>
           </tr>

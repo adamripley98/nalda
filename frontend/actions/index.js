@@ -28,3 +28,11 @@ export function logout() {
     type: 'LOGOUT'
   };
 }
+
+// Dispatch an action to change name
+export function changeFullName(name) {
+  return {
+    type: 'NAMECHANGE',
+    name,
+  };
+}

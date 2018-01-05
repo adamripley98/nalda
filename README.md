@@ -111,7 +111,7 @@ Backend for articles and listings
 
 ## Cam
 - [ ] Nav bar style when no one is logged in
-- [ ] Style curator profile view (`Profile.js`). Add profile picture spot!
+- [ ] Style curator profile view (`Profile.js`). Add profile picture spot! (also add profile pic spot to `Account.js`)
 
 ## Other
 
