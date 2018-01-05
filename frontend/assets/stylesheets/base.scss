@@ -43,6 +43,16 @@ h6,
   color: $gray !important;
 }
 
+// Modular class to style text in the primary color
+.primary-text {
+  color: $primary !important;
+}
+
+// Modular class to style text dark gray
+.dark-gray-text {
+  color: $dark-gray !important;
+}
+
 // Style placeholders as gray (a lighter color than the default)
 .form-control {
   &::-webkit-input-placeholder {

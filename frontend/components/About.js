@@ -4,16 +4,29 @@ import React, { Component } from 'react';
 // Import components
 import Thin from './shared/Thin';
 
-const naldaBio = "Nalda is a centralized source for information, food, activities, and fun on your campus. Currently in beta testing at the University of Pennsylvania, Nalda BLASKDFLADSKFLASDKFLAKSDFLASDKFSDKFLSDKF";
-
 class About extends Component {
   // Renders about component
   // TODO: Nalda needs to send us the information for this component
   render() {
     return (
       <Thin>
-        <p className="marg-top-1 marg-bot-0">
-          { naldaBio }
+        <h3 className="primary-text marg-top-1 marg-bot-1">
+          Hey there, we're Nalda
+        </h3>
+        <p className="dark-gray-text">
+          College is an experience – academic rigors, friendships, and countless new adventures. It is also, however, a home and a way of life.
+        </p>
+        <p className="dark-gray-text">
+          Nalda aims to help college students explore the neighborhoods of their schools by providing specially curated student-to-student information about how to make the most of their college experience. Brunch spots, food trucks, birthday venues, Nalda has it all.
+        </p>
+        <p className="dark-gray-text">
+          But more importantly, Nalda only gives you what you need. It’s like an experienced friend giving you suggestions, except now, you could have that friend with you anywhere, at any time.
+        </p>
+        <p className="dark-gray-text">
+          Thank you for giving us your time, and look forward to more content soon.
+        </p>
+        <p className="dark-gray-text italic marg-bot-2">
+          - The Nalda team
         </p>
       </Thin>
     );
