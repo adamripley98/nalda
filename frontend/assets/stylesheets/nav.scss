@@ -344,6 +344,8 @@
 
 /**
  * Swap the placeholder on smaller screen sizes for a shorter version
+ * Also hide links prompting the user to login and register
+ * NOTE these links can still be accessed by toggling the side menu
  */
 @media screen and (max-width: 648px) {
   .nav .search .form-control {
@@ -354,6 +356,10 @@
     &.large {
       display: none;
     }
+  }
+
+  .sign-in-links {
+    display: none;
   }
 }
 
@@ -366,5 +372,9 @@
     &.large {
       display: none;
     }
+  }
+
+  .sign-in-links {
+    display: none;
   }
 }
