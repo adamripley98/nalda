@@ -1,13 +1,14 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
 /**
- * Listing model
+ * Listing Schema
  * NOTE hours are an object storing opening and closing times for each day of
  * the week
  * TODO reviews need a user ID so that we can render the user's profile picture
  * and handle changes to the user's name
  */
-module.exports = mongoose.model('Listing', {
+const listingSchema = new Schema({
   title: String,
   description: String,
   location: String,
@@ -48,3 +49,11 @@ module.exports = mongoose.model('Listing', {
     }
   ],
 });
+
+// Creates an index allowing for search functionality
+listingSchema.index({"$**": "text"});
+
+/**
+ * Listing model using schema
+ */
+module.exports = mongoose.model('Listing', listingSchema);

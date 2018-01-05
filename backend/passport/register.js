@@ -103,6 +103,6 @@ const isValidPassword = (password, verPassword) => {
 /**
  * Generates hash using bCrypt, storing password safely
  */
-var createHash = (password) => {
+constcreateHash = (password) => {
   return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
 };

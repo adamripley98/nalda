@@ -3,7 +3,7 @@ import axios from 'axios';
 
 /**
  * Renders the search bar on the navbar
- * TODO search functionality
+ * TODO Style search button, clear input field when search is done, display errors on frontend, display content somehow
  */
 class Search extends Component {
   // Constructor method
