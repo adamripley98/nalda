@@ -1,11 +1,18 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-/**
- * Video model
- */
-module.exports = mongoose.model('Video', {
+// Schema contains pertinent information about the video
+const videoSchema = new Schema({
   title: String,
   description: String,
   location: String,
   id: String,
 });
+
+// Creates an index allowing for search functionality
+videoSchema.index({"$**": "text"});
+
+/**
+ * Video model using schema
+ */
+module.exports = mongoose.model('Video', videoSchema);

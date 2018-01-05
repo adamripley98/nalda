@@ -3,6 +3,7 @@
  * NOTE all of these routes are prefixed with "/api"
  * NOTE these routes serve and accept JSON-formatted data
  * TODO file should be split up into many smaller files
+ * TODO when pulling users, should not pull password and other private information
  */
 
 // Import frameworks
@@ -200,6 +201,73 @@ module.exports = () => {
       }
     });
   });
+
+  /**
+   * Pull listings, videos, articles, and curators from the database based off what is searched for
+   * @param search (what term user searched for)
+   */
+  router.post('/search', (req, res) => {
+    // First search through articles
+    Article.find({"$text": { $search: req.body.search }}, (errArticle, articles) => {
+      // Error finding articles
+      if (errArticle) {
+        res.send({
+          success: false,
+          error: errArticle
+        });
+      }
+      // Now search through listings
+      Listing.find({"$text": { $search: req.body.search }}, (errListing, listings) => {
+        // Error finding listings
+        if (errListing) {
+          res.send({
+            success: false,
+            error: errListing,
+          });
+        }
+        // Now search through videos
+        Video.find({"$text": { $search: req.body.search }}, (errVideo, videos) => {
+          // Error finding videos
+          if (errVideo) {
+            res.send({
+              success: false,
+              error: errVideo,
+            });
+          }
+          // Now search through users
+          User.find({"$text": { $search: req.body.search }}, (errUser, users) => {
+            // Error finding users
+            if (errUser) {
+              res.send({
+                success: false,
+                error: errUser,
+              });
+            }
+            // Make sure that users are curators or admins, do not want to be able to search for regular users
+            const curators = [];
+            // Check each user to make sure they are admin or curator before returning
+            users.forEach((user) => {
+              if (user.userType !== 'user') {
+                curators.push(user);
+              }
+            });
+            // If there were no errors, send back all data
+            res.send({
+              success: true,
+              error: '',
+              data: {
+                articles,
+                listings,
+                videos,
+                curators,
+              },
+            });
+          });
+        });
+      });
+    });
+  });
+
 
   /**
    * Pull all videos from the database

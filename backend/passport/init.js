@@ -1,6 +1,6 @@
-var login = require('./login');
-var register = require('./register');
-var User = require('../models/user');
+const login = require('./login');
+const register = require('./register');
+const User = require('../models/user');
 
 /**
  * Initialize the passport routes

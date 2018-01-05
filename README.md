@@ -78,7 +78,7 @@ Backend for articles and listings
 - [ ] Make it easier for an admin to enter hours (some sort of autofill)
 - [ ] Icons for all amenities
 - [X] Get rid of article reducer
-- [ ] Style nav bar so it looks okay when no user is logged in (no user or location)
+- [X] Style nav bar so it looks okay when no user is logged in (no user or location)
 - [X] Create a curator profile view (Should show name, location, bio, contact info, and all content created)
 
 ## Backend
@@ -90,7 +90,11 @@ Backend for articles and listings
 - [X] Password security
 - [ ] HTTPS
 - [ ] Searching functionality
-  * A user should be able to search for `articles`, `videos`, `listings`, and `curators` (those who create content).
+  - [X] Articles
+  - [X] Videos
+  - [X] Listings
+  - [X] Curators
+  - [ ] Location
 - [ ] Recommending content for users to look at
   * To begin they can be location based and random
 - [ ] Domain registration/setup
@@ -112,10 +116,15 @@ Backend for articles and listings
   - [X] Bio
 - [ ] Replace dummy data in `Account.js`
 - [X] Add bio and content to `user` schema
+- [ ] Update listing review schema to have author's id
 
 ## Cam
-- [ ] Nav bar style when no one is logged in
+- [X] Nav bar style when no one is logged in
 - [ ] Style curator profile view (`Profile.js`). Add profile picture spot! (also add profile pic spot to `Account.js`)
+- [ ] Back to home button on individual listing page
+- [ ] Style search button in Nav bar (make it only visible when someone has typed something)
+- [ ] Display search results on the frontend (backend is done)
+- [ ] Load component on `Account.js` and `Profile.js`
 
 ## Other
 

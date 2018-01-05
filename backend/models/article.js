@@ -1,11 +1,8 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-/**
- * Article model
- * Contains pertinent information about article
- */
-module.exports = mongoose.model('Article', {
+// Schema contains pertinent information about the article
+const articleSchema = new Schema({
   title: String,
   subtitle: String,
   image: String,
@@ -15,3 +12,11 @@ module.exports = mongoose.model('Article', {
     type: Schema.Types.ObjectId, ref: 'User',
   }
 });
+
+// Creates an index allowing for search functionality
+articleSchema.index({"$**": "text"});
+
+/**
+ * Article model using schema
+ */
+module.exports = mongoose.model('Article', articleSchema);
