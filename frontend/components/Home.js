@@ -10,8 +10,6 @@ import Loading from './shared/Loading';
 import ErrorMessage from './shared/ErrorMessage';
 import Button from './shared/Button';
 import ArticlePreview from './content/articles/ArticlePreview';
-import AuthCheck from './auth/authCheck';
-
 
 // TODO: Should standardize the size of all the pictures
 /**

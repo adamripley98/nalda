@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 
-
 // Import components
 import Thin from './shared/Thin';
 import ErrorMessage from './shared/ErrorMessage';
@@ -90,7 +89,9 @@ class Admin extends Component {
     return (
       <Thin>
         { /* Redirect the user to home if they are not logged in */ }
-        { (!this.props.userId || this.props.userType !== 'admin') && <Redirect to="/login" /> }
+        {/* {
+          (!this.props.userId) && <Redirect to="/login" />
+        } */}
 
         <form className="thin-form">
           <h2 className="bold marg-bot-1">Admin panel</h2>
@@ -149,6 +150,7 @@ Admin.propTypes = {
   userId: PropTypes.string,
 };
 
+// Allows us to access this.props.userId and this.props.userType
 const mapStateToProps = (state) => {
   return {
     userId: state.authState.userId,
@@ -157,7 +159,8 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = () => {
-  return {};
+  return {
+  };
 };
 
 // Redux config

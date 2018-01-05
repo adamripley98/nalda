@@ -122,7 +122,7 @@ class AppContainer extends Component {
 
                 { /* Admin routes */ }
                 {/* TODO: Route protecting still doesn't completely work */}
-                <Route exact path="/admin" component={Admin}/>
+                <Route exact path="/admin" component={requireAdmin(Admin)}/>
 
                 { /* Routes for articles */ }
                 <Route exact path="/articles" component={Articles} />
