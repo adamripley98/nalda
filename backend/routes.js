@@ -333,7 +333,6 @@ module.exports = () => {
         error,
       });
     } else {
-      const author = {};
       User.findById(userId, (err, user) => {
         if (err) {
           console.log('err finding user', err);
@@ -347,9 +346,7 @@ module.exports = () => {
             error: 'Can not find user.'
           });
         } else {
-          author._id = userId;
-          author.profilePicture = user.profilePicture;
-          author.name = user.name;
+          const author = userId;
           // Creates a new article with given params
           const newArticle = new Article({
             title,
@@ -358,7 +355,6 @@ module.exports = () => {
             body,
             author,
           });
-          console.log('newArticle', newArticle);
           // Save the new article in Mongo
           newArticle.save((errr, article) => {
             if (errr) {
@@ -401,10 +397,32 @@ module.exports = () => {
         });
         // if no errors, returns article along with the date it was created
       } else {
-        res.send({
-          success: true,
-          data: article,
-          timestamp: article._id.getTimestamp(),
+        // Fetch author data
+        User.findById(article.author, (er, user) => {
+          if (er) {
+            // Error finding author
+            res.send({
+              success: false,
+              error: er,
+            });
+          } else if (!user) {
+            res.send({
+              success: false,
+              error: 'Cannot find author.',
+            });
+          } else {
+            // Author found
+            res.send({
+              success: true,
+              data: article,
+              timestamp: article._id.getTimestamp(),
+              author: {
+                name: user.name,
+                profilePicture: user.profilePicture,
+                _id: user._id,
+              }
+            });
+          }
         });
       }
     });
@@ -507,6 +525,7 @@ module.exports = () => {
             error: er,
           });
         } else {
+          // TODO: Update user's content
           // Send the data along if it was successfully stored
           res.send({
             success: true,
@@ -803,10 +822,21 @@ module.exports = () => {
         });
       // Otherwise render user data
       } else {
-        res.send({
-          success: true,
-          error: '',
-          data: user
+        // TODO: Populate user's content
+        Article.find({author: id}, (er, articles) => {
+          // Error checking
+          if (er) {
+            res.send({
+              success: false,
+              error: er,
+            });
+          }
+          res.send({
+            success: true,
+            error: '',
+            data: user,
+            articles,
+          });
         });
       }
     });

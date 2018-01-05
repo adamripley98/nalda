@@ -46,6 +46,7 @@ class Article extends React.Component {
           this.setState({
             error: "",
             article: res.data.data,
+            author: res.data.author,
             time: moment(res.data.timestamp).fromNow(),
             pending: false,
           });
@@ -72,8 +73,8 @@ class Article extends React.Component {
       <div className="author">
         <div className="author-img" style={{ backgroundImage: `url(${this.state.author.profilePicture})` }}/>
         <div className="text">
-          <Link className="name" to={`/users/${this.state.article.author._id}`}>
-            { this.state.article.author.name }
+          <Link className="name" to={`/users/${this.state.author._id}`}>
+            { this.state.author.name }
           </Link>
           <p className="timestamp">
             {this.state.time}
