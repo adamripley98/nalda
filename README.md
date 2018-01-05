@@ -80,6 +80,7 @@ Backend for articles and listings
 - [X] Get rid of article reducer
 - [ ] Style nav bar so it looks okay when no user is logged in (no user or location)
 - [X] Create a curator profile view (Should show name, location, bio, contact info, and all content created)
+- [ ] Update meta tags for all forms of content
 
 ## Backend
 

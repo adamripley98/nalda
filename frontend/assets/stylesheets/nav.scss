@@ -67,7 +67,7 @@
 
       &:focus,
       &:active {
-        border-bottom: 2px solid $secondary;
+        border-bottom: 2px solid $primary;
       }
 
       &::-webkit-input-placeholder {
@@ -256,7 +256,7 @@
 
       &:focus,
       &:active {
-        color: $secondary;
+        color: $primary;
       }
     }
   }
