@@ -4,18 +4,19 @@ import { Redirect, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import PropTypes from 'prop-types';
-import Button from '../shared/Button';
-import Loading from '../shared/Loading';
+import autosize from 'autosize';
 
 // Import actions
 import {changeFullName} from '../../actions/index.js';
 
 // Import components
 import ErrorMessage from '../shared/ErrorMessage';
+import Button from '../shared/Button';
+import Loading from '../shared/Loading';
 
 /**
  * Component to render a user's account information
- * TODO pull user data from the backend
+ * TODO edit location
  */
 class Account extends Component {
   /**
@@ -85,6 +86,9 @@ class Account extends Component {
     } else if (this.state.editBio) {
       // Focus on the bio text area upon clicking edit
       this.bioInput.focus();
+
+      // Autosize textareas
+      autosize(document.querySelectorAll('textarea'));
     }
   }
 
@@ -210,9 +214,7 @@ class Account extends Component {
             <td>
               { this.state.email }
             </td>
-            <td>
-              <i className="fa fa-pencil" aria-hidden="true" />
-            </td>
+            <td />
           </tr>
           <tr>
             <td className="bold">
@@ -220,14 +222,14 @@ class Account extends Component {
             </td>
             <td>
               { this.state.type }
+              <div
+                className="gray marg-top-1"
+                style={{ display: this.state.adminPopover ? "inherit" : "none" }}>
+                A user can either be an admin, curator, or general user. Only Nalda administrators can change your account type.
+              </div>
             </td>
             <td>
               <i className="fa fa-question" aria-hidden="true" onClick={ this.handleAdminClick } />
-              <div
-                className="popover right"
-                style={{ display: this.state.adminPopover ? "inherit" : "none" }}>
-                A user can either be an admin, curator, or general user.
-              </div>
             </td>
           </tr>
           <tr>
@@ -236,7 +238,7 @@ class Account extends Component {
             </td>
             <td>
               <span style={{ display: this.state.editBio && "none" }}>
-                { this.state.bio || 'Add a bio here...' }
+                { this.state.bio || <span className="gray-text">Add a bio here...</span> }
               </span>
               <textarea
                 className="form-control"

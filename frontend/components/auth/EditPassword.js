@@ -7,7 +7,7 @@ import axios from 'axios';
 
 // Import components
 import ErrorMessage from '../shared/ErrorMessage';
-import Button from '../shared/Button';
+import Thin from '../shared/Thin';
 
 /**
  * Component for a user to edit their password
@@ -117,73 +117,65 @@ class EditPassword extends Component {
         { !this.props.userId && <Redirect to="/login" /> }
         { this.state.redirect && <Redirect to="/account" /> }
 
-        <div className="container">
-          <div className="row">
-            <div className="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-              <form className="thin-form" onSubmit={ this.handleSubmit }>
-                <h4 className="bold marg-bot-1">
-                  Edit password
-                </h4>
+        <Thin>
+          <form className="thin-form" onSubmit={ this.handleSubmit }>
+            <h4 className="bold marg-bot-1">
+              Edit password
+            </h4>
 
-                { /* Render an error if there is one */}
-                { this.state.error && <ErrorMessage error={ this.state.error } /> }
+            { /* Render an error if there is one */}
+            { this.state.error && <ErrorMessage error={ this.state.error } /> }
 
-                <label>
-                  Old password
-                </label>
-                <input
-                  type="password"
-                  className="form-control marg-bot-1"
-                  value={ this.state.oldPassword }
-                  onChange={ this.handleChangeOldPassword }
-                />
-                <label>
-                  New password
-                </label>
-                <input
-                  type="password"
-                  className="form-control marg-bot-1"
-                  value={ this.state.newPassword }
-                  onChange={ this.handleChangeNewPassword }
-                />
-                <label>
-                  Confirm new password
-                </label>
-                <input
-                  type="password"
-                  className="form-control marg-bot-1"
-                  value={ this.state.newPasswordConfirm }
-                  onChange={ this.handleChangeNewPasswordConfirm }
-                />
-                <input
-                  type="submit"
-                  value={ this.state.pending ? "Updating password..." : "Update password" }
-                  className={
-                    (this.state.pending) || (
-                      this.state.oldPassword &&
-                      this.state.newPassword &&
-                      this.state.oldPassword !== this.state.newPassword &&
-                      this.state.newPassword === this.state.newPasswordConfirm
-                    ) ? (
-                      "btn btn-primary"
-                    ) : (
-                      "btn btn-primary disabled"
-                    )
-                  }
-                />
-                <div className="marg-top-1">
-                  <Link to="/todo">
-                    Forgot your password?
-                  </Link>
-                </div>
-              </form>
-
-              <div className="marg-top-1">
-                <Button />
-              </div>
+            <label>
+              Old password
+            </label>
+            <input
+              type="password"
+              className="form-control marg-bot-1"
+              value={ this.state.oldPassword }
+              onChange={ this.handleChangeOldPassword }
+            />
+            <label>
+              New password
+            </label>
+            <input
+              type="password"
+              className="form-control marg-bot-1"
+              value={ this.state.newPassword }
+              onChange={ this.handleChangeNewPassword }
+            />
+            <label>
+              Confirm new password
+            </label>
+            <input
+              type="password"
+              className="form-control marg-bot-1"
+              value={ this.state.newPasswordConfirm }
+              onChange={ this.handleChangeNewPasswordConfirm }
+            />
+            <input
+              type="submit"
+              value={ this.state.pending ? "Updating password..." : "Update password" }
+              className={
+                (this.state.pending) || (
+                  this.state.oldPassword &&
+                  this.state.newPassword &&
+                  this.state.oldPassword !== this.state.newPassword &&
+                  this.state.newPassword === this.state.newPasswordConfirm
+                ) ? (
+                  "btn btn-primary"
+                ) : (
+                  "btn btn-primary disabled"
+                )
+              }
+            />
+            <div className="marg-top-1">
+              <Link to="/todo">
+                Forgot your password?
+              </Link>
             </div>
-          </div>
-        </div>
+          </form>
+        </Thin>
       </div>
     );
   }

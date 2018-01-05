@@ -2,7 +2,7 @@
  * Handles all backend routes
  * NOTE all of these routes are prefixed with "/api"
  * NOTE these routes serve and accept JSON-formatted data
- * TODO: file should be split up into many smaller files
+ * TODO file should be split up into many smaller files
  */
 
 // Import frameworks
