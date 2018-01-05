@@ -251,6 +251,7 @@ module.exports = () => {
                 curators.push(user);
               }
             });
+            // TODO: Display all of their content as well
             // If there were no errors, send back all data
             res.send({
               success: true,
@@ -267,7 +268,6 @@ module.exports = () => {
       });
     });
   });
-
 
   /**
    * Pull all videos from the database
@@ -289,6 +289,96 @@ module.exports = () => {
         });
       }
     });
+  });
+
+  /**
+   * Pull a specific video from the database
+   */
+  router.get('/videos/:id', (req, res) => {
+    // Find the id from the url
+    const id = req.params.id;
+
+    // Pull specific video from mongo
+    Video.findById(id, (err, video) => {
+      if (err) {
+        res.send({
+          success: false,
+          error: err,
+        });
+      // If the video doesn't exist
+      } else if (!video) {
+        res.send({
+          success: false,
+          error: "Video not found",
+        });
+      // if no errors, return video
+      } else {
+        res.send({
+          success: true,
+          data: video,
+        });
+      }
+    });
+  });
+
+
+  /**
+   * Route to handle a new article submission
+   * @param title
+   * @param url
+   * @param description
+   * TODO error checking
+   */
+  router.post('/videos/new', (req, res) => {
+    // Isolate variables
+    const title = req.body.title;
+    const url = req.body.url;
+    const description = req.body.description;
+
+    let error = "";
+    const urlRegexp = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
+
+    // Perform error checking on variables
+    if (!title) {
+      error = "Title must be populated.";
+    } else if (!description) {
+      error = "Subtitle must be populated.";
+    } else if (!urlRegexp.test(url)) {
+      error = "Image must be a valid URL to an image.";
+    }
+
+    // If there was an error or not
+    if (error) {
+      res.send({
+        success: false,
+        error,
+      });
+    } else {
+      // Create a new video with given data
+      // TODO: Add location
+      const newVideo = new Video({
+        title,
+        url,
+        description,
+      });
+
+      // Save the new video in Mongo
+      newVideo.save((errVideo, video) => {
+        if (errVideo) {
+          // If there was an error saving the video
+          res.send({
+            success: false,
+            error: errVideo,
+          });
+        } else {
+          // Successfully send back data
+          res.send({
+            success: true,
+            data: video,
+          });
+        }
+      });
+    }
   });
 
   /**
@@ -402,9 +492,9 @@ module.exports = () => {
         error,
       });
     } else {
+      // Find the author
       User.findById(userId, (err, user) => {
         if (err) {
-          console.log('err finding user', err);
           res.send({
             success: false,
             error: 'Error finding author ' + err
@@ -433,6 +523,7 @@ module.exports = () => {
                 error: errr,
               });
             } else {
+              // Successfully send back data
               res.send({
                 success: true,
                 data: article,

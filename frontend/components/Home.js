@@ -127,13 +127,13 @@ class Home extends React.Component {
    * TODO render preview?
    */
   renderVideos() {
-    // If there are vidoes to render
+    // If there are videos to render
     if (this.state.videos && this.state.videos.length) {
       return this.state.videos.map((video) => (
         <div className="col-6 col-lg-3" key={ video._id } >
           <Link to={ `/videos/${video._id}` } >
             <div className="article-preview">
-              <img className="img-fluid" alt={video.name} src={video.url} />
+              <img className="img-fluid" alt={video.title} src={`https://img.youtube.com/vi/${video.url.substring(video.url.indexOf("v=") + 2)}/0.jpg`} />
               <h2 className="title">
                 {video.name}
               </h2>

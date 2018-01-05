@@ -6,7 +6,7 @@ const videoSchema = new Schema({
   title: String,
   description: String,
   location: String,
-  id: String,
+  url: String,
 });
 
 // Creates an index allowing for search functionality
