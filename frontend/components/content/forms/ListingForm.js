@@ -11,6 +11,7 @@ import Medium from '../../shared/Medium';
 /**
  * Component to render the new article form
  * TODO integrate with website
+ * TODO Fix hours state issue
  */
 class ListingForm extends React.Component {
   // Constructor method
@@ -311,11 +312,14 @@ class ListingForm extends React.Component {
                 </p>
                 <input
                 type="time"
+                // Default value is monday's value
+                value={this.state.hours.tuesday.start || this.state.hours.monday.start}
                 onChange={(e) => { this.handleChangeHours(e, "start", "tuesday");}}
                 className="form-control"
               />
                 <input
                 type="time"
+                value={this.state.hours.tuesday.finish || this.state.hours.monday.finish}
                 onChange={(e) => { this.handleChangeHours(e, "finish", "tuesday");}}
                 className="form-control"
               />
@@ -326,11 +330,13 @@ class ListingForm extends React.Component {
                 </p>
                 <input
                   type="time"
+                  value={this.state.hours.wednesday.start || this.state.hours.monday.start}
                   onChange={(e) => { this.handleChangeHours(e, "start", "wednesday");}}
                   className="form-control"
                 />
                 <input
                   type="time"
+                  value={this.state.hours.wednesday.finish || this.state.hours.monday.finish}
                   onChange={(e) => { this.handleChangeHours(e, "finish", "wednesday");}}
                   className="form-control"
                 />
@@ -341,11 +347,13 @@ class ListingForm extends React.Component {
                 </p>
                 <input
                   type="time"
+                  value={this.state.hours.thursday.start || this.state.hours.monday.start}
                   onChange={(e) => { this.handleChangeHours(e, "start", "thursday");}}
                   className="form-control"
                 />
                 <input
                   type="time"
+                  value={this.state.hours.thursday.finish || this.state.hours.monday.finish}
                   onChange={(e) => { this.handleChangeHours(e, "finish", "thursday");}}
                   className="form-control"
                 />
@@ -356,11 +364,13 @@ class ListingForm extends React.Component {
                 </p>
                 <input
                   type="time"
+                  value={this.state.hours.friday.start || this.state.hours.monday.start}
                   onChange={(e) => { this.handleChangeHours(e, "start", "friday");}}
                   className="form-control"
                 />
                 <input
                   type="time"
+                  value={this.state.hours.friday.finish || this.state.hours.monday.finish}
                   onChange={(e) => { this.handleChangeHours(e, "finish", "friday");}}
                   className="form-control"
                 />
@@ -371,11 +381,13 @@ class ListingForm extends React.Component {
                 </p>
                 <input
                   type="time"
+                  value={this.state.hours.saturday.start || this.state.hours.monday.start}
                   onChange={(e) => { this.handleChangeHours(e, "start", "saturday");}}
                   className="form-control"
                 />
                 <input
                   type="time"
+                  value={this.state.hours.saturday.finish || this.state.hours.monday.finish}
                   onChange={(e) => { this.handleChangeHours(e, "finish", "saturday");}}
                   className="form-control"
                 />
@@ -386,11 +398,13 @@ class ListingForm extends React.Component {
                 </p>
                 <input
                   type="time"
+                  value={this.state.hours.sunday.start || this.state.hours.monday.start}
                   onChange={(e) => { this.handleChangeHours(e, "start", "sunday");}}
                   className="form-control"
                 />
                 <input
                   type="time"
+                  value={this.state.hours.sunday.finish || this.state.hours.monday.finish}
                   onChange={(e) => { this.handleChangeHours(e, "finish", "sunday");}}
                   className="form-control"
                 />
