@@ -81,7 +81,16 @@ class Nav extends Component {
               <div className="user-img" />
             </div>
           ) : (
-            <div className="user-info" />
+            <div className="user-info">
+              <div className="sign-in-links">
+                <Link to="/login" className="login">
+                  Login
+                </Link>
+                <Link to="/register" className="register">
+                  Register
+                </Link>
+              </div>
+            </div>
           )
         }
 

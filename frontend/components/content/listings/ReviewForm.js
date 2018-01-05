@@ -9,6 +9,7 @@ import axios from 'axios';
 /**
  * Component to render the form to review applications
  * TODO handle submit
+ * TODO only let a user leave 1 review on a listing
  */
 class ReviewForm extends React.Component {
   /**
