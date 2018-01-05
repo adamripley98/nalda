@@ -595,7 +595,7 @@ module.exports = () => {
         // Resave listing in Mongo
         listing.save((er) => {
           // Error saving listing
-          if (err) {
+          if (er) {
             res.send({
               success: false,
               error: 'Error saving review' + er,
@@ -645,6 +645,7 @@ module.exports = () => {
   router.post('/users/bio', (req, res) => {
     // Isolate variables from the request
     const bio = req.body.bio;
+    const userId = req.body.userId;
 
     // Error checking
     if (bio.length > 500) {
@@ -653,9 +654,42 @@ module.exports = () => {
         error: "Bio length cannot exceed 500 characters.",
       });
     } else {
-      /**
-       * TODO make the request
-       */
+      // Search for user in Mongo
+      User.findById(userId, (err, user) => {
+        // Error finding user
+        if (err) {
+          res.send({
+            success: false,
+            error: err,
+          });
+        // User doesn't exist in Mongo
+        } else if (!user) {
+          res.send({
+            success: false,
+            error: 'Cannot find user.'
+          });
+        } else {
+          // Update user with new bio
+          user.bio = bio;
+
+          // Save in Mongo
+          user.save((errr) => {
+            // Error saving user
+            if (err) {
+              res.send({
+                success: false,
+                error: errr,
+              });
+            } else {
+              // User bio updated successfully
+              res.send({
+                success: true,
+                error: '',
+              });
+            }
+          });
+        }
+      });
     }
   });
 

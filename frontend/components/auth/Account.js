@@ -26,7 +26,7 @@ class Account extends Component {
       name: '',
       email: '',
       type: '',
-      bio: 'Hello this is my bio. It describes who I am and what I am passionate for.',
+      bio: '',
       location: 'University City, PA',
       profilePicture: '',
       error: '',
@@ -60,6 +60,7 @@ class Account extends Component {
           name: resp.data.data.name,
           email: resp.data.data.username,
           type: resp.data.data.userType,
+          bio: resp.data.data.bio,
           error: "",
         });
       }
@@ -122,9 +123,19 @@ class Account extends Component {
    */
   handleBioClick() {
     if (this.state.editBio) {
-      /**
-       * TODO save the updated bio
-       */
+      // Save the updated bio
+      axios.post('/api/users/bio', {
+        userId: this.props.userId,
+        bio: this.state.bio,
+      })
+      .then((resp) => {
+        // If there was an error, display it
+        if (!resp.data.success) {
+          this.setState({
+            error: resp.data.error,
+          });
+        }
+      });
     }
 
     // Update the state
@@ -207,7 +218,7 @@ class Account extends Component {
             </td>
             <td>
               <span style={{ display: this.state.editBio && "none" }}>
-                { this.state.bio }
+                { this.state.bio || 'Add a bio here...' }
               </span>
               <textarea
                 className="form-control"
