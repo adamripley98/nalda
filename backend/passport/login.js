@@ -1,32 +1,36 @@
 const express = require('express');
-var router = express.Router();
+const router = express.Router();
 
-// Backend file for logging in existing users
+/**
+ * Backend file for logging in existing users
+ */
 module.exports = (passport) => {
   router.post('/login', (req, res, next) => {
     // Passport method for authenticating users using local strategy
-    passport.authenticate('local', (err, user) => {
-      // Sending back error
-      if (err) {
+    passport.authenticate('local', (passportErr, user) => {
+      if (passportErr) {
+        // If there was an error in the authentication
         res.send({
           success: false,
-          error: err,
+          error: passportErr,
         });
-      // If the user doesn't actually exist
       } else if (!user) {
+        // If the user doesn't actually exist
         res.send({
           success: false,
           error: 'Invalid email or password.'
         });
       }
+
       // Built in passport login method
-      req.logIn(user, (errr) => {
-        if (errr) {
+      req.logIn(user, (loginErr) => {
+        if (loginErr) {
           res.send({
             success: false,
-            error: errr,
+            error: loginErr,
           });
         }
+
         // Finally, if there is no error, send back user
         res.send({
           success: true,

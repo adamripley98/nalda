@@ -1,13 +1,14 @@
-var User = require('../models/user');
-var bCrypt = require('bcrypt-nodejs');
 const express = require('express');
-var router = express.Router();
+const router = express.Router();
 
-// Backend file for logging users out
+/**
+ * Backend file for logging users out
+ */
 module.exports = (passport) => {
   router.post('/logout', (req, res) => {
     // Passport specific logout
     req.logout();
+
     // Destroying session
     req.session.destroy((err) => {
       if (err) {
@@ -17,7 +18,8 @@ module.exports = (passport) => {
           error: err,
         });
       }
-      // Logout successful
+
+      // If the logout was successful
       res.send({
         success: true,
         error: '',
@@ -25,5 +27,6 @@ module.exports = (passport) => {
     });
   });
 
-		 return router;
+  // Return the router
+  return router;
 };

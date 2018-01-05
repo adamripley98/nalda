@@ -1,9 +1,16 @@
 var mongoose = require('mongoose');
 
-// Article model, contains pertinent information about article
+/**
+ * Listing model
+ * NOTE hours are an object storing opening and closing times for each day of
+ * the week
+ * TODO reviews need a user ID so that we can render the user's profile picture
+ * and handle changes to the user's name
+ */
 module.exports = mongoose.model('Listing', {
   title: String,
   description: String,
+  location: String,
   image: String,
   rating: Number,
   hours: {},

@@ -1,8 +1,11 @@
 var mongoose = require('mongoose');
 
-// Article model, contains pertinent information about article
+/**
+ * Video model
+ */
 module.exports = mongoose.model('Video', {
   title: String,
   description: String,
+  location: String,
   id: String,
 });
