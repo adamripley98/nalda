@@ -2,33 +2,115 @@
  * Styles for the footer at the bottom of every page
  */
 footer {
-  p {
-    margin-bottom: 0rem;
-  }
-  
   .footer-top {
-    padding: 1rem 0rem 2rem 0rem;
+    display: flex;
+    padding: 1rem 1rem 2rem 1rem;
     border-top: 1px solid $border;
     background: white;
-    color: $dark-gray;
+    color: $gray;
 
-    .footer-nav {
-      .link {
-        display: block;
+    .logo {
+      color: black !important;
+      font-weight: bold;
+      font-size: 1.4rem;
+      display: inline-block;
+      width: auto;
+      margin-right: 2rem;
 
-        a {
-          color: $gray;
+      img {
+        width: 2rem;
+        height: 2rem;
+        margin-right: 0.6rem;
+      }
+    }
 
-          &:hover {
-            color: $dark-gray;
-          }
+    .credits {
+      margin-top: 0.4rem;
+      display: inline-block;
+      width: auto;
+    }
+
+    .links {
+      margin-top: 0.4rem;
+      flex: 1;
+      text-align: right;
+
+      a {
+        text-align: right;
+        display: inline-block;
+        width: auto;
+        margin-left: 1rem;
+        color: $gray;
+
+        &:hover,
+        &:focus,
+        &:active {
+          color: $dark-gray;
         }
       }
     }
   }
 
   .footer-bottom {
+    padding: 0rem 1rem;
     color: $gray;
     font-size: 0.8rem;
+    margin-bottom: 1rem;
+  }
+}
+
+/**
+ * Adjust the footer to smaller screen sizes by making the smaller sections
+ * each take up the full width of the screen
+ */
+@media screen and (max-width: 892px) {
+  footer .footer-top {
+    display: block;
+
+    .credits {
+      margin-top: 1rem;
+      width: 100%;
+    }
+
+    .links {
+      margin-top: 1rem;
+      width: 100%;
+      text-align: left;
+
+      a {
+        display: block;
+        width: 100%;
+        text-align: left;
+        margin-bottom: 0.2rem;
+        margin-left: 0rem;
+        margin-right: auto;
+      }
+    }
+  }
+}
+
+@media screen and (max-device-width: 892px) {
+  footer .footer-top {
+    display: block;
+
+    .credits {
+      margin-top: 1rem;
+      width: 100%;
+    }
+
+    .links {
+      margin-top: 1rem;
+      width: 100%;
+      text-align: left;
+
+      a {
+        display: block;
+        width: 100%;
+        text-align: left;
+        margin-bottom: 0.2rem;
+        margin-left: 0rem;
+        margin-right: auto;
+      }
+    }
   }
 }
