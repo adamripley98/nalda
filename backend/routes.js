@@ -321,7 +321,7 @@ module.exports = () => {
       error = "Subtitle must be populated.";
     } else if (!image) {
       error = "Image must be populated.";
-    } else if (!body) {
+    } else if (!body || !body.length) {
       error = "Body must be populated.";
     } else if (!urlRegexp.test(image)) {
       error = "Image must be a valid URL to an image.";
@@ -348,6 +348,7 @@ module.exports = () => {
           });
         } else {
           const author = userId;
+
           // Creates a new article with given params
           const newArticle = new Article({
             title,
@@ -356,6 +357,7 @@ module.exports = () => {
             body,
             author,
           });
+
           // Save the new article in Mongo
           newArticle.save((errr, article) => {
             if (errr) {
@@ -550,7 +552,7 @@ module.exports = () => {
     if (!req.body.userId) {
       res.send({
         success: false,
-        error: 'Must be logged in to post reviews!'
+        error: 'You must be logged in in order to leave a review on a listing.'
       });
     }
 

@@ -19,7 +19,12 @@ class ArticleForm extends React.Component {
       title: "",
       subtitle: "",
       image: "",
-      body: "",
+      body: [
+        {
+          type: "text",
+          body: "",
+        },
+      ],
       error: "",
       redirectToHome: false,
     };
@@ -30,6 +35,7 @@ class ArticleForm extends React.Component {
     this.handleChangeImage = this.handleChangeImage.bind(this);
     this.handleChangeBody = this.handleChangeBody.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.addNewComponent = this.addNewComponent.bind(this);
   }
 
   // Handle resizing textarea
@@ -66,9 +72,35 @@ class ArticleForm extends React.Component {
   }
 
   // Helper method to handle a change to the body state
-  handleChangeBody(event) {
-    this.setState({
+  handleChangeBody(event, index) {
+    // Manipulate the correct component object
+    const bodyObj = this.state.body;
+    bodyObj[index] = {
+      type: bodyObj[index].type,
       body: event.target.value,
+    };
+
+    // Update the state
+    this.setState({
+      body: bodyObj,
+    });
+  }
+
+  // Helper method to add a new component to the body
+  addNewComponent() {
+    // Create the new component
+    const component = {
+      type: "text",
+      body: "",
+    };
+
+    // Find and update the body object
+    const bodyObj = this.state.body;
+    bodyObj.push(component);
+
+    // Update the state
+    this.setState({
+      body: bodyObj,
     });
   }
 
@@ -76,6 +108,9 @@ class ArticleForm extends React.Component {
   handleSubmit(event) {
     // Prevent the default submit action
     event.preventDefault();
+
+    console.log("STATE");
+    console.log(this.state);
 
     // Begin error checking
     if (!this.state.title) {
@@ -98,15 +133,13 @@ class ArticleForm extends React.Component {
       this.setState({
         error: "Subtitle must be between 4 and 200 characters long.",
       });
-    } else if (this.state.body.length < 4) {
-      this.setState({
-        error: "Body must be at least 4 characters long",
-      });
     } else {
       // Set the error to the empty string
       this.setState({
         error: "",
       });
+
+      console.log("NO ERRORS");
 
       // Otherwise, the request is properly formulated. Post request to routes.js
       axios.post('/api/articles/new', {
@@ -197,19 +230,27 @@ class ArticleForm extends React.Component {
               <label>
                 Body
               </label>
-              <textarea
-                name="body"
-                type="text"
-                className="form-control marg-bot-1"
-                rows="1"
-                value={ this.state.body }
-                onChange={ this.handleChangeBody }
-              />
+              {
+                this.state.body.map((component, index) => (
+                  <textarea
+                    name="body"
+                    type="text"
+                    className="form-control marg-bot-1"
+                    rows="1"
+                    key={ index }
+                    value={ this.state.body[index].body }
+                    onChange={ (e) => this.handleChangeBody(e, index) }
+                  />
+                ))
+              }
+              <div className="btn btn-secondary marg-bot-1" onClick={ this.addNewComponent }>
+                Add new component
+              </div>
               <input
                 type="submit"
                 value="Create Article"
                 className={
-                  this.state.title && this.state.subtitle && this.state.body ? (
+                  this.state.title && this.state.subtitle && this.state.body[0].body ? (
                     "btn btn-primary full-width"
                   ) : (
                     "btn btn-primary disabled full-width"
@@ -238,8 +279,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = () => {
-  return {
-  };
+  return {};
 };
 
 // Redux config

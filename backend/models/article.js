@@ -9,8 +9,12 @@ module.exports = mongoose.model('Article', {
   title: String,
   subtitle: String,
   image: String,
-  location: String,
-  body: String,
+  body: [
+    {
+      type: String,
+      body: String,
+    }
+  ],
   author: {
     type: Schema.Types.ObjectId, ref: 'User',
   }

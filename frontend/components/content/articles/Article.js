@@ -45,7 +45,7 @@ class Article extends React.Component {
         if (res.data.success) {
           this.setState({
             error: "",
-            article: res.data.data,
+            ...res.data.data,
             author: res.data.author,
             time: moment(res.data.timestamp).fromNow(),
             pending: false,
@@ -77,7 +77,7 @@ class Article extends React.Component {
             { this.state.author.name }
           </Link>
           <p className="timestamp">
-            {this.state.time}
+            { this.state.time }
           </p>
         </div>
       </div>
@@ -95,19 +95,17 @@ class Article extends React.Component {
                 <Loading />
               ) : (
                 <div>
-                  {
-                    this.state.error && <ErrorMessage error={this.state.error} />
-                  }
+                  <ErrorMessage error={this.state.error} />
                   <h1>
-                    { this.state.article.title }
+                    { this.state.title }
                   </h1>
                   <h3>
                     { this.state.subtitle }
                   </h3>
                   { this.renderAuthor() }
-                  <img src={ this.state.article.image } alt={ this.state.article.title } className="img-fluid" />
+                  <img src={ this.state.image } alt={ this.state.title } className="img-fluid" />
                   <p>
-                    { this.state.article.body }
+                    { this.state.body }
                   </p>
                   <div className="space-1" />
                   <Button />
