@@ -21,7 +21,7 @@ class ArticleForm extends React.Component {
       image: "",
       body: [
         {
-          type: "text",
+          componentType: "text",
           body: "",
         },
       ],
@@ -76,7 +76,7 @@ class ArticleForm extends React.Component {
     // Manipulate the correct component object
     const bodyObj = this.state.body;
     bodyObj[index] = {
-      type: bodyObj[index].type,
+      componentType: bodyObj[index].componentType,
       body: event.target.value,
     };
 
@@ -90,7 +90,7 @@ class ArticleForm extends React.Component {
   addNewComponent() {
     // Create the new component
     const component = {
-      type: "text",
+      componentType: "text",
       body: "",
     };
 
@@ -108,9 +108,6 @@ class ArticleForm extends React.Component {
   handleSubmit(event) {
     // Prevent the default submit action
     event.preventDefault();
-
-    console.log("STATE");
-    console.log(this.state);
 
     // Begin error checking
     if (!this.state.title) {
@@ -138,8 +135,6 @@ class ArticleForm extends React.Component {
       this.setState({
         error: "",
       });
-
-      console.log("NO ERRORS");
 
       // Otherwise, the request is properly formulated. Post request to routes.js
       axios.post('/api/articles/new', {
@@ -243,9 +238,15 @@ class ArticleForm extends React.Component {
                   />
                 ))
               }
-              <div className="btn btn-secondary marg-bot-1" onClick={ this.addNewComponent }>
-                Add new component
+              <div className="buttons marg-bot-1">
+                <div className="btn btn-secondary marg-bot-1" onClick={ this.addNewComponent }>
+                  Add new text
+                </div>
+                <div className="btn btn-secondary marg-bot-1" onClick={ this.addNewComponent }>
+                  Add new image
+                </div>
               </div>
+
               <input
                 type="submit"
                 value="Create Article"

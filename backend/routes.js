@@ -325,6 +325,8 @@ module.exports = () => {
       error = "Body must be populated.";
     } else if (!urlRegexp.test(image)) {
       error = "Image must be a valid URL to an image.";
+    } else if (typeof body !== "object" || !Array.isArray(body)) {
+      error = "Body must be an array";
     }
 
     // If there was an error or not
@@ -336,7 +338,6 @@ module.exports = () => {
     } else {
       User.findById(userId, (err, user) => {
         if (err) {
-          console.log('err finding user', err);
           res.send({
             success: false,
             error: 'Error finding author ' + err
@@ -344,18 +345,16 @@ module.exports = () => {
         } else if (!user) {
           res.send({
             success: false,
-            error: 'Can not find user.'
+            error: 'User not found.'
           });
         } else {
-          const author = userId;
-
           // Creates a new article with given params
           const newArticle = new Article({
             title,
             subtitle,
             image,
             body,
-            author,
+            author: userId,
           });
 
           // Save the new article in Mongo
@@ -364,7 +363,7 @@ module.exports = () => {
               // If there was an error saving the article
               res.send({
                 success: false,
-                error: errr,
+                error: errr.message,
               });
             } else {
               res.send({
@@ -390,15 +389,16 @@ module.exports = () => {
       if (err) {
         res.send({
           success: false,
-          error: err,
+          error: err.message,
         });
       // If the article doesn't exist
       } else if (!article) {
         res.send({
           success: false,
-          error: "Article not found",
+          error: "Article not found.",
         });
-        // if no errors, returns article along with the date it was created
+
+        // If no errors, returns article along with the date it was created
       } else {
         // Fetch author data
         User.findById(article.author, (er, user) => {

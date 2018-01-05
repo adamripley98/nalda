@@ -8,6 +8,7 @@ import Button from '../../shared/Button';
 import axios from 'axios';
 import Loading from '../../shared/Loading';
 import ErrorMessage from '../../shared/ErrorMessage';
+import NotFoundSection from '../../NotFoundSection';
 
 /**
  * Component to render an article
@@ -27,7 +28,10 @@ class Article extends React.Component {
         _id: "",
         profilePicture: "https://scontent-lga3-1.xx.fbcdn.net/v/t31.0-8/19800933_1555674071163224_6756529645784213707_o.jpg?oh=d3ce5cc19160312229b760b7448d3c67&oe=5A8FEE3B",
       },
-      article: {},
+      title: "",
+      subtitle: "",
+      image: "",
+      body: [],
       pending: true,
     };
     // Bind this to helper methods
@@ -86,6 +90,18 @@ class Article extends React.Component {
 
   // Render the component
   render() {
+    // If the article is not found
+    if (!this.state.pending && !this.state.title) {
+      return (
+        <NotFoundSection
+          title="Article not found"
+          content="Uh-oh! Looks like this article you are looking for was either moved or does not exist."
+          url="/articles"
+          urlText="Back to all articles"
+        />
+      );
+    }
+
     return (
       <div className="container">
         <div className="row">
@@ -104,9 +120,13 @@ class Article extends React.Component {
                   </h3>
                   { this.renderAuthor() }
                   <img src={ this.state.image } alt={ this.state.title } className="img-fluid" />
-                  <p>
-                    { this.state.body }
-                  </p>
+                  {
+                    this.state.body.map((component, index) => (
+                      <p key={ index }>
+                        { component.body }
+                      </p>
+                    ))
+                  }
                   <div className="space-1" />
                   <Button />
                 </div>

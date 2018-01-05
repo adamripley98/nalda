@@ -11,7 +11,7 @@ module.exports = mongoose.model('Article', {
   image: String,
   body: [
     {
-      type: String,
+      componentType: String,
       body: String,
     }
   ],
