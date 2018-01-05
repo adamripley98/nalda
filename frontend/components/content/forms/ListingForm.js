@@ -145,7 +145,6 @@ class ListingForm extends React.Component {
           !currentHours[day].finish ||
           currentHours[day].finish < event.target.value
         )) {
-      console.log(event.target.value);
       currentHours[day].finish = event.target.value;
     }
     this.setState({
@@ -190,6 +189,7 @@ class ListingForm extends React.Component {
         rating: this.state.rating,
         price: this.state.price,
         website: this.state.website,
+        amenities: this.state.amenities,
       })
         .then(() => {
           /**

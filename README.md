@@ -33,10 +33,12 @@ Backend for articles and listings
 - [ ] Add author field to every form of content
   - [ ] Videos
   - [ ] Listings
-  - [ ] Articles
+  - [X] Articles
 - [ ] Curator show pages
   * This should display all of the content a curator has written
 - [X] Default create users with type `user`. Admin can switch them to `admin` or `curator`
+- [ ] Give users ability to set and change profile pictures, update this in new article/listing/video backend
+- [ ] Make it so you can click and view author pages, author page should also list all their articles
 
 ## Listings
 
@@ -44,8 +46,8 @@ Backend for articles and listings
 - [ ] Store reviews / comments on listings
 - [ ] Form for adding reviews
 - [ ] Complete listing view
-- [ ] Complete listing backend (already stores listing in Mongo, just need to populate to home screen.
-- [ ] Figure out why listings page is not displaying
+- [X] Complete listing backend (already stores listing in Mongo, just need to populate to home screen.
+- [X] Figure out why listings page is not displaying
 
 ## Videos
 
@@ -58,7 +60,7 @@ Backend for articles and listings
 - [ ] Video styling
 - [ ] Login/Register/Reset/Edit Account Form styling
 - [ ] Sendgrid configuration for sending emails
-- [ ] Individual listing view
+- [X] Individual listing view
 - [ ] Ajax search suggestions
 - [ ] Routing 	
 - [ ] User show pages
@@ -70,10 +72,13 @@ Backend for articles and listings
 - [ ] Ajax search suggestions
 - [ ] Incorporate Nalda logo and other advice from Edward
 - [ ] Home page needs to have other ways of sorting: most popular, by category, by author?, etc
-- [ ] Side Nav Bar should close once an option is clicked
+- [X] Side Nav Bar should close once an option is clicked
 - [ ] Nav bar should only show name and location when a user is logged in
 - [ ] Make it easier for an admin to enter hours (some sort of autofill)
 - [ ] Icons for all amenities
+- [X] Get rid of article reducer
+- [ ] Style nav bar so it looks okay when no user is logged in (no user or location)
+- [ ] Create a curator profile view (Should show name, location, bio, contact info, and all content created)
 
 ## Backend
 
@@ -95,17 +100,35 @@ Backend for articles and listings
   - [ ] Videos
   - [ ] Listings
   - [X] Articles
+- [ ] Split up `routes.js` into many smaller files
+- [ ] Sort reviews functionality (time, rating)
+- [ ] Deal with location
+- [ ] Curator profile view
+- [ ] Change/forgot password backend
+- [ ] Replace dummy location, profile picture, and bio data
+- [ ] Replace dummy data in `Account.js`
+- [ ] Add bio and content to `user` schema
+
+## Cam
+- [ ] Nav bar style when no one is logged in
+- [ ] Style curator profile view (`Profile.js`). Add profile picture spot! (also add profile pic spot to `Account.js`)
 
 ## Other
 
-- [ ] Make a check in the `AppContainer` component to ensure that `passport` and `redux` are in sync (`redux persist`) makes it such that this can outlast the backend session
+- [X] Make a check in the `AppContainer` component to ensure that `passport` and `redux` are in sync (`redux persist`) makes it such that this can outlast the backend session
 - [ ] Style about page
 - [ ] General clean up, get rid of console.logs and deal with errors better
 - [ ] Change title tag, description, other meta tags depending on the page
+- [ ] Get rid of redux capabilities of all components that don't use redux
+- [ ] Go back and take care of all TODO's
+- [ ] Make sure all form submissions check for empty fields on frontend and/or backend
 
 ## Bugs
 - [ ] Fix authentication route bug
   * When you refresh on a page that requires authentication it redirects to the home page (this should not be the case if the session persists)
+- [ ] Bug where login error crashes app instead of displaying error
+  - [ ] 'Cannot set headers after they are sent' error crashes app
+- [X] Persist issue, now it makes you log back in all the time. Perhaps passport session is very short?
 
 ## Questions
 

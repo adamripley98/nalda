@@ -2,6 +2,7 @@
  * Handles all backend routes
  * NOTE all of these routes are prefixed with "/api"
  * NOTE these routes serve and accept JSON-formatted data
+ * TODO: file should be split up into many smaller files
  */
 
 // Import frameworks
@@ -24,6 +25,23 @@ module.exports = () => {
       success: true,
       data: "API is up and running.",
     });
+  });
+
+  router.get('/sync', (req, res) => {
+    // If passport state is not present, user is not logged in on the backend
+    if (!req.session.passport) {
+      // States are NOT synced!
+      res.send({
+        success: false,
+        data: 'States are not synced!'
+      });
+    } else {
+      // States are synced!
+      res.send({
+        success: true,
+        data: 'States are synced!',
+      });
+    }
   });
 
   /**
@@ -290,6 +308,8 @@ module.exports = () => {
     const subtitle = req.body.subtitle;
     const image = req.body.image;
     const body = req.body.body;
+    const userId = req.body.userId;
+
     let error = "";
     const urlRegexp = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
 
@@ -313,26 +333,46 @@ module.exports = () => {
         error,
       });
     } else {
-      // Creates a new article with given params
-      const newArticle = new Article({
-        title,
-        subtitle,
-        image,
-        body,
-      });
-
-      // Save the new article in Mongo
-      newArticle.save((err, article) => {
+      const author = {};
+      User.findById(userId, (err, user) => {
         if (err) {
-          // If there was an error saving the article
+          console.log('err finding user', err);
           res.send({
             success: false,
-            error: err,
+            error: 'Error finding author ' + err
+          });
+        } else if (!user) {
+          res.send({
+            success: false,
+            error: 'Can not find user.'
           });
         } else {
-          res.send({
-            success: true,
-            data: article,
+          author._id = userId;
+          author.profilePicture = user.profilePicture;
+          author.name = user.name;
+          // Creates a new article with given params
+          const newArticle = new Article({
+            title,
+            subtitle,
+            image,
+            body,
+            author,
+          });
+          console.log('newArticle', newArticle);
+          // Save the new article in Mongo
+          newArticle.save((errr, article) => {
+            if (errr) {
+              // If there was an error saving the article
+              res.send({
+                success: false,
+                error: errr,
+              });
+            } else {
+              res.send({
+                success: true,
+                data: article,
+              });
+            }
           });
         }
       });
@@ -374,7 +414,7 @@ module.exports = () => {
    * Route to handle pulling the information for a specific listing
    */
   router.get('/listings/:id', (req, res) => {
-    // Find the id from the url
+    // Find the id from the listing url
     const id = req.params.id;
 
     // Pull specific listing from mongo
@@ -420,6 +460,7 @@ module.exports = () => {
     const rating = req.body.rating;
     const price = req.body.price;
     const website = req.body.website;
+    const amenities = req.body.amenities;
     let error = "";
 
     // Error checking
@@ -454,6 +495,7 @@ module.exports = () => {
         rating,
         price,
         website,
+        amenities,
       });
 
       // Save the new article in mongo
@@ -476,12 +518,110 @@ module.exports = () => {
   });
 
   /**
+   * Route to add a new review
+   * @param userId
+   * @param listingId
+   * @param rating
+   * @param title
+   * @param content
+   */
+  router.post('/reviews/new', (req, res) => {
+    // Ensure that a user is logged in before reviewing
+    if (!req.body.userId) {
+      res.send({
+        success: false,
+        error: 'Must be logged in to post reviews!'
+      });
+    }
+
+    // Ensure all fields are populated before leaving review
+    if (!req.body.rating || !req.body.title || !req.body.content) {
+      res.send({
+        success: false,
+        error: 'All fields must be populated.'
+      });
+    }
+
+    // If user is logged in, first find author in MongoDB
+    User.findById(req.body.userId, (err, user) => {
+      // Error finding user
+      if (err) {
+        res.send({
+          success: false,
+          error: 'Error finding user' + err,
+        });
+      }
+
+      // If user doesn't exist
+      if (!user) {
+        res.send({
+          success: false,
+          error: 'User does not exist.'
+        });
+      }
+
+      // If no errors can now save new reviews
+      // First find given listing
+      Listing.findById(req.body.listingId, (errr, listing) => {
+        // Error finding listing
+        if (errr) {
+          res.send({
+            success: false,
+            error: errr
+          });
+        }
+
+        // Listing doesn't exist for some reason
+        if (!listing) {
+          res.send({
+            success: false,
+            error: 'Cannot find listing.',
+          });
+        }
+
+        // If listing has been found, update it with review
+        const currentReviews = listing.reviews;
+
+        // Add new review to array of current reviews
+        currentReviews.push({
+          rating: req.body.rating,
+          title: req.body.title,
+          content: req.body.content,
+          createdAt: new Date().getTime(),
+          name: user.name,
+        });
+
+        // Update listing with new review
+        listing.reviews = currentReviews;
+
+        // Resave listing in Mongo
+        listing.save((er) => {
+          // Error saving listing
+          if (er) {
+            res.send({
+              success: false,
+              error: 'Error saving review' + er,
+            });
+          }
+
+          // Finally, if review is saved successfully
+          res.send({
+            success: true,
+            error: '',
+          });
+        });
+      });
+    });
+  });
+
+  /**
    * Update a user's name
-   * TODO update the user
+   * TODO: Error check and ensure full name was entered
    */
   router.post('/users/name', (req, res) => {
     // Isolate variables from the request
     const name = req.body.name;
+    const userId = req.body.userId;
 
     // Error checking
     if (!name) {
@@ -496,9 +636,42 @@ module.exports = () => {
       });
     } else {
       // The name is properly formatted
-      /**
-       * TODO update the user
-       */
+      // Search for user in Mongo
+      User.findById(userId, (err, user) => {
+        // Error finding user
+        if (err) {
+          res.send({
+            success: false,
+            error: err,
+          });
+        // User doesn't exist in Mongo
+        } else if (!user) {
+          res.send({
+            success: false,
+            error: 'Cannot find user.'
+          });
+        } else {
+          // Update user with new name
+          user.name = name;
+
+          // Save in Mongo
+          user.save((errr) => {
+            // Error saving user
+            if (err) {
+              res.send({
+                success: false,
+                error: errr,
+              });
+            } else {
+              // User name updated successfully
+              res.send({
+                success: true,
+                error: '',
+              });
+            }
+          });
+        }
+      });
     }
   });
 
@@ -508,6 +681,7 @@ module.exports = () => {
   router.post('/users/bio', (req, res) => {
     // Isolate variables from the request
     const bio = req.body.bio;
+    const userId = req.body.userId;
 
     // Error checking
     if (bio.length > 500) {
@@ -516,9 +690,42 @@ module.exports = () => {
         error: "Bio length cannot exceed 500 characters.",
       });
     } else {
-      /**
-       * TODO make the request
-       */
+      // Search for user in Mongo
+      User.findById(userId, (err, user) => {
+        // Error finding user
+        if (err) {
+          res.send({
+            success: false,
+            error: err,
+          });
+        // User doesn't exist in Mongo
+        } else if (!user) {
+          res.send({
+            success: false,
+            error: 'Cannot find user.'
+          });
+        } else {
+          // Update user with new bio
+          user.bio = bio;
+
+          // Save in Mongo
+          user.save((errr) => {
+            // Error saving user
+            if (err) {
+              res.send({
+                success: false,
+                error: errr,
+              });
+            } else {
+              // User bio updated successfully
+              res.send({
+                success: true,
+                error: '',
+              });
+            }
+          });
+        }
+      });
     }
   });
 
@@ -571,6 +778,38 @@ module.exports = () => {
         error: "Not yet implemented.",
       });
     }
+  });
+
+  /**
+   * Show a given users profile
+   */
+  router.get('/users/:id', (req, res) => {
+    // Find the id from the url
+    const id = req.params.id;
+
+    // Find user's profile in Mongo
+    User.findById(id, (err, user) => {
+      // Error finding user
+      if (err) {
+        res.send({
+          success: false,
+          error: err,
+        });
+      } else if (!user) {
+        // User doesn't exist in mongo
+        res.send({
+          success: false,
+          error: 'User does not exist.'
+        });
+      // Otherwise render user data
+      } else {
+        res.send({
+          success: true,
+          error: '',
+          data: user
+        });
+      }
+    });
   });
 
   // Return the router for use throughout the application

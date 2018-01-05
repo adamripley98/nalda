@@ -2,6 +2,9 @@
 import React, { Component } from 'react';
 import autosize from 'autosize';
 import axios from 'axios';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { Redirect } from 'react-router-dom';
 
 // Import components
 import Thin from './shared/Thin';
@@ -10,6 +13,7 @@ import ErrorMessage from './shared/ErrorMessage';
 /**
  * Component for Admin only, allows them to add and remove other admins and content curators
  * TODO Add removing functionality
+ // TODO make text not extend button, styling issue
  */
 class Admin extends Component {
   // Constructor method
@@ -52,7 +56,7 @@ class Admin extends Component {
         this.setState({error: resp.data.error});
       } else {
         this.setState({error: ''});
-        // TODO: Notify of successful change
+        // TODO: Notify on frontend of successful change
       }
     }).catch((err) => {
       console.log('err', err);
@@ -73,7 +77,7 @@ class Admin extends Component {
         this.setState({error: resp.data.error});
       } else {
         this.setState({error: ''});
-        // TODO: Notify of successful change
+        // TODO: Notify on frontend of successful change
       }
     }).catch((err) => {
       console.log('err', err);
@@ -84,6 +88,11 @@ class Admin extends Component {
   render() {
     return (
       <Thin>
+        { /* Redirect the user to home if they are not logged in */ }
+        {/* {
+          (!this.props.userId) && <Redirect to="/login" />
+        } */}
+
         <form className="thin-form">
           <h2 className="bold marg-bot-1">Admin panel</h2>
           <p className="marg-bot-1">
@@ -135,5 +144,29 @@ class Admin extends Component {
     );
   }
 }
+
+Admin.propTypes = {
+  userType: PropTypes.string,
+  userId: PropTypes.string,
+};
+
+// Allows us to access this.props.userId and this.props.userType
+const mapStateToProps = (state) => {
+  return {
+    userId: state.authState.userId,
+    userType: state.authState.userType,
+  };
+};
+
+const mapDispatchToProps = () => {
+  return {
+  };
+};
+
+// Redux config
+Admin = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Admin);
 
 export default Admin;

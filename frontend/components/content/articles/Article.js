@@ -22,9 +22,9 @@ class Article extends React.Component {
     // TODO: Remove dummy state
     this.state = {
       error: "",
-      user: {
-        name: "Adam Ripley",
-        _id: "81493243t90",
+      author: {
+        name: "",
+        _id: "",
         profilePicture: "https://scontent-lga3-1.xx.fbcdn.net/v/t31.0-8/19800933_1555674071163224_6756529645784213707_o.jpg?oh=d3ce5cc19160312229b760b7448d3c67&oe=5A8FEE3B",
       },
       article: {},
@@ -70,10 +70,10 @@ class Article extends React.Component {
   renderAuthor() {
     return(
       <div className="author">
-        <div className="author-img" style={{ backgroundImage: `url(${this.state.user.profilePicture})` }}/>
+        <div className="author-img" style={{ backgroundImage: `url(${this.state.author.profilePicture})` }}/>
         <div className="text">
-          <Link className="name" to={`/users/${this.state.user._id}`}>
-            { this.state.user.name }
+          <Link className="name" to={`/users/${this.state.article.author._id}`}>
+            { this.state.article.author.name }
           </Link>
           <p className="timestamp">
             {this.state.time}
@@ -124,9 +124,8 @@ Article.propTypes = {
   match: PropTypes.object,
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = () => {
   return {
-    article: state.articleState.article
   };
 };
 

@@ -108,7 +108,7 @@ class ArticleForm extends React.Component {
 
       // Otherwise, the request is properly formulated
       /**
-       * TODO SEND THE REQEUST TO MAKE A NEW ARTICLE, AND REDIRECT
+       * TODO: SEND THE REQUEST TO MAKE A NEW ARTICLE, AND REDIRECT
        */
     }
   }

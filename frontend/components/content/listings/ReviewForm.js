@@ -4,6 +4,7 @@ import ErrorMessage from '../../shared/ErrorMessage';
 import autosize from 'autosize';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import axios from 'axios';
 
 /**
  * Component to render the form to review applications
@@ -78,13 +79,41 @@ class ReviewForm extends React.Component {
 
   /**
    * Handle when a user submits the form
-   * TODO
    */
   handleSubmit(event) {
     // Prevent the default form action
     event.preventDefault();
+    // Post to backend
+    // TODO: Error checking, make sure fields are populated.
+    axios.post('/api/reviews/new', {
+      rating: this.state.rating,
+      title: this.state.title,
+      content: this.state.content,
+      userId: this.props.userId,
+      listingId: this.props.listingId,
+    })
+    .then((resp) => {
+      // If error, display it
+      if (!resp.data.success) {
+        this.setState({
+          error: resp.data.error,
+        });
+      }
+      // Calls parent component (Listing.js) method to display new review
+      this.props.updateReviews();
 
-    // TODO
+      // Clear fields after submission
+      this.setState({
+        rating: 0.0,
+        title: '',
+        content: '',
+      });
+    })
+    .catch((err) => {
+      if (err) {
+        console.log('Error posting review', err);
+      }
+    });
   }
 
   /**
@@ -106,7 +135,7 @@ class ReviewForm extends React.Component {
 
     // Else, if the user is logged in, render the form
     return (
-      <form onSubmit={ this.handleSubmit } className="thin-form">
+      <form onSubmit={ this.handleSubmit } id="reviewForm" className="thin-form">
         {
           this.state.error && <ErrorMessage error={ this.state.error } />
         }
@@ -177,16 +206,16 @@ class ReviewForm extends React.Component {
 
 ReviewForm.propTypes = {
   userId: PropTypes.string,
+  listingId: PropTypes.string,
+  updateReviews: PropTypes.func,
 };
 
-// Allows us to access redux state as this.props.userId inside component
 const mapStateToProps = state => {
   return {
     userId: state.authState.userId,
   };
 };
 
-// Allows us to dispatch a logout event by calling this.props.onLogout
 const mapDispatchToProps = () => {
   return {};
 };

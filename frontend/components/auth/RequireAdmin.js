@@ -9,22 +9,6 @@ import { Redirect } from 'react-router-dom';
  */
 export default function(ComponentToRender) {
   class RequireAdmin extends Component {
-    componentWillMount() {
-      if (!this.props.userId) {
-        return (
-          <Redirect to="/login"/>
-        );
-      }
-    }
-
-    componentWillUpdate(nextProps) {
-      if (!nextProps.userId) {
-        return (
-          <Redirect to="/login"/>
-        );
-      }
-    }
-
     render() {
       // Renders component if user is logged in, returns to /login if not.
       if (this.props.userId && this.props.userType === 'admin') {

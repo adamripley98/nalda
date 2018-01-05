@@ -4,11 +4,12 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+
+// Import components
 import Loading from './shared/Loading';
 import ErrorMessage from './shared/ErrorMessage';
 import Button from './shared/Button';
 import ArticlePreview from './content/articles/ArticlePreview';
-
 
 // TODO: Should standardize the size of all the pictures
 /**
@@ -34,7 +35,6 @@ class Home extends React.Component {
   /**
    * Load data once the component mounts
    * Pulls articles, listings, and videos simulatneously
-   * TODO custom route to pull all of this data
    */
   componentDidMount() {
     // Pull all articles from the database
@@ -73,7 +73,7 @@ class Home extends React.Component {
           _id={ art._id }
           title={ art.title }
           subtitle={ art.subtitle }
-          imag={ art.image }
+          image={ art.image }
         />
       ));
     }

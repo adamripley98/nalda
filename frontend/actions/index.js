@@ -29,13 +29,10 @@ export function logout() {
   };
 }
 
-// -----------------------------------------------------------------------------
-// ---------------------------Article Actions-----------------------------------
-// -----------------------------------------------------------------------------
-
-export function openArt(article) {
+// Dispatch an action to change name
+export function changeFullName(name) {
   return {
-    type: 'OPENART',
-    article,
+    type: 'NAMECHANGE',
+    name,
   };
 }

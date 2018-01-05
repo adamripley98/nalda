@@ -4,7 +4,8 @@ import Medium from '../../shared/Medium';
 import autosize from 'autosize';
 import { Link, Redirect } from 'react-router-dom';
 import axios from 'axios';
-
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 /**
  * Component to render the new article form
  * TODO redirect to article instead of to home
@@ -113,6 +114,7 @@ class ArticleForm extends React.Component {
         subtitle: this.state.subtitle,
         image: this.state.image,
         body: this.state.body,
+        userId: this.props.userId,
       })
         .then((res) => {
           if (res.data.success) {
@@ -224,4 +226,24 @@ class ArticleForm extends React.Component {
   }
 }
 
-export default ArticleForm;
+ArticleForm.propTypes = {
+  userId: PropTypes.string,
+};
+
+// Necessary so we can access this.props.userId
+const mapStateToProps = (state) => {
+  return {
+    userId: state.authState.userId,
+  };
+};
+
+const mapDispatchToProps = () => {
+  return {
+  };
+};
+
+// Redux config
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ArticleForm);

@@ -20,6 +20,8 @@ const store = createStore(
    )
  );
 
+const persistor = persistStore(store);
+
 // Persist Store allows redux state to not reset when page refresh
 persistStore(
   store,
@@ -28,6 +30,6 @@ persistStore(
 );
 
 render(
-    <Root store={store} />,
+    <Root store={store} persistor={persistor}/>,
     document.getElementById('root')
 );
