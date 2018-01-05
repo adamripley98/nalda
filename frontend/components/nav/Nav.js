@@ -41,7 +41,9 @@ class Nav extends Component {
     return (
       <nav className="nav">
         {/* Render the logo which links to the home page */}
-        <Link to="/" className="logo">Nalda</Link>
+        <Link to="/" className="logo">
+          <img src="https://s3.amazonaws.com/nalda/nalda_logo.svg" alt="Nalda" />
+        </Link>
 
         { /* Render the search bar on the left of the navbar */ }
         <div className="search">
