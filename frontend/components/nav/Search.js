@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 
 /**
  * Renders the search bar on the navbar
@@ -16,14 +17,39 @@ class Search extends Component {
 
     // Bindings so 'this' refers to component
     this.handleChangeSearch = this.handleChangeSearch.bind(this);
+    this.handleSubmitSearch = this.handleSubmitSearch.bind(this);
+  }
+
+  /**
+   * Handle when a user types into search bar
+   */
+  handleChangeSearch(event) {
+    this.setState({
+      search: event.target.value,
+    });
   }
 
   /**
    * Handle when a user searches for something
    */
-  handleChangeSearch(event) {
-    this.setState({
-      search: event.target.value,
+  handleSubmitSearch(event) {
+    event.preventDefault();
+    axios.post('/api/search', {
+      search: this.state.search,
+    })
+    .then((resp) => {
+      if (!resp.data.success) {
+        // TODO: Display error
+        console.log('Error searching', resp.data.error);
+      } else {
+        // TODO: Display results on the frontend
+        // TODO: Clear search input
+        console.log('results are:', resp.data.data);
+      }
+    })
+    .catch((err) => {
+      // TODO: Display error
+      console.log('Error searching:', err);
     });
   }
 
@@ -45,6 +71,11 @@ class Search extends Component {
           value={ this.state.seach }
           onChange={ this.handleChangeSearch }
           placeholder="Search for activities, places, or curators"
+        />
+        <input
+          type="submit"
+          value="Search"
+          onClick={this.handleSubmitSearch}
         />
       </div>
     );

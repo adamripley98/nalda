@@ -202,6 +202,29 @@ module.exports = () => {
   });
 
   /**
+   * Pull listings, videos, articles, and curators from the database based off what is searched for
+   * @param search (what term user searched for)
+   */
+  router.post('/search', (req, res) => {
+    // First search through articles
+    Article.find({"$text": { $search: req.body.search }}, (errArticle, articles) => {
+      // Error finding articles
+      if (errArticle) {
+        res.send({
+          success: false,
+          error: errArticle
+        });
+      }
+      // If successful, send back articles
+      res.send({
+        success: true,
+        error: '',
+        data: articles,
+      });
+    });
+  });
+
+  /**
    * Pull all videos from the database
    */
   router.get('/videos', (req, res) => {
