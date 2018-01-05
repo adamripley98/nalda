@@ -46,24 +46,24 @@ Backend for articles and listings
 - [X] Store reviews on listings
 - [ ] Store comments on articles
 - [X] Form for adding reviews
-- [ ] Complete listing view
+- [X] Complete listing view
 - [X] Complete listing backend (already stores listing in Mongo, just need to populate to home screen.
 - [X] Figure out why listings page is not displaying
 
 ## Videos
 
-- [ ] Improve styling
-- [ ] Video backend
+- [X] Improve styling
+- [X] Video backend
+- [ ] Allow comments?
 
 ## Frontend
 
 - [X] Setting up SCSS
-- [ ] Video styling
+- [X] Video styling
 - [ ] Login/Register/Reset/Edit Account Form styling
 - [ ] Sendgrid configuration for sending emails
 - [X] Individual listing view
-- [ ] Ajax search suggestions
-- [ ] Routing 	
+- [X] Routing 	
 - [ ] User show pages (backend is working, needs to be styled though)
 - [X] Footer
 - [X] Article form display
@@ -71,10 +71,10 @@ Backend for articles and listings
 - [X] Listing form display
 - [ ] Login/Register/Reset/Edit Account Form styling
 - [ ] Ajax search suggestions
-- [ ] Incorporate Nalda logo and other advice from Edward
+- [X] Incorporate Nalda logo and other advice from Edward
 - [ ] Home page needs to have other ways of sorting: most popular, by category, by author?, etc
 - [X] Side Nav Bar should close once an option is clicked
-- [ ] Nav bar should only show name and location when a user is logged in
+- [X] Nav bar should only show name and location when a user is logged in
 - [ ] Make it easier for an admin to enter hours (some sort of autofill)
 - [ ] Icons for all amenities
 - [X] Get rid of article reducer
@@ -124,7 +124,7 @@ Backend for articles and listings
 - [ ] Back to home button on individual listing page
 - [ ] Style search button in Nav bar (make it only visible when someone has typed something)
 - [ ] Display search results on the frontend (backend is done)
-- [ ] Load component on `Account.js` and `Profile.js`
+- [ ] Load component on `Account.js` and `Profile.js` and others.
 
 ## Other
 

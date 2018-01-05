@@ -323,7 +323,7 @@ module.exports = () => {
 
 
   /**
-   * Route to handle a new article submission
+   * Route to handle a new video submission
    * @param title
    * @param url
    * @param description
