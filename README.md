@@ -34,17 +34,18 @@ Backend for articles and listings
   - [ ] Videos
   - [ ] Listings
   - [X] Articles
-- [ ] Curator show pages
+- [X] Curator show pages
   * This should display all of the content a curator has written
 - [X] Default create users with type `user`. Admin can switch them to `admin` or `curator`
 - [ ] Give users ability to set and change profile pictures, update this in new article/listing/video backend
-- [ ] Make it so you can click and view author pages, author page should also list all their articles
+- [X] Make it so you can click and view author pages, author page should also list all their articles
 
 ## Listings
 
-- [ ] Store an array of times or two fields for each day
-- [ ] Store reviews / comments on listings
-- [ ] Form for adding reviews
+- [X] Store an array of times or two fields for each day
+- [X] Store reviews on listings
+- [ ] Store comments on articles
+- [X] Form for adding reviews
 - [ ] Complete listing view
 - [X] Complete listing backend (already stores listing in Mongo, just need to populate to home screen.
 - [X] Figure out why listings page is not displaying
@@ -63,7 +64,7 @@ Backend for articles and listings
 - [X] Individual listing view
 - [ ] Ajax search suggestions
 - [ ] Routing 	
-- [ ] User show pages
+- [ ] User show pages (backend is working, needs to be styled though)
 - [X] Footer
 - [X] Article form display
 - [X] Video form display
@@ -78,7 +79,7 @@ Backend for articles and listings
 - [ ] Icons for all amenities
 - [X] Get rid of article reducer
 - [ ] Style nav bar so it looks okay when no user is logged in (no user or location)
-- [ ] Create a curator profile view (Should show name, location, bio, contact info, and all content created)
+- [X] Create a curator profile view (Should show name, location, bio, contact info, and all content created)
 
 ## Backend
 
@@ -95,7 +96,7 @@ Backend for articles and listings
 - [ ] Domain registration/setup
 - [ ] Better user auth checks on the backend
 - [ ] Better parameter error checking on the backend
-- [ ] Link user data to posted article
+- [X] Link user data to posted article
 - [ ] Give content a timestamp
   - [ ] Videos
   - [ ] Listings
@@ -103,11 +104,14 @@ Backend for articles and listings
 - [ ] Split up `routes.js` into many smaller files
 - [ ] Sort reviews functionality (time, rating)
 - [ ] Deal with location
-- [ ] Curator profile view
+- [X] Curator profile view
 - [ ] Change/forgot password backend
-- [ ] Replace dummy location, profile picture, and bio data
+- [ ] Replace dummy data
+  - [ ] Location
+  - [ ] Profile picture
+  - [X] Bio
 - [ ] Replace dummy data in `Account.js`
-- [ ] Add bio and content to `user` schema
+- [X] Add bio and content to `user` schema
 
 ## Cam
 - [ ] Nav bar style when no one is logged in
