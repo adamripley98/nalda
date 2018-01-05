@@ -6,8 +6,12 @@ const articleSchema = new Schema({
   title: String,
   subtitle: String,
   image: String,
-  location: String,
-  body: String,
+  body: [
+    {
+      componentType: String,
+      body: String,
+    }
+  ],
   author: {
     type: Schema.Types.ObjectId, ref: 'User',
   }

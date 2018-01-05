@@ -479,10 +479,32 @@ module.exports = () => {
       error = "Subtitle must be populated.";
     } else if (!image) {
       error = "Image must be populated.";
-    } else if (!body) {
+    } else if (!body || !body.length) {
       error = "Body must be populated.";
     } else if (!urlRegexp.test(image)) {
       error = "Image must be a valid URL to an image.";
+    } else if (typeof body !== "object" || !Array.isArray(body)) {
+      error = "Body must be an array";
+    } else {
+      for (let i = 0; i < body.length && !error; i++) {
+        const component = body[i];
+        if (!component) {
+          error = "Each component must be defined.";
+        } else if (!component.body) {
+          error = "Each component must be populated with text.";
+        } else if (component.componentType !== "text" && component.componentType !== "image") {
+          error = "Component type must be either text or image.";
+        } else if (component.componentType === "image") {
+          // Ensure that the URL to the image is proper
+          // This means that it is both a URL and an image file
+          const imgRegexp = /\.(jpeg|jpg|gif|png)$/;
+          if (!imgRegexp.test(component.body)) {
+            error = "Image url must end in \"jpeg\", \"png\", \"gif\", or \"jpg\".";
+          } else if (!urlRegexp.test(component.body)) {
+            error = "Image url must be a valid URL.";
+          }
+        }
+      }
     }
 
     // If there was an error or not
@@ -502,25 +524,25 @@ module.exports = () => {
         } else if (!user) {
           res.send({
             success: false,
-            error: 'Can not find user.'
+            error: 'User not found.'
           });
         } else {
-          const author = userId;
           // Creates a new article with given params
           const newArticle = new Article({
             title,
             subtitle,
             image,
             body,
-            author,
+            author: userId,
           });
+
           // Save the new article in Mongo
           newArticle.save((errr, article) => {
             if (errr) {
               // If there was an error saving the article
               res.send({
                 success: false,
-                error: errr,
+                error: errr.message,
               });
             } else {
               // Successfully send back data
@@ -547,15 +569,16 @@ module.exports = () => {
       if (err) {
         res.send({
           success: false,
-          error: err,
+          error: err.message,
         });
       // If the article doesn't exist
       } else if (!article) {
         res.send({
           success: false,
-          error: "Article not found",
+          error: "Article not found.",
         });
-        // if no errors, returns article along with the date it was created
+
+        // If no errors, returns article along with the date it was created
       } else {
         // Fetch author data
         User.findById(article.author, (er, user) => {
@@ -709,7 +732,7 @@ module.exports = () => {
     if (!req.body.userId) {
       res.send({
         success: false,
-        error: 'Must be logged in to post reviews!'
+        error: 'You must be logged in in order to leave a review on a listing.'
       });
     }
 

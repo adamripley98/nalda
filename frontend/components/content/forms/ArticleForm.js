@@ -19,7 +19,12 @@ class ArticleForm extends React.Component {
       title: "",
       subtitle: "",
       image: "",
-      body: "",
+      body: [
+        {
+          componentType: "text",
+          body: "",
+        },
+      ],
       error: "",
       redirectToHome: false,
     };
@@ -30,6 +35,7 @@ class ArticleForm extends React.Component {
     this.handleChangeImage = this.handleChangeImage.bind(this);
     this.handleChangeBody = this.handleChangeBody.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.addNewComponent = this.addNewComponent.bind(this);
   }
 
   // Handle resizing textarea
@@ -66,9 +72,35 @@ class ArticleForm extends React.Component {
   }
 
   // Helper method to handle a change to the body state
-  handleChangeBody(event) {
-    this.setState({
+  handleChangeBody(event, index) {
+    // Manipulate the correct component object
+    const bodyObj = this.state.body;
+    bodyObj[index] = {
+      componentType: bodyObj[index].componentType,
       body: event.target.value,
+    };
+
+    // Update the state
+    this.setState({
+      body: bodyObj,
+    });
+  }
+
+  // Helper method to add a new component to the body
+  addNewComponent(type) {
+    // Create the new component
+    const component = {
+      componentType: type,
+      body: "",
+    };
+
+    // Find and update the body object
+    const bodyObj = this.state.body;
+    bodyObj.push(component);
+
+    // Update the state
+    this.setState({
+      body: bodyObj,
     });
   }
 
@@ -97,10 +129,6 @@ class ArticleForm extends React.Component {
     } else if (this.state.subtitle.length < 4 || this.state.subtitle.length > 200) {
       this.setState({
         error: "Subtitle must be between 4 and 200 characters long.",
-      });
-    } else if (this.state.body.length < 4) {
-      this.setState({
-        error: "Body must be at least 4 characters long",
       });
     } else {
       // Set the error to the empty string
@@ -197,19 +225,68 @@ class ArticleForm extends React.Component {
               <label>
                 Body
               </label>
-              <textarea
-                name="body"
-                type="text"
-                className="form-control marg-bot-1"
-                rows="1"
-                value={ this.state.body }
-                onChange={ this.handleChangeBody }
-              />
+              {
+                this.state.body.map((component, index) => {
+                  let placeholder;
+                  if (component.componentType === "text") {
+                    placeholder = "Enter text...";
+                  } else if (component.componentType === "image") {
+                    placeholder = "Enter URL to an image...";
+                  }
+
+                  // Return the textarea associated with the component
+                  return (
+                    <div className="component">
+                      <textarea
+                        placeholder={ placeholder }
+                        name="body"
+                        type="text"
+                        className="form-control marg-bot-1"
+                        rows="1"
+                        key={ index }
+                        value={ this.state.body[index].body }
+                        onChange={ (e) => this.handleChangeBody(e, index) }
+                      />
+                      {
+                        (index !== 0 || this.state.body.length > 1) && (
+                          <i
+                            className="fa fa-trash-o"
+                            aria-hidden="true"
+                            onClick={() => {
+                              const bodyObj = this.state.body;
+                              bodyObj.splice(index, 1);
+                              this.setState({
+                                body: bodyObj,
+                              });
+                            }}
+                          />
+                        )
+                      }
+                    </div>
+                  );
+                })
+              }
+              <label>
+                Add a new section
+              </label>
+              <div className="icons marg-bot-1">
+                <i
+                  className="fa fa-align-justify"
+                  aria-hidden="true"
+                  onClick={ () => this.addNewComponent("text") }
+                />
+                <i
+                  className="fa fa-picture-o"
+                  aria-hidden="true"
+                  onClick={ () => this.addNewComponent("image") }
+                />
+              </div>
+
               <input
                 type="submit"
                 value="Create Article"
                 className={
-                  this.state.title && this.state.subtitle && this.state.body ? (
+                  this.state.title && this.state.subtitle && this.state.body[0].body ? (
                     "btn btn-primary full-width"
                   ) : (
                     "btn btn-primary disabled full-width"
@@ -238,8 +315,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = () => {
-  return {
-  };
+  return {};
 };
 
 // Redux config
