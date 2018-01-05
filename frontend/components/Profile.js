@@ -9,6 +9,7 @@ import Loading from './shared/Loading';
 
 // Import components
 import ErrorMessage from './shared/ErrorMessage';
+import ArticlePreview from './content/articles/ArticlePreview';
 
 /**
  * Component to render a curators profile
@@ -17,6 +18,7 @@ class Profile extends Component {
   /**
    * Constructor method
    * TODO: Replace dummy location, prof pic, and bio data
+   * TODO: Add loading component
    */
   constructor(props) {
     super(props);
@@ -28,7 +30,7 @@ class Profile extends Component {
       profilePicture: '',
       error: '',
       pending: false,
-      content: 'dummy content',
+      content: [],
     };
   }
 
@@ -48,6 +50,7 @@ class Profile extends Component {
           email: resp.data.data.username,
           bio: resp.data.data.bio,
           error: "",
+          content: resp.data.articles,
         });
       } else {
         this.setState({
@@ -59,6 +62,34 @@ class Profile extends Component {
         error: err,
       });
     });
+  }
+
+  /**
+   * Helper function to render a user's content
+   */
+  renderContent() {
+    // Isolate variable
+    const content = this.state.content;
+    // Map through and display content
+    // TODO: Display nicely
+    if (content && content.length) {
+      return content.map((art) => (
+        <ArticlePreview
+          _id={ art._id }
+          title={ art.title }
+          subtitle={ art.subtitle }
+          image={ art.image }
+        />
+      ));
+    }
+    // If no articles were found
+    return (
+      <div className="col-12">
+        <div className="card pad-1 marg-bot-1">
+          This author hasn't posted any articles yet!
+        </div>
+      </div>
+    );
   }
 
   /**
@@ -109,7 +140,7 @@ class Profile extends Component {
               Content created
             </td>
             <td>
-              { this.state.content }
+              { this.renderContent() }
             </td>
           </tr>
         </tbody>
