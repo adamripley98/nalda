@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import Loading from './shared/Loading';
 import ErrorMessage from './shared/ErrorMessage';
 import Button from './shared/Button';
-import ArticlePreview from './content/articles/ArticlPreview';
+import ArticlePreview from './content/articles/ArticlePreview';
 
 
 // TODO: Should standardize the size of all the pictures
