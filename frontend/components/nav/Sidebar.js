@@ -167,6 +167,9 @@ class Sidebar extends Component {
                 </div>
               )
             }
+            <div className="sidebar-logo">
+              <img src="https://s3.amazonaws.com/nalda/logo_gray.svg" alt="Nalda" />
+            </div>
           </div>
         </div>
       </div>

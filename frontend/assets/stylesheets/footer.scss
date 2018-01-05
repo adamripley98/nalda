@@ -9,6 +9,9 @@ footer {
     background: white;
     color: $gray;
 
+    /**
+     * Nalda logo in the footer
+     */
     .logo {
       color: black !important;
       font-weight: bold;
@@ -24,12 +27,19 @@ footer {
       }
     }
 
+    /**
+     * All rights reserved
+     */
     .credits {
       margin-top: 0.4rem;
       display: inline-block;
       width: auto;
     }
 
+    /**
+     * Links to other pages on the site
+     * On larger screens display left-justified
+     */
     .links {
       margin-top: 0.4rem;
       flex: 1;
@@ -51,11 +61,24 @@ footer {
     }
   }
 
+  /**
+   * Credit to the developers at the very bottom of the footer
+   */
   .footer-bottom {
     padding: 0rem 1rem;
     color: $gray;
     font-size: 0.8rem;
     margin-bottom: 1rem;
+
+    a {
+      color: $gray;
+
+      &:hover,
+      &:active,
+      &:focus {
+        color: $dark-gray;
+      }
+    }
   }
 }
 

@@ -36,7 +36,7 @@ class Footer extends React.Component {
             </div>
           </div>
           <div className="footer-bottom">
-            Created by Cameron Cabo and Adam Ripley. Nalda © 2017.
+            Developed by <Link to="http://cameroncabo.com">Cameron Cabo</Link> and Adam Ripley.
           </div>
         </div>
       </footer>
