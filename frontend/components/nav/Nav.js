@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Sidebar from './Sidebar';
-import { logout } from '../../actions/index.js';
 
 /**
  * Renders the navbar at the top of the screen on all pages.
@@ -60,26 +59,32 @@ class Nav extends Component {
             placeholder="Search for activities, places, or curators"
           />
         </div>
-        { /* Render the user's profile information IF USER IS LOGGED IN */ }
-        {/* TODO: Style this better if the user is not logged in */}
-        {this.props.userId ? (
-          <div className="user-info">
-            <div className="user-text">
-              { /* Render the user's location information */ }
-              <div className="location">
-                University City, PA
+        { /* Render the user's profile information if the user is logged in */ }
+        { /* If the user is not logged in, an empty div is returned */ }
+        { /* NOTE the empty div preserves styling of the sidebar */ }
+        {
+          this.props.userId ? (
+            <div className="user-info">
+              <div className="user-text">
+                { /* Render the user's location information */ }
+                <div className="location">
+                  University City, PA
+                </div>
+                <div className="name">
+                  <p>
+                    Hi, <Link to="/account">{this.props.name}</Link>
+                  </p>
+                </div>
               </div>
-              <div className="name">
-                <p>
-                  Hi, <Link to="/account">{this.props.name}</Link>
-                </p>
-              </div>
+              <div className="user-img" />
             </div>
-            <div className="user-img" />
-          </div>
-        ) :
-      <div/>}
+          ) : (
+            <div className="user-info" />
+          )
+        }
+
         { /* Render the sidebar */ }
+        { /* This includes the three-bar meny toggle which is always visible */ }
         <Sidebar />
       </nav>
     );
@@ -98,15 +103,14 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-  };
+const mapDispatchToProps = () => {
+  return {};
 };
 
 // Redux config
 Nav = connect(
-    mapStateToProps,
-    mapDispatchToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(Nav);
 
 export default Nav;
