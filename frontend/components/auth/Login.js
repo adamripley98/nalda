@@ -4,6 +4,8 @@ import axios from 'axios';
 import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+
+// Import actions
 import {login} from '../../actions/index.js';
 
 // Import components

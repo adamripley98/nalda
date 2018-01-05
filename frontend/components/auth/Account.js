@@ -7,6 +7,9 @@ import PropTypes from 'prop-types';
 import Button from '../shared/Button';
 import Loading from '../shared/Loading';
 
+// Import actions
+import {changeFullName} from '../../actions/index.js';
+
 // Import components
 import ErrorMessage from '../shared/ErrorMessage';
 
@@ -17,8 +20,9 @@ import ErrorMessage from '../shared/ErrorMessage';
 class Account extends Component {
   /**
    * Constructor method
-   * TODO replace dummy data: bio, location, prof pic, etc.
-   * TODO allow changing name, profile pic, password, location, and bio
+   * TODO replace dummy data: location, prof pic, etc.
+   * TODO allow changing profile pic, password, location
+   * TODO profile pic needs to be shown
    */
   constructor(props) {
     super(props);
@@ -26,7 +30,7 @@ class Account extends Component {
       name: '',
       email: '',
       type: '',
-      bio: 'Hello this is my bio. It describes who I am and what I am passionate for.',
+      bio: '',
       location: 'University City, PA',
       profilePicture: '',
       error: '',
@@ -60,6 +64,7 @@ class Account extends Component {
           name: resp.data.data.name,
           email: resp.data.data.username,
           type: resp.data.data.userType,
+          bio: resp.data.data.bio,
           error: "",
         });
       }
@@ -96,12 +101,27 @@ class Account extends Component {
    * Helper method to trigger edit name
    */
   handleNameClick() {
-    if (this.state.editName) {
-      /**
-       * TODO save the updated name
-       */
-    }
+    // Isolate function
+    const changeName = this.props.changeName;
 
+    if (this.state.editName) {
+       // Save the updated name
+      axios.post('/api/users/name', {
+        userId: this.props.userId,
+        name: this.state.name,
+      })
+      .then((resp) => {
+        // If there was an error, display it
+        if (!resp.data.success) {
+          this.setState({
+            error: resp.data.error,
+          });
+        } else {
+          // change redux state
+          changeName(this.state.name);
+        }
+      });
+    }
     // Update the state
     this.setState({
       editName: !this.state.editName,
@@ -122,11 +142,20 @@ class Account extends Component {
    */
   handleBioClick() {
     if (this.state.editBio) {
-      /**
-       * TODO save the updated bio
-       */
+      // Save the updated bio
+      axios.post('/api/users/bio', {
+        userId: this.props.userId,
+        bio: this.state.bio,
+      })
+      .then((resp) => {
+        // If there was an error, display it
+        if (!resp.data.success) {
+          this.setState({
+            error: resp.data.error,
+          });
+        }
+      });
     }
-
     // Update the state
     this.setState({
       editBio: !this.state.editBio,
@@ -207,7 +236,7 @@ class Account extends Component {
             </td>
             <td>
               <span style={{ display: this.state.editBio && "none" }}>
-                { this.state.bio }
+                { this.state.bio || 'Add a bio here...' }
               </span>
               <textarea
                 className="form-control"
@@ -290,6 +319,7 @@ class Account extends Component {
 
 Account.propTypes = {
   userId: PropTypes.string,
+  changeName: PropTypes.func,
 };
 
 // Allows us to access redux state as this.props.userId inside component
@@ -300,8 +330,10 @@ const mapStateToProps = state => {
 };
 
 // Allows us to dispatch a login event by calling this.props.onLogin
-const mapDispatchToProps = () => {
-  return {};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    changeName: (name) => dispatch(changeFullName(name))
+  };
 };
 
 // Redux config

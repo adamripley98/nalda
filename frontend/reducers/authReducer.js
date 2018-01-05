@@ -25,6 +25,12 @@ const authReducer = (state = {}, action) => {
       newState.name = action.name;
       return newState;
     }
+    // When a user changes his/her name
+    case 'NAMECHANGE': {
+      const newState = Object.assign({}, state);
+      newState.name = action.name;
+      return newState;
+    }
     default:
       return state;
   }
