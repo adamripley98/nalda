@@ -61,7 +61,7 @@ class Videos extends React.Component {
         <div className="col-6 col-lg-4 col-xl-3" key={ video._id } >
           <Link to={ `/videos/${video._id}` } >
             <div className="article-preview">
-              <img className="img-fluid" alt={video.title} src={video.image} />
+              <img className="img-fluid" alt={video.title} src={`https://img.youtube.com/vi/${video.url.substring(video.url.indexOf("v=") + 2)}/0.jpg`} />
               <h2 className="title">
                 {video.title}
               </h2>

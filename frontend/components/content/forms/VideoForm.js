@@ -1,7 +1,8 @@
 import React from 'react';
 import Medium from '../../shared/Medium';
 import autosize from 'autosize';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
+import axios from 'axios';
 
 /**
  * Component to render the new article form
@@ -17,6 +18,7 @@ class ArticleForm extends React.Component {
       url: "",
       description: "",
       error: "",
+      redirectToHome: false,
     };
 
     // Bind this to helper methods
@@ -72,14 +74,6 @@ class ArticleForm extends React.Component {
       this.setState({
         error: "Title must be populated.",
       });
-    } else if (!this.state.subtitle) {
-      this.setState({
-        error: "Subtitle must be populated.",
-      });
-    } else if (!this.state.body) {
-      this.setState({
-        error: "Body must be populated.",
-      });
     } else if (!this.state.url) {
       this.setState({
         error: "Video url must be populated",
@@ -101,15 +95,29 @@ class ArticleForm extends React.Component {
         error: "Video URL must be properly formatted. That is, it must begin with \"https://www.youtube.com/watch?v=\" followed by the video ID.",
       });
     } else {
-      // Set the error to the empty string
+      // Otherwise, the request is properly formulated
       this.setState({
         error: "",
       });
-
-      // Otherwise, the request is properly formulated
-      /**
-       * TODO: SEND THE REQUEST TO MAKE A NEW ARTICLE, AND REDIRECT
-       */
+      // Post to backend creating new video
+      axios.post('/api/videos/new', {
+        title: this.state.title,
+        description: this.state.description,
+        url: this.state.url,
+      })
+      .then((resp) => {
+        if (!resp.data.success) {
+          // Display error on frontend
+          this.setState({
+            error: resp.data.error,
+          });
+        } else {
+          // Redirect to home after successful submission
+          this.setState({
+            redirectToHome: true,
+          });
+        }
+      });
     }
   }
 
@@ -119,6 +127,7 @@ class ArticleForm extends React.Component {
   render() {
     return (
       <div>
+        { this.state.redirectToHome && <Redirect to="/"/> }
         <Medium>
           <div className="card thin-form no-pad">
             <div className="tabs">
@@ -176,7 +185,7 @@ class ArticleForm extends React.Component {
                 type="submit"
                 value="Create Video"
                 className={
-                  this.state.title && this.state.video && this.state.description ? (
+                  this.state.title && this.state.url && this.state.description ? (
                     "btn btn-primary full-width"
                   ) : (
                     "btn btn-primary disabled full-width"

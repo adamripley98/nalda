@@ -1,9 +1,16 @@
 // Import frameworks
 import React from 'react';
+import axios from 'axios';
+import PropTypes from 'prop-types';
+
+// Import components
 import Button from '../../shared/Button';
 
 /**
- * Component to render a listing
+ * Component to render a videos
+ * TODO: Add error component
+ * TODO: Add loading component
+ * TODO: Add pending?
  */
 class Video extends React.Component {
   // Constructor method
@@ -12,18 +19,50 @@ class Video extends React.Component {
 
     // Set the state with dummy data
     this.state = {
-      url: "https://www.youtube.com/watch?v=feFPZXgF9ts",
-      title: "Philly's pitch for Amazon",
-      description: "Lorem ipsum dolor amet semiotics succulents normcore poutine. Live-edge meh banjo, mixtape unicorn ugh vexillologist lomo single-origin coffee ennui marfa shaman pabst. 90's kinfolk banjo narwhal messenger bag 3 wolf moon tumblr taiyaki salvia hexagon artisan. Poutine forage before they sold out beard ethical iPhone cliche mumblecore direct trade cloud bread tilde chambray knausgaard drinking vinegar. Chartreuse put a bird on it bitters, bespoke salvia ugh XOXO literally.\n\nUgh flexitarian banjo selfies normcore. 3 wolf moon portland kitsch, af squid readymade schlitz. Activated charcoal fam chambray pok pok selvage. Sartorial cornhole church-key ramps bitters. Tumblr salvia fanny pack put a bird on it af shaman.",
+      video: {},
     };
 
     // Bind this to helper functions
     this.renderVideo = this.renderVideo.bind(this);
   }
 
+  // Pull the video data from the database
+  componentDidMount() {
+    // Find the id in the url
+    const id = this.props.match.params.id;
+
+    // Find the video
+    axios.get(`/api/videos/${id}`)
+      .then(res => {
+        if (res.data.success) {
+          this.setState({
+            error: "",
+            video: res.data.data,
+          });
+        } else {
+          // If there was an error with the request
+          this.setState({
+            error: res.data.error,
+          });
+        }
+      })
+      .catch(err => {
+        // If there was an error making the request
+        this.setState({
+          error: err,
+          pending: false,
+        });
+      });
+  }
+
   // Helper function to render the video
   renderVideo() {
-    const videoID = this.state.url.split("=")[1];
+    // Isolate variables
+    const url = this.state.video.url;
+    let videoID = '';
+    if (url) {
+      videoID = url.split("=")[1];
+    }
     return (
       <iframe
         src={`https://www.youtube.com/embed/${videoID}`}
@@ -44,11 +83,11 @@ class Video extends React.Component {
               { this.renderVideo() }
               <div className="header">
                 <h1 className="title">
-                  { this.state.title }
+                  { this.state.video.title }
                 </h1>
               </div>
               <p className="description">
-                { this.state.description }
+                { this.state.video.description }
               </p>
               <div className="space-1" />
               <Button />
@@ -60,5 +99,9 @@ class Video extends React.Component {
     );
   }
 }
+
+Video.propTypes = {
+  match: PropTypes.object,
+};
 
 export default Video;
