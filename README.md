@@ -124,7 +124,7 @@ Backend for articles and listings
 - [ ] Make sure all form submissions check for empty fields on frontend and/or backend
 
 ## Bugs
-- [ ] Fix authentication route bug
+- [X] Fix authentication route bug
   * When you refresh on a page that requires authentication it redirects to the home page (this should not be the case if the session persists)
 - [ ] Bug where login error crashes app instead of displaying error
   - [ ] 'Cannot set headers after they are sent' error crashes app

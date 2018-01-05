@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
 
 // Article model, contains pertinent information about article
 module.exports = mongoose.model('Article', {
@@ -7,8 +8,6 @@ module.exports = mongoose.model('Article', {
   image: String,
   body: String,
   author: {
-    name: String,
-    _id: String,
-    profilePicture: String,
-  },
+    type: Schema.Types.ObjectId, ref: 'User',
+  }
 });
