@@ -87,10 +87,10 @@ class ArticleForm extends React.Component {
   }
 
   // Helper method to add a new component to the body
-  addNewComponent() {
+  addNewComponent(type) {
     // Create the new component
     const component = {
-      componentType: "text",
+      componentType: type,
       body: "",
     };
 
@@ -226,25 +226,43 @@ class ArticleForm extends React.Component {
                 Body
               </label>
               {
-                this.state.body.map((component, index) => (
-                  <textarea
-                    name="body"
-                    type="text"
-                    className="form-control marg-bot-1"
-                    rows="1"
-                    key={ index }
-                    value={ this.state.body[index].body }
-                    onChange={ (e) => this.handleChangeBody(e, index) }
-                  />
-                ))
+                this.state.body.map((component, index) => {
+                  let placeholder;
+                  if (component.componentType === "text") {
+                    placeholder = "Enter text...";
+                  } else if (component.componentType === "image") {
+                    placeholder = "Enter URL to an image...";
+                  }
+
+                  // Return the textarea associated with the component
+                  return (
+                    <textarea
+                      placeholder={ placeholder }
+                      name="body"
+                      type="text"
+                      className="form-control marg-bot-1"
+                      rows="1"
+                      key={ index }
+                      value={ this.state.body[index].body }
+                      onChange={ (e) => this.handleChangeBody(e, index) }
+                    />
+                  );
+                })
               }
-              <div className="buttons marg-bot-1">
-                <div className="btn btn-secondary marg-bot-1" onClick={ this.addNewComponent }>
-                  Add new text
-                </div>
-                <div className="btn btn-secondary marg-bot-1" onClick={ this.addNewComponent }>
-                  Add new image
-                </div>
+              <label>
+                Add a new section
+              </label>
+              <div className="icons marg-bot-1">
+                <i
+                  className="fa fa-align-justify"
+                  aria-hidden="true"
+                  onClick={ () => this.addNewComponent("text") }
+                />
+                <i
+                  className="fa fa-picture-o"
+                  aria-hidden="true"
+                  onClick={ () => this.addNewComponent("image") }
+                />
               </div>
 
               <input

@@ -121,11 +121,27 @@ class Article extends React.Component {
                   { this.renderAuthor() }
                   <img src={ this.state.image } alt={ this.state.title } className="img-fluid" />
                   {
-                    this.state.body.map((component, index) => (
-                      <p key={ index }>
-                        { component.body }
-                      </p>
-                    ))
+                    this.state.body.map((component, index) => {
+                      if (component.componentType === "text") {
+                        return (
+                          <p key={ index }>
+                            { component.body }
+                          </p>
+                        );
+                      } else if (component.componentType === "image") {
+                        return (
+                          <img
+                            key={ index }
+                            src={ component.body }
+                            alt={ this.state.title }
+                            className="img-fluid"
+                          />
+                        );
+                      }
+
+                      // If there was not a component type match
+                      return null;
+                    })
                   }
                   <div className="space-1" />
                   <Button />

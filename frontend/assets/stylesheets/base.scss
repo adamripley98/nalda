@@ -243,6 +243,25 @@ a {
       border-bottom: 2px solid $secondary;
     }
   }
+
+  // Style clickable icon sections
+  .icons {
+    margin-top: 0.5rem;
+
+    .fa {
+      font-size: 2rem;
+      color: $gray;
+      margin-right: 1rem;
+      cursor: hand;
+      cursor: pointer;
+
+      &:hover,
+      &:focus,
+      &:active {
+        color: $dark-gray;
+      }
+    }
+  }
 }
 
 // General form control styling

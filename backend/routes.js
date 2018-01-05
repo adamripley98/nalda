@@ -327,6 +327,26 @@ module.exports = () => {
       error = "Image must be a valid URL to an image.";
     } else if (typeof body !== "object" || !Array.isArray(body)) {
       error = "Body must be an array";
+    } else {
+      for (let i = 0; i < body.length && !error; i++) {
+        const component = body[i];
+        if (!component) {
+          error = "Each component must be defined.";
+        } else if (!component.body) {
+          error = "Each component must be populated with text.";
+        } else if (component.componentType !== "text" && component.componentType !== "image") {
+          error = "Component type must be either text or image.";
+        } else if (component.componentType === "image") {
+          // Ensure that the URL to the image is proper
+          // This means that it is both a URL and an image file
+          const imgRegexp = /\.(jpeg|jpg|gif|png)$/;
+          if (!imgRegexp.test(component.body)) {
+            error = "Image url must end in \"jpeg\", \"png\", \"gif\", or \"jpg\".";
+          } else if (!urlRegexp.test(component.body)) {
+            error = "Image url must be a valid URL.";
+          }
+        }
+      }
     }
 
     // If there was an error or not
