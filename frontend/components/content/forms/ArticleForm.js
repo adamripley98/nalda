@@ -236,16 +236,33 @@ class ArticleForm extends React.Component {
 
                   // Return the textarea associated with the component
                   return (
-                    <textarea
-                      placeholder={ placeholder }
-                      name="body"
-                      type="text"
-                      className="form-control marg-bot-1"
-                      rows="1"
-                      key={ index }
-                      value={ this.state.body[index].body }
-                      onChange={ (e) => this.handleChangeBody(e, index) }
-                    />
+                    <div className="component">
+                      <textarea
+                        placeholder={ placeholder }
+                        name="body"
+                        type="text"
+                        className="form-control marg-bot-1"
+                        rows="1"
+                        key={ index }
+                        value={ this.state.body[index].body }
+                        onChange={ (e) => this.handleChangeBody(e, index) }
+                      />
+                      {
+                        (index !== 0 || this.state.body.length > 1) && (
+                          <i
+                            className="fa fa-trash-o"
+                            aria-hidden="true"
+                            onClick={() => {
+                              const bodyObj = this.state.body;
+                              bodyObj.splice(index, 1);
+                              this.setState({
+                                body: bodyObj,
+                              });
+                            }}
+                          />
+                        )
+                      }
+                    </div>
                   );
                 })
               }
