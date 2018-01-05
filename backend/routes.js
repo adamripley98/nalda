@@ -45,7 +45,8 @@ module.exports = () => {
   });
 
   /**
-   * Route to handle adding new admins, admins allowed to add more admins/curators and create content
+   * Route to handle adding new admins
+   * Admins are allowed to add more admins/curators and create content
    * @param userToAdd
    */
   router.post('/admin/new', (req, res) => {
@@ -459,10 +460,10 @@ module.exports = () => {
     });
   });
 
-/**
- * Route to handle creating new listings
- * @param title
- * @param description
+  /**
+   * Route to handle creating new listings
+   * @param title
+   * @param description
    * @param image
    * @param hours
    * @param rating (0.5 increments from 0 to 5)
@@ -800,7 +801,7 @@ module.exports = () => {
   });
 
   /**
-   * Show a given users profile
+   * Find a given user's profile
    */
   router.get('/users/:id', (req, res) => {
     // Find the id from the url

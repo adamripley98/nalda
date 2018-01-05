@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Sidebar from './Sidebar';
+import Search from './Search';
 
 /**
  * Renders the navbar at the top of the screen on all pages.
@@ -46,21 +47,8 @@ class Nav extends Component {
         </Link>
 
         { /* Render the search bar on the left of the navbar */ }
-        <div className="search">
-          <i className="fa fa-search" aria-hidden="true" />
-          <input
-            className="form-control small"
-            value={ this.state.seach }
-            onChange={ this.handleChangeSearch }
-            placeholder="Search"
-          />
-          <input
-            className="form-control large"
-            value={ this.state.seach }
-            onChange={ this.handleChangeSearch }
-            placeholder="Search for activities, places, or curators"
-          />
-        </div>
+        <Search />
+
         { /* Render the user's profile information if the user is logged in */ }
         { /* If the user is not logged in, an empty div is returned */ }
         { /* NOTE the empty div preserves styling of the sidebar */ }

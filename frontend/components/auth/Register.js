@@ -26,6 +26,7 @@ class Register extends Component {
     this.state = {
       email: '',
       name: '',
+      location: '',
       password: '',
       verPassword: '',
       error: '',
@@ -36,6 +37,7 @@ class Register extends Component {
     this.handleRegisterSubmit = this.handleRegisterSubmit.bind(this);
     this.handleChangeName = this.handleChangeName.bind(this);
     this.handleChangeEmail = this.handleChangeEmail.bind(this);
+    this.handleChangeLocation = this.handleChangeLocation.bind(this);
     this.handleChangePassword = this.handleChangePassword.bind(this);
     this.handleChangeVerifyPassword = this.handleChangeVerifyPassword.bind(this);
   }
@@ -44,7 +46,6 @@ class Register extends Component {
    * Handle when the register form is submitted
    * TODO name
    * TODO profile picture
-   * TODO front end validations
    */
   handleRegisterSubmit(event) {
     // Prevent the default submit action
@@ -53,6 +54,7 @@ class Register extends Component {
     // Isolate form fields
     const name = this.state.name;
     const email = this.state.email;
+    const location = this.state.location;
     const password = this.state.password;
     const verPassword = this.state.verPassword;
     const onRegister = this.props.onRegister;
@@ -79,6 +81,10 @@ class Register extends Component {
       this.setState({
         error: "Password and confirm password must match.",
       });
+    } else if (!location) {
+      this.setState({
+        error: "Location must be populated.",
+      });
     } else {
       // Fields are all populated
       // Remove any existing error
@@ -90,6 +96,7 @@ class Register extends Component {
       axios.post('/api/register', {
         name,
         username: email,
+        location,
         password,
         verPassword,
       })
@@ -127,7 +134,16 @@ class Register extends Component {
    */
   handleChangeEmail(event) {
     this.setState({
-      email: event.target.value
+      email: event.target.value,
+    });
+  }
+
+  /**
+   * Handle when a user changes their location
+   */
+  handleChangeLocation(event) {
+    this.setState({
+      location: event.target.value,
     });
   }
 
@@ -183,6 +199,16 @@ class Register extends Component {
               required="true"
             />
             <label>
+              Location
+            </label>
+            <input
+              type="text"
+              className="form-control marg-bot-1"
+              value={this.state.location}
+              onChange={ this.handleChangeLocation }
+              required="true"
+            />
+            <label>
               Password
             </label>
             <input
@@ -210,6 +236,7 @@ class Register extends Component {
                   this.state.verPassword &&
                   this.state.password &&
                   this.state.email &&
+                  this.state.location &&
                   this.state.password === this.state.verPassword
                 ) ? (
                   "btn btn-primary full-width"
