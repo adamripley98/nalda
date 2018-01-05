@@ -109,7 +109,7 @@ h6,
 .btn {
   cursor: hand;
   cursor: pointer;
-  font-weight: bold;
+  font-weight: bold !important;
   border: 0px solid transparent;
 
   &.full-width {
@@ -118,6 +118,8 @@ h6,
 
   &.btn-primary {
     background: $primary;
+    color: white !important;
+    border: 0px solid transparent;
 
     &:hover,
     &:active,
@@ -172,12 +174,12 @@ h6,
 // Remove underline on all anchor tags
 a {
   text-decoration: none !important;
-  color: $secondary;
+  color: $primary;
 
   &:active,
   &:focus,
   &:hover {
-    color: $dark-secondary;
+    color: $dark-primary;
   }
 
   &:active,
@@ -240,7 +242,49 @@ a {
 
     &:focus,
     &:active {
-      border-bottom: 2px solid $secondary;
+      border-bottom: 2px solid $primary;
+    }
+  }
+
+  // Style clickable icon sections
+  .icons {
+    margin-top: 0.5rem;
+
+    .fa {
+      font-size: 2rem;
+      color: $gray;
+      margin-right: 1rem;
+      cursor: hand;
+      cursor: pointer;
+
+      &:hover,
+      &:focus,
+      &:active {
+        color: $dark-gray;
+      }
+    }
+  }
+
+  .component {
+    display: flex;
+
+    .form-control {
+      flex: 1;
+    }
+
+    .fa {
+      color: $gray;
+      cursor: hand;
+      cursor: pointer;
+      font-size: 1.4rem;
+      margin-left: 0.5rem;
+      margin-top: 0.4rem;
+
+      &:hover,
+      &:focus,
+      &:active {
+        color: $dark-gray;
+      }
     }
   }
 }
@@ -255,7 +299,7 @@ a {
 
   &:active,
   &:focus {
-    border: 1px solid $secondary;
+    border: 1px solid $primary;
   }
 }
 
