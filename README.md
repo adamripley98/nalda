@@ -61,7 +61,6 @@ Backend for articles and listings
 - [X] Setting up SCSS
 - [X] Video styling
 - [ ] Login/Register/Reset/Edit Account Form styling
-- [ ] Sendgrid configuration for sending emails
 - [X] Individual listing view
 - [X] Routing 	
 - [ ] User show pages (backend is working, needs to be styled though)
@@ -75,7 +74,6 @@ Backend for articles and listings
 - [X] Home page needs to have other ways of sorting: most popular, by category, by author?, etc
 - [X] Side Nav Bar should close once an option is clicked
 - [X] Nav bar should only show name and location when a user is logged in
-- [ ] Make it easier for an admin to enter hours (some sort of autofill)
 - [ ] Icons for all amenities
 - [X] Get rid of article reducer
 - [X] Style nav bar so it looks okay when no user is logged in (no user or location)
@@ -96,8 +94,6 @@ Backend for articles and listings
   - [X] Listings
   - [X] Curators
   - [ ] Location
-- [ ] Recommending content for users to look at
-  * To begin they can be location based and random
 - [ ] Domain registration/setup
 - [ ] Better user auth checks on the backend
 - [ ] Better parameter error checking on the backend
@@ -106,9 +102,6 @@ Backend for articles and listings
   - [ ] Videos
   - [ ] Listings
   - [X] Articles
-- [ ] Split up `routes.js` into many smaller files
-- [ ] Sort reviews functionality (time, rating)
-- [ ] Deal with location
 - [X] Curator profile view
 - [ ] Change/forgot password backend
 - [ ] Replace dummy data
@@ -129,7 +122,7 @@ Backend for articles and listings
 - [ ] Load component on `Account.js` and `Profile.js` and others.
 - [ ] Sorting buttons at top of `Listings.js`, `Videos.js`, and `Articles.js` (actual sorting done)
 
-## Other
+## General cleanup
 
 - [X] Make a check in the `AppContainer` component to ensure that `passport` and `redux` are in sync (`redux persist`) makes it such that this can outlast the backend session
 - [X] Style about page
@@ -143,13 +136,23 @@ Backend for articles and listings
 - [ ] Search by Location
 - [ ] Issue where "ada" doesn't populate "adam ripley" but "adam" does (I think best way to deal with this is search button)
 - [ ] Don't let it search through reviews
+- [ ] Frontend issue where it displays two articles on one line
 
 ## Bugs
 - [X] Fix authentication route bug
   * When you refresh on a page that requires authentication it redirects to the home page (this should not be the case if the session persists)
-- [ ] Bug where login error crashes app instead of displaying error
-  - [ ] 'Cannot set headers after they are sent' error crashes app
+- [X] Bug where login error crashes app instead of displaying error
+  - [X] 'Cannot set headers after they are sent' error crashes app
 - [X] Persist issue, now it makes you log back in all the time. Perhaps passport session is very short?
+
+## Features for next update
+- [ ] Sendgrid configuration for sending emails
+- [ ] Make it easier for an admin to enter hours (some sort of autofill)
+- [ ] Recommending content for users to look at
+  * To begin they can be location based and random
+- [ ] Split up `routes.js` into many smaller files
+- [ ] Sort reviews functionality (time, rating)
+- [ ] Deal with location
 
 ## Questions
 
