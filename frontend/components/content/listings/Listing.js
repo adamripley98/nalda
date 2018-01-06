@@ -209,7 +209,7 @@ class Listing extends React.Component {
         <p>
           There { count === 1 ? ("is 1 review") : (`are ${count} reviews`) } on this listing
           {
-            (count === 0) ? (".") : (`with an average rating of ${ average.toFixed(1) } out of 5.0 stars.`)
+            (count === 0) ? (".") : (` with an average rating of ${ average.toFixed(1) } out of 5.0 stars.`)
           }
         </p>
         <ReviewForm listingId={listingId} updateReviews={this.updateReviews}/>

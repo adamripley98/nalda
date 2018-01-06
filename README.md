@@ -153,6 +153,7 @@ Backend for articles and listings
 - [ ] Split up `routes.js` into many smaller files
 - [ ] Sort reviews functionality (time, rating)
 - [ ] Deal with location
+- [ ] Give user model a "private" field (object containing info like password, email, etc) & have API not return it.
 
 ## Questions
 

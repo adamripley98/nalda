@@ -78,6 +78,7 @@ module.exports = () => {
             // If no error saving new user, returns successfully
             res.send({
               success: true,
+              error: '',
             });
           }
         });
@@ -86,7 +87,7 @@ module.exports = () => {
   });
 
   /**
-   * Route to handle adding new curators, allowed to create content but not add others
+   * Route to handle adding new curators who are allowed to create content but not add others
    * @param userToAdd
    */
   router.post('/curator/new', (req, res) => {
@@ -117,6 +118,7 @@ module.exports = () => {
             // If no error saving new user, returns successfully
             res.send({
               success: true,
+              error: '',
             });
           }
         });
@@ -253,8 +255,15 @@ module.exports = () => {
                         curators.push(user);
                       }
                     });
+                    // Do not return private information about curators (password, username, etc)
+                    curators.forEach((curator) => {
+                      curator.password = '';
+                      curator.userType = '';
+                      curator.username = '';
+                    });
                     // TODO: Display all of their content as well
                     // If there were no errors, send back all data
+                    console.log('cur', curators);
                     res.send({
                       success: true,
                       error: '',
@@ -429,6 +438,7 @@ module.exports = () => {
         });
       } else {
         // If everything went as planned, send back user
+        // TODO: don't send back private user info
         res.send({
           success: true,
           data: user,
@@ -1025,6 +1035,7 @@ module.exports = () => {
               success: false,
               error: er,
             });
+          // TODO: don't send back private user info
           } else {
             res.send({
               success: true,

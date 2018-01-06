@@ -21,7 +21,7 @@ import Loading from '../shared/Loading';
 class Account extends Component {
   /**
    * Constructor method
-   * TODO replace dummy data: location, prof pic, etc.
+   * TODO replace dummy data: location, prof pic
    * TODO allow changing profile pic, password, location
    * TODO profile pic needs to be shown
    * TODO edit location
@@ -36,7 +36,7 @@ class Account extends Component {
       location: '',
       profilePicture: '',
       error: '',
-      pending: false,
+      pending: true,
       adminPopover: false,
       editName: false,
       editBio: false,
@@ -69,10 +69,17 @@ class Account extends Component {
           bio: resp.data.data.bio,
           location: resp.data.data.location.name,
           error: "",
+          pending: false
+        });
+      } else {
+        this.setState({
+          error: resp.data.error,
+          pending: false,
         });
       }
     }).catch((err) => {
       this.setState({
+        pending: false,
         error: err,
       });
     });

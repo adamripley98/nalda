@@ -4,11 +4,12 @@ import { Redirect, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import PropTypes from 'prop-types';
-import Button from './shared/Button';
-import Loading from './shared/Loading';
+
 
 // Import components
 import ErrorMessage from './shared/ErrorMessage';
+import Button from './shared/Button';
+import Loading from './shared/Loading';
 import ArticlePreview from './content/articles/ArticlePreview';
 
 /**
@@ -29,7 +30,7 @@ class Profile extends Component {
       location: 'University City, PA',
       profilePicture: '',
       error: '',
-      pending: false,
+      pending: true,
       content: [],
     };
   }
@@ -51,14 +52,17 @@ class Profile extends Component {
           bio: resp.data.data.bio,
           error: "",
           content: resp.data.articles,
+          pending: false,
         });
       } else {
         this.setState({
+          pending: false,
           error: resp.data.error,
         });
       }
     }).catch((err) => {
       this.setState({
+        pending: false,
         error: err,
       });
     });
