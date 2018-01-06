@@ -58,7 +58,13 @@ class Nav extends Component {
               <div className="user-text">
                 { /* Render the user's location information */ }
                 <div className="location">
-                  University City, PA
+                  {
+                    this.props.location.indexOf(",") > 0 ? (
+                      this.props.location.substring(0, this.props.location.lastIndexOf(","))
+                    ) : (
+                      this.props.location
+                    )
+                  }
                 </div>
                 <div className="name">
                   <p>
@@ -93,12 +99,14 @@ class Nav extends Component {
 Nav.propTypes = {
   userId: PropTypes.string,
   name: PropTypes.string,
+  location: PropTypes.string,
 };
 
 const mapStateToProps = state => {
   return {
     userId: state.authState.userId,
     name: state.authState.name,
+    location: state.authState.location,
   };
 };
 

@@ -128,11 +128,18 @@ class Register extends Component {
                   error: resp.data.error,
                 });
               } else {
-                // If successful, redirect to home page and dispatch a register event
+                // If successful, redirect to home page
                 this.setState({
                   redirectToHome: true,
                 });
-                onRegister(resp.data.user._id, resp.data.user.userType, name);
+
+                // Dispatch a register event
+                onRegister(
+                  resp.data.user._id,
+                  resp.data.user.userType,
+                  name,
+                  location
+                );
               }
             })
             .catch((err) => {
@@ -289,7 +296,7 @@ const mapStateToProps = state => {
 // When we call onRegister now, it will dispatch register event
 const mapDispatchToProps = dispatch => {
   return {
-    onRegister: (userId, userType, name) => dispatch(register(userId, userType, name)),
+    onRegister: (userId, userType, name, location) => dispatch(register(userId, userType, name, location)),
   };
 };
 

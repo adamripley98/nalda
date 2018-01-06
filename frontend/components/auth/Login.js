@@ -22,9 +22,9 @@ class Login extends Component {
     this.state = {
       username: '',
       password: '',
-      redirectToHome: false,
-      error: "",
+      error: '',
     };
+
     // Bindings so 'this' refers to component
     this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
     this.handleChangeEmail = this.handleChangeEmail.bind(this);
@@ -62,11 +62,12 @@ class Login extends Component {
             });
           } else {
             // Dispatch login event for redux state
-            onLogin(resp.data.user._id, resp.data.user.userType, resp.data.user.name);
-            // Set state so that it redirects to home page
-            this.setState({
-              redirectToHome: true,
-            });
+            onLogin(
+              resp.data.user._id,
+              resp.data.user.userType,
+              resp.data.user.name,
+              resp.data.user.location.name
+            );
           }
         })
         .catch((err) => {
@@ -94,7 +95,7 @@ class Login extends Component {
     // If user is logged in or if user successfully logs in, redirects to home
     return (
       <div>
-        {(this.props.userId || this.state.redirectToHome) && <Redirect to="/"/>}
+        {(this.props.userId) && <Redirect to="/"/>}
         <Thin>
           <form className="thin-form" method="POST" onSubmit={ this.handleLoginSubmit }>
             <h2 className="marg-bot-1 bold">
@@ -163,7 +164,7 @@ const mapStateToProps = state => {
 // Allows us to dispatch a login event by calling this.props.onLogin
 const mapDispatchToProps = dispatch => {
   return {
-    onLogin: (userId, userType, name) => dispatch(login(userId, userType, name))
+    onLogin: (userId, userType, name, location) => dispatch(login(userId, userType, name, location))
   };
 };
 

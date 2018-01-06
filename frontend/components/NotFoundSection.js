@@ -17,7 +17,10 @@ class NotFoundSection extends Component {
     return (
       <Thin>
         <div className="card pad-1 marg-top-1">
-          <h2 className="bold marg-bot-1">
+          <div className="not-found-compass">
+            <img src="https://s3.amazonaws.com/nalda/logo_gray.svg" alt="Nalda" />
+          </div>
+          <h2 className="bold marg-bot-1 dark-gray-text">
             {
               this.props.title ? this.props.title : "Page not found"
             }

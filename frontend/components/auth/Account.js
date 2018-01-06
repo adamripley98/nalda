@@ -24,6 +24,7 @@ class Account extends Component {
    * TODO replace dummy data: location, prof pic, etc.
    * TODO allow changing profile pic, password, location
    * TODO profile pic needs to be shown
+   * TODO edit location
    */
   constructor(props) {
     super(props);
@@ -32,7 +33,7 @@ class Account extends Component {
       email: '',
       type: '',
       bio: '',
-      location: 'University City, PA',
+      location: '',
       profilePicture: '',
       error: '',
       pending: false,
@@ -66,6 +67,7 @@ class Account extends Component {
           email: resp.data.data.username,
           type: resp.data.data.userType,
           bio: resp.data.data.bio,
+          location: resp.data.data.location.name,
           error: "",
         });
       }
