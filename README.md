@@ -123,14 +123,14 @@ Backend for articles and listings
 - [X] Nav bar style when no one is logged in
 - [ ] Style curator profile view (`Profile.js`). Add profile picture spot! (also add profile pic spot to `Account.js`)
 - [ ] Back to home button on individual listing page
-- [ ] Style search button in Nav bar (make it only visible when someone has typed something)
+- [X] Style search button in Nav bar (make it only visible when someone has typed something)
 - [ ] Display search results on the frontend (backend is done)
 - [ ] Load component on `Account.js` and `Profile.js` and others.
 
 ## Other
 
 - [X] Make a check in the `AppContainer` component to ensure that `passport` and `redux` are in sync (`redux persist`) makes it such that this can outlast the backend session
-- [ ] Style about page
+- [X] Style about page
 - [ ] General clean up, get rid of console.logs and deal with errors better
 - [ ] Change title tag, description, other meta tags depending on the page
 - [ ] Get rid of redux capabilities of all components that don't use redux

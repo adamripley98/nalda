@@ -1,6 +1,7 @@
 // Import frameworks
 import React, { Component } from 'react';
 import autosize from 'autosize';
+import axios from 'axios';
 
 // Import components
 import Thin from './shared/Thin';
@@ -27,6 +28,7 @@ class Contact extends Component {
     this.handleChangeName = this.handleChangeName.bind(this);
     this.handleChangeEmail = this.handleChangeEmail.bind(this);
     this.handleChangeMessage = this.handleChangeMessage.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   // Resize textarea to fit input
@@ -56,6 +58,7 @@ class Contact extends Component {
   }
 
   // Handle a user submitting the form
+  // TODO: implement on the backend
   handleSubmit(event) {
     // Prevent the default action
     event.preventDefault();
@@ -70,10 +73,23 @@ class Contact extends Component {
       this.setState({
         error: "",
       });
-
-      /**
-       * TODO
-       */
+      // Send request to backend
+      axios.post('/api/contact', {
+        name: this.state.name,
+        email: this.state.email,
+        message: this.state.message,
+      })
+      .then((resp) => {
+        console.log(resp.data);
+        this.setState({
+          error: resp.data.error + ' For now contact us at contact@naldaeasytravel.com',
+        });
+      })
+      .catch((err) => {
+        this.setState({
+          error: err,
+        });
+      });
     }
   }
 
@@ -81,7 +97,7 @@ class Contact extends Component {
   render() {
     return (
       <Thin>
-        <form className="thin-form">
+        <form className="thin-form" onSubmit={this.handleSubmit}>
           <h2 className="bold marg-bot-1">Contact us</h2>
           <p className="marg-bot-1">
             Questions or comments about the app? Interested in joining the Nalda team? Reach out and we will get back to you shortly.
