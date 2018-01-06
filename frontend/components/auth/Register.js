@@ -43,6 +43,19 @@ class Register extends Component {
   }
 
   /**
+   * WHen the component mounts
+   */
+  componentDidMount() {
+    // Autocomplete the user's city
+    const location = document.getElementById("location");
+    const options = {
+      types: ['(cities)'],
+      componentRestrictions: {country: 'us'},
+    };
+    new google.maps.places.Autocomplete(location, options);
+  }
+
+  /**
    * Handle when the register form is submitted
    * TODO name
    * TODO profile picture
@@ -203,6 +216,7 @@ class Register extends Component {
             </label>
             <input
               type="text"
+              id="location"
               className="form-control marg-bot-1"
               value={this.state.location}
               onChange={ this.handleChangeLocation }
