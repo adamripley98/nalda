@@ -13,7 +13,11 @@ const userSchema = new Schema({
   password: String,
   userType: String,
   profilePicture: String,
-  location: String,
+  location: {
+    name: String,
+    lat: Number,
+    lng: Number,
+  },
   bio: String,
   content: {
     type: Schema.Types.ObjectId, ref: 'User',

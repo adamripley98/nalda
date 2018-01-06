@@ -37,7 +37,6 @@ class Register extends Component {
     this.handleRegisterSubmit = this.handleRegisterSubmit.bind(this);
     this.handleChangeName = this.handleChangeName.bind(this);
     this.handleChangeEmail = this.handleChangeEmail.bind(this);
-    this.handleChangeLocation = this.handleChangeLocation.bind(this);
     this.handleChangePassword = this.handleChangePassword.bind(this);
     this.handleChangeVerifyPassword = this.handleChangeVerifyPassword.bind(this);
   }
@@ -67,13 +66,11 @@ class Register extends Component {
     // Isolate form fields
     const name = this.state.name;
     const email = this.state.email;
-    const location = this.state.location;
+    const location = document.getElementById('location').value;
     const password = this.state.password;
     const verPassword = this.state.verPassword;
     const onRegister = this.props.onRegister;
 
-    // Front end error checking
-    // TODO: make sure name is a full name
     if (!name) {
       this.setState({
         error: "Name must be populated.",
@@ -99,37 +96,54 @@ class Register extends Component {
         error: "Location must be populated.",
       });
     } else {
-      // Fields are all populated
-      // Remove any existing error
-      this.setState({
-        error: "",
-      });
+      // Find the longitude and latitude of the location passed in
+      const geocoder = new google.maps.Geocoder();
+      geocoder.geocode({ 'address': location }, (results, status) => {
+        if (status === google.maps.GeocoderStatus.OK) {
+          const latitude = results[0].geometry.location.lat();
+          const longitude = results[0].geometry.location.lng();
 
-      // Post to register, will check on backend in mongo for issues
-      axios.post('/api/register', {
-        name,
-        username: email,
-        location,
-        password,
-        verPassword,
-      })
-        .then((resp) => {
-          // If issue with register, error message will display
-          if (!resp.data.success) {
-            this.setState({
-              error: resp.data.error,
+          // Fields are all populated
+          // Remove any existing error
+          this.setState({
+            error: "",
+          });
+
+          // Post to register, will check on backend in mongo for issues
+          axios.post('/api/register', {
+            name,
+            username: email,
+            location: {
+              name: location,
+              lat: latitude,
+              lng: longitude,
+            },
+            password,
+            verPassword,
+          })
+            .then((resp) => {
+              // If issue with register, error message will display
+              if (!resp.data.success) {
+                this.setState({
+                  error: resp.data.error,
+                });
+              } else {
+                // If successful, redirect to home page and dispatch a register event
+                this.setState({
+                  redirectToHome: true,
+                });
+                onRegister(resp.data.user._id, resp.data.user.userType, name);
+              }
+            })
+            .catch((err) => {
+              console.log('there was an error', err);
             });
-          } else {
-            // If successful, redirect to home page and dispatch a register event
-            this.setState({
-              redirectToHome: true,
-            });
-            onRegister(resp.data.user._id, resp.data.user.userType, name);
-          }
-        })
-        .catch((err) => {
-          console.log('there was an error', err);
-        });
+        } else {
+          this.setState({
+            error: "Invalid location",
+          });
+        }
+      });
     }
   }
 
@@ -148,15 +162,6 @@ class Register extends Component {
   handleChangeEmail(event) {
     this.setState({
       email: event.target.value,
-    });
-  }
-
-  /**
-   * Handle when a user changes their location
-   */
-  handleChangeLocation(event) {
-    this.setState({
-      location: event.target.value,
     });
   }
 
@@ -218,8 +223,6 @@ class Register extends Component {
               type="text"
               id="location"
               className="form-control marg-bot-1"
-              value={this.state.location}
-              onChange={ this.handleChangeLocation }
               required="true"
             />
             <label>
@@ -250,7 +253,7 @@ class Register extends Component {
                   this.state.verPassword &&
                   this.state.password &&
                   this.state.email &&
-                  this.state.location &&
+                  document.getElementById('location').value &&
                   this.state.password === this.state.verPassword
                 ) ? (
                   "btn btn-primary full-width"
