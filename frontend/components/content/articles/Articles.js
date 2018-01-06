@@ -29,7 +29,6 @@ class Articles extends React.Component {
     // Bind this to helper methods
     this.sortByDate = this.sortByDate.bind(this);
     this.sortByTitle = this.sortByTitle.bind(this);
-    this.sortByAuthor = this.sortByAuthor.bind(this);
   }
 
   // Load articles from Mongo once thre component mounts
@@ -110,16 +109,10 @@ class Articles extends React.Component {
     });
   }
 
-  // Method to sort by author
-  sortByAuthor() {
-    // TODO implement
-  }
-
   // Methods renders each individual article
   renderArticles() {
     // If articles are pulled from the database
     if (this.state.articles && this.state.articles.length) {
-      console.log('arts', this.state.articles);
       return this.state.articles.map((art) => (
         <ArticlePreview
           _id={ art._id }
