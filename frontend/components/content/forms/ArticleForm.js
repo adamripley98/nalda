@@ -252,6 +252,7 @@ class ArticleForm extends React.Component {
                           <i
                             className="fa fa-trash-o"
                             aria-hidden="true"
+                            key={ index }
                             onClick={() => {
                               const bodyObj = this.state.body;
                               bodyObj.splice(index, 1);

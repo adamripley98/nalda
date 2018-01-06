@@ -20,7 +20,7 @@
   display: flex;
   position: fixed;
   width: 100%;
-  z-index: 1299;
+  z-index: 1299 !important;
   box-shadow: 0rem 0.1rem 0.05rem rgba(0, 0, 0, 0.05);
 
   .logo {
@@ -85,6 +85,18 @@
       &:-moz-placeholder {
         color: $gray;
       }
+    }
+
+    .search-shade {
+      position: fixed;
+      left: 0;
+      z-index: -2;
+      cursor: hand;
+      cursor: pointer;
+      background: rgba(0, 0, 0, 0.4);
+      width: 100%;
+      height: 100%;
+      top: 57.19px;
     }
   }
 
@@ -161,6 +173,40 @@
           background: $dark-primary;
         }
       }
+    }
+  }
+}
+
+/**
+ * Styling search suggestions
+ */
+.suggestions {
+  position: fixed;
+  width: 100%;
+  height: auto;
+  padding: 1rem;
+  top: 57.19px;
+  background: white;
+  left: 0;
+  border-top: 1px solid $border;
+  box-shadow: 0rem 0.1rem 0.05rem rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid $border;
+
+  .col-12 {
+    margin-bottom: 0.5rem;
+  }
+
+  h4 {
+    color: $dark-gray;
+  }
+
+  a {
+    color: $gray;
+
+    &:hover,
+    &:active,
+    &:focus {
+      color: $dark-gray;
     }
   }
 }
