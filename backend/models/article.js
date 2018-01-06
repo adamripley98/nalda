@@ -14,7 +14,8 @@ const articleSchema = new Schema({
   ],
   author: {
     type: Schema.Types.ObjectId, ref: 'User',
-  }
+  },
+  createdAt: String,
 });
 
 // Creates an index allowing for search functionality

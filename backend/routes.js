@@ -444,7 +444,12 @@ module.exports = () => {
           error: err,
         });
       } else {
-        // If everything went as planned
+        // Add a timestamp field for sorting
+        articles.forEach((article) => {
+          article.createdAt = article._id.getTimestamp();
+          article.save();
+        });
+        // Send back data
         res.send({
           success: true,
           data: articles,
