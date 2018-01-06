@@ -21,7 +21,14 @@ class Articles extends React.Component {
       articles: [],
       pending: true,
       error: "",
+      currentSort: "",
+      titleSortedAscending: false,
+      dateSortedAscending: false,
     };
+
+    // Bind this to helper methods
+    this.sortByDate = this.sortByDate.bind(this);
+    this.sortByTitle = this.sortByTitle.bind(this);
   }
 
   // Load articles from Mongo once thre component mounts
@@ -46,6 +53,59 @@ class Articles extends React.Component {
         pending: false,
         error: err,
       });
+    });
+  }
+
+  // Method to sort by date
+  sortByDate() {
+    // Define variable
+    const sortedArticles = Object.assign([], this.state.articles);
+
+    if (!this.state.dateSortedAscending) {
+      // Sort articles based off date
+      sortedArticles.sort((a, b) => {
+        return new Date(a.createdAt) - new Date(b.createdAt);
+      });
+    } else {
+      // If already sorted ascending, reverse to show descending
+      sortedArticles.reverse();
+    }
+
+    // Display sorted articles
+    this.setState({
+      articles: sortedArticles,
+      dateSortedAscending: !this.state.dateSortedAscending,
+      titleSortedAscending: false,
+    });
+  }
+
+  // Method to sort by title
+  sortByTitle() {
+    // Define variable
+    const sortedArticles = Object.assign([], this.state.articles);
+
+    if (!this.state.titleSortedAscending) {
+      // Sort articles based off title
+      sortedArticles.sort((a, b) => {
+        if (a.title < b.title) {
+          return -1;
+        }
+        if (a.title > b.title) {
+          return 1;
+        }
+        // names must be equal
+        return 0;
+      });
+    } else {
+      // If already sorted ascending, reverse to show descending
+      sortedArticles.reverse();
+    }
+
+    // Display sorted articles
+    this.setState({
+      articles: sortedArticles,
+      titleSortedAscending: !this.state.titleSortedAscending,
+      dateSortedAscending: false,
     });
   }
 
@@ -81,6 +141,8 @@ class Articles extends React.Component {
         <h3 className="title">
           Articles
         </h3>
+        <div onClick={this.sortByTitle}>Sort by title</div>
+        <div onClick={this.sortByDate}>Sort by date</div>
         <div className="row">
           {
             this.state.pending ? (

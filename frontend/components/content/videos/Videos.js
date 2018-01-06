@@ -21,7 +21,11 @@ class Videos extends React.Component {
       videos: [],
       pending: true,
       error: "",
+      titleSortedAscending: false,
     };
+
+    // Bind this for helper methods
+    this.sortByTitle = this.sortByTitle.bind(this);
   }
 
   /**
@@ -49,6 +53,35 @@ class Videos extends React.Component {
           error: err,
         });
       });
+  }
+
+  // Method to sort by title
+  sortByTitle() {
+    // Define variable
+    const sortedVideos = Object.assign([], this.state.videos);
+
+    if (!this.state.titleSortedAscending) {
+      // Sort videos based off title
+      sortedVideos.sort((a, b) => {
+        if (a.title < b.title) {
+          return -1;
+        }
+        if (a.title > b.title) {
+          return 1;
+        }
+        // names must be equal
+        return 0;
+      });
+    } else {
+      // If already sorted ascending, reverse to show descending
+      sortedVideos.reverse();
+    }
+
+    // Display sorted articles
+    this.setState({
+      videos: sortedVideos,
+      titleSortedAscending: !this.state.titleSortedAscending,
+    });
   }
 
   /**
@@ -94,6 +127,7 @@ class Videos extends React.Component {
         <h3 className="title">
           Videos
         </h3>
+        <div onClick={this.sortByTitle}>Sort by title</div>
         <div className="row">
           {
             this.state.pending ? (

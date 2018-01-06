@@ -17,13 +17,13 @@ module.exports = (passport) => {
           success: false,
           error: err,
         });
+      } else {
+        // If the logout was successful
+        res.send({
+          success: true,
+          error: '',
+        });
       }
-
-      // If the logout was successful
-      res.send({
-        success: true,
-        error: '',
-      });
     });
   });
 

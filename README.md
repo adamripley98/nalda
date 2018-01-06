@@ -70,9 +70,9 @@ Backend for articles and listings
 - [X] Video form display
 - [X] Listing form display
 - [ ] Login/Register/Reset/Edit Account Form styling
-- [ ] Ajax search suggestions
+- [X] Ajax search suggestions
 - [X] Incorporate Nalda logo and other advice from Edward
-- [ ] Home page needs to have other ways of sorting: most popular, by category, by author?, etc
+- [X] Home page needs to have other ways of sorting: most popular, by category, by author?, etc
 - [X] Side Nav Bar should close once an option is clicked
 - [X] Nav bar should only show name and location when a user is logged in
 - [ ] Make it easier for an admin to enter hours (some sort of autofill)
@@ -118,14 +118,16 @@ Backend for articles and listings
 - [ ] Replace dummy data in `Account.js`
 - [X] Add bio and content to `user` schema
 - [ ] Update listing review schema to have author's id
+- [ ] Sort listings by amenities
 
 ## Cam
 - [X] Nav bar style when no one is logged in
 - [ ] Style curator profile view (`Profile.js`). Add profile picture spot! (also add profile pic spot to `Account.js`)
 - [ ] Back to home button on individual listing page
 - [X] Style search button in Nav bar (make it only visible when someone has typed something)
-- [ ] Display search results on the frontend (backend is done)
+- [X] Display search results on the frontend (backend is done)
 - [ ] Load component on `Account.js` and `Profile.js` and others.
+- [ ] Sorting buttons at top of `Listings.js`, `Videos.js`, and `Articles.js` (actual sorting done)
 
 ## Other
 
@@ -136,6 +138,11 @@ Backend for articles and listings
 - [ ] Get rid of redux capabilities of all components that don't use redux
 - [ ] Go back and take care of all TODO's
 - [ ] Make sure all form submissions check for empty fields on frontend and/or backend
+
+## Search
+- [ ] Search by Location
+- [ ] Issue where "ada" doesn't populate "adam ripley" but "adam" does (I think best way to deal with this is search button)
+- [ ] Don't let it search through reviews
 
 ## Bugs
 - [X] Fix authentication route bug

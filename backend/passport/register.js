@@ -22,52 +22,51 @@ module.exports = (passport) => {
         		success: false,
         		error: 'Unknown registration error' + err,
         	});
-        }
-
+        } else
 	    	// Error if the user already exists
         if (user) {
 				  res.send({
 					  success: false,
 				    error: 'User with username' + req.body.username + 'already exists',
 				  });
+        } else {
+          // If no error and user doesn't already exist, create a user
+          // Default sets userType to user, admin can change to admin or curator
+          const newUser = new User({
+            name: req.body.name,
+            username: req.body.username,
+            location: req.body.location,
+            password: createHash(req.body.password),
+            userType: 'user'
+          });
+
+          // Saving new user in Mongo
+          newUser.save((er, usr) => {
+            if (er) {
+              res.send({
+                success: false,
+                error: 'Unknown registration error' + er,
+              });
+            } else {
+              // Built in passport method for logging in
+              req.login(usr, (e) => {
+                if (e) {
+                  res.send({
+                    success: false,
+                    error: 'Error logging in new user' + e
+                  });
+                } else {
+                  // Finally, if registration is successful, send back user
+                  res.send({
+                    success: true,
+                    error: '',
+                    user: usr,
+                  });
+                }
+              });
+            }
+          });
         }
-
-        // If no error and user doesn't already exist, create a user
-        // Default sets userType to user, admin can change to admin or curator
-        const newUser = new User({
-          name: req.body.name,
-          username: req.body.username,
-          location: req.body.location,
-				  password: createHash(req.body.password),
-			    userType: 'user'
-		    });
-
-				// Saving new user in Mongo
-        newUser.save((er, usr) => {
-          if (er) {
-            res.send({
-              success: false,
-              error: 'Unknown registration error' + er,
-            });
-          }
-
-					// Built in passport method for logging in
-			    req.login(usr, (e) => {
-				    if (e) {
-						  res.send({
-						    success: false,
-					      error: 'Error logging in new user' + e
-					    });
-				    }
-
-						// Finally, if registration is successful, send back user
-				    res.send({
-			        success: true,
-					    error: '',
-				      user: usr,
-				    });
-		      });
-        });
 		  });
     }
   });
@@ -103,6 +102,6 @@ const isValidPassword = (password, verPassword) => {
 /**
  * Generates hash using bCrypt, storing password safely
  */
-constcreateHash = (password) => {
+const createHash = (password) => {
   return bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
 };
