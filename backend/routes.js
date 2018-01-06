@@ -68,17 +68,18 @@ module.exports = () => {
       } else {
         // Makes given user an admin
         user.userType = "admin";
-        user.save((err2) => {
-          if (err2) {
+        user.save((errSave) => {
+          if (errSave) {
             res.send({
               success: false,
-              error: err2,
+              error: errSave,
+            });
+          } else {
+            // If no error saving new user, returns successfully
+            res.send({
+              success: true,
             });
           }
-          // If no error saving new user, returns successfully
-          res.send({
-            success: true,
-          });
         });
       }
     });
@@ -106,17 +107,18 @@ module.exports = () => {
       } else {
         // Makes given user an admin
         user.userType = "curator";
-        user.save((err2) => {
-          if (err2) {
+        user.save((errSave) => {
+          if (errSave) {
             res.send({
               success: false,
-              error: err2,
+              error: errSave,
+            });
+          } else {
+            // If no error saving new user, returns successfully
+            res.send({
+              success: true,
             });
           }
-          // If no error saving new user, returns successfully
-          res.send({
-            success: true,
-          });
         });
       }
     });
@@ -215,57 +217,61 @@ module.exports = () => {
           success: false,
           error: errArticle
         });
-      }
-      // Now search through listings
-      Listing.find({"$text": { $search: req.body.search }}, (errListing, listings) => {
-        // Error finding listings
-        if (errListing) {
-          res.send({
-            success: false,
-            error: errListing,
-          });
-        }
-        // Now search through videos
-        Video.find({"$text": { $search: req.body.search }}, (errVideo, videos) => {
-          // Error finding videos
-          if (errVideo) {
+      } else {
+        // Now search through listings
+        Listing.find({"$text": { $search: req.body.search }}, (errListing, listings) => {
+          // Error finding listings
+          if (errListing) {
             res.send({
               success: false,
-              error: errVideo,
+              error: errListing,
             });
-          }
-          // Now search through users
-          User.find({"$text": { $search: req.body.search }}, (errUser, users) => {
-            // Error finding users
-            if (errUser) {
-              res.send({
-                success: false,
-                error: errUser,
-              });
-            }
-            // Make sure that users are curators or admins, do not want to be able to search for regular users
-            const curators = [];
-            // Check each user to make sure they are admin or curator before returning
-            users.forEach((user) => {
-              if (user.userType !== 'user') {
-                curators.push(user);
+          } else {
+            // Now search through videos
+            Video.find({"$text": { $search: req.body.search }}, (errVideo, videos) => {
+              // Error finding videos
+              if (errVideo) {
+                res.send({
+                  success: false,
+                  error: errVideo,
+                });
+              } else {
+                // Now search through users
+                User.find({"$text": { $search: req.body.search }}, (errUser, users) => {
+                  // Error finding users
+                  if (errUser) {
+                    res.send({
+                      success: false,
+                      error: errUser,
+                    });
+                  } else {
+                    // Make sure that users are curators or admins, do not want to be able to search for regular users
+                    const curators = [];
+                    // Check each user to make sure they are admin or curator before returning
+                    users.forEach((user) => {
+                      if (user.userType !== 'user') {
+                        curators.push(user);
+                      }
+                    });
+                    // TODO: Display all of their content as well
+                    // If there were no errors, send back all data
+                    res.send({
+                      success: true,
+                      error: '',
+                      data: {
+                        articles,
+                        listings,
+                        videos,
+                        curators,
+                      },
+                    });
+                  }
+                });
               }
             });
-            // TODO: Display all of their content as well
-            // If there were no errors, send back all data
-            res.send({
-              success: true,
-              error: '',
-              data: {
-                articles,
-                listings,
-                videos,
-                curators,
-              },
-            });
-          });
+          }
         });
-      });
+      }
     });
   });
 
@@ -447,6 +453,7 @@ module.exports = () => {
         // Add a timestamp field for sorting
         articles.forEach((article) => {
           article.createdAt = article._id.getTimestamp();
+          // TODO Don't save in mongo
           article.save();
         });
         // Send back data
@@ -739,86 +746,85 @@ module.exports = () => {
         success: false,
         error: 'You must be logged in in order to leave a review on a listing.'
       });
-    }
-
+    } else
     // Ensure all fields are populated before leaving review
     if (!req.body.rating || !req.body.title || !req.body.content) {
       res.send({
         success: false,
         error: 'All fields must be populated.'
       });
-    }
-
-    // If user is logged in, first find author in MongoDB
-    User.findById(req.body.userId, (err, user) => {
-      // Error finding user
-      if (err) {
-        res.send({
-          success: false,
-          error: 'Error finding user' + err,
-        });
-      }
-
-      // If user doesn't exist
-      if (!user) {
-        res.send({
-          success: false,
-          error: 'User does not exist.'
-        });
-      }
-
-      // If no errors can now save new reviews
-      // First find given listing
-      Listing.findById(req.body.listingId, (errr, listing) => {
-        // Error finding listing
-        if (errr) {
+    } else {
+      // If user is logged in, first find author in MongoDB
+      User.findById(req.body.userId, (err, user) => {
+        // Error finding user
+        if (err) {
           res.send({
             success: false,
-            error: errr
+            error: 'Error finding user' + err,
           });
-        }
+        } else
 
-        // Listing doesn't exist for some reason
-        if (!listing) {
+        // If user doesn't exist
+        if (!user) {
           res.send({
             success: false,
-            error: 'Cannot find listing.',
+            error: 'User does not exist.'
+          });
+        } else {
+          // If no errors can now save new reviews
+          // First find given listing
+          Listing.findById(req.body.listingId, (errr, listing) => {
+            // Error finding listing
+            if (errr) {
+              res.send({
+                success: false,
+                error: errr
+              });
+            } else
+
+            // Listing doesn't exist for some reason
+            if (!listing) {
+              res.send({
+                success: false,
+                error: 'Cannot find listing.',
+              });
+            } else {
+              // If listing has been found, update it with review
+              const currentReviews = listing.reviews;
+
+              // Add new review to array of current reviews
+              currentReviews.push({
+                rating: req.body.rating,
+                title: req.body.title,
+                content: req.body.content,
+                createdAt: new Date().getTime(),
+                name: user.name,
+              });
+
+              // Update listing with new review
+              listing.reviews = currentReviews;
+
+              // Resave listing in Mongo
+              listing.save((er) => {
+                // Error saving listing
+                if (er) {
+                  res.send({
+                    success: false,
+                    error: 'Error saving review' + er,
+                  });
+                } else {
+                  // Finally, if review is saved successfully
+                  res.send({
+                    success: true,
+                    error: '',
+                  });
+                }
+              });
+            }
           });
         }
-
-        // If listing has been found, update it with review
-        const currentReviews = listing.reviews;
-
-        // Add new review to array of current reviews
-        currentReviews.push({
-          rating: req.body.rating,
-          title: req.body.title,
-          content: req.body.content,
-          createdAt: new Date().getTime(),
-          name: user.name,
-        });
-
-        // Update listing with new review
-        listing.reviews = currentReviews;
-
-        // Resave listing in Mongo
-        listing.save((er) => {
-          // Error saving listing
-          if (er) {
-            res.send({
-              success: false,
-              error: 'Error saving review' + er,
-            });
-          }
-
-          // Finally, if review is saved successfully
-          res.send({
-            success: true,
-            error: '',
-          });
-        });
       });
-    });
+    }
   });
 
   /**
@@ -979,6 +985,7 @@ module.exports = () => {
     } else {
       /**
        * TODO perform error checking on password strength
+       * TODO allow password change
        */
       res.send({
         success: false,
@@ -1018,13 +1025,14 @@ module.exports = () => {
               success: false,
               error: er,
             });
+          } else {
+            res.send({
+              success: true,
+              error: '',
+              data: user,
+              articles,
+            });
           }
-          res.send({
-            success: true,
-            error: '',
-            data: user,
-            articles,
-          });
         });
       }
     });

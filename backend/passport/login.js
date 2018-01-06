@@ -20,24 +20,24 @@ module.exports = (passport) => {
           success: false,
           error: 'Invalid email or password.'
         });
-      }
-
-      // Built in passport login method
-      req.logIn(user, (loginErr) => {
-        if (loginErr) {
-          res.send({
-            success: false,
-            error: loginErr,
-          });
-        }
-
-        // Finally, if there is no error, send back user
-        res.send({
-          success: true,
-          error: false,
-          user,
+      } else {
+        // Built in passport login method
+        req.logIn(user, (loginErr) => {
+          if (loginErr) {
+            res.send({
+              success: false,
+              error: loginErr,
+            });
+          } else {
+            // Finally, if there is no error, send back user
+            res.send({
+              success: true,
+              error: false,
+              user,
+            });
+          }
         });
-      });
+      }
     })(req, res, next);
   });
 
