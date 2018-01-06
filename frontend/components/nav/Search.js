@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import Loading from '../shared/Loading';
 
 /**
  * Renders the search bar on the navbar
- * TODO Style search button, clear input field when search is done, display errors on frontend, display content somehow
  */
 class Search extends Component {
   // Constructor method
@@ -22,11 +22,13 @@ class Search extends Component {
         curators: [],
       },
       active: false,
+      pending: false,
     };
 
     // Bindings so 'this' refers to component
     this.handleChangeSearch = this.handleChangeSearch.bind(this);
     this.renderSuggestions = this.renderSuggestions.bind(this);
+    this.getSearchResults = this.getSearchResults.bind(this);
   }
 
   /**
@@ -40,37 +42,49 @@ class Search extends Component {
 
     // Else, if there was change in search state
     if (!this.state.error && this.state.search) {
-      axios.post('/api/search', {
-        search: this.state.search,
-      })
-        .then((resp) => {
-          if (!resp.data.success) {
-            this.setState({
-              error: true,
-            });
-          } else {
-            // There is no error
-            this.setState({
-              error: false,
-            });
+      this.getSearchResults();
+    }
+  }
 
-            // TODO: Display results on the frontend
-            // TODO: Clear search input
-            console.log('results are:', resp.data.data);
+  /**
+   * Helper method to search
+   */
+  getSearchResults() {
+    // Denote that new results are on the way
+    this.setState({
+      pending: true,
+    });
 
-            // Update the suggestions
-            this.setState({
-              suggestions: resp.data.data,
-            });
-          }
-        })
-        .catch(() => {
-          // If there was an error
+    // Get new search results
+    axios.post('/api/search', {
+      search: this.state.search,
+    })
+      .then((resp) => {
+        if (!resp.data.success) {
           this.setState({
             error: true,
+            pending: false,
           });
+        } else {
+          // There is no error
+          this.setState({
+            error: false,
+            pending: false,
+          });
+
+          // Update the suggestions
+          this.setState({
+            suggestions: resp.data.data,
+          });
+        }
+      })
+      .catch(() => {
+        // If there was an error
+        this.setState({
+          error: true,
+          pending: false,
         });
-    }
+      });
   }
 
   /**
@@ -102,13 +116,7 @@ class Search extends Component {
    * Render suggestions to the user
    */
   renderSuggestions() {
-    if (this.state.suggestions &&
-        this.state.active && (
-        this.state.suggestions.articles.length ||
-        this.state.suggestions.listings.length ||
-        this.state.suggestions.videos.length ||
-        this.state.suggestions.curators.length
-    )) {
+    if (this.state.active) {
       return (
         <div className="suggestions">
           <div className="container-fluid">
@@ -169,7 +177,21 @@ class Search extends Component {
                   </div>
                 ) : null
               }
+              {
+                !this.state.suggestions.articles.length &&
+                !this.state.suggestions.listings.length &&
+                !this.state.suggestions.videos.length &&
+                !this.state.suggestions.curators.length ? (
+                  <div className="col-12">
+                    <h4 className="gray-text">
+                      ...
+                    </h4>
+                  </div>
+                ) : null
+              }
             </div>
+
+            { this.state.pending && <Loading /> }
           </div>
         </div>
       );

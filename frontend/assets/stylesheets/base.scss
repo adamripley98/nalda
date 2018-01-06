@@ -461,7 +461,10 @@ a {
   .title {
     font-weight: bold;
     margin-bottom: 1rem;
-    color: black;
+  }
+
+  .section-title {
+    color: $dark-gray;
   }
 }
 

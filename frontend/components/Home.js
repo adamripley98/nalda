@@ -162,7 +162,7 @@ class Home extends React.Component {
       <div className="container home">
         <div className="space-1"/>
         { this.state.error && <ErrorMessage error={ this.state.error } /> }
-        <h3 className="title">
+        <h3 className="title section-title">
           Recent articles
         </h3>
         <div className="row">
@@ -184,7 +184,7 @@ class Home extends React.Component {
         }
         <div className="line marg-0" />
         <div className="space-1"/>
-        <h3 className="title">
+        <h3 className="title section-title">
           Recent listings
         </h3>
         <div className="row">
@@ -206,7 +206,7 @@ class Home extends React.Component {
         }
         <div className="line marg-0" />
         <div className="space-1"/>
-        <h3 className="title">
+        <h3 className="title section-title">
           Recent videos
         </h3>
         <div className="row">
