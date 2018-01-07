@@ -1,8 +1,14 @@
+// Import frameworks
 import React, { Component } from 'react';
 import axios from 'axios';
 import { Redirect, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+
+// Import components
+import ErrorMessage from '../shared/ErrorMessage';
+
+// Import actions
 import { logout } from '../../actions/index.js';
 
 /**
@@ -17,6 +23,7 @@ class Sidebar extends Component {
     this.state = {
       redirectToLogin: false,
       active: false,
+      error: '',
     };
 
     // Bindings so 'this' refers to component
@@ -55,17 +62,15 @@ class Sidebar extends Component {
             redirectToLogin: true,
           });
         } else {
-          /**
-           * TODO handle this better
-           */
-          console.log('Log out error', resp.data.error);
+          this.setState({
+            error: resp.data.error,
+          });
         }
       })
       .catch((err) => {
-        /**
-         * TODO handle this better
-         */
-        console.log('There was an error', err);
+        this.setState({
+          error: err,
+        });
       });
   }
 
@@ -77,7 +82,8 @@ class Sidebar extends Component {
       <div>
         {/* Redirect to the login page when the user signs out */}
         { this.state.redirectToLogin && (<Redirect to="/login"/>) }
-
+        {/* Display any errors */}
+        {this.state.error && <ErrorMessage/>}
         {/* Render the clickable menu bars */}
         <div className="menu">
           <div className="bars" onClick={ this.toggleMenu }>

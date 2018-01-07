@@ -5,12 +5,11 @@ import PropTypes from 'prop-types';
 
 // Import components
 import Button from '../../shared/Button';
+import ErrorMessage from '../../shared/ErrorMessage';
+import Loading from '../../shared/Loading';
 
 /**
  * Component to render a videos
- * TODO: Add error component
- * TODO: Add loading component
- * TODO: Add pending?
  */
 class Video extends React.Component {
   // Constructor method
@@ -20,6 +19,8 @@ class Video extends React.Component {
     // Set the state with dummy data
     this.state = {
       video: {},
+      pending: true,
+      error: '',
     };
 
     // Bind this to helper functions
@@ -38,11 +39,13 @@ class Video extends React.Component {
           this.setState({
             error: "",
             video: res.data.data,
+            pending: false,
           });
         } else {
           // If there was an error with the request
           this.setState({
             error: res.data.error,
+            pending: false,
           });
         }
       })
@@ -79,19 +82,22 @@ class Video extends React.Component {
       <div className="video">
         <div className="container">
           <div className="row">
-            <div className="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-              { this.renderVideo() }
-              <div className="header">
-                <h1 className="title">
-                  { this.state.video.title }
-                </h1>
+            { this.state.error && <ErrorMessage error={ this.state.error } /> }
+            { this.state.pending ? <Loading /> : (
+              <div className="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+                { this.renderVideo() }
+                <div className="header">
+                  <h1 className="title">
+                    { this.state.video.title }
+                  </h1>
+                </div>
+                <p className="description">
+                  { this.state.video.description }
+                </p>
+                <div className="space-1" />
+                <Button />
               </div>
-              <p className="description">
-                { this.state.video.description }
-              </p>
-              <div className="space-1" />
-              <Button />
-            </div>
+            )}
           </div>
         </div>
         <div className="space-2" />

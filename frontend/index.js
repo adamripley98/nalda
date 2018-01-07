@@ -12,6 +12,7 @@ import Root from './containers/Root';
 // Imported for styling
 import './assets/stylesheets/base.scss';
 
+// Create store for redux
 const store = createStore(
    rootReducer,
    undefined,
@@ -20,6 +21,7 @@ const store = createStore(
    )
  );
 
+// Allows persisting between refreshes
 const persistor = persistStore(store);
 
 // Persist Store allows redux state to not reset when page refresh

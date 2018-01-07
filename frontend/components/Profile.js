@@ -1,14 +1,13 @@
 // Import framworks
 import React, { Component } from 'react';
-import { Redirect, Link } from 'react-router-dom';
-import { connect } from 'react-redux';
 import axios from 'axios';
 import PropTypes from 'prop-types';
-import Button from './shared/Button';
-import Loading from './shared/Loading';
+
 
 // Import components
 import ErrorMessage from './shared/ErrorMessage';
+import Button from './shared/Button';
+import Loading from './shared/Loading';
 import ArticlePreview from './content/articles/ArticlePreview';
 
 /**
@@ -17,8 +16,7 @@ import ArticlePreview from './content/articles/ArticlePreview';
 class Profile extends Component {
   /**
    * Constructor method
-   * TODO: Replace dummy location, prof pic, and bio data
-   * TODO: Add loading component
+   * TODO: Replace dummy prof pic
    */
   constructor(props) {
     super(props);
@@ -26,10 +24,10 @@ class Profile extends Component {
       name: '',
       email: '',
       bio: '',
-      location: 'University City, PA',
+      location: '',
       profilePicture: '',
       error: '',
-      pending: false,
+      pending: true,
       content: [],
     };
   }
@@ -51,14 +49,18 @@ class Profile extends Component {
           bio: resp.data.data.bio,
           error: "",
           content: resp.data.articles,
+          location: resp.data.data.location.name,
+          pending: false,
         });
       } else {
         this.setState({
+          pending: false,
           error: resp.data.error,
         });
       }
     }).catch((err) => {
       this.setState({
+        pending: false,
         error: err,
       });
     });
@@ -180,20 +182,5 @@ class Profile extends Component {
 Profile.propTypes = {
   match: PropTypes.object,
 };
-
-const mapStateToProps = () => {
-  return {
-  };
-};
-
-const mapDispatchToProps = () => {
-  return {};
-};
-
-// Redux config
-Profile = connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(Profile);
 
 export default Profile;

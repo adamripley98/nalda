@@ -192,15 +192,9 @@ const mapStateToProps = state => {
   };
 };
 
-// Allows us to dispatch a login event by calling this.props.onLogin
-const mapDispatchToProps = () => {
-  return {};
-};
-
 // Redux config
 EditPassword = connect(
     mapStateToProps,
-    mapDispatchToProps
 )(EditPassword);
 
 export default EditPassword;

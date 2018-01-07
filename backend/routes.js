@@ -3,7 +3,6 @@
  * NOTE all of these routes are prefixed with "/api"
  * NOTE these routes serve and accept JSON-formatted data
  * TODO file should be split up into many smaller files
- * TODO when pulling users, should not pull password and other private information
  */
 
 // Import frameworks
@@ -49,6 +48,7 @@ module.exports = () => {
    * Route to handle adding new admins
    * Admins are allowed to add more admins/curators and create content
    * @param userToAdd
+   // TODO: Security, must be admin
    */
   router.post('/admin/new', (req, res) => {
     // finds given user in Mongo
@@ -63,11 +63,17 @@ module.exports = () => {
       } else if (!user) {
         res.send({
           success: false,
-          error: req.body.userToAdd + 'does not seem to exist!'
+          error: req.body.userToAdd + ' does not seem to exist!'
+        });
+      } else if (user.userType === "admin") {
+        res.send({
+          success: false,
+          error: user.name + ' is already an admin.',
         });
       } else {
         // Makes given user an admin
         user.userType = "admin";
+        // Save changes in Mongo
         user.save((errSave) => {
           if (errSave) {
             res.send({
@@ -78,6 +84,7 @@ module.exports = () => {
             // If no error saving new user, returns successfully
             res.send({
               success: true,
+              error: '',
             });
           }
         });
@@ -86,9 +93,10 @@ module.exports = () => {
   });
 
   /**
-   * Route to handle adding new curators, allowed to create content but not add others
+   * Route to handle adding new curators who are allowed to create content but not add others
    * @param userToAdd
    */
+  // TODO: Security, must be admin
   router.post('/curator/new', (req, res) => {
     // finds given user in Mongo
     User.findOne({username: req.body.userToAdd}, (err, user) => {
@@ -104,9 +112,20 @@ module.exports = () => {
           success: false,
           error: req.body.userToAdd + ' does not seem to exist!'
         });
+      } else if (user.userType === "curator") {
+        res.send({
+          success: false,
+          error: user.name + ' is already a curator.'
+        });
+      } else if (user.userType === "admin") {
+        res.send({
+          success: false,
+          error: 'Cannot revoke admin privileges.'
+        });
       } else {
         // Makes given user an admin
         user.userType = "curator";
+        // Save changes in mongo
         user.save((errSave) => {
           if (errSave) {
             res.send({
@@ -117,9 +136,59 @@ module.exports = () => {
             // If no error saving new user, returns successfully
             res.send({
               success: true,
+              error: '',
             });
           }
         });
+      }
+    });
+  });
+
+  /**
+   * Route to handle adding new curators who are allowed to create content but not add others
+   * @param userToAdd
+   // TODO: Security, must be admin
+   */
+  router.post('/curator/remove', (req, res) => {
+    // finds given user in Mongo
+    User.findOne({username: req.body.userToAdd}, (err, user) => {
+      // Lets them know that if there is an error
+      if (err) {
+        res.send({
+          success: false,
+          error: err,
+        });
+      // Makes sure that user exists
+      } else if (!user) {
+        res.send({
+          success: false,
+          error: req.body.userToAdd + ' does not seem to exist!'
+        });
+      } else {
+        // Revokes curator privileges, don't have power to revoke admin privilege though
+        if (user.userType === "curator") {
+          user.userType = "user";
+          // Save changes in mongo
+          user.save((errSave) => {
+            if (errSave) {
+              res.send({
+                success: false,
+                error: errSave,
+              });
+            } else {
+              // If no error saving new user, returns successfully
+              res.send({
+                success: true,
+                error: '',
+              });
+            }
+          });
+        } else {
+          res.send({
+            success: false,
+            error: 'Cannot revoke admin privileges.',
+          });
+        }
       }
     });
   });
@@ -253,8 +322,15 @@ module.exports = () => {
                         curators.push(user);
                       }
                     });
+                    // Do not return private information about curators (password, username, etc)
+                    curators.forEach((curator) => {
+                      curator.password = '';
+                      curator.userType = '';
+                      curator.username = '';
+                    });
                     // TODO: Display all of their content as well
                     // If there were no errors, send back all data
+                    console.log('cur', curators);
                     res.send({
                       success: true,
                       error: '',
@@ -429,6 +505,8 @@ module.exports = () => {
         });
       } else {
         // If everything went as planned, send back user
+        // Remove private user info first
+        user.password = '';
         res.send({
           success: true,
           data: user,
@@ -549,12 +627,12 @@ module.exports = () => {
           });
 
           // Save the new article in Mongo
-          newArticle.save((errr, article) => {
-            if (errr) {
+          newArticle.save((errArticle, article) => {
+            if (errArticle) {
               // If there was an error saving the article
               res.send({
                 success: false,
-                error: errr.message,
+                error: errArticle.message,
               });
             } else {
               // Successfully send back data
@@ -674,6 +752,8 @@ module.exports = () => {
     const price = req.body.price;
     const website = req.body.website;
     const amenities = req.body.amenities;
+    const location = req.body.location;
+
     let error = "";
 
     // Error checking
@@ -690,6 +770,8 @@ module.exports = () => {
       error = "Price must be populated.";
     } else if (!website) {
       error = "Website must be populated.";
+    } else if (!location) {
+      error = "Location must be populated.";
     }
 
     // Handle error if there is one
@@ -709,6 +791,7 @@ module.exports = () => {
         price,
         website,
         amenities,
+        location,
       });
 
       // Save the new article in mongo
@@ -720,7 +803,6 @@ module.exports = () => {
             error: er,
           });
         } else {
-          // TODO: Update user's content
           // Send the data along if it was successfully stored
           res.send({
             success: true,
@@ -755,12 +837,12 @@ module.exports = () => {
       });
     } else {
       // If user is logged in, first find author in MongoDB
-      User.findById(req.body.userId, (err, user) => {
+      User.findById(req.body.userId, (errUser, user) => {
         // Error finding user
-        if (err) {
+        if (errUser) {
           res.send({
             success: false,
-            error: 'Error finding user' + err,
+            error: 'Error finding user' + errUser,
           });
         } else
 
@@ -773,12 +855,12 @@ module.exports = () => {
         } else {
           // If no errors can now save new reviews
           // First find given listing
-          Listing.findById(req.body.listingId, (errr, listing) => {
+          Listing.findById(req.body.listingId, (errListing, listing) => {
             // Error finding listing
-            if (errr) {
+            if (errListing) {
               res.send({
                 success: false,
-                error: errr
+                error: errListing,
               });
             } else
 
@@ -792,34 +874,49 @@ module.exports = () => {
               // If listing has been found, update it with review
               const currentReviews = listing.reviews;
 
-              // Add new review to array of current reviews
-              currentReviews.push({
-                rating: req.body.rating,
-                title: req.body.title,
-                content: req.body.content,
-                createdAt: new Date().getTime(),
-                name: user.name,
-              });
-
-              // Update listing with new review
-              listing.reviews = currentReviews;
-
-              // Resave listing in Mongo
-              listing.save((er) => {
-                // Error saving listing
-                if (er) {
-                  res.send({
-                    success: false,
-                    error: 'Error saving review' + er,
-                  });
-                } else {
-                  // Finally, if review is saved successfully
-                  res.send({
-                    success: true,
-                    error: '',
-                  });
+              // Check if user has already left a review
+              let leftReviewAlready = false;
+              currentReviews.forEach((review) => {
+                if (review.name === user.name) {
+                  leftReviewAlready = true;
                 }
               });
+              // If already left a review send back error
+              if (leftReviewAlready) {
+                res.send({
+                  success: false,
+                  error: "Users may only leave one review."
+                });
+              } else {
+                // Add new review to array of current reviews
+                currentReviews.push({
+                  rating: req.body.rating,
+                  title: req.body.title,
+                  content: req.body.content,
+                  createdAt: new Date().getTime(),
+                  name: user.name,
+                });
+
+                // Update listing with new review
+                listing.reviews = currentReviews;
+
+                // Resave listing in Mongo
+                listing.save((er) => {
+                  // Error saving listing
+                  if (er) {
+                    res.send({
+                      success: false,
+                      error: 'Error saving review' + er,
+                    });
+                  } else {
+                    // Finally, if review is saved successfully
+                    res.send({
+                      success: true,
+                      error: '',
+                    });
+                  }
+                });
+              }
             }
           });
         }
@@ -868,12 +965,12 @@ module.exports = () => {
           user.name = name;
 
           // Save in Mongo
-          user.save((errr) => {
+          user.save((errUser) => {
             // Error saving user
-            if (err) {
+            if (errUser) {
               res.send({
                 success: false,
-                error: errr,
+                error: errUser,
               });
             } else {
               // User name updated successfully
@@ -922,12 +1019,12 @@ module.exports = () => {
           user.bio = bio;
 
           // Save in Mongo
-          user.save((errr) => {
+          user.save((errUser) => {
             // Error saving user
-            if (err) {
+            if (errUser) {
               res.send({
                 success: false,
-                error: errr,
+                error: errUser,
               });
             } else {
               // User bio updated successfully
@@ -1026,6 +1123,8 @@ module.exports = () => {
               error: er,
             });
           } else {
+            // Remove private data before sending back
+            user.password = "";
             res.send({
               success: true,
               error: '',

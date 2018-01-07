@@ -1,8 +1,6 @@
 // Import frameworks
 import React from 'react';
 import axios from 'axios';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 // Import components
@@ -37,7 +35,7 @@ class Home extends React.Component {
    * Pulls articles, listings, and videos simulatneously
    */
   componentDidMount() {
-    // Pull all articles from the database
+    // Pull all articles, listings, and videos from the database
     axios.get('/api/home')
       .then((resp) => {
         if (resp.data.success) {
@@ -124,7 +122,6 @@ class Home extends React.Component {
 
   /**
    * Helper method to render each individual video
-   * TODO render preview?
    */
   renderVideos() {
     // If there are videos to render
@@ -231,23 +228,5 @@ class Home extends React.Component {
     );
   }
 }
-
-Home.propTypes = {
-  openCurrentArticle: PropTypes.func,
-};
-
-const mapStateToProps = () => {
-  return {};
-};
-
-const mapDispatchToProps = () => {
-  return {};
-};
-
-// Redux config
-Home = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Home);
 
 export default Home;

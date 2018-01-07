@@ -11,7 +11,6 @@ import Medium from '../../shared/Medium';
 /**
  * Component to render the new article form
  * TODO integrate with website
- * TODO Fix hours state issue
  */
 class ListingForm extends React.Component {
   // Constructor method
@@ -20,6 +19,7 @@ class ListingForm extends React.Component {
     this.state = {
       title: "",
       description: "",
+      location: "",
       image: "",
       rating: 0.0,
       price: "$",
@@ -54,6 +54,7 @@ class ListingForm extends React.Component {
         },
       },
       error: "",
+      listingId: "",
       redirectToHome: "",
       website: "",
       amenities: {
@@ -90,6 +91,7 @@ class ListingForm extends React.Component {
     this.handleChangeWebsite = this.handleChangeWebsite.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleClickAmenity = this.handleClickAmenity.bind(this);
+    this.handleChangeLocation = this.handleChangeLocation.bind(this);
   }
 
   // Handle resizing textarea
@@ -108,6 +110,13 @@ class ListingForm extends React.Component {
   handleChangeDescription(event) {
     this.setState({
       description: event.target.value,
+    });
+  }
+
+  // Helper method to handle a change to the location state
+  handleChangeLocation(event) {
+    this.setState({
+      location: event.target.value,
     });
   }
 
@@ -185,6 +194,7 @@ class ListingForm extends React.Component {
       axios.post('/api/listings/new', {
         title: this.state.title,
         image: this.state.image,
+        location: this.state.location,
         description: this.state.description,
         hours: this.state.hours,
         rating: this.state.rating,
@@ -201,6 +211,7 @@ class ListingForm extends React.Component {
           } else {
             // Redirect to home if successful
             this.setState({
+              listingId: resp.data.data._id,
               redirectToHome: true,
             });
           }
@@ -238,6 +249,11 @@ class ListingForm extends React.Component {
         error: "Subtitle must be between 4 and 2000 characters long.",
       });
       return false;
+    } else if (this.state.location.length < 4 || this.state.location.length > 100) {
+      this.setState({
+        error: "Location must be between 4 and 100 characters long.",
+      });
+      return false;
     }
     // Set the error to the empty string if everything is valid
     this.setState({
@@ -253,7 +269,7 @@ class ListingForm extends React.Component {
   render() {
     return (
       <div>
-        { this.state.redirectToHome && <Redirect to="/"/> }
+        { this.state.redirectToHome && <Redirect to={`/listings/${this.state.listingId}`}/> }
         <Medium>
           <div className="card thin-form no-pad">
             <div className="tabs">
@@ -282,6 +298,16 @@ class ListingForm extends React.Component {
                 className="form-control marg-bot-1"
                 value={ this.state.image }
                 onChange={ this.handleChangeImage }
+              />
+              <label>
+                Location
+              </label>
+              <input
+                name="title"
+                type="text"
+                className="form-control marg-bot-1"
+                value={ this.state.location }
+                onChange={ this.handleChangeLocation }
               />
               <label>
                 Description

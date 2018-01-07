@@ -1,15 +1,15 @@
 // Import frameworks
 import React from 'react';
-import ErrorMessage from '../../shared/ErrorMessage';
 import autosize from 'autosize';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import axios from 'axios';
 
+// Import components
+import ErrorMessage from '../../shared/ErrorMessage';
+
 /**
  * Component to render the form to review applications
- * TODO handle submit
- * TODO only let a user leave 1 review on a listing
  */
 class ReviewForm extends React.Component {
   /**
@@ -85,36 +85,51 @@ class ReviewForm extends React.Component {
     // Prevent the default form action
     event.preventDefault();
     // Post to backend
-    // TODO: Error checking, make sure fields are populated.
-    axios.post('/api/reviews/new', {
-      rating: this.state.rating,
-      title: this.state.title,
-      content: this.state.content,
-      userId: this.props.userId,
-      listingId: this.props.listingId,
-    })
-    .then((resp) => {
-      // If error, display it
-      if (!resp.data.success) {
-        this.setState({
-          error: resp.data.error,
-        });
-      }
-      // Calls parent component (Listing.js) method to display new review
-      this.props.updateReviews();
-
-      // Clear fields after submission
+    if (!this.state.rating) {
       this.setState({
-        rating: 0.0,
-        title: '',
-        content: '',
+        error: "Rating must be populated.",
       });
-    })
-    .catch((err) => {
-      if (err) {
-        console.log('Error posting review', err);
-      }
-    });
+    } else if (!this.state.title) {
+      this.setState({
+        error: "Title must be populated.",
+      });
+    } else if (!this.state.content) {
+      this.setState({
+        error: "Content must be populated.",
+      });
+    } else {
+      axios.post('/api/reviews/new', {
+        rating: this.state.rating,
+        title: this.state.title,
+        content: this.state.content,
+        userId: this.props.userId,
+        listingId: this.props.listingId,
+      })
+      .then((resp) => {
+        // If error, display it
+        if (!resp.data.success) {
+          this.setState({
+            error: resp.data.error,
+          });
+        }
+        // Calls parent component (Listing.js) method to display new review
+        this.props.updateReviews();
+
+        // Clear fields after submission
+        this.setState({
+          rating: 0.0,
+          title: '',
+          content: '',
+        });
+      })
+      .catch((err) => {
+        if (err) {
+          this.setState({
+            error: err,
+          });
+        }
+      });
+    }
   }
 
   /**
@@ -217,14 +232,9 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = () => {
-  return {};
-};
-
 // Redux config
 ReviewForm = connect(
     mapStateToProps,
-    mapDispatchToProps
 )(ReviewForm);
 
 export default ReviewForm;

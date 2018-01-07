@@ -49,6 +49,7 @@ Backend for articles and listings
 - [X] Complete listing view
 - [X] Complete listing backend (already stores listing in Mongo, just need to populate to home screen.
 - [X] Figure out why listings page is not displaying
+- [ ] `Listing` back to all listings button
 
 ## Videos
 
@@ -112,6 +113,12 @@ Backend for articles and listings
 - [X] Add bio and content to `user` schema
 - [ ] Update listing review schema to have author's id
 - [ ] Sort listings by amenities
+- [X] Admin remove curators functionality
+- [ ] Security on backend
+  - [ ] Require admin to make changes (`curator/new`, `admin/new`, `curator/remove`)
+  - [ ] Require curator or admin to post content (all post routes)
+  - [X] Don't return sensitive user data (password)
+- [ ] Change location functionality
 
 ## Cam
 - [X] Nav bar style when no one is logged in
@@ -121,6 +128,8 @@ Backend for articles and listings
 - [X] Display search results on the frontend (backend is done)
 - [ ] Load component on `Account.js` and `Profile.js` and others.
 - [ ] Sorting buttons at top of `Listings.js`, `Videos.js`, and `Articles.js` (actual sorting done)
+- [ ] `Admin.js` restyle 3 buttons & display successful admin change on frontend
+- [ ] Standardize size of all pictures on home page
 
 ## General cleanup
 
@@ -128,7 +137,7 @@ Backend for articles and listings
 - [X] Style about page
 - [ ] General clean up, get rid of console.logs and deal with errors better
 - [ ] Change title tag, description, other meta tags depending on the page
-- [ ] Get rid of redux capabilities of all components that don't use redux
+- [X] Get rid of redux capabilities of all components that don't use redux
 - [ ] Go back and take care of all TODO's
 - [ ] Make sure all form submissions check for empty fields on frontend and/or backend
 
@@ -136,7 +145,7 @@ Backend for articles and listings
 - [ ] Search by Location
 - [ ] Issue where "ada" doesn't populate "adam ripley" but "adam" does (I think best way to deal with this is search button)
 - [ ] Don't let it search through reviews
-- [ ] Frontend issue where it displays two articles on one line
+- [X] Frontend issue where it displays two articles on one line
 
 ## Bugs
 - [X] Fix authentication route bug
@@ -152,7 +161,11 @@ Backend for articles and listings
   * To begin they can be location based and random
 - [ ] Split up `routes.js` into many smaller files
 - [ ] Sort reviews functionality (time, rating)
-- [ ] Deal with location
+- [ ] Give user model a "private" field (object containing info like password, email, etc) & have API not return it.
+- [ ] Have listing location be a map picture
+- [ ] Add author to listings and videos? At least on backend
+- [ ] Improve search performance
+- [ ] Delete reviews functionality
 
 ## Questions
 

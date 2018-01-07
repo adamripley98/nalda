@@ -58,13 +58,16 @@ class AppContainer extends Component {
       redirectToLogin: false,
     };
   }
+
   /**
     * This method ensures that the state stored in redux persist does not outlast the backend setState.
     * If the backend and frontend states aren't synced, redirects to login and wipes redux state.
-    * Note: could not be done in componentDidMount because this fired before this.props.userId was set (redux persist issue)
    */
-  checkSynced(userId) {
+  componentDidMount() {
+    // Isolate variables
     const onLogout = this.props.onLogout;
+    const userId = this.props.userId;
+
     // Call to backend (routes.js)
     axios.get('/api/sync', {
       params: {
@@ -74,8 +77,7 @@ class AppContainer extends Component {
     .then((resp) => {
       // Redux persist and backend state are NOT synced. Need to wipe redux state and redirect to login
       if (!resp.data.success) {
-        // Dispatch the action
-        console.log("Redux and backend not synced");
+        // Dispatch the logout action
         onLogout();
         // Set the state to redirect to login
         this.setState({
@@ -84,16 +86,13 @@ class AppContainer extends Component {
       }
     })
     .catch((err) => {
+      // TODO Handle error better
       console.log('Error with syncing state', err);
     });
   }
 
   // Render the application
   render() {
-    // Waits to call this until this.props has been populated (not immediate with redux persist)
-    if (this.props.userId) {
-      this.checkSynced(this.props.userId);
-    }
     return (
       <div>
         <Router>
@@ -108,9 +107,8 @@ class AppContainer extends Component {
                 <Route exact path="/register" component={Register}/>
 
                 { /* Other user routes */ }
-                <Route exact path="/account" component={Account} />
-                {/* TODO: Protect this route */}
-                <Route exact path="/password" component={EditPassword} />
+                <Route exact path="/account" component={requireLogin(Account)} />
+                <Route exact path="/password" component={requireLogin(EditPassword)} />
 
                 { /* Routes for viewing profiles */ }
                 <Route exact path="/users/:id" component={Profile} />
@@ -121,7 +119,6 @@ class AppContainer extends Component {
                 <Route exact path="/" component={Home}/>
 
                 { /* Admin routes */ }
-                {/* TODO: Route protecting still doesn't completely work */}
                 <Route exact path="/admin" component={requireAdmin(Admin)}/>
 
                 { /* Routes for articles */ }
@@ -156,15 +153,13 @@ class AppContainer extends Component {
 
 AppContainer.propTypes = {
   userId: PropTypes.string,
-  userType: PropTypes.string,
   onLogout: PropTypes.func,
 };
 
-// Necessary so we can access this.props.userId and this.props.userType
+// Necessary so we can access this.props.userId
 const mapStateToProps = (state) => {
   return {
     userId: state.authState.userId,
-    userType: state.authState.userType,
   };
 };
 
