@@ -114,6 +114,11 @@ Backend for articles and listings
 - [ ] Update listing review schema to have author's id
 - [ ] Sort listings by amenities
 - [X] Admin remove curators functionality
+- [ ] Security on backend
+  - [ ] Require admin to make changes (`curator/new`, `admin/new`, `curator/remove`)
+  - [ ] Require curator or admin to post content (all post routes)
+  - [X] Don't return sensitive user data (password)
+- [ ] Change location functionality
 
 ## Cam
 - [X] Nav bar style when no one is logged in
@@ -124,6 +129,7 @@ Backend for articles and listings
 - [ ] Load component on `Account.js` and `Profile.js` and others.
 - [ ] Sorting buttons at top of `Listings.js`, `Videos.js`, and `Articles.js` (actual sorting done)
 - [ ] `Admin.js` restyle 3 buttons & display successful admin change on frontend
+- [ ] Standardize size of all pictures on home page
 
 ## General cleanup
 

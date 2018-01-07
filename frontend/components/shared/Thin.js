@@ -17,7 +17,6 @@ const Thin = ({ children }) => {
   );
 };
 
-
 Thin.propTypes = {
   children: PropTypes.object,
 };

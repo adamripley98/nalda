@@ -2,8 +2,6 @@
 import React, { Component } from 'react';
 import autosize from 'autosize';
 import axios from 'axios';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 
 // Import components
 import Thin from './shared/Thin';
@@ -179,29 +177,5 @@ class Admin extends Component {
     );
   }
 }
-
-Admin.propTypes = {
-  userType: PropTypes.string,
-  userId: PropTypes.string,
-};
-
-// Allows us to access this.props.userId and this.props.userType
-const mapStateToProps = (state) => {
-  return {
-    userId: state.authState.userId,
-    userType: state.authState.userType,
-  };
-};
-
-const mapDispatchToProps = () => {
-  return {
-  };
-};
-
-// Redux config
-Admin = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Admin);
 
 export default Admin;

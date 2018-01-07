@@ -110,14 +110,9 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = () => {
-  return {};
-};
-
 // Redux config
 Nav = connect(
   mapStateToProps,
-  mapDispatchToProps
 )(Nav);
 
 export default Nav;

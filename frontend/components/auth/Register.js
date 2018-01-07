@@ -8,11 +8,14 @@ import { Link, Redirect } from 'react-router-dom';
 // Import components
 import Thin from '../shared/Thin';
 import ErrorMessage from '../shared/ErrorMessage';
-import {register} from '../../actions/index.js';
+
+// Import actions
+import { register } from '../../actions/index.js';
 
 /**
  * Component to render a form for registration
  * TODO add profile picture field to users
+ * TODO google is not defined error?
  */
 class Register extends Component {
   /**
@@ -29,7 +32,6 @@ class Register extends Component {
       password: '',
       verPassword: '',
       error: '',
-      redirectToHome: false,
     };
 
     // Bindings so 'this' refers to component
@@ -194,7 +196,7 @@ class Register extends Component {
   render() {
     return (
       <div>
-        { this.state.redirectToHome && <Redirect to="/"/> }
+        {(this.props.userId) && <Redirect to="/"/>}
         <Thin>
           <form className="thin-form" method="POST" onSubmit={ (e) => this.handleRegisterSubmit(e) }>
             <h2 className="marg-bot-1 bold">
@@ -279,15 +281,14 @@ class Register extends Component {
 }
 
 Register.propTypes = {
-  onRegister: PropTypes.func
+  onRegister: PropTypes.func,
+  userId: PropTypes.string,
 };
 
 // Currently no props, possibly will add userId if needed
 const mapStateToProps = state => {
   return {
     userId: state.authState.userId,
-    userType: state.authState.userType,
-    name: state.authState.name,
   };
 };
 

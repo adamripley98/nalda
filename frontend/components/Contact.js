@@ -9,7 +9,7 @@ import ErrorMessage from './shared/ErrorMessage';
 
 /**
  * Component for contacting Nalda
- * TODO link this to Sendgrid?
+ * TODO link this to service like sendgrid or nodemailer
  */
 class Contact extends Component {
   // Constructor method
@@ -58,7 +58,6 @@ class Contact extends Component {
   }
 
   // Handle a user submitting the form
-  // TODO: implement on the backend
   handleSubmit(event) {
     // Prevent the default action
     event.preventDefault();

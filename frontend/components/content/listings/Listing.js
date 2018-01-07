@@ -1,6 +1,5 @@
 // Import frameworks
 import React from 'react';
-import { connect } from 'react-redux';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import moment from 'moment';
@@ -408,19 +407,5 @@ class Listing extends React.Component {
 Listing.propTypes = {
   match: PropTypes.object,
 };
-
-const mapStateToProps = () => {
-  return {};
-};
-
-const mapDispatchToProps = () => {
-  return {};
-};
-
-// Redux config
-Listing = connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(Listing);
 
 export default Listing;

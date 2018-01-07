@@ -16,15 +16,13 @@ import Loading from '../shared/Loading';
 
 /**
  * Component to render a user's account information
- * TODO edit location
- */
+  */
 class Account extends Component {
   /**
    * Constructor method
-   * TODO replace dummy data: location, prof pic
+   * TODO replace dummy data: prof pic
    * TODO allow changing profile pic, password, location
    * TODO profile pic needs to be shown
-   * TODO edit location
    */
   constructor(props) {
     super(props);
@@ -340,7 +338,9 @@ const mapStateToProps = state => {
   };
 };
 
-// Allows us to dispatch a login event by calling this.props.onLogin
+// Allows us to dispatch a changeName event by calling this.props.changeFullName
+// NOTE this is necessary because name is stored in redux state to render on nav bar
+// TODO Will need to dispatch a changeLocation event as well for same reason
 const mapDispatchToProps = (dispatch) => {
   return {
     changeName: (name) => dispatch(changeFullName(name))

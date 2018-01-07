@@ -48,7 +48,7 @@ module.exports = () => {
    * Route to handle adding new admins
    * Admins are allowed to add more admins/curators and create content
    * @param userToAdd
-   // TODO Notify if already admin
+   // TODO: Security, must be admin
    */
   router.post('/admin/new', (req, res) => {
     // finds given user in Mongo
@@ -96,7 +96,7 @@ module.exports = () => {
    * Route to handle adding new curators who are allowed to create content but not add others
    * @param userToAdd
    */
-  // TODO: notify if already curator
+  // TODO: Security, must be admin
   router.post('/curator/new', (req, res) => {
     // finds given user in Mongo
     User.findOne({username: req.body.userToAdd}, (err, user) => {
@@ -147,6 +147,7 @@ module.exports = () => {
   /**
    * Route to handle adding new curators who are allowed to create content but not add others
    * @param userToAdd
+   // TODO: Security, must be admin
    */
   router.post('/curator/remove', (req, res) => {
     // finds given user in Mongo

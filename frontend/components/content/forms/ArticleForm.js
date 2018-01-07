@@ -315,12 +315,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = () => {
-  return {};
-};
-
 // Redux config
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
 )(ArticleForm);
