@@ -10,9 +10,6 @@ import Loading from '../../shared/Loading';
 
 /**
  * Component to render a videos
- * TODO: Add error component
- * TODO: Add loading component
- * TODO: Add pending?
  */
 class Video extends React.Component {
   // Constructor method

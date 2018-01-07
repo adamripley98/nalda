@@ -4,10 +4,13 @@ import autosize from 'autosize';
 import { Link, Redirect } from 'react-router-dom';
 import axios from 'axios';
 
+// Import components
+import ErrorMessage from '../../shared/ErrorMessage';
+
 /**
- * Component to render the new article form
+ * Component to render the new video form
  */
-class ArticleForm extends React.Component {
+class VideoForm extends React.Component {
   /**
    * Constructor method
    */
@@ -18,6 +21,7 @@ class ArticleForm extends React.Component {
       url: "",
       description: "",
       error: "",
+      videoId: "",
       redirectToHome: false,
     };
 
@@ -114,6 +118,7 @@ class ArticleForm extends React.Component {
         } else {
           // Redirect to home after successful submission
           this.setState({
+            videoId: resp.data.data._id,
             redirectToHome: true,
           });
         }
@@ -127,7 +132,7 @@ class ArticleForm extends React.Component {
   render() {
     return (
       <div>
-        { this.state.redirectToHome && <Redirect to="/"/> }
+        { this.state.redirectToHome && <Redirect to={`/videos/${this.state.videoId}`}/> }
         <Medium>
           <div className="card thin-form no-pad">
             <div className="tabs">
@@ -136,6 +141,7 @@ class ArticleForm extends React.Component {
               <Link className="tab active" to="/videos/new">Video</Link>
             </div>
             <form className="pad-1" onSubmit={ this.handleSubmit }>
+              <ErrorMessage error={ this.state.error } />
               {
                 this.state.error ? (
                   <div className="alert alert-danger">
@@ -201,4 +207,4 @@ class ArticleForm extends React.Component {
   }
 }
 
-export default ArticleForm;
+export default VideoForm;

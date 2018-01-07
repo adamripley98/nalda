@@ -3,7 +3,6 @@
  * NOTE all of these routes are prefixed with "/api"
  * NOTE these routes serve and accept JSON-formatted data
  * TODO file should be split up into many smaller files
- * TODO when pulling users, should not pull password and other private information
  */
 
 // Import frameworks
@@ -438,7 +437,8 @@ module.exports = () => {
         });
       } else {
         // If everything went as planned, send back user
-        // TODO: don't send back private user info
+        // Remove private user info first
+        user.password = '';
         res.send({
           success: true,
           data: user,
@@ -684,6 +684,8 @@ module.exports = () => {
     const price = req.body.price;
     const website = req.body.website;
     const amenities = req.body.amenities;
+    const location = req.body.location;
+
     let error = "";
 
     // Error checking
@@ -700,6 +702,8 @@ module.exports = () => {
       error = "Price must be populated.";
     } else if (!website) {
       error = "Website must be populated.";
+    } else if (!location) {
+      error = "Location must be populated.";
     }
 
     // Handle error if there is one
@@ -719,6 +723,7 @@ module.exports = () => {
         price,
         website,
         amenities,
+        location,
       });
 
       // Save the new article in mongo
@@ -730,7 +735,6 @@ module.exports = () => {
             error: er,
           });
         } else {
-          // TODO: Update user's content
           // Send the data along if it was successfully stored
           res.send({
             success: true,
@@ -765,12 +769,12 @@ module.exports = () => {
       });
     } else {
       // If user is logged in, first find author in MongoDB
-      User.findById(req.body.userId, (err, user) => {
+      User.findById(req.body.userId, (errUser, user) => {
         // Error finding user
-        if (err) {
+        if (errUser) {
           res.send({
             success: false,
-            error: 'Error finding user' + err,
+            error: 'Error finding user' + errUser,
           });
         } else
 
@@ -783,12 +787,12 @@ module.exports = () => {
         } else {
           // If no errors can now save new reviews
           // First find given listing
-          Listing.findById(req.body.listingId, (errr, listing) => {
+          Listing.findById(req.body.listingId, (errListing, listing) => {
             // Error finding listing
-            if (errr) {
+            if (errListing) {
               res.send({
                 success: false,
-                error: errr
+                error: errListing,
               });
             } else
 
@@ -802,34 +806,49 @@ module.exports = () => {
               // If listing has been found, update it with review
               const currentReviews = listing.reviews;
 
-              // Add new review to array of current reviews
-              currentReviews.push({
-                rating: req.body.rating,
-                title: req.body.title,
-                content: req.body.content,
-                createdAt: new Date().getTime(),
-                name: user.name,
-              });
-
-              // Update listing with new review
-              listing.reviews = currentReviews;
-
-              // Resave listing in Mongo
-              listing.save((er) => {
-                // Error saving listing
-                if (er) {
-                  res.send({
-                    success: false,
-                    error: 'Error saving review' + er,
-                  });
-                } else {
-                  // Finally, if review is saved successfully
-                  res.send({
-                    success: true,
-                    error: '',
-                  });
+              // Check if user has already left a review
+              let leftReviewAlready = false;
+              currentReviews.forEach((review) => {
+                if (review.name === user.name) {
+                  leftReviewAlready = true;
                 }
               });
+              // If already left a review send back error
+              if (leftReviewAlready) {
+                res.send({
+                  success: false,
+                  error: "Users may only leave one review."
+                });
+              } else {
+                // Add new review to array of current reviews
+                currentReviews.push({
+                  rating: req.body.rating,
+                  title: req.body.title,
+                  content: req.body.content,
+                  createdAt: new Date().getTime(),
+                  name: user.name,
+                });
+
+                // Update listing with new review
+                listing.reviews = currentReviews;
+
+                // Resave listing in Mongo
+                listing.save((er) => {
+                  // Error saving listing
+                  if (er) {
+                    res.send({
+                      success: false,
+                      error: 'Error saving review' + er,
+                    });
+                  } else {
+                    // Finally, if review is saved successfully
+                    res.send({
+                      success: true,
+                      error: '',
+                    });
+                  }
+                });
+              }
             }
           });
         }
@@ -1035,8 +1054,9 @@ module.exports = () => {
               success: false,
               error: er,
             });
-          // TODO: don't send back private user info
           } else {
+            // Remove private data before sending back
+            user.password = "";
             res.send({
               success: true,
               error: '',

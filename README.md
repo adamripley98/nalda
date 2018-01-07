@@ -49,6 +49,7 @@ Backend for articles and listings
 - [X] Complete listing view
 - [X] Complete listing backend (already stores listing in Mongo, just need to populate to home screen.
 - [X] Figure out why listings page is not displaying
+- [ ] `Listing` back to all listings button
 
 ## Videos
 
@@ -152,8 +153,11 @@ Backend for articles and listings
   * To begin they can be location based and random
 - [ ] Split up `routes.js` into many smaller files
 - [ ] Sort reviews functionality (time, rating)
-- [ ] Deal with location
 - [ ] Give user model a "private" field (object containing info like password, email, etc) & have API not return it.
+- [ ] Have listing location be a map picture
+- [ ] Add author to listings and videos? At least on backend
+- [ ] Improve search performance
+- [ ] Delete reviews functionality
 
 ## Questions
 

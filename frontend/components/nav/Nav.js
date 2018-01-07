@@ -1,15 +1,15 @@
+// Import frameworks
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+
+// Import components
 import Sidebar from './Sidebar';
 import Search from './Search';
 
 /**
  * Renders the navbar at the top of the screen on all pages.
- * TODO search functionality
- * TODO populate this with user name CONDITIONALLY (if user isnt logged in, nothing)
- * TODO pull location from the database
  */
 class Nav extends Component {
   // Constructor method

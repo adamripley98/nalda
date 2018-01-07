@@ -1,26 +1,25 @@
 // Import frameworks
 import React from 'react';
-import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import Button from '../../shared/Button';
 import axios from 'axios';
+
+// Import shared components
+import Button from '../../shared/Button';
 import Loading from '../../shared/Loading';
-import ErrorMessage from '../../shared/ErrorMessage';
 import NotFoundSection from '../../NotFoundSection';
 
 /**
  * Component to render an article
  * TODO error handling
- * TODO remove dummy state
+ * TODO remove dummy state for profile picture
  */
 class Article extends React.Component {
   // Constructor method
   constructor(props) {
     super(props);
 
-    // TODO: Remove dummy state
     this.state = {
       error: "",
       author: {
@@ -110,42 +109,50 @@ class Article extends React.Component {
               (this.state.pending) ? (
                 <Loading />
               ) : (
-                <div>
-                  <ErrorMessage error={this.state.error} />
-                  <h1>
-                    { this.state.title }
-                  </h1>
-                  <h3>
-                    { this.state.subtitle }
-                  </h3>
-                  { this.renderAuthor() }
-                  <img src={ this.state.image } alt={ this.state.title } className="img-fluid" />
-                  {
-                    this.state.body.map((component, index) => {
-                      if (component.componentType === "text") {
-                        return (
-                          <p key={ index }>
-                            { component.body }
-                          </p>
-                        );
-                      } else if (component.componentType === "image") {
-                        return (
-                          <img
-                            key={ index }
-                            src={ component.body }
-                            alt={ this.state.title }
-                            className="img-fluid"
-                          />
-                        );
-                      }
+                this.state.error ? (
+                  <NotFoundSection
+                    title="Article not found"
+                    content="Uh-oh! Looks like the article you were looking for was either removed or does not exist."
+                    url="/articles"
+                    urlText="Back to all articles"
+                  />
+                ) : (
+                  <div>
+                    <h1>
+                      { this.state.title }
+                    </h1>
+                    <h3>
+                      { this.state.subtitle }
+                    </h3>
+                    { this.renderAuthor() }
+                    <img src={ this.state.image } alt={ this.state.title } className="img-fluid" />
+                    {
+                      this.state.body.map((component, index) => {
+                        if (component.componentType === "text") {
+                          return (
+                            <p key={ index }>
+                              { component.body }
+                            </p>
+                          );
+                        } else if (component.componentType === "image") {
+                          return (
+                            <img
+                              key={ index }
+                              src={ component.body }
+                              alt={ this.state.title }
+                              className="img-fluid"
+                            />
+                          );
+                        }
 
-                      // If there was not a component type match
-                      return null;
-                    })
-                  }
-                  <div className="space-1" />
-                  <Button />
-                </div>
+                        // If there was not a component type match
+                        return null;
+                      })
+                    }
+                    <div className="space-1" />
+                    <Button />
+                  </div>
+                )
               )
             }
           </div>
@@ -158,20 +165,5 @@ class Article extends React.Component {
 Article.propTypes = {
   match: PropTypes.object,
 };
-
-const mapStateToProps = () => {
-  return {
-  };
-};
-
-const mapDispatchToProps = () => {
-  return {};
-};
-
-// Redux config
-Article = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Article);
 
 export default Article;

@@ -5,16 +5,18 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import uuid from 'uuid-v4';
+
+// Import components
 import Review from './Review';
 import ReviewForm from './ReviewForm';
 import Loading from '../../shared/Loading';
+import Button from '../../shared/Button';
 import NotFoundSection from '../../NotFoundSection';
 import { Link } from 'react-router-dom';
 
 /**
  * Component to render a listing
  */
- // TODO: Remove dummy data for location
 class Listing extends React.Component {
   // Constructor method
   constructor(props) {
@@ -29,23 +31,8 @@ class Listing extends React.Component {
       website: "",
       price: "",
       amenities: {},
-      location: {},
-      reviews: [
-        {
-          name: "Cameron Cabo",
-          rating: 0.5,
-          title: "This is the title of my review",
-          content: "This is the content of my review. I hope you like reading it.",
-          createdAt: 1513816681804,
-        },
-        {
-          name: "Adam Ripley",
-          rating: 5.0,
-          title: "This is a second review",
-          content: "This is the content of my review. I hope you like reading it.",
-          createdAt: 1513816699243,
-        }
-      ],
+      location: "",
+      reviews: [],
       error: "",
       pending: true,
       infoTrigger: false,
@@ -318,6 +305,9 @@ class Listing extends React.Component {
                   <h5 className="subtitle">
                     Location
                   </h5>
+                  <p className="description">
+                  {this.state.location}
+                  </p>
                   <div className="line" />
                   { this.renderReviewsSection() }
                 </div>
@@ -403,6 +393,8 @@ class Listing extends React.Component {
                     </p>
                   </div>
                 </div>
+                <div className="space-1" />
+                <Button />
               </div>
             </div>
             <div className="space-2" />

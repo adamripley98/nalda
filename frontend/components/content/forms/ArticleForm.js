@@ -8,7 +8,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 /**
  * Component to render the new article form
- * TODO redirect to article instead of to home
  * TODO flash notifications when a new article is made?
  */
 class ArticleForm extends React.Component {
@@ -148,6 +147,7 @@ class ArticleForm extends React.Component {
           if (res.data.success) {
             // If creating the article was successful
             this.setState({
+              articleId: res.data.data._id,
               redirectToHome: true,
             });
           } else {
@@ -169,7 +169,7 @@ class ArticleForm extends React.Component {
   render() {
     return (
       <div>
-        { this.state.redirectToHome && <Redirect to="/"/> }
+        { this.state.redirectToHome && <Redirect to={`/articles/${this.state.articleId}`}/> }
         <Medium>
           <div className="card thin-form no-pad">
             <div className="tabs">

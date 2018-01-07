@@ -1,13 +1,15 @@
 // Import frameworks
 import React from 'react';
 import axios from 'axios';
+
+// Import shared components
 import Loading from '../../shared/Loading';
 import ErrorMessage from '../../shared/ErrorMessage';
 import Button from '../../shared/Button';
 import ArticlePreview from './ArticlePreview';
 
 /**
- * Component for the homepage of the application
+ * Component for displaying all articles of the application
  */
 
  // TODO: Only show first 20 or so articles on a page

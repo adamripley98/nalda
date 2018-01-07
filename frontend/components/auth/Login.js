@@ -33,6 +33,10 @@ class Login extends Component {
 
   // When login button clicked, will attempt to login on backend (login.js)
   handleLoginSubmit(event) {
+    // Binding this for inside axios request
+    const username = this.state.username;
+    const password = this.state.password;
+
     // Prevent the default form action
     event.preventDefault();
     // Find the needed variables
@@ -51,8 +55,8 @@ class Login extends Component {
       // If successful, will send back userId. If redux state contains userId,
       // will redirect to home
       axios.post('/api/login', {
-        username: this.state.username,
-        password: this.state.password,
+        username,
+        password,
       })
         .then((resp) => {
           // If there was an issue with logging in, display error
@@ -147,8 +151,6 @@ class Login extends Component {
 
 Login.propTypes = {
   userId: PropTypes.string,
-  userType: PropTypes.string,
-  name: PropTypes.string,
   onLogin: PropTypes.func,
 };
 
@@ -156,8 +158,6 @@ Login.propTypes = {
 const mapStateToProps = state => {
   return {
     userId: state.authState.userId,
-    userType: state.authState.userType,
-    name: state.authState.name,
   };
 };
 

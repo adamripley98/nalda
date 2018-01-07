@@ -12,7 +12,6 @@ import {register} from '../../actions/index.js';
 
 /**
  * Component to render a form for registration
- * TODO add name field to users
  * TODO add profile picture field to users
  */
 class Register extends Component {
@@ -56,7 +55,6 @@ class Register extends Component {
 
   /**
    * Handle when the register form is submitted
-   * TODO name
    * TODO profile picture
    */
   handleRegisterSubmit(event) {
