@@ -97,12 +97,21 @@ class Home extends React.Component {
         <div className="col-6 col-lg-3" key={ listing._id } >
           <Link to={ `/listings/${listing._id}` } >
             <div className="article-preview">
-              <img className="img-fluid" alt={listing.name} src={listing.image} />
+              <div
+                className="background-image"
+                style={{ backgroundImage: `url(${listing.image})`}}
+              />
               <h2 className="title">
                 {listing.title}
               </h2>
               <h6 className="subtitle">
-                {listing.description}
+                {
+                  listing.description.length > 100 ? (
+                    listing.description.substring(0, 100) + "..."
+                  ) : (
+                    listing.description
+                  )
+                }
               </h6>
             </div>
           </Link>
@@ -130,7 +139,10 @@ class Home extends React.Component {
         <div className="col-6 col-lg-3" key={ video._id } >
           <Link to={ `/videos/${video._id}` } >
             <div className="article-preview">
-              <img className="img-fluid" alt={video.title} src={`https://img.youtube.com/vi/${video.url.substring(video.url.indexOf("v=") + 2)}/0.jpg`} />
+              <div
+                className="background-image"
+                style={{ backgroundImage: `url(https://img.youtube.com/vi/${video.url.substring(video.url.indexOf("v=") + 2)}/maxresdefault.jpg)`}}
+              />
               <h2 className="title">
                 { video.title }
               </h2>

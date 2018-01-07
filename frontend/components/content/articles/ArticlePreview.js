@@ -9,7 +9,10 @@ const ArticlePreview = ({ _id, title, subtitle, image }) => (
   <div className="col-6 col-lg-3" key={ _id } >
     <Link to={ `/articles/${_id}` } >
       <div className="article-preview">
-        <img className="img-fluid" alt={ title } src={ image } />
+        <div
+          className="background-image"
+          style={{ backgroundImage: `url(${image})`}}
+        />
         <h2 className="title">
           { title }
         </h2>

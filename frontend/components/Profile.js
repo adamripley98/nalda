@@ -12,6 +12,7 @@ import ArticlePreview from './content/articles/ArticlePreview';
 
 /**
  * Component to render a curators profile
+ * TODO load all articles, listings, and videos by the curator
  */
 class Profile extends Component {
   /**

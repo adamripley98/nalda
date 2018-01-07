@@ -122,10 +122,10 @@ Backend for articles and listings
 ## Cam
 - [X] Nav bar style when no one is logged in
 - [ ] Style curator profile view (`Profile.js`). Add profile picture spot! (also add profile pic spot to `Account.js`)
-- [ ] Back to home button on individual listing page
+- [x] Back to home button on individual listing page
 - [X] Style search button in Nav bar (make it only visible when someone has typed something)
 - [X] Display search results on the frontend (backend is done)
-- [ ] Load component on `Account.js` and `Profile.js` and others.
+- [x] Load component on `Account.js` and `Profile.js` and others.
 - [ ] Sorting buttons at top of `Listings.js`, `Videos.js`, and `Articles.js` (actual sorting done)
 - [ ] `Admin.js` restyle 3 buttons & display successful admin change on frontend
 - [ ] Standardize size of all pictures on home page

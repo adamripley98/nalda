@@ -140,11 +140,17 @@ class Articles extends React.Component {
     return (
       <div className="container home">
         <div className="space-1"/>
-        <h3 className="title">
+        <h3 className="title section-title">
           Articles
         </h3>
-        <div onClick={this.sortByTitle}>Sort by title</div>
-        <div onClick={this.sortByDate}>Sort by date</div>
+        <div className="buttons marg-bot-1">
+          <div className="btn btn-primary" onClick={this.sortByTitle}>
+            Sort by title
+          </div>
+          <div className="btn btn-primary" onClick={this.sortByDate}>
+            Sort by date
+          </div>
+        </div>
         <div className="row">
           {
             this.state.pending ? (

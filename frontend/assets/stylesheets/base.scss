@@ -402,9 +402,11 @@ a {
   color: black;
   margin-bottom: 1rem;
 
-  img {
+  .background-image {
     border-radius: 0.4rem;
     margin-bottom: 0.5rem;
+    height: 10rem;
+    width: 100%;
   }
 
   .title {
@@ -465,6 +467,12 @@ a {
 
   .section-title {
     color: $dark-gray;
+  }
+}
+
+.buttons {
+  .btn {
+    margin-right: 0.5rem;
   }
 }
 
