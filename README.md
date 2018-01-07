@@ -104,7 +104,7 @@ Backend for articles and listings
   - [ ] Listings
   - [X] Articles
 - [X] Curator profile view
-- [ ] Change/forgot password backend
+- [X] Change/forgot password backend
 - [ ] Replace dummy data
   - [ ] Location
   - [ ] Profile picture
@@ -156,6 +156,9 @@ Backend for articles and listings
 
 ## Features for next update
 - [ ] Sendgrid configuration for sending emails
+  - [ ] Contact us page
+  - [ ] Confirm email page
+  - [ ] Forgot password reset
 - [ ] Make it easier for an admin to enter hours (some sort of autofill)
 - [ ] Recommending content for users to look at
   * To begin they can be location based and random

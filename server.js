@@ -17,6 +17,7 @@ const User = require('./backend/models/user');
 const login = require('./backend/passport/login');
 const register = require('./backend/passport/register');
 const logout = require('./backend/passport/logout');
+const changePassword = require('./backend/passport/changePassword');
 
 // Connecting to mongo
 const connect = process.env.MONGODB_URI;
@@ -85,6 +86,7 @@ const isValidPassword = (user, password) => {
 app.use('/api/', login(passport));
 app.use('/api/', register(passport));
 app.use('/api/', logout(passport));
+app.use('/api/', changePassword(passport));
 app.use('/api/', routes);
 
 app.get('*', (request, response) => {
