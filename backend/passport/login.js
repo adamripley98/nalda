@@ -1,3 +1,4 @@
+// Import frameworks
 const express = require('express');
 const router = express.Router();
 
@@ -8,8 +9,8 @@ module.exports = (passport) => {
   router.post('/login', (req, res, next) => {
     // Passport method for authenticating users using local strategy
     passport.authenticate('local', (passportErr, user) => {
+      // If there was an error in the authentication
       if (passportErr) {
-        // If there was an error in the authentication
         res.send({
           success: false,
           error: passportErr,
@@ -23,6 +24,7 @@ module.exports = (passport) => {
       } else {
         // Built in passport login method
         req.logIn(user, (loginErr) => {
+          // Error logging in
           if (loginErr) {
             res.send({
               success: false,

@@ -627,12 +627,12 @@ module.exports = () => {
           });
 
           // Save the new article in Mongo
-          newArticle.save((errr, article) => {
-            if (errr) {
+          newArticle.save((errArticle, article) => {
+            if (errArticle) {
               // If there was an error saving the article
               res.send({
                 success: false,
-                error: errr.message,
+                error: errArticle.message,
               });
             } else {
               // Successfully send back data
@@ -965,12 +965,12 @@ module.exports = () => {
           user.name = name;
 
           // Save in Mongo
-          user.save((errr) => {
+          user.save((errUser) => {
             // Error saving user
-            if (err) {
+            if (errUser) {
               res.send({
                 success: false,
-                error: errr,
+                error: errUser,
               });
             } else {
               // User name updated successfully
@@ -1019,12 +1019,12 @@ module.exports = () => {
           user.bio = bio;
 
           // Save in Mongo
-          user.save((errr) => {
+          user.save((errUser) => {
             // Error saving user
-            if (err) {
+            if (errUser) {
               res.send({
                 success: false,
-                error: errr,
+                error: errUser,
               });
             } else {
               // User bio updated successfully

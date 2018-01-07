@@ -1,10 +1,10 @@
 /**
- * Reducer which handles all events related to user login process
+ * Reducer which handles all events related to user authentication process
  */
 const authReducer = (state = {}, action) => {
   switch (action.type) {
     // When login event is called, will update redux state with userId,
-    // userType, and name so we know who is logged in
+    // userType, location, and name so we know who is logged in
     case 'LOGIN': {
       const newState = Object.assign({}, state);
       newState.userId = action.userId;
@@ -23,7 +23,7 @@ const authReducer = (state = {}, action) => {
       return newState;
     }
     // When register event is called, will update redux state with userId,
-    // userType, and name so we know who is logged in
+    // userType, location, and name so we know who is logged in
     case 'REGISTER': {
       const newState = Object.assign({}, state);
       newState.userId = action.userId;

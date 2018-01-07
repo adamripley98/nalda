@@ -6,13 +6,13 @@ const router = express.Router();
 /**
  * Backend file for registering new users
  */
-module.exports = (passport) => {
+module.exports = () => {
   router.post('/register', (req, res) => {
     // Ensure password meets validity conditions
-    if (isValidPassword(req.body.password, req.body.verPassword) !== 'success') {
+    if (invalidPassword(req.body.password, req.body.verPassword)) {
       res.send({
         success: false,
-        error: isValidPassword(req.body.password, req.body.verPassword),
+        error: invalidPassword(req.body.password, req.body.verPassword),
       });
     } else {
       // Will attempt to find user in database
@@ -20,14 +20,14 @@ module.exports = (passport) => {
         if (err) {
         	res.send({
         		success: false,
-        		error: 'Unknown registration error' + err,
+        		error: 'Unknown registration error: ' + err,
         	});
         } else
 	    	// Error if the user already exists
         if (user) {
 				  res.send({
 					  success: false,
-				    error: 'User with username' + req.body.username + 'already exists',
+				    error: 'User with username ' + req.body.username + ' already exists',
 				  });
         } else {
           // If no error and user doesn't already exist, create a user
@@ -41,19 +41,19 @@ module.exports = (passport) => {
           });
 
           // Saving new user in Mongo
-          newUser.save((er, usr) => {
-            if (er) {
+          newUser.save((errUser, usr) => {
+            if (errUser) {
               res.send({
                 success: false,
-                error: 'Unknown registration error' + er,
+                error: 'Unknown registration error: ' + errUser,
               });
             } else {
               // Built in passport method for logging in
-              req.login(usr, (e) => {
-                if (e) {
+              req.login(usr, (errLogin) => {
+                if (errLogin) {
                   res.send({
                     success: false,
-                    error: 'Error logging in new user' + e
+                    error: 'Error logging in new user: ' + errLogin,
                   });
                 } else {
                   // Finally, if registration is successful, send back user
@@ -79,7 +79,7 @@ module.exports = (passport) => {
  * Must match, contain between 8-30 characters, have a number, uppercase,
  * special character, no weird characters
  */
-const isValidPassword = (password, verPassword) => {
+const invalidPassword = (password, verPassword) => {
   // Error checking
   if (password !== verPassword) {
 	  return 'Password fields must match.';
@@ -96,7 +96,7 @@ const isValidPassword = (password, verPassword) => {
   }
 
   // If there was no error
-  return 'success';
+  return false;
 };
 
 /**

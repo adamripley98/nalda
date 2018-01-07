@@ -137,7 +137,7 @@ Backend for articles and listings
 - [X] Style about page
 - [ ] General clean up, get rid of console.logs and deal with errors better
 - [ ] Change title tag, description, other meta tags depending on the page
-- [ ] Get rid of redux capabilities of all components that don't use redux
+- [X] Get rid of redux capabilities of all components that don't use redux
 - [ ] Go back and take care of all TODO's
 - [ ] Make sure all form submissions check for empty fields on frontend and/or backend
 

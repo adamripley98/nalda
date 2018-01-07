@@ -4,15 +4,15 @@ const router = express.Router();
 /**
  * Backend file for logging users out
  */
-module.exports = (passport) => {
+module.exports = () => {
   router.post('/logout', (req, res) => {
     // Passport specific logout
     req.logout();
 
     // Destroying session
     req.session.destroy((err) => {
+      // Error logging out
       if (err) {
-        console.log('error logging out', err);
         res.send({
           success: false,
           error: err,

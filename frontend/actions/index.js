@@ -1,6 +1,4 @@
-// -----------------------------------------------------------------------------
-// ---------------------------Authentication Actions----------------------------
-// -----------------------------------------------------------------------------
+// Actions which will be dispatched to the reducers (authReducer.js)
 
 // Dispatch login action, will call appropriate reducer (authReducer.js)
 export function login(userId, userType, name, location) {
