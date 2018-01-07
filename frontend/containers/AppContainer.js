@@ -86,7 +86,9 @@ class AppContainer extends Component {
       }
     })
     .catch((err) => {
-      // TODO Handle error better
+      /**
+       * TODO Handle error better
+       */
       console.log('Error with syncing state', err);
     });
   }

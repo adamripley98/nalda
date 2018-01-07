@@ -94,7 +94,6 @@ class Listing extends React.Component {
           });
         } else {
           // If there was an error with the request
-          console.log('what is the error', res.data.error);
           this.setState({
             error: res.data.error,
             pending: false,
@@ -103,7 +102,6 @@ class Listing extends React.Component {
       })
       .catch(err => {
         // If there was an error making the request
-        console.log('what is the error', err);
         this.setState({
           error: err,
           pending: false,
