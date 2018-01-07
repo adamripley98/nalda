@@ -18,6 +18,9 @@ const listingSchema = new Schema({
   hours: {},
   price: String,
   website: String,
+  author: {
+    type: Schema.Types.ObjectId, ref: 'User',
+  },
   amenities: {
     foodTrucks: Boolean,
     lateNights: Boolean,

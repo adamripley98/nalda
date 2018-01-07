@@ -140,7 +140,7 @@ class Admin extends Component {
                   )
                 }
               >
-                Add admin
+                Add as admin
               </button>
             </div>
             <div className="col-6">
@@ -154,10 +154,10 @@ class Admin extends Component {
                   )
                 }
               >
-                Add curator
+                Add as curator
               </button>
             </div>
-            <div className="col-6">
+            <div className="col-12 marg-top-1">
               <button
                 onClick={(e) => this.onSubmitRemoveCurator(e)}
                 className={

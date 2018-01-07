@@ -61,7 +61,6 @@ Backend for articles and listings
 
 - [X] Setting up SCSS
 - [X] Video styling
-- [ ] Login/Register/Reset/Edit Account Form styling
 - [X] Individual listing view
 - [X] Routing 	
 - [ ] User show pages (backend is working, needs to be styled though)

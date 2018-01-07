@@ -549,6 +549,7 @@ module.exports = () => {
    * @param image (url)
    * @param body (text of the article)
    * TODO error checking
+   * TODO pull user ID from the backend NOT the frontend
    */
   router.post('/articles/new', (req, res) => {
     // Isolate variables
@@ -558,6 +559,7 @@ module.exports = () => {
     const body = req.body.body;
     const userId = req.body.userId;
 
+    // Keep track of any errors
     let error = "";
     const urlRegexp = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
 

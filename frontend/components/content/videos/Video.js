@@ -18,7 +18,9 @@ class Video extends React.Component {
 
     // Set the state with dummy data
     this.state = {
-      video: {},
+      title: "",
+      url: "",
+      description: "",
       pending: true,
       error: '',
     };
@@ -37,8 +39,8 @@ class Video extends React.Component {
       .then(res => {
         if (res.data.success) {
           this.setState({
+            ...res.data.data,
             error: "",
-            video: res.data.data,
             pending: false,
           });
         } else {
@@ -61,7 +63,7 @@ class Video extends React.Component {
   // Helper function to render the video
   renderVideo() {
     // Isolate variables
-    const url = this.state.video.url;
+    const url = this.state.url;
     let videoID = '';
     if (url) {
       videoID = url.split("=")[1];
@@ -88,11 +90,11 @@ class Video extends React.Component {
                 { this.renderVideo() }
                 <div className="header">
                   <h1 className="title">
-                    { this.state.video.title }
+                    { this.state.title }
                   </h1>
                 </div>
                 <p className="description">
-                  { this.state.video.description }
+                  { this.state.description }
                 </p>
                 <div className="space-1" />
                 <Button />

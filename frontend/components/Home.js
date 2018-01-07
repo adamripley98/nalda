@@ -132,10 +132,16 @@ class Home extends React.Component {
             <div className="article-preview">
               <img className="img-fluid" alt={video.title} src={`https://img.youtube.com/vi/${video.url.substring(video.url.indexOf("v=") + 2)}/0.jpg`} />
               <h2 className="title">
-                {video.name}
+                { video.title }
               </h2>
               <h6 className="subtitle">
-                {video.description}
+                {
+                  video.description.length > 100 ? (
+                    video.description.substring(0, 100) + "..."
+                  ) : (
+                    video.description
+                  )
+                }
               </h6>
             </div>
           </Link>

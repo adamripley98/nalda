@@ -8,6 +8,9 @@ const videoSchema = new Schema({
   description: String,
   location: String,
   url: String,
+  author: {
+    type: Schema.Types.ObjectId, ref: 'User',
+  },
 });
 
 // Creates an index allowing for search functionality
