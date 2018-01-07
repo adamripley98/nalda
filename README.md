@@ -128,7 +128,7 @@ Backend for articles and listings
 - [x] Load component on `Account.js` and `Profile.js` and others.
 - [ ] Sorting buttons at top of `Listings.js`, `Videos.js`, and `Articles.js` (actual sorting done)
 - [ ] `Admin.js` restyle 3 buttons & display successful admin change on frontend
-- [ ] Standardize size of all pictures on home page
+- [x] Standardize size of all pictures on home page
 
 ## General cleanup
 

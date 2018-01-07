@@ -10,7 +10,6 @@ import ErrorMessage from './shared/ErrorMessage';
 /**
  * Component for Admin only, allows them to add and remove other admins and content curators
  * TODO Add removing functionality
- // TODO make text not extend button, styling issue
  */
 class Admin extends Component {
   // Constructor method
@@ -21,6 +20,7 @@ class Admin extends Component {
     this.state = {
       email: "",
       error: "",
+      success: "",
     };
 
     // Bind this to helper methods
@@ -46,6 +46,7 @@ class Admin extends Component {
   onSubmitAdmin(event) {
     // Prevent the default action
     event.preventDefault();
+
     // Posts to routes.js
     axios.post('/api/admin/new', {
       userToAdd: this.state.email,
@@ -53,13 +54,21 @@ class Admin extends Component {
     .then((resp) => {
       // Shows any errors
       if (resp.data.error) {
-        this.setState({error: resp.data.error});
+        this.setState({
+          error: resp.data.error,
+          success: "",
+        });
       } else {
-        this.setState({error: ''});
-        // TODO: Notify on frontend of successful change
+        this.setState({
+          error: "",
+          success: "Successfully added new admin."
+        });
       }
-    }).catch((err) => {
-      console.log('err', err);
+    }).catch(err => {
+      this.setState({
+        error: err,
+        success: "",
+      });
     });
   }
 
@@ -75,15 +84,19 @@ class Admin extends Component {
       // Shows any errors
       if (resp.data.error) {
         this.setState({
-          error: resp.data.error
+          error: resp.data.error,
+          success: "",
         });
       } else {
-        this.setState({error: ''});
-        // TODO: Notify on frontend of successful change
+        this.setState({
+          error: "",
+          success: "Successfully added curator.",
+        });
       }
     }).catch((err) => {
       this.setState({
         error: err,
+        success: "",
       });
     });
   }
@@ -91,6 +104,7 @@ class Admin extends Component {
   onSubmitRemoveCurator(event) {
     // Prevent the default action
     event.preventDefault();
+
     // Posts to routes.js
     axios.post('/api/curator/remove', {
       userToAdd: this.state.email,
@@ -98,13 +112,21 @@ class Admin extends Component {
     .then((resp) => {
       // Shows any errors
       if (resp.data.error) {
-        this.setState({error: resp.data.error});
+        this.setState({
+          error: resp.data.error,
+          success: "",
+        });
       } else {
-        this.setState({error: ''});
-        // TODO: Notify on frontend of successful change
+        this.setState({
+          error: "",
+          success: "Successfully removed curator",
+        });
       }
     }).catch((err) => {
-      console.log('err', err);
+      this.setState({
+        error: err,
+        success: "",
+      });
     });
   }
 
@@ -118,6 +140,13 @@ class Admin extends Component {
             Enter a user's email address in order to add them as an admin or as a content curator or to remove them as a content creator.
           </p>
           <ErrorMessage error={ this.state.error } />
+          {
+            this.state.success ? (
+              <div className="alert alert-success marg-bot-1">
+                { this.state.success }
+              </div>
+            ) : null
+          }
           <label>
             Email address
           </label>

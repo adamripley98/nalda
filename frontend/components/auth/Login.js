@@ -74,8 +74,10 @@ class Login extends Component {
             );
           }
         })
-        .catch((err) => {
-          console.log('there was an error', err);
+        .catch(err => {
+          this.setState({
+            error: err,
+          });
         });
     }
   }
