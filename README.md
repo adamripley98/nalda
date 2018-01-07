@@ -146,6 +146,7 @@ Backend for articles and listings
 - [ ] Issue where "ada" doesn't populate "adam ripley" but "adam" does (I think best way to deal with this is search button)
 - [ ] Don't let it search through reviews
 - [X] Frontend issue where it displays two articles on one line
+- [ ] Clicking a link closes suggestion and clears search bar
 
 ## Bugs
 - [X] Fix authentication route bug
@@ -153,6 +154,7 @@ Backend for articles and listings
 - [X] Bug where login error crashes app instead of displaying error
   - [X] 'Cannot set headers after they are sent' error crashes app
 - [X] Persist issue, now it makes you log back in all the time. Perhaps passport session is very short?
+- [X] Search doesn't redirect to page
 
 ## Features for next update
 - [ ] Sendgrid configuration for sending emails
@@ -169,6 +171,7 @@ Backend for articles and listings
 - [ ] Add author to listings and videos? At least on backend
 - [ ] Improve search performance
 - [ ] Delete reviews functionality
+- [ ] Searching should not search through reviews
 
 ## Questions
 

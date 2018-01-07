@@ -330,7 +330,6 @@ module.exports = () => {
                     });
                     // TODO: Display all of their content as well
                     // If there were no errors, send back all data
-                    console.log('cur', curators);
                     res.send({
                       success: true,
                       error: '',

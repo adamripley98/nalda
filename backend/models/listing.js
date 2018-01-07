@@ -52,7 +52,7 @@ const listingSchema = new Schema({
 });
 
 // Creates an index allowing for search functionality
-listingSchema.index({"$**": "text"});
+listingSchema.index({"title": "text", "description": "text", "location": "text"});
 
 /**
  * Listing model using schema
