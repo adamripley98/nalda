@@ -130,7 +130,8 @@ class Search extends Component {
                     <h4>Articles</h4>
                     {
                       this.state.suggestions.articles.map(a => (
-                        <Link key={ a._id } to={ `/articles/${a._id}` }>
+                        // NOTE: Tempory fix issue where won't reload page
+                        <Link key={ a._id } onClick={location.reload} to={ `/articles/${a._id}` }>
                           { a.title }
                           <div/>
                         </Link>
@@ -145,7 +146,8 @@ class Search extends Component {
                     <h4>Listings</h4>
                     {
                       this.state.suggestions.listings.map(l => (
-                        <Link key={ l._id } to={ `/listings/${l._id}` }>
+                        // NOTE: Tempory fix issue where won't reload page
+                        <Link key={ l._id } onClick={location.reload} to={ `/listings/${l._id}` }>
                           { l.title }
                           <div/>
                         </Link>
@@ -160,7 +162,8 @@ class Search extends Component {
                     <h4>Videos</h4>
                     {
                       this.state.suggestions.videos.map(v => (
-                        <Link key={ v._id } to={ `/videos/${v._id}` }>
+                        // NOTE: Tempory fix issue where won't reload page
+                        <Link key={ v._id } onClick={location.reload} to={ `/videos/${v._id}` }>
                           { v.title }
                           <div/>
                         </Link>
@@ -175,7 +178,8 @@ class Search extends Component {
                     <h4>Curators</h4>
                     {
                       this.state.suggestions.curators.map(c => (
-                        <Link key={ c._id } to={ `/users/${c._id}` }>
+                        // NOTE: Tempory fix issue where won't reload page
+                        <Link key={ c._id } onClick={location.reload} to={ `/users/${c._id}` }>
                           { c.name }
                           <div/>
                         </Link>

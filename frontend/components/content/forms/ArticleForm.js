@@ -42,13 +42,6 @@ class ArticleForm extends React.Component {
     autosize(document.querySelectorAll('textarea'));
   }
 
-  // Function to redirect the user to home
-  redirectToHome() {
-    return (
-      <Redirect to="/"/>
-    );
-  }
-
   // Helper method to handle a change to the title state
   handleChangeTitle(event) {
     this.setState({

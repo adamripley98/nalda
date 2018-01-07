@@ -63,7 +63,6 @@ class EditPassword extends Component {
 
   /**
    * Handle submitting the form
-   * TODO
    */
   handleSubmit(event) {
     // Prevent the default submit action
@@ -80,11 +79,13 @@ class EditPassword extends Component {
       oldPassword: this.state.oldPassword,
       newPassword: this.state.newPassword,
       newPasswordConfirm: this.state.newPasswordConfirm,
+      userId: this.props.userId,
     };
 
     // Send the request
     axios.post('/api/users/password', body)
       .then(res => {
+        // If successful
         if (res.data.success) {
           this.setState({
             pending: false,
@@ -92,6 +93,7 @@ class EditPassword extends Component {
             redirect: true,
           });
         } else {
+          // Otherwise display errors
           this.setState({
             pending: false,
             error: res.data.error,
@@ -110,13 +112,9 @@ class EditPassword extends Component {
    * Render the component
    */
   render() {
-    // If user is logged in or if user successfully logs in, redirects to home
     return (
       <div>
-        { /* Redirect the user to home if they are not logged in */ }
-        { !this.props.userId && <Redirect to="/login" /> }
         { this.state.redirect && <Redirect to="/account" /> }
-
         <Thin>
           <form className="thin-form" onSubmit={ this.handleSubmit }>
             <h4 className="bold marg-bot-1">
