@@ -1,7 +1,6 @@
+// Import frameworks
 import React from 'react';
 import { Link } from 'react-router-dom';
-import {connect} from 'react-redux';
-import PropTypes from 'prop-types';
 
 /**
  * Renders the footer at the bottom of the screen on all pages.
@@ -24,6 +23,9 @@ class Footer extends React.Component {
               <Link to="/about">
                 About Nalda
               </Link>
+              <Link to="/contact">
+                Contact Us
+              </Link>
               <Link to="/credits">
                 Site credits
               </Link>
@@ -43,25 +45,5 @@ class Footer extends React.Component {
     );
   }
 }
-
-Footer.propTypes = {
-  userId: PropTypes.string,
-};
-
-const mapStateToProps = state => {
-  return {
-    userId: state.authState.userId,
-  };
-};
-
-const mapDispatchToProps = () => {
-  return {};
-};
-
-// Redux config
-Footer = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Footer);
 
 export default Footer;

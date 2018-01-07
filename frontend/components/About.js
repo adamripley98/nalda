@@ -6,7 +6,6 @@ import Thin from './shared/Thin';
 
 class About extends Component {
   // Renders about component
-  // TODO: Nalda needs to send us the information for this component
   render() {
     return (
       <Thin>

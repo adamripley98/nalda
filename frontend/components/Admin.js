@@ -4,7 +4,6 @@ import autosize from 'autosize';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Redirect } from 'react-router-dom';
 
 // Import components
 import Thin from './shared/Thin';
@@ -28,6 +27,9 @@ class Admin extends Component {
 
     // Bind this to helper methods
     this.handleChangeEmail = this.handleChangeEmail.bind(this);
+    this.onSubmitAdmin = this.onSubmitAdmin.bind(this);
+    this.onSubmitCurator = this.onSubmitCurator.bind(this);
+    this.onSubmitRemoveCurator = this.onSubmitRemoveCurator.bind(this);
   }
 
   // Resize textarea to fit input
@@ -74,6 +76,30 @@ class Admin extends Component {
     .then((resp) => {
       // Shows any errors
       if (resp.data.error) {
+        this.setState({
+          error: resp.data.error
+        });
+      } else {
+        this.setState({error: ''});
+        // TODO: Notify on frontend of successful change
+      }
+    }).catch((err) => {
+      this.setState({
+        error: err,
+      });
+    });
+  }
+
+  onSubmitRemoveCurator(event) {
+    // Prevent the default action
+    event.preventDefault();
+    // Posts to routes.js
+    axios.post('/api/curator/remove', {
+      userToAdd: this.state.email,
+    })
+    .then((resp) => {
+      // Shows any errors
+      if (resp.data.error) {
         this.setState({error: resp.data.error});
       } else {
         this.setState({error: ''});
@@ -88,15 +114,10 @@ class Admin extends Component {
   render() {
     return (
       <Thin>
-        { /* Redirect the user to home if they are not logged in */ }
-        {/* {
-          (!this.props.userId) && <Redirect to="/login" />
-        } */}
-
         <form className="thin-form">
           <h2 className="bold marg-bot-1">Admin panel</h2>
           <p className="marg-bot-1">
-            Enter a user's email address in order to add them as an admin or as a content curator.
+            Enter a user's email address in order to add them as an admin or as a content curator or to remove them as a content creator.
           </p>
           <ErrorMessage error={ this.state.error } />
           <label>
@@ -121,7 +142,7 @@ class Admin extends Component {
                   )
                 }
               >
-                Add as admin
+                Add admin
               </button>
             </div>
             <div className="col-6">
@@ -135,7 +156,21 @@ class Admin extends Component {
                   )
                 }
               >
-                Add as content curator
+                Add curator
+              </button>
+            </div>
+            <div className="col-6">
+              <button
+                onClick={(e) => this.onSubmitRemoveCurator(e)}
+                className={
+                  this.state.email ? (
+                    "btn btn-primary full-width cursor"
+                  ) : (
+                    "btn btn-primary full-width disabled"
+                  )
+                }
+              >
+                Remove curator
               </button>
             </div>
           </div>

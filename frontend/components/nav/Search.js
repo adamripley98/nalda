@@ -132,6 +132,7 @@ class Search extends Component {
                       this.state.suggestions.articles.map(a => (
                         <Link key={ a._id } to={ `/articles/${a._id}` }>
                           { a.title }
+                          <div/>
                         </Link>
                       ))
                     }
@@ -146,6 +147,7 @@ class Search extends Component {
                       this.state.suggestions.listings.map(l => (
                         <Link key={ l._id } to={ `/listings/${l._id}` }>
                           { l.title }
+                          <div/>
                         </Link>
                       ))
                     }
@@ -160,6 +162,7 @@ class Search extends Component {
                       this.state.suggestions.videos.map(v => (
                         <Link key={ v._id } to={ `/videos/${v._id}` }>
                           { v.title }
+                          <div/>
                         </Link>
                       ))
                     }
@@ -174,6 +177,7 @@ class Search extends Component {
                       this.state.suggestions.curators.map(c => (
                         <Link key={ c._id } to={ `/users/${c._id}` }>
                           { c.name }
+                          <div/>
                         </Link>
                       ))
                     }

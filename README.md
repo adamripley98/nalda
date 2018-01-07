@@ -113,6 +113,7 @@ Backend for articles and listings
 - [X] Add bio and content to `user` schema
 - [ ] Update listing review schema to have author's id
 - [ ] Sort listings by amenities
+- [X] Admin remove curators functionality
 
 ## Cam
 - [X] Nav bar style when no one is logged in
@@ -122,6 +123,7 @@ Backend for articles and listings
 - [X] Display search results on the frontend (backend is done)
 - [ ] Load component on `Account.js` and `Profile.js` and others.
 - [ ] Sorting buttons at top of `Listings.js`, `Videos.js`, and `Articles.js` (actual sorting done)
+- [ ] `Admin.js` restyle 3 buttons & display successful admin change on frontend
 
 ## General cleanup
 
@@ -137,7 +139,7 @@ Backend for articles and listings
 - [ ] Search by Location
 - [ ] Issue where "ada" doesn't populate "adam ripley" but "adam" does (I think best way to deal with this is search button)
 - [ ] Don't let it search through reviews
-- [ ] Frontend issue where it displays two articles on one line
+- [X] Frontend issue where it displays two articles on one line
 
 ## Bugs
 - [X] Fix authentication route bug
