@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import ErrorMessage from './shared/ErrorMessage';
 import Button from './shared/Button';
 import Loading from './shared/Loading';
-import ArticlePreview from './content/articles/ArticlePreview';
+import Preview from './content/Preview';
 
 /**
  * Component to render a curators profile
@@ -77,7 +77,7 @@ class Profile extends Component {
     // TODO: Display nicely
     if (content && content.length) {
       return content.map((art) => (
-        <ArticlePreview
+        <Preview
           _id={ art._id }
           title={ art.title }
           subtitle={ art.subtitle }

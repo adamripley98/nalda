@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import Loading from './shared/Loading';
 import ErrorMessage from './shared/ErrorMessage';
 import Button from './shared/Button';
-import ArticlePreview from './content/articles/ArticlePreview';
+import Preview from './content/Preview';
 
 // TODO: Should standardize the size of all the pictures
 /**
@@ -67,12 +67,13 @@ class Home extends React.Component {
     // If there are articles to render
     if (this.state.articles && this.state.articles.length) {
       return this.state.articles.map((art) => (
-        <ArticlePreview
+        <Preview
           _id={ art._id }
           title={ art.title }
           subtitle={ art.subtitle }
           image={ art.image }
           key={ art._id }
+          isArticle
         />
       ));
     }
@@ -94,28 +95,14 @@ class Home extends React.Component {
     // If there are listings to render
     if (this.state.listings && this.state.listings.length) {
       return this.state.listings.map((listing) => (
-        <div className="col-6 col-lg-3" key={ listing._id } >
-          <Link to={ `/listings/${listing._id}` } >
-            <div className="article-preview">
-              <div
-                className="background-image"
-                style={{ backgroundImage: `url(${listing.image})`}}
-              />
-              <h2 className="title">
-                {listing.title}
-              </h2>
-              <h6 className="subtitle">
-                {
-                  listing.description.length > 100 ? (
-                    listing.description.substring(0, 100) + "..."
-                  ) : (
-                    listing.description
-                  )
-                }
-              </h6>
-            </div>
-          </Link>
-        </div>
+        <Preview
+          _id={ listing._id }
+          title={ listing.title }
+          subtitle={ listing.description }
+          image={ listing.image }
+          key={ listing._id }
+          isListing
+        />
       ));
     }
 
@@ -135,30 +122,19 @@ class Home extends React.Component {
   renderVideos() {
     // If there are videos to render
     if (this.state.videos && this.state.videos.length) {
-      return this.state.videos.map((video) => (
-        <div className="col-6 col-lg-3" key={ video._id } >
-          <Link to={ `/videos/${video._id}` } >
-            <div className="article-preview">
-              <div
-                className="background-image"
-                style={{ backgroundImage: `url(https://img.youtube.com/vi/${video.url.substring(video.url.indexOf("v=") + 2)}/maxresdefault.jpg)`}}
-              />
-              <h2 className="title">
-                { video.title }
-              </h2>
-              <h6 className="subtitle">
-                {
-                  video.description.length > 100 ? (
-                    video.description.substring(0, 100) + "..."
-                  ) : (
-                    video.description
-                  )
-                }
-              </h6>
-            </div>
-          </Link>
-        </div>
-      ));
+      return this.state.videos.map((video) => {
+        const videoId = video.url.substring(video.url.indexOf("v=") + 2);
+        return (
+          <Preview
+            _id={ video._id }
+            title={ video.title }
+            subtitle={ video.description }
+            image={ `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` }
+            key={ video._id }
+            isVideo
+          />
+        );
+      });
     }
 
     // If there are no listings

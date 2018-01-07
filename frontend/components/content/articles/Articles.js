@@ -6,7 +6,7 @@ import axios from 'axios';
 import Loading from '../../shared/Loading';
 import ErrorMessage from '../../shared/ErrorMessage';
 import Button from '../../shared/Button';
-import ArticlePreview from './ArticlePreview';
+import Preview from '../Preview';
 
 /**
  * Component for displaying all articles of the application
@@ -116,11 +116,12 @@ class Articles extends React.Component {
     // If articles are pulled from the database
     if (this.state.articles && this.state.articles.length) {
       return this.state.articles.map((art) => (
-        <ArticlePreview
+        <Preview
           _id={ art._id }
           title={ art.title }
           subtitle={ art.subtitle }
           image={ art.image }
+          isArticle
         />
       ));
     }

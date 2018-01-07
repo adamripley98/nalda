@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import Loading from '../../shared/Loading';
 import ErrorMessage from '../../shared/ErrorMessage';
 import Button from '../../shared/Button';
+import Preview from '../Preview';
 
 /**
  * Component for the homepage of the application
@@ -92,21 +93,19 @@ class Videos extends React.Component {
   renderVideos() {
     // If there were videos pulled from the backend
     if (this.state.videos && this.state.videos.length) {
-      return this.state.videos.map((video) => (
-        <div className="col-6 col-lg-4 col-xl-3" key={ video._id } >
-          <Link to={ `/videos/${video._id}` } >
-            <div className="article-preview">
-              <img className="img-fluid" alt={video.title} src={`https://img.youtube.com/vi/${video.url.substring(video.url.indexOf("v=") + 2)}/0.jpg`} />
-              <h2 className="title">
-                {video.title}
-              </h2>
-              <h6 className="subtitle">
-                {video.description}
-              </h6>
-            </div>
-          </Link>
-        </div>
-      ));
+      return this.state.videos.map((video) => {
+        const videoId = video.url.substring(video.url.indexOf("v=") + 2);
+        return (
+          <Preview
+            _id={ video._id }
+            title={ video.title }
+            subtitle={ video.description }
+            image={ `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` }
+            key={ video._id }
+            isVideo
+          />
+        );
+      });
     }
 
     // If there were no videos found
@@ -129,7 +128,11 @@ class Videos extends React.Component {
         <h3 className="title">
           Videos
         </h3>
-        <div onClick={this.sortByTitle}>Sort by title</div>
+        <div className="buttons marg-bot-1">
+          <div className="btn btn-primary" onClick={this.sortByTitle}>
+            Sort by title
+          </div>
+        </div>
         <div className="row">
           {
             this.state.pending ? (

@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import Loading from '../../shared/Loading';
 import ErrorMessage from '../../shared/ErrorMessage';
 import Button from '../../shared/Button';
+import Preview from '../Preview';
 
 /**
  * Component for the homepage of the application
@@ -159,20 +160,15 @@ class Listings extends React.Component {
   renderListings() {
     // If listings were pulled from the database
     if (this.state.listings && this.state.listings.length) {
-      return this.state.listings.map((listing) => (
-        <div className="col-6 col-lg-4 col-xl-3" key={ listing._id } >
-          <Link to={ `/listings/${listing._id}` } >
-            <div className="article-preview">
-              <img className="img-fluid" alt={listing.title} src={listing.image} />
-              <h2 className="title">
-                {listing.title}
-              </h2>
-              <h6 className="subtitle">
-                {listing.description}
-              </h6>
-            </div>
-          </Link>
-        </div>
+      return this.state.listings.map(listing => (
+        <Preview
+          _id={ listing._id }
+          title={ listing.title }
+          subtitle={ listing.description }
+          image={ listing.image }
+          key={ listing._id }
+          isListing
+        />
       ));
     }
 
@@ -196,10 +192,20 @@ class Listings extends React.Component {
         <h3 className="title">
           Listings
         </h3>
-        <div onClick={this.sortByTitle}>Sort by title</div>
-        <div onClick={this.sortByPrice}>Sort by price</div>
-        <div onClick={this.sortByRating}>Sort by rating</div>
-        <div onClick={this.sortByAmenity}>Sort by amenity</div>
+        <div className="buttons marg-bot-1">
+          <div className="btn btn-primary" onClick={this.sortByTitle}>
+            Sort by title
+          </div>
+          <div className="btn btn-primary" onClick={this.sortByPrice}>
+            Sort by price
+          </div>
+          <div className="btn btn-primary" onClick={this.sortByRating}>
+            Sort by rating
+          </div>
+          <div className="btn btn-primary" onClick={this.sortByAmenity}>
+            Sort by amenity
+          </div>
+        </div>
         <div className="row">
           {
             this.state.pending ? (
