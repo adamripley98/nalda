@@ -130,6 +130,11 @@ class Sidebar extends Component {
                     )
                   }
 
+                  {/* Link to the user's profile page */}
+                  <Link onClick={this.toggleMenu} to={`/users/${this.props.userId}`} className="link">
+                    Your profile
+                  </Link>
+
                   { /* Render admin panel only if admin */ }
                   {
                     (this.props.userType === 'admin') && (
