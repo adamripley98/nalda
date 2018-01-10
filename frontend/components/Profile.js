@@ -14,6 +14,8 @@ import NotFoundSection from './NotFoundSection';
  * Component to render a curators profile
  * TODO load all articles, listings, and videos by the curator
  * TODO profile picture
+ * TODO a user should only be able to see their own profile or the profile of
+ *      another user IFF they are a `curator` or an `admin`
  */
 class Profile extends Component {
   /**
@@ -166,7 +168,10 @@ class Profile extends Component {
       );
     } else if (this.state.error) {
       return (
-        <NotFoundSection />
+        <NotFoundSection
+          title="Curator not found"
+          content="Seems like the user you were looking for was either moved or does not exist."
+        />
       );
     }
 
