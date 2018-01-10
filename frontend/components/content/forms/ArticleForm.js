@@ -6,6 +6,8 @@ import { Link, Redirect } from 'react-router-dom';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import uuid from 'uuid-v4';
+
 /**
  * Component to render the new article form
  * TODO flash notifications when a new article is made?
@@ -195,6 +197,7 @@ class ArticleForm extends React.Component {
                 value={ this.state.title }
                 onChange={ this.handleChangeTitle }
               />
+
               <label>
                 Subtitle
               </label>
@@ -205,6 +208,7 @@ class ArticleForm extends React.Component {
                 value={ this.state.subtitle }
                 onChange={ this.handleChangeSubtitle }
               />
+
               <label>
                 Image (url to an image)
               </label>
@@ -215,6 +219,7 @@ class ArticleForm extends React.Component {
                 value={ this.state.image }
                 onChange={ this.handleChangeImage }
               />
+
               <label>
                 Body
               </label>
@@ -229,14 +234,14 @@ class ArticleForm extends React.Component {
 
                   // Return the textarea associated with the component
                   return (
-                    <div className="component">
+                    <div className="component" key={ uuid() }>
                       <textarea
                         placeholder={ placeholder }
                         name="body"
                         type="text"
                         className="form-control marg-bot-1"
                         rows="1"
-                        key={ index }
+                        key={ uuid() }
                         value={ this.state.body[index].body }
                         onChange={ (e) => this.handleChangeBody(e, index) }
                       />
@@ -245,7 +250,7 @@ class ArticleForm extends React.Component {
                           <i
                             className="fa fa-trash-o"
                             aria-hidden="true"
-                            key={ index }
+                            key={ uuid() }
                             onClick={() => {
                               const bodyObj = this.state.body;
                               bodyObj.splice(index, 1);
@@ -260,6 +265,7 @@ class ArticleForm extends React.Component {
                   );
                 })
               }
+
               <label>
                 Add a new section
               </label>
