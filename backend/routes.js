@@ -48,149 +48,260 @@ module.exports = () => {
    * Route to handle adding new admins
    * Admins are allowed to add more admins/curators and create content
    * @param userToAdd
-   // TODO: Security, must be admin
    */
   router.post('/admin/new', (req, res) => {
-    // finds given user in Mongo
-    User.findOne({username: req.body.userToAdd}, (err, user) => {
-      // Lets them know that if there is an error
-      if (err) {
-        res.send({
-          success: false,
-          error: err,
-        });
-      // Makes sure that user exists
-      } else if (!user) {
-        res.send({
-          success: false,
-          error: req.body.userToAdd + ' does not seem to exist!'
-        });
-      } else if (user.userType === "admin") {
-        res.send({
-          success: false,
-          error: user.name + ' is already an admin.',
-        });
-      } else {
-        // Makes given user an admin
-        user.userType = "admin";
-        // Save changes in Mongo
-        user.save((errSave) => {
-          if (errSave) {
-            res.send({
-              success: false,
-              error: errSave,
-            });
-          } else {
-            // If no error saving new user, returns successfully
-            res.send({
-              success: true,
-              error: '',
-            });
-          }
-        });
-      }
-    });
-  });
-
-  /**
-   * Route to handle adding new curators who are allowed to create content but not add others
-   * @param userToAdd
-   */
-  // TODO: Security, must be admin
-  router.post('/curator/new', (req, res) => {
-    // finds given user in Mongo
-    User.findOne({username: req.body.userToAdd}, (err, user) => {
-      // Lets them know that if there is an error
-      if (err) {
-        res.send({
-          success: false,
-          error: err,
-        });
-      // Makes sure that user exists
-      } else if (!user) {
-        res.send({
-          success: false,
-          error: req.body.userToAdd + ' does not seem to exist!'
-        });
-      } else if (user.userType === "curator") {
-        res.send({
-          success: false,
-          error: user.name + ' is already a curator.'
-        });
-      } else if (user.userType === "admin") {
-        res.send({
-          success: false,
-          error: 'Cannot revoke admin privileges.'
-        });
-      } else {
-        // Makes given user an admin
-        user.userType = "curator";
-        // Save changes in mongo
-        user.save((errSave) => {
-          if (errSave) {
-            res.send({
-              success: false,
-              error: errSave,
-            });
-          } else {
-            // If no error saving new user, returns successfully
-            res.send({
-              success: true,
-              error: '',
-            });
-          }
-        });
-      }
-    });
-  });
-
-  /**
-   * Route to handle adding new curators who are allowed to create content but not add others
-   * @param userToAdd
-   // TODO: Security, must be admin
-   */
-  router.post('/curator/remove', (req, res) => {
-    // finds given user in Mongo
-    User.findOne({username: req.body.userToAdd}, (err, user) => {
-      // Lets them know that if there is an error
-      if (err) {
-        res.send({
-          success: false,
-          error: err,
-        });
-      // Makes sure that user exists
-      } else if (!user) {
-        res.send({
-          success: false,
-          error: req.body.userToAdd + ' does not seem to exist!'
-        });
-      } else {
-        // Revokes curator privileges, don't have power to revoke admin privilege though
-        if (user.userType === "curator") {
-          user.userType = "user";
-          // Save changes in mongo
-          user.save((errSave) => {
-            if (errSave) {
-              res.send({
-                success: false,
-                error: errSave,
-              });
-            } else {
-              // If no error saving new user, returns successfully
-              res.send({
-                success: true,
-                error: '',
-              });
-            }
-          });
-        } else {
+    let userId = '';
+    // Assign userId to user in backend
+    if (req.session.passport) {
+      userId = req.session.passport.user;
+    }
+    // If user doesn't exist
+    if (!userId) {
+      res.send({
+        success: false,
+        error: 'Must be logged in.',
+      });
+    } else {
+      // Find the admin in Mongo
+      User.findById(userId, (errAdmin, admin) => {
+        // Error finding admin
+        if (errAdmin) {
           res.send({
             success: false,
-            error: 'Cannot revoke admin privileges.',
+            error: errAdmin.message,
           });
+        // Can't find admin
+        } else if (!admin) {
+          res.send({
+            success: false,
+            error: 'User not found.'
+          });
+        } else {
+          // Check if user is an admin
+          if (admin.userType !== 'admin') {
+            res.send({
+              success: false,
+              error: 'You must be an admin to post.'
+            });
+          } else {
+            // If user is an admin, finds given user to add in Mongo
+            User.findOne({username: req.body.userToAdd}, (err, user) => {
+              // Lets them know that if there is an error
+              if (err) {
+                res.send({
+                  success: false,
+                  error: err.message,
+                });
+              // Makes sure that user exists
+              } else if (!user) {
+                res.send({
+                  success: false,
+                  error: req.body.userToAdd + ' does not seem to exist!'
+                });
+              } else if (user.userType === "admin") {
+                res.send({
+                  success: false,
+                  error: user.name + ' is already an admin.',
+                });
+              } else {
+                // Makes given user an admin
+                user.userType = "admin";
+                // Save changes in Mongo
+                user.save((errSave) => {
+                  if (errSave) {
+                    res.send({
+                      success: false,
+                      error: errSave.message,
+                    });
+                  } else {
+                    // If no error saving new user, returns successfully
+                    res.send({
+                      success: true,
+                      error: '',
+                    });
+                  }
+                });
+              }
+            });
+          }
         }
-      }
-    });
+      });
+    }
+  });
+
+  /**
+   * Route to handle adding new curators who are allowed to create content but not add others
+   * @param userToAdd
+   */
+  router.post('/curator/new', (req, res) => {
+    let userId = '';
+    // Assign userId to user in backend
+    if (req.session.passport) {
+      userId = req.session.passport.user;
+    }
+    // If user doesn't exist
+    if (!userId) {
+      res.send({
+        success: false,
+        error: 'Must be logged in.',
+      });
+    } else {
+      // Find the admin in Mongo
+      User.findById(userId, (errAdmin, admin) => {
+        // Error finding admin
+        if (errAdmin) {
+          res.send({
+            success: false,
+            error: errAdmin.message,
+          });
+        // Can't find admin
+        } else if (!admin) {
+          res.send({
+            success: false,
+            error: 'User not found.'
+          });
+        } else {
+          // Check if user is an admin
+          if (admin.userType !== 'admin') {
+            res.send({
+              success: false,
+              error: 'You must be an admin to post.'
+            });
+          } else {
+            // finds given user in Mongo
+            User.findOne({username: req.body.userToAdd}, (err, user) => {
+              // Lets them know that if there is an error
+              if (err) {
+                res.send({
+                  success: false,
+                  error: err.message,
+                });
+              // Makes sure that user exists
+              } else if (!user) {
+                res.send({
+                  success: false,
+                  error: req.body.userToAdd + ' does not seem to exist!'
+                });
+              } else if (user.userType === "curator") {
+                res.send({
+                  success: false,
+                  error: user.name + ' is already a curator.'
+                });
+              } else if (user.userType === "admin") {
+                res.send({
+                  success: false,
+                  error: 'Cannot revoke admin privileges.'
+                });
+              } else {
+                // Makes given user an admin
+                user.userType = "curator";
+                // Save changes in mongo
+                user.save((errSave) => {
+                  if (errSave) {
+                    res.send({
+                      success: false,
+                      error: errSave.message,
+                    });
+                  } else {
+                    // If no error saving new user, returns successfully
+                    res.send({
+                      success: true,
+                      error: '',
+                    });
+                  }
+                });
+              }
+            });
+          }
+        }
+      });
+    }
+  });
+
+  /**
+   * Route to handle adding new curators who are allowed to create content but not add others
+   * @param userToAdd
+   */
+  router.post('/curator/remove', (req, res) => {
+    let userId = '';
+    // Assign userId to user in backend
+    if (req.session.passport) {
+      userId = req.session.passport.user;
+    }
+    // If user doesn't exist
+    if (!userId) {
+      res.send({
+        success: false,
+        error: 'Must be logged in.',
+      });
+    } else {
+      // Find the admin in Mongo
+      User.findById(userId, (errAdmin, admin) => {
+        // Error finding admin
+        if (errAdmin) {
+          res.send({
+            success: false,
+            error: errAdmin.message,
+          });
+        // Can't find admin
+        } else if (!admin) {
+          res.send({
+            success: false,
+            error: 'User not found.'
+          });
+        } else {
+          // Check if user is an admin
+          if (admin.userType !== 'admin') {
+            res.send({
+              success: false,
+              error: 'You must be an admin to post.'
+            });
+          } else {
+            // finds given user in Mongo
+            User.findOne({username: req.body.userToAdd}, (err, user) => {
+              // Lets them know that if there is an error
+              if (err) {
+                res.send({
+                  success: false,
+                  error: err.message,
+                });
+              // Makes sure that user exists
+              } else if (!user) {
+                res.send({
+                  success: false,
+                  error: req.body.userToAdd + ' does not seem to exist!'
+                });
+              } else {
+                // Revokes curator privileges, don't have power to revoke admin privilege though
+                if (user.userType === "curator") {
+                  user.userType = "user";
+                  // Save changes in mongo
+                  user.save((errSave) => {
+                    if (errSave) {
+                      res.send({
+                        success: false,
+                        error: errSave.message,
+                      });
+                    } else {
+                      // If no error saving new user, returns successfully
+                      res.send({
+                        success: true,
+                        error: '',
+                      });
+                    }
+                  });
+                } else {
+                  res.send({
+                    success: false,
+                    error: 'Cannot revoke admin privileges.',
+                  });
+                }
+              }
+            });
+          }
+        }
+      });
+    }
   });
 
   /**
@@ -204,7 +315,7 @@ module.exports = () => {
       if (articleErr) {
         res.send({
           success: false,
-          error: articleErr,
+          error: articleErr.message,
         });
       } else {
         /**
@@ -223,7 +334,7 @@ module.exports = () => {
           if (listingErr) {
             res.send({
               success: false,
-              error: listingErr,
+              error: listingErr.message,
             });
           } else {
             /**
@@ -242,7 +353,7 @@ module.exports = () => {
               if (videoErr) {
                 res.send({
                   success: false,
-                  error: videoErr,
+                  error: videoErr.message,
                 });
               } else {
                 /**
@@ -284,16 +395,17 @@ module.exports = () => {
       if (errArticle) {
         res.send({
           success: false,
-          error: errArticle
+          error: errArticle.message
         });
       } else {
         // Now search through listings
+        // TODO: Don't allow search through reviewers
         Listing.find({"$text": { $search: req.body.search }}, (errListing, listings) => {
           // Error finding listings
           if (errListing) {
             res.send({
               success: false,
-              error: errListing,
+              error: errListing.message,
             });
           } else {
             // Now search through videos
@@ -302,7 +414,7 @@ module.exports = () => {
               if (errVideo) {
                 res.send({
                   success: false,
-                  error: errVideo,
+                  error: errVideo.message,
                 });
               } else {
                 // Now search through users
@@ -311,7 +423,7 @@ module.exports = () => {
                   if (errUser) {
                     res.send({
                       success: false,
-                      error: errUser,
+                      error: errUser.message,
                     });
                   } else {
                     // Make sure that users are curators or admins, do not want to be able to search for regular users
@@ -360,7 +472,7 @@ module.exports = () => {
         // If there was an error with the request
         res.send({
           success: false,
-          error: err,
+          error: err.message,
         });
       } else {
         // If everything went as planned
@@ -384,7 +496,7 @@ module.exports = () => {
       if (err) {
         res.send({
           success: false,
-          error: err,
+          error: err.message,
         });
       // If the video doesn't exist
       } else if (!video) {
@@ -411,52 +523,90 @@ module.exports = () => {
    * TODO error checking
    */
   router.post('/videos/new', (req, res) => {
-    // Isolate variables
-    const title = req.body.title;
-    const url = req.body.url;
-    const description = req.body.description;
-
-    let error = "";
-    const urlRegexp = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
-
-    // Perform error checking on variables
-    if (!title) {
-      error = "Title must be populated.";
-    } else if (!description) {
-      error = "Subtitle must be populated.";
-    } else if (!urlRegexp.test(url)) {
-      error = "Image must be a valid URL to an image.";
+    let userId = '';
+    // Assign userId to user in backend
+    if (req.session.passport) {
+      userId = req.session.passport.user;
     }
-
-    // If there was an error or not
-    if (error) {
+    // If user doesn't exist
+    if (!userId) {
       res.send({
         success: false,
-        error,
+        error: 'Must be logged in.',
       });
     } else {
-      // Create a new video with given data
-      // TODO: Add location
-      const newVideo = new Video({
-        title,
-        url,
-        description,
-      });
-
-      // Save the new video in Mongo
-      newVideo.save((errVideo, video) => {
-        if (errVideo) {
-          // If there was an error saving the video
+      // Find the poster in Mongo
+      User.findById(userId, (errPost, poster) => {
+        // Error finding admin
+        if (errPost) {
           res.send({
             success: false,
-            error: errVideo,
+            error: errPost.message,
+          });
+        // Can't find poster
+        } else if (!poster) {
+          res.send({
+            success: false,
+            error: 'User not found.'
           });
         } else {
-          // Successfully send back data
-          res.send({
-            success: true,
-            data: video,
-          });
+            // Check if user is an admin
+          if (poster.userType !== 'admin' && poster.userType !== 'curator') {
+            res.send({
+              success: false,
+              error: 'You must be an admin or curator to post.'
+            });
+          } else {
+            // Isolate variables
+            const title = req.body.title;
+            const url = req.body.url;
+            const description = req.body.description;
+
+            let error = "";
+            const urlRegexp = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
+
+            // Perform error checking on variables
+            if (!title) {
+              error = "Title must be populated.";
+            } else if (!description) {
+              error = "Subtitle must be populated.";
+            } else if (!urlRegexp.test(url)) {
+              error = "Image must be a valid URL to an image.";
+            }
+
+            // If there was an error or not
+            if (error) {
+              res.send({
+                success: false,
+                error,
+              });
+            } else {
+              // Create a new video with given data
+              // TODO: Add location
+              const newVideo = new Video({
+                title,
+                url,
+                description,
+              });
+
+            // Save the new video in Mongo
+              newVideo.save((errVideo, video) => {
+                if (errVideo) {
+                  // If there was an error saving the video
+                  res.send({
+                    success: false,
+                    error: errVideo.message,
+                  });
+                } else {
+                  // Successfully send back data
+                  res.send({
+                    success: true,
+                    data: video,
+                  });
+                }
+              });
+            }
+          }
         }
       });
     }
@@ -472,7 +622,7 @@ module.exports = () => {
         // If there was an error with the request
         res.send({
           success: false,
-          error: err,
+          error: err.message,
         });
       } else {
         // If everything went as planned
@@ -489,29 +639,48 @@ module.exports = () => {
    * @param userID
    */
   router.get('/account', (req, res) => {
-    User.findById(req.query.userId, (err, user) => {
-      if (err) {
-        // If there was an error with the request
-        res.send({
-          success: false,
-          error: err,
-        });
-        // If no user exists
-      } else if (!user) {
-        res.send({
-          success: false,
-          error: 'Can not find user',
-        });
-      } else {
-        // If everything went as planned, send back user
-        // Remove private user info first
-        user.password = '';
-        res.send({
-          success: true,
-          data: user,
-        });
-      }
-    });
+    // Isolate userId from backend
+    let userId = "";
+    if (req.session.passport) {
+      userId = req.session.passport.user;
+    }
+    if (!userId) {
+      res.send({
+        success: false,
+        error: 'Must be logged in.'
+      });
+    // Check to make sure user is accessing their own data
+    } else if (userId !== req.query.userId) {
+      res.send({
+        success: false,
+        error: 'You may only access your own information.'
+      });
+    } else {
+      // Find user in Mongo
+      User.findById(userId, (err, user) => {
+        if (err) {
+          // If there was an error with the request
+          res.send({
+            success: false,
+            error: err.message,
+          });
+          // If no user exists
+        } else if (!user) {
+          res.send({
+            success: false,
+            error: 'Can not find user',
+          });
+        } else {
+          // If everything went as planned, send back user
+          // Remove private user info first
+          user.password = '';
+          res.send({
+            success: true,
+            data: user,
+          });
+        }
+      });
+    }
   });
 
   /**
@@ -524,7 +693,7 @@ module.exports = () => {
         // If there was an error with the request
         res.send({
           success: false,
-          error: err,
+          error: err.message,
         });
       } else {
         // Add a timestamp field for sorting
@@ -548,101 +717,131 @@ module.exports = () => {
    * @param subtitle
    * @param image (url)
    * @param body (text of the article)
-   * TODO error checking
-   * TODO pull user ID from the backend NOT the frontend
    */
   router.post('/articles/new', (req, res) => {
-    // Isolate variables
-    const title = req.body.title;
-    const subtitle = req.body.subtitle;
-    const image = req.body.image;
-    const body = req.body.body;
-    const userId = req.body.userId;
-
-    // Keep track of any errors
-    let error = "";
-    const urlRegexp = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
-
-    // Perform error checking on variables
-    if (!title) {
-      error = "Title must be populated.";
-    } else if (!subtitle) {
-      error = "Subtitle must be populated.";
-    } else if (!image) {
-      error = "Image must be populated.";
-    } else if (!body || !body.length) {
-      error = "Body must be populated.";
-    } else if (!urlRegexp.test(image)) {
-      error = "Image must be a valid URL to an image.";
-    } else if (typeof body !== "object" || !Array.isArray(body)) {
-      error = "Body must be an array";
-    } else {
-      for (let i = 0; i < body.length && !error; i++) {
-        const component = body[i];
-        if (!component) {
-          error = "Each component must be defined.";
-        } else if (!component.body) {
-          error = "Each component must be populated with text.";
-        } else if (component.componentType !== "text" && component.componentType !== "image") {
-          error = "Component type must be either text or image.";
-        } else if (component.componentType === "image") {
-          // Ensure that the URL to the image is proper
-          // This means that it is both a URL and an image file
-          const imgRegexp = /\.(jpeg|jpg|gif|png)$/;
-          if (!imgRegexp.test(component.body)) {
-            error = "Image url must end in \"jpeg\", \"png\", \"gif\", or \"jpg\".";
-          } else if (!urlRegexp.test(component.body)) {
-            error = "Image url must be a valid URL.";
-          }
-        }
-      }
+    // Isolate userId from Backend
+    const userId = "";
+    if (req.session.passport) {
+      userId = req.session.passport.user;
     }
-
-    // If there was an error or not
-    if (error) {
+    if (!userId) {
       res.send({
         success: false,
-        error,
+        error: 'You must be logged in to post.'
+      });
+    } else if (userId !== req.body.userId) {
+      res.send({
+        success: false,
+        error: 'Incorrect user.'
       });
     } else {
-      // Find the author
-      User.findById(userId, (err, user) => {
-        if (err) {
+      User.findById(userId, (errUser, user) => {
+        if (errUser) {
           res.send({
             success: false,
-            error: 'Error finding author ' + err
-          });
-        } else if (!user) {
-          res.send({
-            success: false,
-            error: 'User not found.'
+            error: errUser,
           });
         } else {
-          // Creates a new article with given params
-          const newArticle = new Article({
-            title,
-            subtitle,
-            image,
-            body,
-            author: userId,
-          });
+          if (user.userType !== 'admin' && user.userType !== 'curator') {
+            res.send({
+              success: false,
+              error: 'General users cannot create articles.',
+            });
+          } else {
+            // Isolate variables
+            const title = req.body.title;
+            const subtitle = req.body.subtitle;
+            const image = req.body.image;
+            const body = req.body.body;
 
-          // Save the new article in Mongo
-          newArticle.save((errArticle, article) => {
-            if (errArticle) {
-              // If there was an error saving the article
+            // Keep track of any errors
+            let error = "";
+            const urlRegexp = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
+
+            // Perform error checking on variables
+            if (!title) {
+              error = "Title must be populated.";
+            } else if (!subtitle) {
+              error = "Subtitle must be populated.";
+            } else if (!image) {
+              error = "Image must be populated.";
+            } else if (!body || !body.length) {
+              error = "Body must be populated.";
+            } else if (!urlRegexp.test(image)) {
+              error = "Image must be a valid URL to an image.";
+            } else if (typeof body !== "object" || !Array.isArray(body)) {
+              error = "Body must be an array";
+            } else {
+              for (let i = 0; i < body.length && !error; i++) {
+                const component = body[i];
+                if (!component) {
+                  error = "Each component must be defined.";
+                } else if (!component.body) {
+                  error = "Each component must be populated with text.";
+                } else if (component.componentType !== "text" && component.componentType !== "image") {
+                  error = "Component type must be either text or image.";
+                } else if (component.componentType === "image") {
+                  // Ensure that the URL to the image is proper
+                  // This means that it is both a URL and an image file
+                  const imgRegexp = /\.(jpeg|jpg|gif|png)$/;
+                  if (!imgRegexp.test(component.body)) {
+                    error = "Image url must end in \"jpeg\", \"png\", \"gif\", or \"jpg\".";
+                  } else if (!urlRegexp.test(component.body)) {
+                    error = "Image url must be a valid URL.";
+                  }
+                }
+              }
+            }
+
+            // If there was an error or not
+            if (error) {
               res.send({
                 success: false,
-                error: errArticle.message,
+                error,
               });
             } else {
-              // Successfully send back data
-              res.send({
-                success: true,
-                data: article,
+              // Find the author
+              User.findById(userId, (err, author) => {
+                if (err) {
+                  res.send({
+                    success: false,
+                    error: 'Error finding author ' + err.message
+                  });
+                } else if (!author) {
+                  res.send({
+                    success: false,
+                    error: 'Author not found.'
+                  });
+                } else {
+                  // Creates a new article with given params
+                  const newArticle = new Article({
+                    title,
+                    subtitle,
+                    image,
+                    body,
+                    author: userId,
+                  });
+
+                  // Save the new article in Mongo
+                  newArticle.save((errArticle, article) => {
+                    if (errArticle) {
+                      // If there was an error saving the article
+                      res.send({
+                        success: false,
+                        error: errArticle.message,
+                      });
+                    } else {
+                      // Successfully send back data
+                      res.send({
+                        success: true,
+                        data: article,
+                      });
+                    }
+                  });
+                }
               });
             }
-          });
+          }
         }
       });
     }
@@ -677,7 +876,7 @@ module.exports = () => {
             // Error finding author
             res.send({
               success: false,
-              error: er,
+              error: er.message,
             });
           } else if (!user) {
             res.send({
@@ -714,7 +913,7 @@ module.exports = () => {
       if (err) {
         res.send({
           success: false,
-          error: err,
+          error: err.message,
         });
       // If the listing doesn't exist
       } else if (!listing) {
@@ -744,71 +943,106 @@ module.exports = () => {
    * @param website
    */
   router.post('/listings/new', (req, res) => {
-    // Isolate variables from the body
-    const title = req.body.title;
-    const description = req.body.description;
-    const image = req.body.image;
-    const hours = req.body.hours;
-    const rating = req.body.rating;
-    const price = req.body.price;
-    const website = req.body.website;
-    const amenities = req.body.amenities;
-    const location = req.body.location;
-
-    let error = "";
-
-    // Error checking
-    // TODO: error check for hours
-    if (!title) {
-      error = "Title must be populated.";
-    } else if (!description) {
-      error = "Description must be populated.";
-    } else if (!image) {
-      error = "Image must be populated.";
-    } else if (!rating) {
-      error = "Rating must be populated.";
-    } else if (!price) {
-      error = "Price must be populated.";
-    } else if (!website) {
-      error = "Website must be populated.";
-    } else if (!location) {
-      error = "Location must be populated.";
+    let userId = '';
+    if (req.session.passport) {
+      userId = req.session.passport.user;
     }
-
-    // Handle error if there is one
-    if (error) {
+    // User is not logged in, cannot post
+    if (!userId) {
       res.send({
         success: false,
-        error,
+        error: 'You must be logged in to post.'
       });
     } else {
-      // Creates a new listing with given params
-      const newListing = new Listing({
-        title,
-        description,
-        image,
-        hours,
-        rating,
-        price,
-        website,
-        amenities,
-        location,
-      });
-
-      // Save the new article in mongo
-      newListing.save((er, listing) => {
-        if (er) {
-          // Pass on any error to the user
+      // Ensure poster is an admin or curator
+      User.findById(userId, (errUser, user) => {
+        if (errUser) {
           res.send({
             success: false,
-            error: er,
+            error: errUser,
+          });
+        } else if (!user) {
+          res.send({
+            success: false,
+            error: 'Cannot find user',
           });
         } else {
-          // Send the data along if it was successfully stored
-          res.send({
-            success: true,
-            data: listing,
-          });
+          // Check if user is authorized to post
+          if (user.userType !== 'admin' && user.userType !== 'curator') {
+            res.send({
+              success: false,
+              error: 'General users cannot post new listings',
+            });
+          } else {
+            // Isolate variables from the body
+            const title = req.body.title;
+            const description = req.body.description;
+            const image = req.body.image;
+            const hours = req.body.hours;
+            const rating = req.body.rating;
+            const price = req.body.price;
+            const website = req.body.website;
+            const amenities = req.body.amenities;
+            const location = req.body.location;
+
+            let error = "";
+
+            // Error checking
+            // TODO: error check for hours and amenities
+            if (!title) {
+              error = "Title must be populated.";
+            } else if (!description) {
+              error = "Description must be populated.";
+            } else if (!image) {
+              error = "Image must be populated.";
+            } else if (!rating) {
+              error = "Rating must be populated.";
+            } else if (!price) {
+              error = "Price must be populated.";
+            } else if (!website) {
+              error = "Website must be populated.";
+            } else if (!location) {
+              error = "Location must be populated.";
+            }
+
+            // Handle error if there is one
+            if (error) {
+              res.send({
+                success: false,
+                error,
+              });
+            } else {
+              // Creates a new listing with given params
+              const newListing = new Listing({
+                title,
+                description,
+                image,
+                hours,
+                rating,
+                price,
+                website,
+                amenities,
+                location,
+              });
+
+              // Save the new article in mongo
+              newListing.save((er, listing) => {
+                if (er) {
+                  // Pass on any error to the user
+                  res.send({
+                    success: false,
+                    error: er.message,
+                  });
+                } else {
+                  // Send the data along if it was successfully stored
+                  res.send({
+                    success: true,
+                    data: listing,
+                  });
+                }
+              });
+            }
+          }
         }
       });
     }
@@ -816,6 +1050,7 @@ module.exports = () => {
 
   /**
    * Route to add a new review
+   * TODO error checking
    * @param userId
    * @param listingId
    * @param rating
@@ -823,11 +1058,20 @@ module.exports = () => {
    * @param content
    */
   router.post('/reviews/new', (req, res) => {
-    // Ensure that a user is logged in before reviewing
-    if (!req.body.userId) {
+    const userId = '';
+    if (req.session.passport) {
+      userId = req.session.passport.user;
+    }
+    if (!userId) {
       res.send({
         success: false,
-        error: 'You must be logged in in order to leave a review on a listing.'
+        error: 'You must be logged in to leave reviews.'
+      });
+    // Backend user and frontend user do not match
+    } else if (userId !== req.body.userId) {
+      res.send({
+        success: false,
+        error: 'You cannot post as another user.',
       });
     } else
     // Ensure all fields are populated before leaving review
@@ -843,7 +1087,7 @@ module.exports = () => {
         if (errUser) {
           res.send({
             success: false,
-            error: 'Error finding user' + errUser,
+            error: 'Error finding user' + errUser.message,
           });
         } else
 
@@ -861,7 +1105,7 @@ module.exports = () => {
             if (errListing) {
               res.send({
                 success: false,
-                error: errListing,
+                error: errListing.message,
               });
             } else
 
@@ -907,7 +1151,7 @@ module.exports = () => {
                   if (er) {
                     res.send({
                       success: false,
-                      error: 'Error saving review' + er,
+                      error: 'Error saving review' + er.message,
                     });
                   } else {
                     // Finally, if review is saved successfully
@@ -933,7 +1177,23 @@ module.exports = () => {
     // Isolate variables from the request
     const name = req.body.name;
     const userId = req.body.userId;
-
+    let userIdBackend = "";
+    if (req.session.passport) {
+      userIdBackend = req.session.passport.user;
+    }
+    // User is not logged in
+    if (!userIdBackend) {
+      res.send({
+        success: false,
+        error: 'You must be logged in to change your name.'
+      });
+    // Frontend and backend userId do not match
+    } else if (userId !== userIdBackend) {
+      res.send({
+        success: false,
+        error: 'You may only change your own name.'
+      });
+    } else
     // Error checking
     if (!name) {
       res.send({
@@ -953,7 +1213,7 @@ module.exports = () => {
         if (err) {
           res.send({
             success: false,
-            error: err,
+            error: err.message,
           });
         // User doesn't exist in Mongo
         } else if (!user) {
@@ -971,7 +1231,7 @@ module.exports = () => {
             if (errUser) {
               res.send({
                 success: false,
-                error: errUser,
+                error: errUser.message,
               });
             } else {
               // User name updated successfully
@@ -993,7 +1253,23 @@ module.exports = () => {
     // Isolate variables from the request
     const bio = req.body.bio;
     const userId = req.body.userId;
-
+    const userIdBackend = "";
+    if (req.session.passport) {
+      userIdBackend = req.session.passport.user;
+    }
+    // User is not logged in
+    if (!userIdBackend) {
+      res.send({
+        success: false,
+        error: 'You must be logged in to change a bio.'
+      });
+      // User id on backend and frontend do not match
+    } else if (userIdBackend !== userId) {
+      res.send({
+        success: false,
+        error: 'You may only change your own bio.',
+      });
+    } else
     // Error checking
     if (bio.length > 500) {
       res.send({
@@ -1007,7 +1283,7 @@ module.exports = () => {
         if (err) {
           res.send({
             success: false,
-            error: err,
+            error: err.message,
           });
         // User doesn't exist in Mongo
         } else if (!user) {
@@ -1025,7 +1301,7 @@ module.exports = () => {
             if (errUser) {
               res.send({
                 success: false,
-                error: errUser,
+                error: errUser.message,
               });
             } else {
               // User bio updated successfully
@@ -1042,6 +1318,7 @@ module.exports = () => {
 
   /**
    * Find a given user's profile
+   * TODO error checking
    */
   router.get('/users/:id', (req, res) => {
     // Find the id from the url
@@ -1069,7 +1346,7 @@ module.exports = () => {
           if (er) {
             res.send({
               success: false,
-              error: er,
+              error: er.message,
             });
           } else {
             // Remove private data before sending back
