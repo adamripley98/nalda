@@ -8,6 +8,7 @@ import autosize from 'autosize';
 
 // Import actions
 import {changeFullName} from '../../actions/index.js';
+import {changeProfilePicture} from '../../actions/index.js';
 
 // Import components
 import ErrorMessage from '../shared/ErrorMessage';
@@ -20,8 +21,7 @@ import Loading from '../shared/Loading';
 class Account extends Component {
   /**
    * Constructor method
-   * TODO replace dummy data: prof pic
-   * TODO allow changing profile pic, password, location
+   * TODO allow changing profile pic, location
    * TODO profile pic needs to be shown
    */
   constructor(props) {
@@ -46,6 +46,8 @@ class Account extends Component {
     this.handleNameClick = this.handleNameClick.bind(this);
     this.handleChangeBio = this.handleChangeBio.bind(this);
     this.handleBioClick = this.handleBioClick.bind(this);
+    this.changeProfilePicture = this.changeProfilePicture.bind(this);
+    this.submitProfilePicture = this.submitProfilePicture.bind(this);
     this.handleProfilePictureClick = this.handleProfilePictureClick.bind(this);
   }
 
@@ -193,6 +195,53 @@ class Account extends Component {
   }
 
   /**
+   * Helper method for change profile picture
+   */
+  changeProfilePicture(e) {
+    this.setState({
+      profilePicture: e.target.value,
+    });
+  }
+
+  /**
+   * Helper method for submitting new profile picture
+   */
+  submitProfilePicture(e) {
+    // Isolate variables
+    const changeProfilePic = this.props.changeProfilePic;
+    const userId = this.props.userId;
+    const profilePicture = this.state.profilePicture;
+    // Prevent default action
+    e.preventDefault();
+    // Error checking
+    if (!this.state.profilePicture) {
+      this.setState({
+        error: 'Profile picture cannot be empty',
+      });
+    } else {
+      axios.post('/api/users/profilePicture', {
+        userId,
+        profilePicture,
+      })
+      .then((resp) => {
+        if (!resp.data.success) {
+          this.setState({
+            error: resp.data.error,
+          });
+        } else {
+          // Dispatch redux action
+          changeProfilePic(profilePicture);
+        }
+      })
+      .catch((err) => {
+        this.setState({
+          error: err,
+        });
+      });
+    }
+  }
+
+  /**
    * Helper function to render a user's information
    */
   renderInfo() {
@@ -226,6 +275,13 @@ class Account extends Component {
           </tr>
           <tr>
             <td className="bold">
+//               Profile Picture
+//             </td>
+//             <td className="bold">
+//               <input type="text" onChange={this.changeProfilePicture} />
+//             </td>
+//             <td>
+//               <input type="submit" onClick={this.submitProfilePicture} />
               Profile picture
             </td>
             <td>
@@ -362,6 +418,7 @@ class Account extends Component {
 Account.propTypes = {
   userId: PropTypes.string,
   changeName: PropTypes.func,
+  changeProfilePic: PropTypes.func,
 };
 
 // Allows us to access redux state as this.props.userId inside component
@@ -376,7 +433,8 @@ const mapStateToProps = state => {
 // TODO Will need to dispatch a changeLocation event as well for same reason
 const mapDispatchToProps = (dispatch) => {
   return {
-    changeName: (name) => dispatch(changeFullName(name))
+    changeName: (name) => dispatch(changeFullName(name)),
+    changeProfilePic: (profilePicture) => dispatch(changeProfilePicture(profilePicture))
   };
 };
 
@@ -387,3 +445,6 @@ Account = connect(
 )(Account);
 
 export default Account;
+
+// function myFunction(){
+// }

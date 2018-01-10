@@ -36,3 +36,11 @@ export function changeFullName(name) {
     name,
   };
 }
+
+// Dispatch an action to change profile picture
+export function changeProfilePicture(profilePicture) {
+  return {
+    type: 'PROFILEPICTURECHANGE',
+    profilePicture,
+  };
+}

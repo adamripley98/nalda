@@ -92,7 +92,7 @@ h6,
 .background-image {
   width: 100%;
   background-size: cover;
-  background-repeat: none;
+  background-repeat: no-repeat;
   background-position: center;
 
   &.background-fixed {
@@ -503,3 +503,111 @@ a {
     margin-right: 0.5rem;
   }
 }
+
+.video {
+  iframe {
+    width: 100%;
+    min-height: 60vh;
+    max-height: 100vh;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .title {
+    font-weight: bold;
+  }
+}
+
+/**
+ * Styling relating to account information
+ */
+.account.table {
+  font-size: 0.8rem;
+
+  .fa {
+    color: $gray;
+    cursor: hand;
+    cursor: pointer;
+
+    &:hover,
+    &:focus,
+    &:active {
+      color: $dark-gray;
+    }
+  }
+}
+
+.amenities-form {
+  .bold {
+    width: 100%;
+    color: $gray;
+    margin-top: 0.8rem;
+    margin-bottom: 0.2rem;
+    text-decoration: none;
+    cursor: auto;
+  }
+
+  p {
+    text-decoration: line-through;
+    width: 100%;
+    color: $gray;
+    margin-bottom: 0.2rem;
+    cursor: hand;
+    cursor: pointer;
+
+    &.active {
+      color: $dark-gray;
+      text-decoration: none;
+    }
+  }
+}
+
+/**
+ * Styling profile page
+ */
+.profile-wrapper {
+  .profile {
+    display: flex;
+
+    .profile-picture {
+      width: 4rem;
+      height: 4rem;
+      margin-right: 1rem;
+      border-radius: 50%;
+      background: $gray;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+
+    .profile-content {
+      flex: 1;
+
+      p {
+        margin-bottom: 0.5rem;
+
+        &:last-child {
+          margin-bottom: 0rem;
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Make the profile picture less wide on smaller screens
+ */
+@media screen and (max-width: 448px) {
+  .profile-wrapper .profile .profile-picture {
+    width: 3rem;
+    height: 3rem;
+  }
+}
+
+@media screen and (max-device-width: 448px) {
+  .profile-wrapper .profile .profile-picture {
+    width: 3rem;
+    height: 3rem;
+  }
+}
+

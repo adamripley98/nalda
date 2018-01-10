@@ -79,7 +79,6 @@ class Contact extends Component {
         message: this.state.message,
       })
       .then((resp) => {
-        console.log(resp.data);
         this.setState({
           error: resp.data.error + ' For now contact us at contact@naldaeasytravel.com',
         });

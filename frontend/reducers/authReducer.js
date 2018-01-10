@@ -11,6 +11,7 @@ const authReducer = (state = {}, action) => {
       newState.userType = action.userType;
       newState.name = action.name;
       newState.location = action.location;
+      newState.profilePicture = action.profilePicture;
       return newState;
     }
     // When logout event is called, will remove user from redux state
@@ -20,6 +21,7 @@ const authReducer = (state = {}, action) => {
       newState.userType = null;
       newState.name = null;
       newState.location = null;
+      newState.profilePicture = null;
       return newState;
     }
     // When register event is called, will update redux state with userId,
@@ -30,12 +32,19 @@ const authReducer = (state = {}, action) => {
       newState.userType = action.userType;
       newState.name = action.name;
       newState.location = action.location;
+      newState.profilePicture = action.profilePicture;
       return newState;
     }
     // When a user changes his/her name
     case 'NAMECHANGE': {
       const newState = Object.assign({}, state);
       newState.name = action.name;
+      return newState;
+    }
+    // When a user changes his/her profile picture
+    case 'PROFILEPICTURECHANGE': {
+      const newState = Object.assign({}, state);
+      newState.profilePicture = action.profilePicture;
       return newState;
     }
     default:

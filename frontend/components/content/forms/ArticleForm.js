@@ -29,7 +29,6 @@ class ArticleForm extends React.Component {
       error: "",
       redirectToHome: false,
     };
-
     // Bind this to helper methods
     this.handleChangeTitle = this.handleChangeTitle.bind(this);
     this.handleChangeSubtitle = this.handleChangeSubtitle.bind(this);
@@ -73,7 +72,6 @@ class ArticleForm extends React.Component {
       componentType: bodyObj[index].componentType,
       body: event.target.value,
     };
-
     // Update the state
     this.setState({
       body: bodyObj,
