@@ -32,6 +32,7 @@ class Register extends Component {
       password: '',
       verPassword: '',
       error: '',
+      pending: false,
     };
 
     // Bindings so 'this' refers to component
@@ -43,7 +44,7 @@ class Register extends Component {
   }
 
   /**
-   * WHen the component mounts
+   * When the component mounts
    */
   componentDidMount() {
     // Autocomplete the user's city
@@ -63,6 +64,11 @@ class Register extends Component {
     // Prevent the default submit action
     event.preventDefault();
 
+    // Denote that the registration request is pending
+    this.setState({
+      pending: true,
+    });
+
     // Isolate form fields
     const name = this.state.name;
     const email = this.state.email;
@@ -74,26 +80,32 @@ class Register extends Component {
     if (!name) {
       this.setState({
         error: "Name must be populated.",
+        pending: false,
       });
     } else if (!email) {
       this.setState({
         error: "Email must be populated.",
+        pending: false,
       });
     } else if (!password) {
       this.setState({
         error: "Password must be populated.",
+        pending: false,
       });
     } else if (!verPassword) {
       this.setState({
         error: "Confirm password must be populated.",
+        pending: false,
       });
     } else if (password !== verPassword) {
       this.setState({
         error: "Password and confirm password must match.",
+        pending: false,
       });
     } else if (!location) {
       this.setState({
         error: "Location must be populated.",
+        pending: false,
       });
     } else {
       // Find the longitude and latitude of the location passed in
@@ -126,6 +138,7 @@ class Register extends Component {
               if (!resp.data.success) {
                 this.setState({
                   error: resp.data.error,
+                  pending: false,
                 });
               } else {
                 // If successful, redirect to home page
@@ -138,18 +151,20 @@ class Register extends Component {
                   resp.data.user._id,
                   resp.data.user.userType,
                   name,
-                  location
+                  location,
                 );
               }
             })
             .catch(err => {
               this.setState({
                 error: err,
+                pending: false,
               });
             });
         } else {
           this.setState({
             error: "Invalid location",
+            pending: false,
           });
         }
       });
@@ -258,6 +273,7 @@ class Register extends Component {
               type="submit"
               className={
                 (
+                  !this.state.pending &&
                   this.state.name &&
                   this.state.verPassword &&
                   this.state.password &&
@@ -270,7 +286,7 @@ class Register extends Component {
                   "btn btn-primary full-width disabled"
                 )
               }
-              value="Register"
+              value={ this.state.pending ? "Registering..." : "Register" }
             />
             <p className="blue-gray-text marg-top-1 marg-bot-0">
               Already have an account?&nbsp; <Link to="/login">Login here.</Link>

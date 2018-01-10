@@ -23,6 +23,7 @@ class VideoForm extends React.Component {
       error: "",
       videoId: "",
       redirectToHome: false,
+      pendingSubmit: false,
     };
 
     // Bind this to helper methods
@@ -73,30 +74,41 @@ class VideoForm extends React.Component {
     // Prevent the default submit action
     event.preventDefault();
 
+    // Denote that the submit is pending
+    this.setState({
+      pendingSubmit: true,
+    });
+
     // Begin error checking
     if (!this.state.title) {
       this.setState({
         error: "Title must be populated.",
+        pendingSubmit: false,
       });
     } else if (!this.state.url) {
       this.setState({
         error: "Video url must be populated",
+        pendingSubmit: false,
       });
     } else if (this.state.title.length < 4 || this.state.title.length > 100) {
       this.setState({
         error: "Title must be between 4 and 100 characters long.",
+        pendingSubmit: false,
       });
     } else if (this.state.description.length < 4) {
       this.setState({
         error: "Description must be at least 4 characters long",
+        pendingSubmit: false,
       });
     } else if (this.state.description.length > 10000) {
       this.setState({
         error: "Description must be less than 10000 characters long.",
+        pendingSubmit: false,
       });
     } else if (!this.state.url.startsWith("https://www.youtube.com/watch?v=")) {
       this.setState({
         error: "Video URL must be properly formatted. That is, it must begin with \"https://www.youtube.com/watch?v=\" followed by the video ID.",
+        pendingSubmit: false,
       });
     } else {
       // Otherwise, the request is properly formulated
@@ -114,12 +126,14 @@ class VideoForm extends React.Component {
           // Display error on frontend
           this.setState({
             error: resp.data.error,
+            pendingSubmit: false,
           });
         } else {
           // Redirect to home after successful submission
           this.setState({
             videoId: resp.data.data._id,
             redirectToHome: true,
+            pendingSubmit: false,
           });
         }
       });
@@ -189,9 +203,12 @@ class VideoForm extends React.Component {
               />
               <input
                 type="submit"
-                value="Create Video"
+                value={ this.state.pendingSubmit ? "Creating video..." : "Create video" }
                 className={
-                  this.state.title && this.state.url && this.state.description ? (
+                  !this.state.pendingSubmit &&
+                  this.state.title &&
+                  this.state.url &&
+                  this.state.description ? (
                     "btn btn-primary full-width"
                   ) : (
                     "btn btn-primary disabled full-width"

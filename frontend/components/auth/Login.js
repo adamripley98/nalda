@@ -23,6 +23,7 @@ class Login extends Component {
       username: '',
       password: '',
       error: '',
+      pending: false,
     };
 
     // Bindings so 'this' refers to component
@@ -33,6 +34,11 @@ class Login extends Component {
 
   // When login button clicked, will attempt to login on backend (login.js)
   handleLoginSubmit(event) {
+    // Denote that the login is pending
+    this.setState({
+      pending: true,
+    });
+
     // Binding this for inside axios request
     const username = this.state.username;
     const password = this.state.password;
@@ -45,10 +51,12 @@ class Login extends Component {
     if (!this.state.username) {
       this.setState({
         error: "Username must be populated.",
+        pending: false,
       });
     } else if (!this.state.password) {
       this.setState({
         error: "Password must be populated",
+        pending: false,
       });
     } else {
       // Make the login request to axios
@@ -63,6 +71,7 @@ class Login extends Component {
           if (!resp.data.success) {
             this.setState({
               error: resp.data.error,
+              pending: false,
             });
           } else {
             // Dispatch login event for redux state
@@ -77,6 +86,7 @@ class Login extends Component {
         .catch(err => {
           this.setState({
             error: err,
+            pending: false,
           });
         });
     }
@@ -132,13 +142,13 @@ class Login extends Component {
             <input
               type="submit"
               className={
-                this.state.password && this.state.username ? (
+                !this.state.pending && this.state.password && this.state.username ? (
                   "btn btn-primary full-width"
                 ) : (
                   "btn btn-primary disabled full-width"
                 )
               }
-              value="Login"
+              value={ this.state.pending ? "Logging in..." : "Login" }
             />
 
             <p className="marg-top-1 marg-bot-0">

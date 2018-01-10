@@ -79,6 +79,7 @@ class ListingForm extends React.Component {
         showoffToYourFriends: false,
         forTheGram: false,
       },
+      pending: false,
     };
 
     // Bind this to helper methods
@@ -91,12 +92,21 @@ class ListingForm extends React.Component {
     this.handleChangeWebsite = this.handleChangeWebsite.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleClickAmenity = this.handleClickAmenity.bind(this);
-    this.handleChangeLocation = this.handleChangeLocation.bind(this);
   }
 
-  // Handle resizing textarea
+  /**
+   * When the component mounts
+   */
   componentDidMount() {
+    // Handle resizing textarea
     autosize(document.querySelectorAll('textarea'));
+
+    // Autocomplete the user's city
+    const location = document.getElementById("location");
+    const options = {
+      componentRestrictions: {country: 'us'},
+    };
+    new google.maps.places.Autocomplete(location, options);
   }
 
   // Helper method to handle a change to the title state
@@ -110,13 +120,6 @@ class ListingForm extends React.Component {
   handleChangeDescription(event) {
     this.setState({
       description: event.target.value,
-    });
-  }
-
-  // Helper method to handle a change to the location state
-  handleChangeLocation(event) {
-    this.setState({
-      location: event.target.value,
     });
   }
 
@@ -187,40 +190,66 @@ class ListingForm extends React.Component {
 
   // Helper method to handle when the form is submitted
   handleSubmit(event) {
+    // Denote that the request is pending
+    this.setState({
+      pending: true,
+    });
+
     // Prevent the default submit action
     event.preventDefault();
+
     // If request is properly formulated, send request to make a new listing (routes.js)
     if (this.inputValid()) {
-      axios.post('/api/listings/new', {
-        title: this.state.title,
-        image: this.state.image,
-        location: this.state.location,
-        description: this.state.description,
-        hours: this.state.hours,
-        rating: this.state.rating,
-        price: this.state.price,
-        website: this.state.website,
-        amenities: this.state.amenities,
-      })
-        .then((resp) => {
-          // Display any errors
-          if (!resp.data.success) {
-            this.setState({
-              error: resp.data.error,
+      // Find the longitude and latitude of the location passed in
+      const geocoder = new google.maps.Geocoder();
+      geocoder.geocode({ 'address': location }, (results, status) => {
+        if (status === google.maps.GeocoderStatus.OK) {
+          const latitude = results[0].geometry.location.lat();
+          const longitude = results[0].geometry.location.lng();
+          axios.post('/api/listings/new', {
+            title: this.state.title,
+            image: this.state.image,
+            location: {
+              name: document.getElementById('location').value,
+              lat: latitude,
+              lgn: longitude,
+            },
+            description: this.state.description,
+            hours: this.state.hours,
+            rating: this.state.rating,
+            price: this.state.price,
+            website: this.state.website,
+            amenities: this.state.amenities,
+          })
+            .then((resp) => {
+              // Display any errors
+              if (!resp.data.success) {
+                this.setState({
+                  error: resp.data.error,
+                  pending: false,
+                });
+              } else {
+                // Redirect to home if successful
+                this.setState({
+                  listingId: resp.data.data._id,
+                  redirectToHome: true,
+                  pending: false,
+                });
+              }
+            })
+            .catch((err) => {
+              this.setState({
+                error: err,
+                pending: false,
+              });
             });
-          } else {
-            // Redirect to home if successful
-            this.setState({
-              listingId: resp.data.data._id,
-              redirectToHome: true,
-            });
-          }
-        })
-        .catch((err) => {
+        } else {
           this.setState({
-            error: err,
+            error: "Invalid location passed in.",
+            pending: false,
           });
-        });
+        }
+      });
     }
   }
 
@@ -249,9 +278,9 @@ class ListingForm extends React.Component {
         error: "Subtitle must be between 4 and 2000 characters long.",
       });
       return false;
-    } else if (this.state.location.length < 4 || this.state.location.length > 100) {
+    } else if (!this.state.location) {
       this.setState({
-        error: "Location must be between 4 and 100 characters long.",
+        error: "Location must be populated.",
       });
       return false;
     }
@@ -305,9 +334,8 @@ class ListingForm extends React.Component {
               <input
                 name="title"
                 type="text"
+                id="location"
                 className="form-control marg-bot-1"
-                value={ this.state.location }
-                onChange={ this.handleChangeLocation }
               />
               <label>
                 Description
@@ -656,9 +684,17 @@ class ListingForm extends React.Component {
 
               <input
                 type="submit"
-                value="Create listing"
+                value={ this.state.pending ? "Creating listing..." : "Create listing" }
                 className={
-                  this.state.title && this.state.description && this.state.website && this.state.image && this.state.rating && this.state.price ? (
+                  !this.state.pending && (
+                    this.state.title &&
+                    this.state.description &&
+                    this.state.website &&
+                    this.state.image &&
+                    this.state.rating &&
+                    this.state.price &&
+                    document.getElementById("location").value
+                  ) ? (
                     "btn btn-primary full-width"
                   ) : (
                     "btn btn-primary disabled full-width"
