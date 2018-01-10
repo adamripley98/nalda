@@ -1001,8 +1001,10 @@ module.exports = () => {
               error = "Price must be populated.";
             } else if (!website) {
               error = "Website must be populated.";
-            } else if (!location) {
+            } else if (!location.name) {
               error = "Location must be populated.";
+            } else if (!location.lat || !location.lgn) {
+              error = "Location must be valid.";
             }
 
             // Handle error if there is one

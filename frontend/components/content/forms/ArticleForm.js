@@ -28,6 +28,7 @@ class ArticleForm extends React.Component {
       ],
       error: "",
       redirectToHome: false,
+      pendingSubmit: false,
     };
     // Bind this to helper methods
     this.handleChangeTitle = this.handleChangeTitle.bind(this);
@@ -101,26 +102,36 @@ class ArticleForm extends React.Component {
     // Prevent the default submit action
     event.preventDefault();
 
+    // Denote that the submit is pending
+    this.setState({
+      pendingSubmit: true,
+    });
+
     // Begin error checking
     if (!this.state.title) {
       this.setState({
         error: "Title must be populated.",
+        pendingSubmit: false,
       });
     } else if (!this.state.subtitle) {
       this.setState({
         error: "Subtitle must be populated.",
+        pendingSubmit: false,
       });
     } else if (!this.state.body) {
       this.setState({
         error: "Body must be populated.",
+        pendingSubmit: false,
       });
     } else if (this.state.title.length < 4 || this.state.title.length > 100) {
       this.setState({
         error: "Title must be between 4 and 100 characters long.",
+        pendingSubmit: false,
       });
     } else if (this.state.subtitle.length < 4 || this.state.subtitle.length > 200) {
       this.setState({
         error: "Subtitle must be between 4 and 200 characters long.",
+        pendingSubmit: false,
       });
     } else {
       // Set the error to the empty string
@@ -146,6 +157,7 @@ class ArticleForm extends React.Component {
           } else {
             this.setState({
               error: res.data.error,
+              pendingSubmit: false,
             });
           }
         })
@@ -153,6 +165,7 @@ class ArticleForm extends React.Component {
           // If there was an error in making the request
           this.setState({
             error: err,
+            pendingSubmit: false,
           });
         });
     }
@@ -282,9 +295,12 @@ class ArticleForm extends React.Component {
 
               <input
                 type="submit"
-                value="Create Article"
+                value={ this.state.pendingSubmit ? "Creating article..." : "Create article" }
                 className={
-                  this.state.title && this.state.subtitle && this.state.body[0].body ? (
+                  !this.state.pendingSubmit &&
+                  this.state.title &&
+                  this.state.subtitle &&
+                  this.state.body[0].body ? (
                     "btn btn-primary full-width"
                   ) : (
                     "btn btn-primary disabled full-width"

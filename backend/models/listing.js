@@ -12,7 +12,11 @@ const Schema = mongoose.Schema;
 const listingSchema = new Schema({
   title: String,
   description: String,
-  location: String,
+  location: {
+    name: String,
+    lat: Number,
+    lng: Number,
+  },
   image: String,
   rating: Number,
   hours: {},
