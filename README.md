@@ -118,6 +118,7 @@ Backend for articles and listings
   - [ ] Require curator or admin to post content (all post routes)
   - [X] Don't return sensitive user data (password)
 - [ ] Change location functionality
+- [ ] Reviews by id instead of name
 
 ## Cam
 - [X] Nav bar style when no one is logged in
@@ -154,6 +155,7 @@ Backend for articles and listings
   - [X] 'Cannot set headers after they are sent' error crashes app
 - [X] Persist issue, now it makes you log back in all the time. Perhaps passport session is very short?
 - [X] Search doesn't redirect to page
+- [ ] Article preview click doesn't render article
 
 ## Features for next update
 - [ ] Sendgrid configuration for sending emails

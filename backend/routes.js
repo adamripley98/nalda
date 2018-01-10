@@ -720,7 +720,7 @@ module.exports = () => {
    */
   router.post('/articles/new', (req, res) => {
     // Isolate userId from Backend
-    const userId = "";
+    let userId = "";
     if (req.session.passport) {
       userId = req.session.passport.user;
     }
@@ -1058,7 +1058,7 @@ module.exports = () => {
    * @param content
    */
   router.post('/reviews/new', (req, res) => {
-    const userId = '';
+    let userId = '';
     if (req.session.passport) {
       userId = req.session.passport.user;
     }
@@ -1253,7 +1253,7 @@ module.exports = () => {
     // Isolate variables from the request
     const bio = req.body.bio;
     const userId = req.body.userId;
-    const userIdBackend = "";
+    let userIdBackend = "";
     if (req.session.passport) {
       userIdBackend = req.session.passport.user;
     }
@@ -1294,7 +1294,7 @@ module.exports = () => {
         } else {
           // Update user with new bio
           user.bio = bio;
-
+          console.log('user', user);
           // Save in Mongo
           user.save((errUser) => {
             // Error saving user
@@ -1305,6 +1305,69 @@ module.exports = () => {
               });
             } else {
               // User bio updated successfully
+              res.send({
+                success: true,
+                error: '',
+              });
+            }
+          });
+        }
+      });
+    }
+  });
+
+  /**
+   * Update a user's profile picture
+   * @param userId
+   * @param profilePicture
+   * TODO: Error check and ensure full name was entered
+   */
+  router.post('/users/profilePicture', (req, res) => {
+    // Isolate variables
+    let userIdBackend = "";
+    const userId = req.body.userId;
+    const profilePicture = req.body.profilePicture;
+
+    if (req.session.passport) {
+      userIdBackend = req.session.passport.user;
+    }
+    // User is not logged in on backend
+    if (!userIdBackend) {
+      res.send({
+        success: false,
+        error: 'Must be logged in to change profile picture.',
+      });
+    // Backend user doesn't match frontend user
+    } else if (userIdBackend !== userId) {
+      res.send({
+        success: false,
+        error: 'Can only change your own profile picture.',
+      });
+      // find and update given user
+    } else {
+      User.findById(userId, (err, user) => {
+        if (err) {
+          // Error finding user
+          res.send({
+            success: false,
+            error: err.message,
+          });
+        } else if (!user) {
+          res.send({
+            success: false,
+            error: 'User cannot be found.',
+          });
+        } else {
+          // Update the user
+          user.profilePicture = profilePicture;
+          // Save the changes
+          user.save((errSave) => {
+            if (err) {
+              res.send({
+                success: false,
+                error: errSave.message,
+              });
+            } else {
               res.send({
                 success: true,
                 error: '',
@@ -1349,6 +1412,7 @@ module.exports = () => {
               error: er.message,
             });
           } else {
+            console.log('prof', user.profilePicture);
             // Remove private data before sending back
             user.password = "";
             res.send({
@@ -1370,7 +1434,6 @@ module.exports = () => {
       success: false,
       error: 'This feature has not been connected yet.'
     });
-    // console.log('enters contact');
     // const nodemailer = require('nodemailer');
     //
     // // Generate test SMTP service account from ethereal.email
@@ -1400,19 +1463,16 @@ module.exports = () => {
     // // send mail with defined transport object
     // transporter.sendMail(mailOptions, (error, info) => {
     //   if (error) {
-    //     // return console.log(error);
-    //     console.log('error sending', error);
+    //     // return error;
     //     res.send({
     //       error: 'Error sending message' + error
     //     });
     //   } else {
-    //     console.log('wow it worked');
     //     res.send({
     //       data: 'lol it worked',
     //     });
     //   }
     //   // Preview only available when sending through an Ethereal account
-    //   console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
     //
     //     // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@blurdybloop.com>
     //     // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...

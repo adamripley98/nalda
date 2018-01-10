@@ -13,12 +13,10 @@ import NotFoundSection from './NotFoundSection';
 /**
  * Component to render a curators profile
  * TODO load all articles, listings, and videos by the curator
- * TODO profile picture
  */
 class Profile extends Component {
   /**
    * Constructor method
-   * TODO: Replace dummy prof pic
    */
   constructor(props) {
     super(props);
@@ -46,8 +44,7 @@ class Profile extends Component {
     .then((resp) => {
       // If successful, will set state with user's information
       if (resp.data.success) {
-        console.log("DATA");
-        console.log(resp.data);
+        console.log('resp.data', resp.data.data);
         this.setState({
           name: resp.data.data.name,
           email: resp.data.data.username,

@@ -72,7 +72,7 @@ class Nav extends Component {
                   </p>
                 </div>
               </div>
-              <div className="user-img" />
+              <div className="user-img" style={{ backgroundImage: `url(${this.props.profilePicture})` }}/>
             </div>
           ) : (
             <div className="user-info">
@@ -89,7 +89,7 @@ class Nav extends Component {
         }
 
         { /* Render the sidebar */ }
-        { /* This includes the three-bar meny toggle which is always visible */ }
+        { /* This includes the three-bar menu toggle which is always visible */ }
         <Sidebar />
       </nav>
     );
@@ -98,6 +98,7 @@ class Nav extends Component {
 
 Nav.propTypes = {
   userId: PropTypes.string,
+  profilePicture: PropTypes.string,
   name: PropTypes.string,
   location: PropTypes.string,
 };
@@ -105,6 +106,7 @@ Nav.propTypes = {
 const mapStateToProps = state => {
   return {
     userId: state.authState.userId,
+    profilePicture: state.authState.profilePicture,
     name: state.authState.name,
     location: state.authState.location,
   };
