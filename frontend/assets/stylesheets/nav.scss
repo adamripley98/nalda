@@ -33,12 +33,14 @@
     }
   }
 
+  // Styling the serachbar--a component of the navbar
   .search {
     padding: 0.6rem 0.5rem;
     width: 24rem;
     max-width: 100% !important;
     display: flex;
 
+    // Search icon to the left of the search bar
     .fa-search {
       color: $gray;
       padding-right: 0.7rem;

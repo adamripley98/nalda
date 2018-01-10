@@ -125,7 +125,7 @@ class Profile extends Component {
                   { this.state.bio }
                 </p>
               ) : (
-                <p className="gray-text">
+                <p className="gray-text italic">
                   { `${this.state.name} has not yet entered a bio.` }
                 </p>
               )
