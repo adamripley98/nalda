@@ -157,3 +157,31 @@
     }
   }
 }
+
+/**
+ * Styling the form for amenities for listings in the ListingForm component
+ */
+.amenities-form {
+  .bold {
+    width: 100%;
+    color: $gray;
+    margin-top: 0.8rem;
+    margin-bottom: 0.2rem;
+    text-decoration: none;
+    cursor: auto;
+  }
+
+  p {
+    text-decoration: line-through;
+    width: 100%;
+    color: $gray;
+    margin-bottom: 0.2rem;
+    cursor: hand;
+    cursor: pointer;
+
+    &.active {
+      color: $dark-gray;
+      text-decoration: none;
+    }
+  }
+}

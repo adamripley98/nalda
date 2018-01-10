@@ -7,6 +7,8 @@
 @import './footer';
 @import './article';
 @import './listing';
+@import './profile';
+@import './video';
 
 /**
  * General styles relevant to the whole application
@@ -59,6 +61,7 @@ h6,
 }
 
 // Style placeholders as gray (a lighter color than the default)
+// This more strongly suggests that the placeholder text is temporary
 .form-control {
   &::-webkit-input-placeholder {
     color: $gray;
@@ -106,16 +109,19 @@ h6,
 }
 
 // Make buttons clickable with bold text
+// Additionally, set button colors and transition styles
 .btn {
   cursor: hand;
   cursor: pointer;
   font-weight: bold !important;
   border: 0px solid transparent;
 
+  // Helper class to make the button take up the full width of its container
   &.full-width {
     width: 100%;
   }
 
+  // Primary buttons are blue with white text
   &.btn-primary {
     background: $primary;
     color: white !important;
@@ -127,11 +133,13 @@ h6,
       background: $dark-primary;
     }
 
+    // Left-aligned icons translate to the left upon hover, focus, etc.
     .fa-chevron-left {
       transition: all 0.2s ease;
       margin-right: 0.5rem;
     }
 
+    // Right-aligned icons translate to the right upon hover, focus, etc.
     .fa-chevron-right {
       transition: all 0.2s ease;
       margin-left: 0.5rem;
@@ -150,15 +158,17 @@ h6,
     }
   }
 
+  // Secondary buttons are white with colored text
   &.btn-secondary {
     font-weight: normal;
     color: $primary;
     border: 1px solid $primary;
+    background: white;
 
     &:hover,
     &:active,
     &:focus {
-      background: transparent;
+      background: white;
       color: $dark-primary;
       border: 1px solid $dark-primary;
     }
@@ -246,7 +256,7 @@ a {
     }
   }
 
-  // Style clickable icon sections
+  // Style clickable icon sections in forms
   .icons {
     margin-top: 0.5rem;
 
@@ -290,6 +300,8 @@ a {
 }
 
 // General form control styling
+// NOTE most all inputs and textareas are given this class per defauly Bootstrap
+// formatting. Here, we give some styling on top of that.
 .form-control {
   border: 1px solid $border;
 
@@ -303,7 +315,8 @@ a {
   }
 }
 
-// Style the loading circle
+// Style the loading circle used on a wide variety of pages when content is
+// pending arrival from the database
 .loading {
   width: 100%;
   text-align: center;
@@ -328,6 +341,7 @@ a {
   }
 }
 
+// Transition to rotate an item smoothly clockwise
 @-webkit-keyframes right {
   0% {
     -webkit-transform: rotate(0deg);
@@ -338,6 +352,7 @@ a {
   }
 }
 
+// Transition to rotate an item smoothly counter-clockwise
 @-webkit-keyframes left {
   0% {
     -webkit-transform: rotate(0deg);
@@ -359,6 +374,7 @@ a {
   }
 }
 
+// Transition for the not found page to rotate in an erratic manner
 @-webkit-keyframes not-found {
   0% {
     -webkit-transform: rotate(0deg);
@@ -378,6 +394,8 @@ a {
 }
 
 // Format styling for picking hours
+// This is particularly relevant to listings though could be used elsewhere
+// The format is: label, time select 1, time select 2
 .time-select {
   display: flex;
 
@@ -388,6 +406,9 @@ a {
     padding: 0.25rem 0rem;
     line-height: 1;
     transform: translateY(0.25rem);
+
+    // This value is picked such that the label for each form can be (generally)
+    // the same width and everything lines up nicely
     min-width: 6rem;
   }
 
@@ -398,7 +419,8 @@ a {
   }
 }
 
-.article-preview {
+// Styling preview for all forms of content (videos, articles, and listings)
+.content-preview {
   color: black;
   margin-bottom: 1rem;
 
@@ -421,6 +443,10 @@ a {
   }
 }
 
+// Styling the tabs at the top of content creation pages
+// ListingForm
+// ArticleForm
+// VideoForm
 .tabs {
   width: 100%;
   display: flex;
@@ -457,6 +483,7 @@ a {
   }
 }
 
+// Styling all listing-related display pages
 .home {
   margin-bottom: 2rem;
 
@@ -470,112 +497,9 @@ a {
   }
 }
 
+// Modular class for left-justified button groups
 .buttons {
   .btn {
     margin-right: 0.5rem;
-  }
-}
-
-.video {
-  iframe {
-    width: 100%;
-    min-height: 60vh;
-    max-height: 100vh;
-    margin-top: 1.5rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .title {
-    font-weight: bold;
-  }
-}
-
-/**
- * Styling relating to account information
- */
-.account.table {
-  font-size: 0.8rem;
-
-  .fa {
-    color: $gray;
-    cursor: hand;
-    cursor: pointer;
-
-    &:hover,
-    &:focus,
-    &:active {
-      color: $dark-gray;
-    }
-  }
-}
-
-.amenities-form {
-  .bold {
-    width: 100%;
-    color: $gray;
-    margin-top: 0.8rem;
-    margin-bottom: 0.2rem;
-    text-decoration: none;
-    cursor: auto;
-  }
-
-  p {
-    text-decoration: line-through;
-    width: 100%;
-    color: $gray;
-    margin-bottom: 0.2rem;
-    cursor: hand;
-    cursor: pointer;
-
-    &.active {
-      color: $dark-gray;
-      text-decoration: none;
-    }
-  }
-}
-
-/**
- * Styling profile page
- */
-.profile-wrapper {
-  .profile {
-    display: flex;
-
-    .profile-picture {
-      width: 4rem;
-      height: 4rem;
-      margin-right: 1rem;
-      border-radius: 50%;
-      background: $gray;
-    }
-
-    .profile-content {
-      flex: 1;
-
-      p {
-        margin-bottom: 0.5rem;
-
-        &:last-child {
-          margin-bottom: 0rem;
-        }
-      }
-    }
-  }
-}
-
-/**
- * Make the profile picture less wide on smaller screens
- */
-@media screen and (max-width: 448px) {
-  .profile-wrapper .profile .profile-picture {
-    width: 3rem;
-    height: 3rem;
-  }
-}
-
-@media screen and (max-device-width: 448px) {
-  .profile-wrapper .profile .profile-picture {
-    width: 3rem;
-    height: 3rem;
   }
 }

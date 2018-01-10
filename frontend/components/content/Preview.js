@@ -20,7 +20,7 @@ const Preview = ({ _id, title, subtitle, image, isArticle, isListing, isVideo })
   return (
     <div className="col-6 col-lg-3" key={ _id } >
       <Link to={ `/${type}/${_id}` }>
-        <div className="article-preview">
+        <div className="content-preview">
           <div
             className="background-image"
             style={{ backgroundImage: `url(${image})`}}
