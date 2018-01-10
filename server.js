@@ -60,7 +60,6 @@ passport.use('local', new LocalStrategy({
   User.findOne({ username: username }, (err, user) =>{
     // If there's an error, finish trying to authenticate (auth failed)
     if (err) {
-      console.error('Error fetching user in LocalStrategy', err);
       return done(err);
     }
     // If no user is present, authentication failed
