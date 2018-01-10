@@ -86,7 +86,7 @@ footer {
  * Adjust the footer to smaller screen sizes by making the smaller sections
  * each take up the full width of the screen
  */
-@media screen and (max-width: 892px) {
+@media screen and (max-width: 1016px) {
   footer .footer-top {
     display: block;
 
@@ -112,7 +112,7 @@ footer {
   }
 }
 
-@media screen and (max-device-width: 892px) {
+@media screen and (max-device-width: 1016px) {
   footer .footer-top {
     display: block;
 

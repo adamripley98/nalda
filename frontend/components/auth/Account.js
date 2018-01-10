@@ -46,6 +46,7 @@ class Account extends Component {
     this.handleNameClick = this.handleNameClick.bind(this);
     this.handleChangeBio = this.handleChangeBio.bind(this);
     this.handleBioClick = this.handleBioClick.bind(this);
+    this.handleProfilePictureClick = this.handleProfilePictureClick.bind(this);
   }
 
   /**
@@ -66,6 +67,7 @@ class Account extends Component {
           type: resp.data.data.userType,
           bio: resp.data.data.bio,
           location: resp.data.data.location.name,
+          profilePicture: resp.data.data.profilePicture,
           error: "",
           pending: false
         });
@@ -140,6 +142,14 @@ class Account extends Component {
   }
 
   /**
+   * Handle click to edit profile picture
+   * TODO
+   */
+  handleProfilePictureClick() {
+    return;
+  }
+
+  /**
    * Handle a change to the bio state
    */
   handleChangeBio(event) {
@@ -211,6 +221,24 @@ class Account extends Component {
                 className="fa fa-pencil"
                 aria-hidden="true"
                 onClick={ this.handleNameClick }
+              />
+            </td>
+          </tr>
+          <tr>
+            <td className="bold">
+              Profile picture
+            </td>
+            <td>
+              <div
+                className="profile-picture background-image"
+                style={{ backgroundImage: `url(${ this.state.profilePicture })`}}
+              />
+            </td>
+            <td>
+              <i
+                className="fa fa-pencil"
+                aria-hidden="true"
+                onClick={ this.handleProfilePictureClick }
               />
             </td>
           </tr>

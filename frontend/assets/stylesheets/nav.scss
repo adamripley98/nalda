@@ -33,12 +33,14 @@
     }
   }
 
+  // Styling the serachbar--a component of the navbar
   .search {
     padding: 0.6rem 0.5rem;
     width: 24rem;
     max-width: 100% !important;
     display: flex;
 
+    // Search icon to the left of the search bar
     .fa-search {
       color: $gray;
       padding-right: 0.7rem;
@@ -87,6 +89,7 @@
       }
     }
 
+    // Clickable shade that renders below the navbar when the user is searching
     .search-shade {
       position: fixed;
       left: 0;
@@ -100,6 +103,9 @@
     }
   }
 
+  // Information about the user shown to the right of the navbar
+  // This includes the user's name, location, and profile picture
+  // The amount of information shown depends on the width of the screen
   .user-info {
     flex: 1;
     margin: 0;
@@ -142,6 +148,8 @@
       display: inline-block;
     }
 
+    // If the user is not signed in, then there is no information to display
+    // Instead, there are links to login and register
     .sign-in-links {
       width: 100%;
       height: 100%;
@@ -196,10 +204,13 @@
     margin-bottom: 0.5rem;
   }
 
+  // Section titles at the top of each category of search results
+  // The categories are articles, listings, videos, and curators
   h4 {
     color: $dark-gray;
   }
 
+  // Each result is a link to the corresponding content
   a {
     color: $gray;
 
@@ -219,6 +230,7 @@
   z-index: 1301;
   width: 3.6rem;
 
+  // Three menu bars which toggle the menu
   .bars {
     width: 2rem;
     cursor: hand;
@@ -241,6 +253,7 @@
       display: block;
     }
 
+    // Apply a margin top to all bars except the first one
     .bar + .bar {
       margin-top: 0.5rem;
     }
@@ -332,6 +345,7 @@
   }
 }
 
+// Oscillating spin transition for the compass rendered on the sidebar
 @-webkit-keyframes spin {
   0% {
     -webkit-transform: rotate(0deg);
@@ -347,7 +361,30 @@
 }
 
 /**
- * Hide yser name when the screen is below 928px
+ * Make sidebar full-screen on smaller screens
+ */
+@media screen and (max-width: 448px) {
+  #sidebar #side-menu {
+    width: 100% !important;
+    min-width: inherit !important;
+    height: 100% !important;
+    overflow-y: scroll;
+    overflow-x: hidden;
+  }
+}
+
+@media screen and (max-device-width: 448px) {
+  #sidebar #side-menu {
+    width: 100% !important;
+    min-width: inherit !important;
+    height: 100% !important;
+    overflow-y: scroll;
+    overflow-x: hidden;
+  }
+}
+
+/**
+ * Hide user name when the screen is below 928px
  */
 @media screen and (max-width: 928px) {
   .nav .user-info .user-text .name {

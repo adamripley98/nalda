@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 /**
  * Renders an error message to the user
  */
-const Preview = ({ _id, title, subtitle, image, isArticle, isListing, isVideo }) => {
+const Preview = ({ _id, title, subtitle, image, isArticle, isListing, isVideo, isThin }) => {
   // Find the type of the content
   let type = "";
   if (isArticle) {
@@ -18,9 +18,9 @@ const Preview = ({ _id, title, subtitle, image, isArticle, isListing, isVideo })
 
   // Return the content preview
   return (
-    <div className="col-6 col-lg-3" key={ _id } >
+    <div className={ isThin ? "col-12 col-md-6" : "col-6 col-xl-3" } key={ _id } >
       <Link to={ `/${type}/${_id}` }>
-        <div className="article-preview">
+        <div className="content-preview">
           <div
             className="background-image"
             style={{ backgroundImage: `url(${image})`}}
@@ -46,6 +46,7 @@ Preview.propTypes = {
   isListing: PropTypes.bool,
   isVideo: PropTypes.bool,
   isArticle: PropTypes.bool,
+  isThin: PropTypes.bool,
 };
 
 export default Preview;
