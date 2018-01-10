@@ -273,7 +273,12 @@ class Account extends Component {
             </td>
             <td>
               <span style={{ display: this.state.editBio && "none" }}>
-                { this.state.bio || <span className="gray-text">Add a bio here...</span> }
+                {
+                  this.state.bio ||
+                  <span className="gray-text cursor" onClick={ this.handleBioClick }>
+                    Add a bio here...
+                  </span>
+                }
               </span>
               <textarea
                 className="form-control"

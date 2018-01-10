@@ -4,6 +4,7 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import uuid from 'uuid-v4';
+import { Link } from 'react-router-dom';
 
 // Import components
 import Review from './Review';
@@ -11,7 +12,7 @@ import ReviewForm from './ReviewForm';
 import Loading from '../../shared/Loading';
 import Button from '../../shared/Button';
 import NotFoundSection from '../../NotFoundSection';
-import { Link } from 'react-router-dom';
+import Stars from './Stars';
 
 /**
  * Component to render a listing
@@ -242,21 +243,103 @@ class Listing extends React.Component {
       const hours = this.state.hours;
       return (
         // If a date has a start and end time, it will be displayed
-        <div>
-          {hours.monday.start && hours.monday.finish && <div>Monday: {this.formatHours(hours.monday.start)} - {this.formatHours(hours.monday.finish)}</div>}
-          {hours.tuesday.start && hours.tuesday.finish && <div>Tuesday: {this.formatHours(hours.tuesday.start)} - {this.formatHours(hours.tuesday.finish)}</div>}
-          {hours.wednesday.start && hours.wednesday.finish && <div>Wednesday: {this.formatHours(hours.wednesday.start)} - {this.formatHours(hours.wednesday.finish)}</div>}
-          {hours.thursday.start && hours.thursday.finish && <div>Thursday: {this.formatHours(hours.thursday.start)} - {this.formatHours(hours.thursday.finish)}</div>}
-          {hours.friday.start && hours.friday.finish && <div>Friday: {this.formatHours(hours.friday.start)} - {this.formatHours(hours.friday.finish)}</div>}
-          {hours.saturday.start && hours.saturday.finish && <div>Saturday: {this.formatHours(hours.saturday.start)} - {this.formatHours(hours.saturday.finish)}</div>}
-          {hours.sunday.start && hours.sunday.finish && <div>Sunday: {this.formatHours(hours.sunday.start)} - {this.formatHours(hours.sunday.finish)}</div>}
-        </div>
+        <table className="table">
+          <tbody>
+            {
+              (hours.monday.start && hours.monday.finish) && (
+                <tr>
+                  <td>
+                    Monday
+                  </td>
+                  <td>
+                    {this.formatHours(hours.monday.start)} - {this.formatHours(hours.monday.finish)}
+                  </td>
+                </tr>
+              )
+            }
+            {
+              (hours.tuesday.start && hours.tuesday.finish) && (
+                <tr>
+                  <td>
+                    Tuesday
+                  </td>
+                  <td>
+                    {this.formatHours(hours.tuesday.start)} - {this.formatHours(hours.tuesday.finish)}
+                  </td>
+                </tr>
+              )
+            }
+            {
+              (hours.wednesday.start && hours.wednesday.finish) && (
+                <tr>
+                  <td>
+                    Wednesday
+                  </td>
+                  <td>
+                    {this.formatHours(hours.wednesday.start)} - {this.formatHours(hours.wednesday.finish)}
+                  </td>
+                </tr>
+              )
+            }
+            {
+              (hours.thursday.start && hours.thursday.finish) && (
+                <tr>
+                  <td>
+                    Thursday
+                  </td>
+                  <td>
+                    {this.formatHours(hours.thursday.start)} - {this.formatHours(hours.thursday.finish)}
+                  </td>
+                </tr>
+              )
+            }
+            {
+              (hours.friday.start && hours.friday.finish) && (
+                <tr>
+                  <td>
+                    Friday
+                  </td>
+                  <td>
+                    {this.formatHours(hours.friday.start)} - {this.formatHours(hours.friday.finish)}
+                  </td>
+                </tr>
+              )
+            }
+            {
+              (hours.saturday.start && hours.saturday.finish) && (
+                <tr>
+                  <td>
+                    Saturday
+                  </td>
+                  <td>
+                    {this.formatHours(hours.saturday.start)} - {this.formatHours(hours.saturday.finish)}
+                  </td>
+                </tr>
+              )
+            }
+            {
+              (hours.sunday.start && hours.sunday.finish) && (
+                <tr>
+                  <td>
+                    Sunday
+                  </td>
+                  <td>
+                    {this.formatHours(hours.sunday.start)} - {this.formatHours(hours.sunday.finish)}
+                  </td>
+                </tr>
+              )
+            }
+          </tbody>
+        </table>
       );
     }
+
     // If there are no hours
     return (
       <div>
-        Unfortunately, hours are not published for this listing.
+        <p className="gray-text">
+          Hours are not published for this listing.
+        </p>
       </div>
     );
   }
@@ -338,9 +421,12 @@ class Listing extends React.Component {
                     <h2>
                       { this.state.title }
                     </h2>
+                    <p className="description">
+                      { this.state.description }
+                    </p>
                     {
                       this.state.website && (
-                        <Link to={ this.state.website }>
+                        <Link to={ this.state.website } className="website">
                           <i className="fa fa-globe" aria-hidden="true" />
                           &nbsp;
                           {
@@ -366,28 +452,27 @@ class Listing extends React.Component {
                     {
                       // TODO: Style rating better, perhaps stars
                       this.state.rating && (
-                        <p className="price">
+                        <div className="price">
                           <strong>
                             Rating:&nbsp;
                           </strong>
-                          { this.state.rating }/5
-                        </p>
+                          <Stars rating={ this.state.rating } />
+                        </div>
                       )
                     }
                     {
                       // TODO: Style hours better, perhaps in its own section
                       this.state.hours && (
-                        <p className="price">
-                          <strong>
-                            Hours:&nbsp;
-                          </strong>
-                          {this.renderHours()}
-                        </p>
+                        <div className="price">
+                          <p>
+                            <strong>
+                              Hours:&nbsp;
+                            </strong>
+                          </p>
+                          { this.renderHours() }
+                        </div>
                       )
                     }
-                    <p className="description">
-                      { this.state.description }
-                    </p>
                   </div>
                 </div>
                 <div className="space-1" />
