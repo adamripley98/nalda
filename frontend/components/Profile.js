@@ -91,6 +91,8 @@ class Profile extends Component {
           title={ art.title }
           subtitle={ art.subtitle }
           image={ art.image }
+          isArticle
+          isThin
         />
       ));
     }

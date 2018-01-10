@@ -373,6 +373,16 @@
   }
 }
 
+@media screen and (max-device-width: 448px) {
+  #sidebar #side-menu {
+    width: 100% !important;
+    min-width: inherit !important;
+    height: 100% !important;
+    overflow-y: scroll;
+    overflow-x: hidden;
+  }
+}
+
 /**
  * Hide user name when the screen is below 928px
  */
