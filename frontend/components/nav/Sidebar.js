@@ -82,8 +82,10 @@ class Sidebar extends Component {
       <div>
         {/* Redirect to the login page when the user signs out */}
         { this.state.redirectToLogin && (<Redirect to="/login"/>) }
+
         {/* Display any errors */}
         {this.state.error && <ErrorMessage/>}
+
         {/* Render the clickable menu bars */}
         <div className="menu">
           <div className="bars" onClick={ this.toggleMenu }>
@@ -117,8 +119,13 @@ class Sidebar extends Component {
                   <Link onClick={this.toggleMenu} to="/videos" className="link">
                     Videos
                   </Link>
-                  <Link onClick={this.toggleMenu} to="/account" className="link">
+                  <Link onClick={this.toggleMenu} to="/account" className="link line-above">
                     Account
+                  </Link>
+
+                  {/* Link to the user's profile page */}
+                  <Link onClick={this.toggleMenu} to={`/users/${this.props.userId}`} className="link">
+                    Profile
                   </Link>
 
                   { /* Render create link only if admin or curator */ }
@@ -129,11 +136,6 @@ class Sidebar extends Component {
                       </Link>
                     )
                   }
-
-                  {/* Link to the user's profile page */}
-                  <Link onClick={this.toggleMenu} to={`/users/${this.props.userId}`} className="link">
-                    Your profile
-                  </Link>
 
                   { /* Render admin panel only if admin */ }
                   {

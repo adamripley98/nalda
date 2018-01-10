@@ -61,4 +61,11 @@
       color: $dark-gray;
     }
   }
+
+  .profile-picture {
+    height: 2rem;
+    width: 2rem;
+    background: $gray;
+    border-radius: 50%;
+  }
 }
