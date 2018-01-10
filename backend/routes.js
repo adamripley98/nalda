@@ -1053,7 +1053,7 @@ module.exports = () => {
       if (err) {
         res.send({
           success: false,
-          error: err,
+          error: err.message,
         });
       } else if (!user) {
         // User doesn't exist in mongo

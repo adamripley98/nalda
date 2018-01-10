@@ -239,7 +239,9 @@ class Search extends Component {
           this.state.active && (
             <div
               className="search-shade"
-              onClick={ () => this.setState({ active: false }) }
+              onClick={ () => this.setState({
+                active: false,
+              }) }
             />
           )
         }

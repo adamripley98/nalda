@@ -3,16 +3,17 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 
-
 // Import components
 import ErrorMessage from './shared/ErrorMessage';
 import Button from './shared/Button';
 import Loading from './shared/Loading';
 import Preview from './content/Preview';
+import NotFoundSection from './NotFoundSection';
 
 /**
  * Component to render a curators profile
  * TODO load all articles, listings, and videos by the curator
+ * TODO profile picture
  */
 class Profile extends Component {
   /**
@@ -25,6 +26,7 @@ class Profile extends Component {
       name: '',
       email: '',
       bio: '',
+      userType: 'user',
       location: '',
       profilePicture: '',
       error: '',
@@ -44,10 +46,14 @@ class Profile extends Component {
     .then((resp) => {
       // If successful, will set state with user's information
       if (resp.data.success) {
+        console.log("DATA");
+        console.log(resp.data);
         this.setState({
           name: resp.data.data.name,
           email: resp.data.data.username,
           bio: resp.data.data.bio,
+          userType: resp.data.data.userType,
+          profilePicture: resp.data.data.profilePicture,
           error: "",
           content: resp.data.articles,
           location: resp.data.data.location.name,
@@ -73,11 +79,12 @@ class Profile extends Component {
   renderContent() {
     // Isolate variable
     const content = this.state.content;
+
     // Map through and display content
-    // TODO: Display nicely
     if (content && content.length) {
       return content.map((art) => (
         <Preview
+          key={ art._id }
           _id={ art._id }
           title={ art.title }
           subtitle={ art.subtitle }
@@ -85,6 +92,7 @@ class Profile extends Component {
         />
       ));
     }
+
     // If no articles were found
     return (
       <div className="col-12">
@@ -100,54 +108,50 @@ class Profile extends Component {
    */
   renderInfo() {
     return (
-      <table className="table account">
-        <tbody>
-          <tr>
-            <td className="bold">
-              Name
-            </td>
-            <td>
-              <span style={{ display: this.state.editName && "none" }}>
-                { this.state.name }
-              </span>
-            </td>
-          </tr>
-          <tr>
-            <td className="bold">
-              Email
-            </td>
-            <td>
-              { this.state.email }
-            </td>
-          </tr>
-          <tr>
-            <td className="bold">
-              Bio
-            </td>
-            <td>
-              <span style={{ display: this.state.editBio && "none" }}>
-                { this.state.bio || `${this.state.name} has not entered a bio`}
-              </span>
-            </td>
-          </tr>
-          <tr>
-            <td className="bold">
-              Location
-            </td>
-            <td>
+      <div className="profile-wrapper">
+        <div className="profile">
+          <div
+            className="profile-picture background-image"
+            style={{ backgroundImage: `url(${this.state.profilePicture})` }}
+          />
+          <div className="profile-content">
+            <h4>
+              { this.state.name }
+            </h4>
+
+            {
+              this.state.bio ? (
+                <p>
+                  { this.state.bio }
+                </p>
+              ) : (
+                <p className="gray-text">
+                  { `${this.state.name} has not yet entered a bio.` }
+                </p>
+              )
+            }
+
+            <p>
               { this.state.location }
-            </td>
-          </tr>
-          <tr>
-            <td className="bold">
-              Content created
-            </td>
-            <td>
-              { this.renderContent() }
-            </td>
-          </tr>
-        </tbody>
-      </table>
+            </p>
+          </div>
+        </div>
+
+        {/* Render content created by a user if they are an admin or curator */}
+        {
+          (this.state.userType === 'admin' || this.state.userType === 'curator') ? (
+            <div>
+              <div className="line" />
+              <h5 className="bold marg-bot-1 dark-gray-text">
+                Content created
+              </h5>
+              <div className="row">
+                { this.renderContent() }
+              </div>
+            </div>
+          ) : null
+        }
+      </div>
     );
   }
 
@@ -155,23 +159,31 @@ class Profile extends Component {
    * Render the component
    */
   render() {
+    // If the content has not yet been pulled
+    if (this.state.pending) {
+      return (
+        <Loading />
+      );
+    } else if (this.state.error) {
+      return (
+        <NotFoundSection />
+      );
+    }
+
+    // If the info has loaded
     return (
       <div>
-        <div className="container">
+        <div className="container marg-top-1">
           <div className="row">
             <div className="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-              <h4 className="bold marg-top-2 marg-bot-1">
-                Curator Profile
-              </h4>
-              { this.state.error && <ErrorMessage error={ this.state.error } /> }
-              { this.state.pending ? <Loading /> : this.renderInfo() }
               {
-                !this.state.pending && (
-                  <div className="marg-top-1">
-                    <Button />
-                  </div>
-                )
+                this.state.error ?
+                <ErrorMessage error={ this.state.error } /> :
+                this.renderInfo()
               }
+              <div className="marg-top-1">
+                <Button />
+              </div>
             </div>
           </div>
         </div>
