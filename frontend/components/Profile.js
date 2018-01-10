@@ -86,6 +86,8 @@ class Profile extends Component {
           title={ art.title }
           subtitle={ art.subtitle }
           image={ art.image }
+          isArticle
+          isThin
         />
       ));
     }
@@ -122,7 +124,7 @@ class Profile extends Component {
                   { this.state.bio }
                 </p>
               ) : (
-                <p className="gray-text">
+                <p className="gray-text italic">
                   { `${this.state.name} has not yet entered a bio.` }
                 </p>
               )
@@ -163,7 +165,10 @@ class Profile extends Component {
       );
     } else if (this.state.error) {
       return (
-        <NotFoundSection />
+        <NotFoundSection
+          title="Curator not found"
+          content="Seems like the user you were looking for was either moved or does not exist."
+        />
       );
     }
 

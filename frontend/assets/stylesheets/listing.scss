@@ -11,6 +11,22 @@
     width: 100%;
   }
 
+  .website {
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    margin-bottom: 0.5rem;
+  }
+
+  .table {
+    font-size: 0.8rem;
+
+    td {
+      padding: 0.25rem 0rem;
+    }
+  }
+
   .content {
     margin-top: 1.5rem;
 
@@ -132,28 +148,61 @@
     font-style: italic;
     margin-top: 0.25rem;
   }
+}
 
-  .rating {
-    color: $light-gray;
-    margin-bottom: 0.5rem;
+/**
+ * Style stars for rating
+ */
+ .rating {
+   color: $light-gray;
+   margin-bottom: 0.5rem;
+   width: auto;
+   display: inline-block;
 
-    .fa {
-      margin-right: 0.25rem;
+   .fa {
+     margin-right: 0.25rem;
 
-      &.full {
-        color: $gold;
-      }
+     &.full {
+       color: $gold;
+     }
 
-      &.fa-star-half {
-        transform: translate(-1.48rem, 0.3rem);
-        position: absolute;
-      }
-    }
+     &.fa-star-half {
+       transform: translate(-1.48rem, 0.3rem);
+       position: absolute;
+     }
+   }
 
-    p {
-      display: inline-block;
-      color: $gray;
-      margin-left: 0.5rem;
+   p {
+     display: inline-block;
+     color: $gray;
+     margin-left: 0.5rem;
+   }
+ }
+
+/**
+ * Styling the form for amenities for listings in the ListingForm component
+ */
+.amenities-form {
+  .bold {
+    width: 100%;
+    color: $gray;
+    margin-top: 0.8rem;
+    margin-bottom: 0.2rem;
+    text-decoration: none;
+    cursor: auto;
+  }
+
+  p {
+    text-decoration: line-through;
+    width: 100%;
+    color: $gray;
+    margin-bottom: 0.2rem;
+    cursor: hand;
+    cursor: pointer;
+
+    &.active {
+      color: $dark-gray;
+      text-decoration: none;
     }
   }
 }

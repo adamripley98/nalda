@@ -48,6 +48,7 @@ class Account extends Component {
     this.handleBioClick = this.handleBioClick.bind(this);
     this.changeProfilePicture = this.changeProfilePicture.bind(this);
     this.submitProfilePicture = this.submitProfilePicture.bind(this);
+    this.handleProfilePictureClick = this.handleProfilePictureClick.bind(this);
   }
 
   /**
@@ -68,6 +69,7 @@ class Account extends Component {
           type: resp.data.data.userType,
           bio: resp.data.data.bio,
           location: resp.data.data.location.name,
+          profilePicture: resp.data.data.profilePicture,
           error: "",
           pending: false
         });
@@ -139,6 +141,14 @@ class Account extends Component {
     this.setState({
       editName: !this.state.editName,
     });
+  }
+
+  /**
+   * Handle click to edit profile picture
+   * TODO
+   */
+  handleProfilePictureClick() {
+    return;
   }
 
   /**
@@ -265,13 +275,27 @@ class Account extends Component {
           </tr>
           <tr>
             <td className="bold">
-              Profile Picture
-            </td>
-            <td className="bold">
-              <input type="text" onChange={this.changeProfilePicture} />
+//               Profile Picture
+//             </td>
+//             <td className="bold">
+//               <input type="text" onChange={this.changeProfilePicture} />
+//             </td>
+//             <td>
+//               <input type="submit" onClick={this.submitProfilePicture} />
+              Profile picture
             </td>
             <td>
-              <input type="submit" onClick={this.submitProfilePicture} />
+              <div
+                className="profile-picture background-image"
+                style={{ backgroundImage: `url(${ this.state.profilePicture })`}}
+              />
+            </td>
+            <td>
+              <i
+                className="fa fa-pencil"
+                aria-hidden="true"
+                onClick={ this.handleProfilePictureClick }
+              />
             </td>
           </tr>
           <tr>
@@ -305,7 +329,12 @@ class Account extends Component {
             </td>
             <td>
               <span style={{ display: this.state.editBio && "none" }}>
-                { this.state.bio || <span className="gray-text">Add a bio here...</span> }
+                {
+                  this.state.bio ||
+                  <span className="gray-text cursor" onClick={ this.handleBioClick }>
+                    Add a bio here...
+                  </span>
+                }
               </span>
               <textarea
                 className="form-control"

@@ -8,6 +8,7 @@ import Loading from '../shared/Loading';
 
 /**
  * Renders the search bar on the navbar
+ * TODO clicking search icon should toggle search
  */
 class Search extends Component {
   // Constructor method
