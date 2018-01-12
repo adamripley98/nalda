@@ -22,7 +22,7 @@ Backend for articles and listings
 - [X] Admin add page (similar look to contact page) where admins can enter email addresses and add both other admins and other content creators. Only admins can add people as content creators and only content creators can create posts.
 - [X] Allow admins to update a user's privileges (ex. from user to curator)
 - [X] Protect `admin`, `curator`, and `user` routes.
-- [ ] Allow `users` to leave reviews: comments and ratings.
+- [X] Allow `users` to leave reviews: comments and ratings.
 
 ## Users
 
@@ -37,8 +37,10 @@ Backend for articles and listings
 - [X] Curator show pages
   * This should display all of the content a curator has written
 - [X] Default create users with type `user`. Admin can switch them to `admin` or `curator`
-- [ ] Give users ability to set and change profile pictures, update this in new article/listing/video backend
-- [X] Make it so you can click and view author pages, author page should also list all their articles
+- [X] Give users ability to set and change profile pictures, update this in new article/listing/video backend
+- [X] Make it so you can click and view author pages, author page should also list all their
+- [ ] Users can leave comments on videos and articles, update in backend (users and articles/videos models)
+- [ ] Reviews and comments should be stored in user model too.
 
 ## Listings
 
@@ -49,13 +51,13 @@ Backend for articles and listings
 - [X] Complete listing view
 - [X] Complete listing backend (already stores listing in Mongo, just need to populate to home screen.
 - [X] Figure out why listings page is not displaying
-- [ ] `Listing` back to all listings button
+- [X] `Listing` back to all listings button
 
 ## Videos
 
 - [X] Improve styling
 - [X] Video backend
-- [ ] Allow comments?
+- [ ] Allow comments
 
 ## Frontend
 
@@ -63,12 +65,12 @@ Backend for articles and listings
 - [X] Video styling
 - [X] Individual listing view
 - [X] Routing 	
-- [ ] User show pages (backend is working, needs to be styled though)
+- [X] User show pages (backend is working, needs to be styled though)
 - [X] Footer
 - [X] Article form display
 - [X] Video form display
 - [X] Listing form display
-- [ ] Login/Register/Reset/Edit Account Form styling
+- [X] Login/Register/Reset/Edit Account Form styling
 - [X] Ajax search suggestions
 - [X] Incorporate Nalda logo and other advice from Edward
 - [X] Home page needs to have other ways of sorting: most popular, by category, by author?, etc
@@ -95,8 +97,8 @@ Backend for articles and listings
   - [X] Curators
   - [ ] Location
 - [ ] Domain registration/setup
-- [ ] Better user auth checks on the backend
-- [ ] Better parameter error checking on the backend
+- [X] Better user auth checks on the backend
+- [X] Better parameter error checking on the backend
 - [X] Link user data to posted article
 - [ ] Give content a timestamp
   - [ ] Videos
@@ -106,36 +108,36 @@ Backend for articles and listings
 - [X] Change/forgot password backend
 - [ ] Replace dummy data
   - [ ] Location
-  - [ ] Profile picture
+  - [X] Profile picture
   - [X] Bio
-- [ ] Replace dummy data in `Account.js`
+- [X] Replace dummy data in `Account.js`
 - [X] Add bio and content to `user` schema
 - [ ] Update listing review schema to have author's id
 - [ ] Sort listings by amenities
 - [X] Admin remove curators functionality
 - [ ] Security on backend
-  - [ ] Require admin to make changes (`curator/new`, `admin/new`, `curator/remove`)
-  - [ ] Require curator or admin to post content (all post routes)
+  - [X] Require admin to make changes (`curator/new`, `admin/new`, `curator/remove`)
+  - [X] Require curator or admin to post content (all post routes)
   - [X] Don't return sensitive user data (password)
 - [ ] Change location functionality
 - [ ] Reviews by id instead of name
 
 ## Cam
 - [X] Nav bar style when no one is logged in
-- [ ] Style curator profile view (`Profile.js`). Add profile picture spot! (also add profile pic spot to `Account.js`)
+- [X] Style curator profile view (`Profile.js`). Add profile picture spot! (also add profile pic spot to `Account.js`)
 - [x] Back to home button on individual listing page
 - [X] Style search button in Nav bar (make it only visible when someone has typed something)
 - [X] Display search results on the frontend (backend is done)
 - [x] Load component on `Account.js` and `Profile.js` and others.
-- [ ] Sorting buttons at top of `Listings.js`, `Videos.js`, and `Articles.js` (actual sorting done)
-- [ ] `Admin.js` restyle 3 buttons & display successful admin change on frontend
-- [x] Standardize size of all pictures on home page
+- [X] Sorting buttons at top of `Listings.js`, `Videos.js`, and `Articles.js` (actual sorting done)
+- [X] `Admin.js` restyle 3 buttons & display successful admin change on frontend
+- [X] Standardize size of all pictures on home page
 
 ## General cleanup
 
 - [X] Make a check in the `AppContainer` component to ensure that `passport` and `redux` are in sync (`redux persist`) makes it such that this can outlast the backend session
 - [X] Style about page
-- [ ] General clean up, get rid of console.logs and deal with errors better
+- [X] General clean up, get rid of console.logs and deal with errors better
 - [ ] Change title tag, description, other meta tags depending on the page
 - [X] Get rid of redux capabilities of all components that don't use redux
 - [ ] Go back and take care of all TODO's
@@ -173,6 +175,7 @@ Backend for articles and listings
 - [ ] Improve search performance
 - [ ] Delete reviews functionality
 - [ ] Searching should not search through reviews
+- [ ] Users can leave comments on videos and articles
 
 ## Questions
 
