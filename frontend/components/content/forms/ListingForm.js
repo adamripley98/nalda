@@ -212,7 +212,7 @@ class ListingForm extends React.Component {
             location: {
               name: document.getElementById('location').value,
               lat: latitude,
-              lgn: longitude,
+              lng: longitude,
             },
             description: this.state.description,
             hours: this.state.hours,

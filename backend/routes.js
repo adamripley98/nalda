@@ -1003,7 +1003,7 @@ module.exports = () => {
               error = "Website must be populated.";
             } else if (!location.name) {
               error = "Location must be populated.";
-            } else if (!location.lat || !location.lgn) {
+            } else if (!location.lat || !location.lng) {
               error = "Location must be valid.";
             }
 

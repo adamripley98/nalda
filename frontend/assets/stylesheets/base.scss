@@ -611,3 +611,12 @@ a {
   }
 }
 
+/**
+ * Styling maps for the google maps API
+ */
+#map {
+  width: 100%;
+  height: 20rem;
+  background: $gray;
+  border-radius: 0.4rem;
+}
