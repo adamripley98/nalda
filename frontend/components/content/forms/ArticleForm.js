@@ -30,6 +30,7 @@ class ArticleForm extends React.Component {
       redirectToHome: false,
       pendingSubmit: false,
     };
+
     // Bind this to helper methods
     this.handleChangeTitle = this.handleChangeTitle.bind(this);
     this.handleChangeSubtitle = this.handleChangeSubtitle.bind(this);
@@ -41,6 +42,11 @@ class ArticleForm extends React.Component {
 
   // Handle resizing textarea
   componentDidMount() {
+    autosize(document.querySelectorAll('textarea'));
+  }
+
+  // Also when the component updates
+  componentDidUpdate() {
     autosize(document.querySelectorAll('textarea'));
   }
 
@@ -69,10 +75,8 @@ class ArticleForm extends React.Component {
   handleChangeBody(event, index) {
     // Manipulate the correct component object
     const bodyObj = this.state.body;
-    bodyObj[index] = {
-      componentType: bodyObj[index].componentType,
-      body: event.target.value,
-    };
+    bodyObj[index].body = event.target.value;
+
     // Update the state
     this.setState({
       body: bodyObj,
@@ -236,23 +240,25 @@ class ArticleForm extends React.Component {
               </label>
               {
                 this.state.body.map((component, index) => {
+                  // Determine the placeholder for the component
                   let placeholder;
                   if (component.componentType === "text") {
                     placeholder = "Enter text...";
                   } else if (component.componentType === "image") {
                     placeholder = "Enter URL to an image...";
+                  } else if (component.componentType === "quote") {
+                    placeholder = "Enter quote...";
                   }
 
                   // Return the textarea associated with the component
                   return (
-                    <div className="component" key={ uuid() }>
+                    <div className="component" key={ index }>
                       <textarea
                         placeholder={ placeholder }
                         name="body"
                         type="text"
                         className="form-control marg-bot-1"
                         rows="1"
-                        key={ uuid() }
                         value={ this.state.body[index].body }
                         onChange={ (e) => this.handleChangeBody(e, index) }
                       />
@@ -261,7 +267,6 @@ class ArticleForm extends React.Component {
                           <i
                             className="fa fa-trash-o"
                             aria-hidden="true"
-                            key={ uuid() }
                             onClick={() => {
                               const bodyObj = this.state.body;
                               bodyObj.splice(index, 1);

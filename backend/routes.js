@@ -730,6 +730,8 @@ module.exports = () => {
     if (req.session.passport) {
       userId = req.session.passport.user;
     }
+
+    // Begin error checking
     if (!userId) {
       res.send({
         success: false,
@@ -778,14 +780,19 @@ module.exports = () => {
             } else if (typeof body !== "object" || !Array.isArray(body)) {
               error = "Body must be an array";
             } else {
+              // Ensure that each article component is properly formatted
               for (let i = 0; i < body.length && !error; i++) {
+                // Find the component at the given index
                 const component = body[i];
                 if (!component) {
                   error = "Each component must be defined.";
                 } else if (!component.body) {
                   error = "Each component must be populated with text.";
-                } else if (component.componentType !== "text" && component.componentType !== "image") {
-                  error = "Component type must be either text or image.";
+                } else if (component.componentType !== "text" &&
+                           component.componentType !== "image" &&
+                           component.componentType !== "quote"
+                ) {
+                  error = "Component type must be valid.";
                 } else if (component.componentType === "image") {
                   // Ensure that the URL to the image is proper
                   // This means that it is both a URL and an image file

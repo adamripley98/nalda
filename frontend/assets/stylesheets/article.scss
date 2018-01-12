@@ -27,6 +27,14 @@
     line-height: 1.5;
   }
 
+  .quote {
+    color: $gray;
+    font-style: italic;
+    border-left: 4px solid $light-gray;
+    padding-left: 0.5rem;
+    font-size: 1.2rem;
+  }
+
   .author {
     width: 100%;
     padding: 1rem 0rem;
