@@ -419,6 +419,10 @@ class Listing extends React.Component {
                   <div id="map" />
                   <div className="line" />
                   { this.renderReviewsSection() }
+
+                  { /* Render a back to home button */ }
+                  <div className="space-1" />
+                  <Button />
                 </div>
 
                 {/* Contains overview aboute the listing */}
@@ -502,10 +506,6 @@ class Listing extends React.Component {
                       )
                     }
                   </div>
-                </div>
-                <div className="space-1" />
-                <div className="col-12">
-                  <Button />
                 </div>
               </div>
             </div>
