@@ -31,7 +31,7 @@ To run the application, run `npm start`. For more responsive hot-reloading on th
   - [ ] Device authorization (confirm your email)?
 - [ ] Add author field to every form of content
   - [ ] Videos
-  - [ ] Listings
+  - [X] Listings
   - [X] Articles
 - [X] Curator show pages
   * This should display all of the content a curator has written
@@ -52,9 +52,9 @@ To run the application, run `npm start`. For more responsive hot-reloading on th
 - [X] Figure out why listings page is not displaying
 - [X] `Listing` back to all listings button
 - [ ] Edit Listings view
-- [ ] Delete Listings view
+- [X] Delete Listings view
 - [ ] Listings location should also show as an address
-- [ ] Store author
+- [X] Store author
 - [ ] Add to curator's list of content
 - [ ] Style edit/delete buttons better
 
@@ -128,15 +128,15 @@ To run the application, run `npm start`. For more responsive hot-reloading on th
   - [X] Bio
 - [X] Replace dummy data in `Account.js`
 - [X] Add bio and content to `user` schema
-- [ ] Update listing review schema to have author's id
+- [X] Update listing review schema to have author's id
 - [ ] Sort listings by amenities
 - [X] Admin remove curators functionality
-- [ ] Security on backend
+- [X] Security on backend
   - [X] Require admin to make changes (`curator/new`, `admin/new`, `curator/remove`)
   - [X] Require curator or admin to post content (all post routes)
   - [X] Don't return sensitive user data (password)
 - [ ] Change location functionality
-- [ ] Reviews by id instead of name
+- [X] Reviews by id instead of name
 - [X] Most recent in reverse order
 
 ## Cam
