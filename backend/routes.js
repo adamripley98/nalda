@@ -497,6 +497,12 @@ module.exports = () => {
     // Find the id from the url
     const id = req.params.id;
 
+    // Check if user is logged in
+    let userId = "";
+    if (req.session.passport) {
+      userId = req.session.passport.user;
+    }
+
     // Pull specific video from mongo
     Video.findById(id, (err, video) => {
       if (err) {
@@ -512,10 +518,117 @@ module.exports = () => {
         });
       // if no errors, return video
       } else {
-        res.send({
-          success: true,
-          data: video,
+        // Fetch author data
+        User.findById(video.author, (er, author) => {
+          if (er) {
+            // Error finding author
+            res.send({
+              success: false,
+              error: er.message,
+            });
+          } else if (!author) {
+            res.send({
+              success: false,
+              error: 'Cannot find author.',
+            });
+          } else {
+            // Default: users can't change videos
+            let canModify = false;
+            User.findById(userId, (errUser, user) => {
+              if (user) {
+                // Check if given user is either an admin or the curator of the video
+                if (user.userType === 'admin' || user._id === video.author) {
+                  canModify = true;
+                }
+              }
+              // Send back data
+              res.send({
+                success: true,
+                data: video,
+                canModify,
+              });
+            });
+          }
         });
+      }
+    });
+  });
+
+  /**
+   * Route to handle deleting a specific video
+   */
+  router.post('/videos/:id/delete', (req, res) => {
+    // Find the id from the video url
+    const id = req.params.id;
+    // Pull userId from the backend
+    let userId = '';
+    if (req.session.passport) {
+      userId = req.session.passport.user;
+    }
+    // Find the given video in Mongo and delete it
+    Video.findById(id, (errVideo, video) => {
+      // Error finding video
+      if (errVideo) {
+        res.send({
+          success: false,
+          error: errVideo.message,
+        });
+      // Cannot find video
+      } else if (!video) {
+        res.send({
+          success: false,
+          error: 'No video found.',
+        });
+      } else {
+        // Check to make sure user is logged in on backend
+        if (!userId) {
+          res.send({
+            success: false,
+            error: 'You must be logged in to delete videos.',
+          });
+        } else {
+          // Find user to check if they can delete docs
+          User.findById(userId, (errUser, user) => {
+            // Error finding user
+            if (errUser) {
+              res.send({
+                success: false,
+                error: errUser.message,
+              });
+            // Cannot find user
+            } else if (!user) {
+              res.send({
+                success: false,
+                error: 'You must be logged in.'
+              });
+            } else {
+              // User found, check if user has privileges to delete a video (author or admin)
+              if (user.userType === 'admin' || user._id === video.author) {
+                // User CAN delete videos, remove from mongo
+                video.remove((errRemove) => {
+                  if (errRemove) {
+                    res.send({
+                      success: false,
+                      error: errRemove.message,
+                    });
+                  // Send back success
+                  } else {
+                    res.send({
+                      success: true,
+                      error: '',
+                    });
+                  }
+                });
+              } else {
+                // User CANNOT delete videos
+                res.send({
+                  success: false,
+                  error: 'You do not have privileges to delete videos.'
+                });
+              }
+            }
+          });
+        }
       }
     });
   });
@@ -593,6 +706,7 @@ module.exports = () => {
                 title,
                 url,
                 description,
+                author: userId,
               });
 
             // Save the new video in Mongo

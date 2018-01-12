@@ -4,8 +4,6 @@ import { Link, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import axios from 'axios';
-import {connect} from 'react-redux';
-
 
 // Import shared components
 import Button from '../../shared/Button';

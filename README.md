@@ -64,8 +64,8 @@ To run the application, run `npm start`. For more responsive hot-reloading on th
 - [X] Video backend
 - [ ] Allow comments
 - [ ] Edit Videos view
-- [ ] Delete Videos view
-- [ ] Store author
+- [X] Delete Videos view
+- [X] Store author
 - [ ] Add to curator's list of content
 
 ## Articles

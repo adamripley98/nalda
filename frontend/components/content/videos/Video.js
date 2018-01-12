@@ -1,6 +1,7 @@
 // Import frameworks
 import React from 'react';
 import axios from 'axios';
+import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 // Import components
@@ -25,10 +26,15 @@ class Video extends React.Component {
       description: "",
       pending: true,
       error: '',
+      canModify: false,
+      redirectToHome: false,
     };
 
     // Bind this to helper functions
     this.renderVideo = this.renderVideo.bind(this);
+    this.deleteVideo = this.deleteVideo.bind(this);
+    this.editVideo = this.editVideo.bind(this);
+    this.renderButtons = this.renderButtons.bind(this);
   }
 
   // Pull the video data from the database
@@ -44,6 +50,7 @@ class Video extends React.Component {
             ...res.data.data,
             error: "",
             pending: false,
+            canModify: res.data.canModify,
           });
         } else {
           // If there was an error with the request
@@ -60,6 +67,63 @@ class Video extends React.Component {
           pending: false,
         });
       });
+  }
+
+  // Helper method to delete specific video
+  deleteVideo() {
+    // Find the id in the url
+    const id = this.props.match.params.id;
+    // Post to backend
+    axios.post(`/api/videos/${id}/delete`)
+    .then((resp) => {
+      if (resp.data.success) {
+        this.setState({
+          redirectToHome: true,
+        });
+      } else {
+        this.setState({
+          error: resp.data.error,
+        });
+      }
+    })
+    .catch((err) => {
+      this.setState({
+        error: err,
+      });
+    });
+  }
+
+  // Helper method to edit specific video
+  editVideo() {
+    // TODO implement
+    // TODO need to do frontend and backend error checks
+    console.log('edit');
+  }
+
+  // Helper method to render buttons to edit and delete the video
+  renderButtons() {
+    // If the user is authorized to edit the video
+    if (this.state.canModify) {
+      return (
+        <div className="buttons right marg-bot-1">
+          <div
+            className="btn btn-primary btn-sm"
+            onClick={ () => this.editVideo() }
+          >
+            Edit
+          </div>
+          <div
+            className="btn btn-danger btn-sm"
+            onClick={ () => this.deleteVideo() }
+          >
+            Delete
+          </div>
+        </div>
+      );
+    }
+
+    // Else, return nothing
+    return null;
   }
 
   // Helper function to render the video
@@ -91,6 +155,8 @@ class Video extends React.Component {
               <div className="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
                 { this.renderVideo() }
                 <div className="header">
+                  { this.state.redirectToHome && <Redirect to="/"/> }
+                  { this.renderButtons() }
                   <h1 className="title">
                     { this.state.title }
                   </h1>
