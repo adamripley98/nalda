@@ -1,7 +1,6 @@
 // Import frameworks
 import React from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 
 // Import components
 import Loading from '../../shared/Loading';
@@ -38,12 +37,14 @@ class Videos extends React.Component {
     axios.get('/api/videos')
       .then((resp) => {
         if (resp.data.success) {
+          // If everything was successful
           this.setState({
             videos: resp.data.data,
             pending: false,
             error: "",
           });
         } else {
+          // If an error was sent back from the database
           this.setState({
             pending: false,
             error: resp.data.error,
@@ -51,6 +52,7 @@ class Videos extends React.Component {
         }
       })
       .catch(err => {
+        // If there was an error with the request
         this.setState({
           pending: false,
           error: err,

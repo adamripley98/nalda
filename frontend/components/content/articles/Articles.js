@@ -10,9 +10,8 @@ import Preview from '../Preview';
 
 /**
  * Component for displaying all articles of the application
+ * TODO: Only show first 20 or so articles on a page
  */
-
- // TODO: Only show first 20 or so articles on a page
 class Articles extends React.Component {
   // Constructor method
   constructor(props) {
@@ -23,9 +22,8 @@ class Articles extends React.Component {
       articles: [],
       pending: true,
       error: "",
-      currentSort: "",
-      titleSortedAscending: false,
-      dateSortedAscending: false,
+      currentSort: "date",
+      isAscending: false,
     };
 
     // Bind this to helper methods
@@ -63,22 +61,29 @@ class Articles extends React.Component {
     // Define variable
     const sortedArticles = Object.assign([], this.state.articles);
 
-    if (!this.state.dateSortedAscending) {
+    // Sort depending on the current state
+    if (this.state.currentSort === "date") {
+      // Reverse the articles
+      sortedArticles.reverse();
+
+      // Update the state
+      this.setState({
+        articles: sortedArticles,
+        isAscending: !this.state.isAscending,
+      });
+    } else {
       // Sort articles based off date
       sortedArticles.sort((a, b) => {
         return new Date(a.createdAt) - new Date(b.createdAt);
       });
-    } else {
-      // If already sorted ascending, reverse to show descending
-      sortedArticles.reverse();
-    }
 
-    // Display sorted articles
-    this.setState({
-      articles: sortedArticles,
-      dateSortedAscending: !this.state.dateSortedAscending,
-      titleSortedAscending: false,
-    });
+      // Update the state
+      this.setState({
+        currentSort: "date",
+        articles: sortedArticles,
+        isAscending: false,
+      });
+    }
   }
 
   // Method to sort by title
@@ -86,7 +91,17 @@ class Articles extends React.Component {
     // Define variable
     const sortedArticles = Object.assign([], this.state.articles);
 
-    if (!this.state.titleSortedAscending) {
+    // Sort depending on the current state
+    if (this.state.currentSort === "title") {
+      // Reverse the articles
+      sortedArticles.reverse();
+
+      // Update the state
+      this.setState({
+        articles: sortedArticles,
+        isAscending: !this.state.isAscending,
+      });
+    } else {
       // Sort articles based off title
       sortedArticles.sort((a, b) => {
         if (a.title < b.title) {
@@ -98,17 +113,14 @@ class Articles extends React.Component {
         // names must be equal
         return 0;
       });
-    } else {
-      // If already sorted ascending, reverse to show descending
-      sortedArticles.reverse();
-    }
 
-    // Display sorted articles
-    this.setState({
-      articles: sortedArticles,
-      titleSortedAscending: !this.state.titleSortedAscending,
-      dateSortedAscending: false,
-    });
+      // Update the state
+      this.setState({
+        currentSort: "title",
+        articles: sortedArticles,
+        isAscending: false,
+      });
+    }
   }
 
   // Methods renders each individual article
@@ -118,6 +130,7 @@ class Articles extends React.Component {
       return this.state.articles.map((art) => (
         <Preview
           _id={ art._id }
+          key={ art._id }
           title={ art.title }
           subtitle={ art.subtitle }
           image={ art.image }
@@ -144,12 +157,34 @@ class Articles extends React.Component {
         <h3 className="title section-title">
           Articles
         </h3>
-        <div className="buttons marg-bot-1">
-          <div className="btn btn-primary" onClick={this.sortByTitle}>
-            Sort by title
+        <div className="sort-options">
+          <div
+            className={ this.state.currentSort === "date" ? "sort-option active" : "sort-option" }
+            onClick={ this.sortByDate }
+          >
+            Sort by date {
+              this.state.currentSort === "date" ? (
+                this.state.isAscending ? (
+                  <i className="fa fa-chevron-up" aria-hidden />
+                ) : (
+                  <i className="fa fa-chevron-up rotated" aria-hidden />
+                )
+              ) : null
+            }
           </div>
-          <div className="btn btn-primary" onClick={this.sortByDate}>
-            Sort by date
+          <div
+            className={ this.state.currentSort === "title" ? "sort-option active" : "sort-option" }
+            onClick={ this.sortByTitle }
+          >
+            Sort by title {
+              this.state.currentSort === "title" ? (
+                this.state.isAscending ? (
+                  <i className="fa fa-chevron-up" aria-hidden />
+                ) : (
+                  <i className="fa fa-chevron-up rotated" aria-hidden />
+                )
+              ) : null
+            }
           </div>
         </div>
         <div className="row">
