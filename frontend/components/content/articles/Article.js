@@ -1,9 +1,11 @@
 // Import frameworks
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import axios from 'axios';
+import {connect} from 'react-redux';
+
 
 // Import shared components
 import Button from '../../shared/Button';
@@ -13,7 +15,7 @@ import NotFoundSection from '../../NotFoundSection';
 /**
  * Component to render an article
  * TODO error handling
- * TODO remove dummy state for profile picture
+ * TODO edit functionality
  */
 class Article extends React.Component {
   // Constructor method
@@ -25,16 +27,21 @@ class Article extends React.Component {
       author: {
         name: "",
         _id: "",
-        profilePicture: "https://scontent-lga3-1.xx.fbcdn.net/v/t31.0-8/19800933_1555674071163224_6756529645784213707_o.jpg?oh=d3ce5cc19160312229b760b7448d3c67&oe=5A8FEE3B",
+        profilePicture: "",
       },
       title: "",
       subtitle: "",
       image: "",
       body: [],
       pending: true,
+      canModify: false,
+      redirectToHome: false,
     };
     // Bind this to helper methods
     this.renderAuthor = this.renderAuthor.bind(this);
+    this.deleteArticle = this.deleteArticle.bind(this);
+    this.editArticle = this.editArticle.bind(this);
+    this.renderButtons = this.renderButtons.bind(this);
   }
 
   // Pull the article data from the database
@@ -52,6 +59,7 @@ class Article extends React.Component {
             author: res.data.author,
             time: moment(res.data.timestamp).fromNow(),
             pending: false,
+            canModify: res.data.canModify,
           });
         } else {
           // If there was an error with the request
@@ -70,6 +78,37 @@ class Article extends React.Component {
       });
   }
 
+  // Helper method to delete specific article
+  deleteArticle() {
+    // Find the id in the url
+    const id = this.props.match.params.id;
+    // Post to backend
+    axios.post(`/api/articles/${id}/delete`)
+    .then((resp) => {
+      if (resp.data.success) {
+        this.setState({
+          redirectToHome: true,
+        });
+      } else {
+        this.setState({
+          error: resp.data.error,
+        });
+      }
+    })
+    .catch((err) => {
+      this.setState({
+        error: err,
+      });
+    });
+  }
+
+  // Helper method to edit specific article
+  editArticle() {
+    // TODO implement
+    // TODO need to do frontend and backend error checks
+    console.log('edit');
+  }
+
   // Helper method to render the author
   renderAuthor() {
     return(
@@ -85,6 +124,32 @@ class Article extends React.Component {
         </div>
       </div>
     );
+  }
+
+  // Helper method to render buttons to edit and the article
+  renderButtons() {
+    // If the user is authorized to edit the article
+    if (this.state.canModify) {
+      return (
+        <div className="buttons right marg-bot-1">
+          <div
+            className="btn btn-primary btn-sm"
+            onClick={ () => this.editArticle() }
+          >
+            Edit
+          </div>
+          <div
+            className="btn btn-danger btn-sm"
+            onClick={ () => this.deleteArticle() }
+          >
+            Delete
+          </div>
+        </div>
+      );
+    }
+
+    // Else, return nothing
+    return null;
   }
 
   // Render the component
@@ -118,20 +183,8 @@ class Article extends React.Component {
                   />
                 ) : (
                   <div>
-                    <div className="buttons right marg-bot-1">
-                      <div
-                        className="btn btn-primary btn-sm"
-                        onClick={ () => console.log("edit") }
-                      >
-                        Edit
-                      </div>
-                      <div
-                        className="btn btn-danger btn-sm"
-                        onClick={ () => console.log("delete") }
-                      >
-                        Delete
-                      </div>
-                    </div>
+                    { this.state.redirectToHome && <Redirect to="/"/> }
+                    { this.renderButtons() }
                     <h1>
                       { this.state.title }
                     </h1>
@@ -184,6 +237,19 @@ class Article extends React.Component {
 
 Article.propTypes = {
   match: PropTypes.object,
+  userId: PropTypes.string,
 };
+
+// Allows us to access redux state as this.props.userId inside component
+const mapStateToProps = state => {
+  return {
+    userId: state.authState.userId,
+  };
+};
+
+// Redux config
+Article = connect(
+    mapStateToProps,
+)(Article);
 
 export default Article;

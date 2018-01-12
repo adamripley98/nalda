@@ -860,6 +860,12 @@ module.exports = () => {
     // Find the id from the url
     const id = req.params.id;
 
+    // Check if user is logged in
+    let userId = "";
+    if (req.session.passport) {
+      userId = req.session.passport.user;
+    }
+
     // Pull specific article from mongo
     Article.findById(id, (err, article) => {
       if (err) {
@@ -877,32 +883,122 @@ module.exports = () => {
         // If no errors, returns article along with the date it was created
       } else {
         // Fetch author data
-        User.findById(article.author, (er, user) => {
+        User.findById(article.author, (er, author) => {
           if (er) {
             // Error finding author
             res.send({
               success: false,
               error: er.message,
             });
-          } else if (!user) {
+          } else if (!author) {
             res.send({
               success: false,
               error: 'Cannot find author.',
             });
           } else {
-            // Author found
-            res.send({
-              success: true,
-              data: article,
-              timestamp: article._id.getTimestamp(),
-              author: {
-                name: user.name,
-                profilePicture: user.profilePicture,
-                _id: user._id,
+            // Default: users can't change article
+            let canModify = false;
+            User.findById(userId, (errUser, user) => {
+              if (user) {
+                // Check if given user is either an admin or the curator of the article
+                if (user.userType === 'admin' || user._id === article.author) {
+                  canModify = true;
+                }
               }
+              // Author found
+              res.send({
+                success: true,
+                data: article,
+                timestamp: article._id.getTimestamp(),
+                author: {
+                  name: author.name,
+                  profilePicture: author.profilePicture,
+                  _id: author._id,
+                },
+                canModify,
+              });
             });
           }
         });
+      }
+    });
+  });
+
+  /**
+   * Route to handle deleting a specific article
+   */
+  router.post('/articles/:id/delete', (req, res) => {
+    // Find the id from the article url
+    const id = req.params.id;
+    // Pull userId from the backend
+    let userId = '';
+    if (req.session.passport) {
+      userId = req.session.passport.user;
+    }
+    // Find the given article in Mongo and delete it
+    Article.findById(id, (errArticle, article) => {
+      // Error finding article
+      if (errArticle) {
+        res.send({
+          success: false,
+          error: errArticle.message,
+        });
+      // Cannot find article
+      } else if (!article) {
+        res.send({
+          success: false,
+          error: 'No article found.',
+        });
+      } else {
+        // Check to make sure user is logged in on backend
+        if (!userId) {
+          res.send({
+            success: false,
+            error: 'You must be logged in to delete articles.',
+          });
+        } else {
+          // Find user to check if they can delete docs
+          User.findById(userId, (errUser, user) => {
+            // Error finding user
+            if (errUser) {
+              res.send({
+                success: false,
+                error: errUser.message,
+              });
+            // Cannot find user
+            } else if (!user) {
+              res.send({
+                success: false,
+                error: 'You must be logged in.'
+              });
+            } else {
+              // User found, check if user has privileges to delete an article (author or admin)
+              if (user.userType === 'admin' || user._id === article.author) {
+                // User CAN delete articles, remove from mongo
+                article.remove((errRemove) => {
+                  if (errRemove) {
+                    res.send({
+                      success: false,
+                      error: errRemove.message,
+                    });
+                  // Send back success
+                  } else {
+                    res.send({
+                      success: true,
+                      error: '',
+                    });
+                  }
+                });
+              } else {
+                // User CANNOT delete articles
+                res.send({
+                  success: false,
+                  error: 'You do not have privileges to delete articles.'
+                });
+              }
+            }
+          });
+        }
       }
     });
   });
