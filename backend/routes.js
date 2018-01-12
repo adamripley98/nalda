@@ -1017,6 +1017,12 @@ module.exports = () => {
     // Find the id from the listing url
     const id = req.params.id;
 
+    // Check if user is logged in
+    let userId = "";
+    if (req.session.passport) {
+      userId = req.session.passport.user;
+    }
+
     // Pull specific listing from mongo
     Listing.findById(id, (err, listing) => {
       if (err) {
@@ -1032,43 +1038,149 @@ module.exports = () => {
         });
       // if no errors, returns article along with the date it was created
       } else {
-        // Make a new copy of the reviews
-        const reviews = listing.reviews.slice();
-        let reviewError = false;
-        // Go through each review and change the author data being passed to frontend
-        reviews.forEach((review) => {
-          // Find author in Mongo
-          User.findById(review.authorId, (errAuthor, author) => {
+        // Fetch author data
+        User.findById(listing.author, (er, author) => {
+          if (er) {
             // Error finding author
-            if (err) {
-              reviewError = err;
-              return;
-            // Author can't be found
-            } else if (!author) {
-              reviewError = "Cannot find author.";
-              return;
-            }
-            // Successfully found author, update so review contains author's name
-            review.author = author;
-            // Remove private information about author
-            review.author.password = "";
-          });
+            res.send({
+              success: false,
+              error: er.message,
+            });
+          } else if (!author) {
+            res.send({
+              success: false,
+              error: 'Cannot find author.',
+            });
+          } else {
+            // Default: users can't change listing
+            let canModify = false;
+            User.findById(userId, (errUser, user) => {
+              if (user) {
+                // Check if given user is either an admin or the curator of the listing
+                if (user.userType === 'admin' || user._id === listing.author) {
+                  canModify = true;
+                }
+              }
+              // Make a new copy of the reviews
+              const reviews = listing.reviews.slice();
+              let reviewError = false;
+              // Go through each review and change the author data being passed to frontend
+              reviews.forEach((review) => {
+                // Find author in Mongo
+                User.findById(review.authorId, (errAuthor, revAuthor) => {
+                  // Error finding author
+                  if (err) {
+                    reviewError = err;
+                    return;
+                  // Author can't be found
+                  } else if (!revAuthor) {
+                    reviewError = "Cannot find review author.";
+                    return;
+                  }
+                  // Successfully found author, update so review contains author's name
+                  review.author = revAuthor;
+                  // Remove private information about author
+                  review.author.password = "";
+                });
+              });
+              // Check for error with reviews
+              if (reviewError) {
+                res.send({
+                  success: false,
+                  error: reviewError,
+                });
+              } else {
+                // Update the reviews
+                listing.reviews = reviews;
+
+                // Send back data
+                res.send({
+                  success: true,
+                  data: listing,
+                  timestamp: listing._id.getTimestamp(),
+                  canModify,
+                });
+              }
+            });
+          }
         });
-        // Check for error with reviews
-        if (reviewError) {
+      }
+    });
+  });
+
+  /**
+   * Route to handle deleting a specific listing
+   */
+  router.post('/listings/:id/delete', (req, res) => {
+    // Find the id from the listing url
+    const id = req.params.id;
+    // Pull userId from the backend
+    let userId = '';
+    if (req.session.passport) {
+      userId = req.session.passport.user;
+    }
+    // Find the given listing in Mongo and delete it
+    Listing.findById(id, (errListing, listing) => {
+      // Error finding listing
+      if (errListing) {
+        res.send({
+          success: false,
+          error: errListing.message,
+        });
+      // Cannot find listing
+      } else if (!listing) {
+        res.send({
+          success: false,
+          error: 'No listing found.',
+        });
+      } else {
+        // Check to make sure user is logged in on backend
+        if (!userId) {
           res.send({
             success: false,
-            error: reviewError,
+            error: 'You must be logged in to delete listings.',
           });
         } else {
-          // Update the reviews
-          listing.reviews = reviews;
-
-          // Send back data
-          res.send({
-            success: true,
-            data: listing,
-            timestamp: listing._id.getTimestamp(),
+          // Find user to check if they can delete docs
+          User.findById(userId, (errUser, user) => {
+            // Error finding user
+            if (errUser) {
+              res.send({
+                success: false,
+                error: errUser.message,
+              });
+            // Cannot find user
+            } else if (!user) {
+              res.send({
+                success: false,
+                error: 'You must be logged in.'
+              });
+            } else {
+              // User found, check if user has privileges to delete a listing (author or admin)
+              if (user.userType === 'admin' || user._id === listing.author) {
+                // User CAN delete listing, remove from mongo
+                listing.remove((errRemove) => {
+                  if (errRemove) {
+                    res.send({
+                      success: false,
+                      error: errRemove.message,
+                    });
+                  // Send back success
+                  } else {
+                    res.send({
+                      success: true,
+                      error: '',
+                    });
+                  }
+                });
+              } else {
+                // User CANNOT delete listing
+                res.send({
+                  success: false,
+                  error: 'You do not have privileges to delete listings.'
+                });
+              }
+            }
           });
         }
       }
@@ -1168,6 +1280,7 @@ module.exports = () => {
                 website,
                 amenities,
                 location,
+                author: userId,
               });
 
               // Save the new article in mongo

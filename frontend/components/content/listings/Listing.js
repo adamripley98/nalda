@@ -4,7 +4,7 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import uuid from 'uuid-v4';
-import { Link } from 'react-router-dom';
+import { Link, Redirect} from 'react-router-dom';
 
 // Import components
 import Review from './Review';
@@ -16,6 +16,8 @@ import Stars from './Stars';
 
 /**
  * Component to render a listing
+ * TODO Edit functionality
+ * TODO Delete functionality
  */
 class Listing extends React.Component {
   // Constructor method
@@ -40,6 +42,8 @@ class Listing extends React.Component {
       error: "",
       pending: true,
       infoTrigger: false,
+      canModify: false,
+      redirectToHome: false,
     };
 
     // Bind this to helper methods
@@ -48,6 +52,9 @@ class Listing extends React.Component {
     this.renderReview = this.renderReviews.bind(this);
     this.handleClickInfoTrigger = this.handleClickInfoTrigger.bind(this);
     this.updateReviews = this.updateReviews.bind(this);
+    this.deleteListing = this.deleteListing.bind(this);
+    this.editListing = this.editListing.bind(this);
+    this.renderButtons = this.renderButtons.bind(this);
   }
 
   // Pull the listing data from the database
@@ -59,12 +66,14 @@ class Listing extends React.Component {
     axios.get(`/api/listings/${id}`)
       .then(res => {
         if (res.data.success) {
+          console.log('whats the data', res.data);
           // Set the state
           this.setState({
             error: "",
             ...res.data.data,
             time: moment(res.data.timestamp).fromNow(),
             pending: false,
+            canModify: res.data.canModify,
           });
 
           // If there is a location
@@ -97,6 +106,36 @@ class Listing extends React.Component {
       });
   }
 
+  // Helper method to edit listing
+  editListing() {
+    // TODO implement
+    console.log('edit');
+  }
+
+  // Helper method to delete specific listing
+  deleteListing() {
+    // Find the id in the url
+    const id = this.props.match.params.id;
+    // Post to backend
+    axios.post(`/api/listings/${id}/delete`)
+    .then((resp) => {
+      if (resp.data.success) {
+        this.setState({
+          redirectToHome: true,
+        });
+      } else {
+        this.setState({
+          error: resp.data.error,
+        });
+      }
+    })
+    .catch((err) => {
+      this.setState({
+        error: err,
+      });
+    });
+  }
+
   // Helper method which will be called by child component (ReviewForm) to update state
   updateReviews() {
     // Find the listing
@@ -107,8 +146,6 @@ class Listing extends React.Component {
           this.setState({
             error: "",
             ...res.data.data,
-            // reviews: res.data.reviews,
-            // author: res.data.author,
             time: moment(res.data.timestamp).fromNow(),
             pending: false,
           });
@@ -252,6 +289,32 @@ class Listing extends React.Component {
     );
   }
 
+  // Helper method to render buttons to edit and delete the listing
+  renderButtons() {
+    // If the user is authorized to edit the listing
+    if (this.state.canModify) {
+      return (
+        <div className="buttons right marg-bot-1">
+          <div
+            className="btn btn-primary btn-sm"
+            onClick={ () => this.editListing() }
+          >
+            Edit
+          </div>
+          <div
+            className="btn btn-danger btn-sm"
+            onClick={ () => this.deleteListing() }
+          >
+            Delete
+          </div>
+        </div>
+      );
+    }
+
+    // Else, return nothing
+    return null;
+  }
+
   // Helper method to convert from military to normal time
   formatHours(hour) {
     return moment(hour, 'HH:mm').format('h:mm a');
@@ -386,6 +449,8 @@ class Listing extends React.Component {
               className="background-image preview background-fixed"
               style={{ backgroundImage: `url(${this.state.image})` }}
             />
+            { this.state.redirectToHome && <Redirect to="/"/> }
+            { this.renderButtons() }
             <div className="container content">
               <div className="row">
                 {/* Contains details about the listing */}

@@ -53,6 +53,10 @@ To run the application, run `npm start`. For more responsive hot-reloading on th
 - [X] `Listing` back to all listings button
 - [ ] Edit Listings view
 - [ ] Delete Listings view
+- [ ] Listings location should also show as an address
+- [ ] Store author
+- [ ] Add to curator's list of content
+- [ ] Style edit/delete buttons better
 
 ## Videos
 
@@ -61,10 +65,12 @@ To run the application, run `npm start`. For more responsive hot-reloading on th
 - [ ] Allow comments
 - [ ] Edit Videos view
 - [ ] Delete Videos view
+- [ ] Store author
+- [ ] Add to curator's list of content
 
 ## Articles
 - [ ] Edit Articles view
-- [ ] Delete Articles view
+- [X] Delete Articles view
 
 
 ## Frontend

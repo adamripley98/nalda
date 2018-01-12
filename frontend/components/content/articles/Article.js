@@ -240,16 +240,4 @@ Article.propTypes = {
   userId: PropTypes.string,
 };
 
-// Allows us to access redux state as this.props.userId inside component
-const mapStateToProps = state => {
-  return {
-    userId: state.authState.userId,
-  };
-};
-
-// Redux config
-Article = connect(
-    mapStateToProps,
-)(Article);
-
 export default Article;
