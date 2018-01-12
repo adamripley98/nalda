@@ -118,6 +118,20 @@ class Article extends React.Component {
                   />
                 ) : (
                   <div>
+                    <div className="buttons right marg-bot-1">
+                      <div
+                        className="btn btn-primary btn-sm"
+                        onClick={ () => console.log("edit") }
+                      >
+                        Edit
+                      </div>
+                      <div
+                        className="btn btn-danger btn-sm"
+                        onClick={ () => console.log("delete") }
+                      >
+                        Delete
+                      </div>
+                    </div>
                     <h1>
                       { this.state.title }
                     </h1>
@@ -142,6 +156,12 @@ class Article extends React.Component {
                               alt={ this.state.title }
                               className="img-fluid"
                             />
+                          );
+                        } else if (component.componentType === "quote") {
+                          return (
+                            <p key={ index } className="quote">
+                              { component.body }
+                            </p>
                           );
                         }
 

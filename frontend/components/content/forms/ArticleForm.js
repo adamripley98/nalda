@@ -291,6 +291,11 @@ class ArticleForm extends React.Component {
                   aria-hidden="true"
                   onClick={ () => this.addNewComponent("image") }
                 />
+                <i
+                  className="fa fa-quote-right"
+                  aria-hidden="true"
+                  onClick={ () => this.addNewComponent("quote") }
+                />
               </div>
 
               <input
