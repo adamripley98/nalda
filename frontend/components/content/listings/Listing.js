@@ -376,6 +376,17 @@ class Listing extends React.Component {
                   <p className="description">
                     { this.state.description }
                   </p>
+                  {
+                    this.state.hours && (
+                      <div className="hidden-lg-up">
+                        <div className="line" />
+                        <h5 className="subtitle">
+                          Hours
+                        </h5>
+                        { this.renderHours() }
+                      </div>
+                    )
+                  }
                   <div className="line" />
                   <h5 className="subtitle">
                     Amenities
@@ -461,9 +472,8 @@ class Listing extends React.Component {
                       )
                     }
                     {
-                      // TODO: Style hours better, perhaps in its own section
                       this.state.hours && (
-                        <div className="price">
+                        <div className="price hidden-md-down">
                           <p>
                             <strong>
                               Hours:&nbsp;

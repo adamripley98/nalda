@@ -79,7 +79,7 @@ class Sidebar extends Component {
    */
   render() {
     return (
-      <div>
+      <div className="sidebar-wrapper">
         {/* Redirect to the login page when the user signs out */}
         { this.state.redirectToLogin && (<Redirect to="/login"/>) }
 

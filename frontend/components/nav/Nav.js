@@ -41,7 +41,7 @@ class Nav extends Component {
    */
   render() {
     return (
-      <nav className="nav">
+      <nav className={ this.state.searchActive ? 'nav search-active' : 'nav' }>
         {/* Render the logo which links to the home page */}
         <Link to="/" className="logo">
           <img src="https://s3.amazonaws.com/nalda/nalda_logo.svg" alt="Nalda" />

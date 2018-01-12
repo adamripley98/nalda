@@ -461,3 +461,41 @@
     display: none;
   }
 }
+
+/**
+ * Handle when the search is active on smaller screens
+ */
+@media screen and (max-width: 648px) {
+  .nav {
+    .logo,
+    .sidebar-wrapper,
+    .user-info {
+      transition: all 0.4s ease;
+    }
+
+    .fa-search {
+      transition: all 0.4s ease;
+    }
+
+    #search {
+      transition: all 0.4s ease;
+      width: 100%;
+    }
+  }
+
+  .nav.search-active {
+    .logo {
+      transform: translateX(-5rem);
+    }
+
+    .sidebar-wrapper,
+    .user-info {
+      transform: translateX(5rem);
+    }
+
+    .logo, .sidebar-wrapper {
+      width: 0 !important;
+      padding: 0 !important;
+    }
+  }
+}
