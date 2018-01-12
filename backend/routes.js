@@ -320,7 +320,6 @@ module.exports = () => {
       } else {
         /**
          * Find the four most recent articles
-         * TODO leverage timestamps
          */
         let recentArticles;
         if (articles.length <= 4) {
@@ -328,6 +327,9 @@ module.exports = () => {
         } else {
           recentArticles = articles.slice(articles.length - 4);
         }
+
+        // Display in correct order
+        recentArticles.reverse();
 
         // Find listings
         Listing.find((listingErr, listings) => {
@@ -339,7 +341,6 @@ module.exports = () => {
           } else {
             /**
              * Find the four most recent listings
-             * TODO leverage timestamps
              */
             let recentListings;
             if (listings.length <= 4) {
@@ -347,6 +348,9 @@ module.exports = () => {
             } else {
               recentListings = listings.slice(listings.length - 4);
             }
+
+            // Display in correct order
+            recentListings.reverse();
 
             // Find videos
             Video.find((videoErr, videos) => {
@@ -358,7 +362,6 @@ module.exports = () => {
               } else {
                 /**
                  * Find the four most recent videos
-                 * TODO leverage timestamps
                  */
                 let recentVideos;
                 if (videos.length <= 4) {
@@ -366,6 +369,9 @@ module.exports = () => {
                 } else {
                   recentVideos = videos.slice(videos.length - 4);
                 }
+
+                // Display in correct order
+                recentVideos.reverse();
 
                 // Send the articles, listings, and videos
                 res.send({
@@ -923,11 +929,45 @@ module.exports = () => {
         });
       // if no errors, returns article along with the date it was created
       } else {
-        res.send({
-          success: true,
-          data: listing,
-          timestamp: listing._id.getTimestamp(),
+        // Make a new copy of the reviews
+        const reviews = listing.reviews.slice();
+        let reviewError = false;
+        // Go through each review and change the author data being passed to frontend
+        reviews.forEach((review) => {
+          // Find author in Mongo
+          User.findById(review.authorId, (errAuthor, author) => {
+            // Error finding author
+            if (err) {
+              reviewError = err;
+              return;
+            // Author can't be found
+            } else if (!author) {
+              reviewError = "Cannot find author.";
+              return;
+            }
+            // Successfully found author, update so review contains author's name
+            review.author = author;
+            // Remove private information about author
+            review.author.password = "";
+          });
         });
+        // Check for error with reviews
+        if (reviewError) {
+          res.send({
+            success: false,
+            error: reviewError,
+          });
+        } else {
+          // Update the reviews
+          listing.reviews = reviews;
+
+          // Send back data
+          res.send({
+            success: true,
+            data: listing,
+            timestamp: listing._id.getTimestamp(),
+          });
+        }
       }
     });
   });
@@ -1100,6 +1140,8 @@ module.exports = () => {
             error: 'User does not exist.'
           });
         } else {
+          // TODO Will eventually also want to store reviews in user model
+          // TODO Update to be by id instead of name
           // If no errors can now save new reviews
           // First find given listing
           Listing.findById(req.body.listingId, (errListing, listing) => {
@@ -1124,10 +1166,11 @@ module.exports = () => {
               // Check if user has already left a review
               let leftReviewAlready = false;
               currentReviews.forEach((review) => {
-                if (review.name === user.name) {
+                if (review.authorId === user._id) {
                   leftReviewAlready = true;
                 }
               });
+
               // If already left a review send back error
               if (leftReviewAlready) {
                 res.send({
@@ -1141,7 +1184,7 @@ module.exports = () => {
                   title: req.body.title,
                   content: req.body.content,
                   createdAt: new Date().getTime(),
-                  name: user.name,
+                  authorId: userId,
                 });
 
                 // Update listing with new review

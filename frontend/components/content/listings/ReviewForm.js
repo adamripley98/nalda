@@ -112,6 +112,7 @@ class ReviewForm extends React.Component {
             error: resp.data.error,
           });
         }
+
         // Calls parent component (Listing.js) method to display new review
         this.props.updateReviews();
 

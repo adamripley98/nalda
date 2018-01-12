@@ -53,7 +53,7 @@ const listingSchema = new Schema({
       title: String,
       content: String,
       createdAt: Number,
-      name: String,
+      authorId: String,
     }
   ],
 });
