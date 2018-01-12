@@ -157,36 +157,41 @@ class Articles extends React.Component {
         <h3 className="title section-title">
           Articles
         </h3>
-        <div className="sort-options">
-          <div
-            className={ this.state.currentSort === "date" ? "sort-option active" : "sort-option" }
-            onClick={ this.sortByDate }
-          >
-            Sort by date {
-              this.state.currentSort === "date" ? (
-                this.state.isAscending ? (
-                  <i className="fa fa-chevron-up" aria-hidden />
-                ) : (
-                  <i className="fa fa-chevron-up rotated" aria-hidden />
-                )
-              ) : null
-            }
-          </div>
-          <div
-            className={ this.state.currentSort === "title" ? "sort-option active" : "sort-option" }
-            onClick={ this.sortByTitle }
-          >
-            Sort by title {
-              this.state.currentSort === "title" ? (
-                this.state.isAscending ? (
-                  <i className="fa fa-chevron-up" aria-hidden />
-                ) : (
-                  <i className="fa fa-chevron-up rotated" aria-hidden />
-                )
-              ) : null
-            }
-          </div>
-        </div>
+        {
+          (this.state.articles && this.state.articles.length > 1) ? (
+            <div className="sort-options">
+              <div
+                className={ this.state.currentSort === "date" ? "sort-option active" : "sort-option" }
+                onClick={ this.sortByDate }
+              >
+                Sort by date {
+                  this.state.currentSort === "date" ? (
+                    this.state.isAscending ? (
+                      <i className="fa fa-chevron-up" aria-hidden />
+                    ) : (
+                      <i className="fa fa-chevron-up rotated" aria-hidden />
+                    )
+                  ) : null
+                }
+              </div>
+              <div
+                className={ this.state.currentSort === "title" ? "sort-option active" : "sort-option" }
+                onClick={ this.sortByTitle }
+              >
+                Sort by title {
+                  this.state.currentSort === "title" ? (
+                    this.state.isAscending ? (
+                      <i className="fa fa-chevron-up" aria-hidden />
+                    ) : (
+                      <i className="fa fa-chevron-up rotated" aria-hidden />
+                    )
+                  ) : null
+                }
+              </div>
+            </div>
+          ) : null
+        }
+
         <div className="row">
           {
             this.state.pending ? (

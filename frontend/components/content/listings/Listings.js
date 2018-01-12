@@ -1,7 +1,6 @@
 // Import frameworks
 import React from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 
 // Import components
 import Loading from '../../shared/Loading';
@@ -10,7 +9,9 @@ import Button from '../../shared/Button';
 import Preview from '../Preview';
 
 /**
- * Component for the homepage of the application
+ * Component for the listings of the application
+ * TODO filter by amenities
+ * TODO filter by open now
  */
 class Listings extends React.Component {
   /**
@@ -24,16 +25,14 @@ class Listings extends React.Component {
       listings: [],
       pending: true,
       error: "",
-      titleSortedAscending: false,
-      ratingSortedAscending: false,
-      priceSortedAscending: false,
+      currentSort: "date",
+      isAscending: false,
     };
 
     // Bind this to helper methods
     this.sortByRating = this.sortByRating.bind(this);
     this.sortByTitle = this.sortByTitle.bind(this);
     this.sortByPrice = this.sortByPrice.bind(this);
-    this.sortByAmenity = this.sortByAmenity.bind(this);
   }
 
   /**
@@ -43,12 +42,14 @@ class Listings extends React.Component {
     axios.get('/api/listings')
       .then((resp) => {
         if (resp.data.success) {
+          // If there was no error
           this.setState({
             listings: resp.data.data,
             pending: false,
             error: "",
           });
         } else {
+          // If there was an error with the request itself
           this.setState({
             pending: false,
             error: resp.data.error,
@@ -56,6 +57,7 @@ class Listings extends React.Component {
         }
       })
       .catch(err => {
+        // If there was an error with making the request
         this.setState({
           pending: false,
           error: err,
@@ -63,37 +65,43 @@ class Listings extends React.Component {
       });
   }
 
-  // Helper method to sort listings by title
+  /**
+   * Helper method to sort listings by title
+   */
   sortByTitle() {
     // Define variable
     const sortedListings = Object.assign([], this.state.listings);
 
-    if (!this.state.titleSortedAscending) {
-      // Sort articles based off title
+    // Sort based on the state of the application
+    if (this.state.currentSort === "title") {
+      // If already sorted ascending, reverse to show descending
+      sortedListings.reverse();
+
+      // Set the state
+      this.setState({
+        listings: sortedListings,
+        isAscending: !this.state.isAscending,
+      });
+    } else {
+      // Sort listings based off title
       sortedListings.sort((a, b) => {
         if (a.title < b.title) {
           return -1;
-        }
-        if (a.title > b.title) {
+        } else if (a.title > b.title) {
           return 1;
         }
-        // names must be equal
+
+        // Names must be equal
         return 0;
       });
-    } else {
-      // If already sorted ascending, reverse to show descending
-      sortedListings.reverse();
-    }
 
-    // Display sorted articles
-    this.setState({
-      listings: sortedListings,
-      // Toggle
-      titleSortedAscending: !this.state.titleSortedAscending,
-      // No longer sorted by these features
-      ratingSortedAscending: false,
-      priceSortedAscending: false,
-    });
+      // Set the state
+      this.setState({
+        listings: sortedListings,
+        isAscending: false,
+        currentSort: "title",
+      });
+    }
   }
 
   // Helper method to sort listings by rating
@@ -101,25 +109,29 @@ class Listings extends React.Component {
     // Define variable
     const sortedListings = Object.assign([], this.state.listings);
 
-    if (!this.state.ratingSortedAscending) {
+    // Sort based on the state of the application
+    if (this.state.currentSort === "rating") {
+      // If already sorted ascending, reverse to show descending
+      sortedListings.reverse();
+
+      // Set the state
+      this.setState({
+        listings: sortedListings,
+        isAscending: !this.state.isAscending,
+      });
+    } else {
       // Sort articles based off rating
       sortedListings.sort((a, b) => {
         return a.rating - b.rating;
       });
-    } else {
-      // If already sorted ascending, reverse to show descending
-      sortedListings.reverse();
-    }
 
-    // Display sorted articles
-    this.setState({
-      listings: sortedListings,
-      // Toggle
-      ratingSortedAscending: !this.state.ratingSortedAscending,
-      // No longer sorted by these features
-      titleSortedAscending: false,
-      priceSortedAscending: false,
-    });
+      // Set the state
+      this.setState({
+        listings: sortedListings,
+        isAscending: false,
+        currentSort: "rating",
+      });
+    }
   }
 
   // Helper method to sort listings by price
@@ -127,31 +139,29 @@ class Listings extends React.Component {
     // Define variable
     const sortedListings = Object.assign([], this.state.listings);
 
-    if (!this.state.priceSortedAscending) {
+    // Sort based on the state of the application
+    if (this.state.currentSort === "price") {
+      // If already sorted ascending, reverse to show descending
+      sortedListings.reverse();
+
+      // Set the state
+      this.setState({
+        listings: sortedListings,
+        isAscending: !this.state.isAscending,
+      });
+    } else {
       // Sort articles based off price
       sortedListings.sort((a, b) => {
         return a.price.length - b.price.length;
       });
-    } else {
-      // If already sorted ascending, reverse to show descending
-      sortedListings.reverse();
+
+      // Set the state
+      this.setState({
+        listings: sortedListings,
+        isAscending: false,
+        currentSort: "price",
+      });
     }
-
-    // Display sorted articles
-    this.setState({
-      listings: sortedListings,
-      // Toggle
-      priceSortedAscending: !this.state.priceSortedAscending,
-      // No longer sorted by these features
-      titleSortedAscending: false,
-      ratingSortedAscending: false,
-    });
-  }
-
-  // Helper method to sort by amenity
-  // TODO: Implement. Make popup menu with all the different options
-  sortByAmenity() {
-
   }
 
   /**
@@ -189,23 +199,52 @@ class Listings extends React.Component {
     return (
       <div className="container home">
         <div className="space-1"/>
-        <h3 className="title">
+        <h3 className="title section-title">
           Listings
         </h3>
-        <div className="buttons marg-bot-1">
-          <div className="btn btn-primary" onClick={this.sortByTitle}>
-            Sort by title
-          </div>
-          <div className="btn btn-primary" onClick={this.sortByPrice}>
-            Sort by price
-          </div>
-          <div className="btn btn-primary" onClick={this.sortByRating}>
-            Sort by rating
-          </div>
-          <div className="btn btn-primary" onClick={this.sortByAmenity}>
-            Sort by amenity
-          </div>
-        </div>
+        {
+          (this.state.listings && this.state.listings.length > 1) ? (
+            <div className="sort-options">
+              <div
+                className={ this.state.currentSort === "title" ? "sort-option active" : "sort-option" }
+                onClick={this.sortByTitle}
+              >
+                Sort by title { this.state.currentSort === "title" ? (
+                  this.state.isAscending ? (
+                    <i className="fa fa-chevron-up" aria-hidden />
+                  ) : (
+                    <i className="fa fa-chevron-up rotated" aria-hidden />
+                  )
+                ) : null }
+              </div>
+              <div
+                className={ this.state.currentSort === "price" ? "sort-option active" : "sort-option" }
+                onClick={this.sortByPrice}
+              >
+                Sort by price { this.state.currentSort === "price" ? (
+                  this.state.isAscending ? (
+                    <i className="fa fa-chevron-up" aria-hidden />
+                  ) : (
+                    <i className="fa fa-chevron-up rotated" aria-hidden />
+                  )
+                ) : null }
+              </div>
+              <div
+                className={ this.state.currentSort === "rating" ? "sort-option active" : "sort-option" }
+                onClick={this.sortByRating}
+              >
+                Sort by rating { this.state.currentSort === "rating" ? (
+                  this.state.isAscending ? (
+                    <i className="fa fa-chevron-up" aria-hidden />
+                  ) : (
+                    <i className="fa fa-chevron-up rotated" aria-hidden />
+                  )
+                ) : null }
+              </div>
+            </div>
+          ) : null
+        }
+
         <div className="row">
           {
             this.state.pending ? (
