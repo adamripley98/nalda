@@ -1,6 +1,8 @@
 # Nalda
 
-A centralized source for information, food, activities, and fun on your campus.
+A centralized source for information, food, activities, and fun on your campus. Developed by @adamripley98 and @ccabo1. View the timesheet [here.](https://docs.google.com/spreadsheets/d/1FaistICZ-BuORu7YYm5fFpgii2cvxZKgEpxApWQ_3pY/edit?usp=sharing)
+
+![Nalda](https://s3.amazonaws.com/nalda/nalda-overview.png)
 
 __Stack used:__
 * `React` JavaScript framework for all views
@@ -10,12 +12,9 @@ __Stack used:__
 * `Express` backend API library
 * `MongoDB` database
 
-View the timesheet [here.](https://docs.google.com/spreadsheets/d/1FaistICZ-BuORu7YYm5fFpgii2cvxZKgEpxApWQ_3pY/edit?usp=sharing)
-
 To run the application, run `npm start`. For more responsive hot-reloading on the backend and frontend, run `npm run frontend` and `npm run backend` concurrently.
 
-## Currently Working on:
-Backend for articles and listings
+# Feature tracking
 
 ## Admins
 
@@ -192,12 +191,8 @@ Backend for articles and listings
 - [ ] Delete reviews functionality
 - [ ] Searching should not search through reviews
 - [ ] Users can leave comments on videos and articles
+- [ ] Multiple curators on the same content
 
 ## Questions
 
-* Should multiple curators be able to contribute to content or just one?
-* What role should location play in the application?
-  * How should we get a user's location?
-  * Should all content have a location?
-  * Should we only show content near the user?
-* What information do you want on the about page?
+* Should there be timestamps on listings and videos?

@@ -73,6 +73,7 @@ class Home extends React.Component {
           subtitle={ art.subtitle }
           image={ art.image }
           key={ art._id }
+          timestamp={ art.createdAt }
           isArticle
         />
       ));

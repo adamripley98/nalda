@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import moment from 'moment';
 
 /**
  * Renders an error message to the user
  */
-const Preview = ({ _id, title, subtitle, image, isArticle, isListing, isVideo, isThin }) => {
+const Preview = ({ _id, title, subtitle, image, isArticle, isListing, isVideo, isThin, timestamp }) => {
   // Find the type of the content
   let type = "";
   if (isArticle) {
@@ -31,6 +32,13 @@ const Preview = ({ _id, title, subtitle, image, isArticle, isListing, isVideo, i
           <h6 className="subtitle">
             { subtitle }
           </h6>
+          {
+            timestamp && (
+              <p className="gray-text marg-bot-0 right italic">
+                { moment(timestamp).fromNow(true) }
+              </p>
+            )
+          }
         </div>
       </Link>
     </div>
@@ -47,6 +55,7 @@ Preview.propTypes = {
   isVideo: PropTypes.bool,
   isArticle: PropTypes.bool,
   isThin: PropTypes.bool,
+  timestamp: PropTypes.string,
 };
 
 export default Preview;
