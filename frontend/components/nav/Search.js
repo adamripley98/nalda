@@ -218,12 +218,26 @@ class Search extends Component {
   render() {
     return (
       <div className="search">
-        <i className="fa fa-search" aria-hidden="true" />
+        <i
+          className="fa fa-search cursor"
+          aria-hidden="true"
+          onClick={ () => {
+            // Focus on the search element
+            document.getElementById('search').focus();
+
+            // Update the state for the searchbar to be active
+            this.setState({
+              active: true,
+            });
+          }}
+        />
         <input
           className="form-control small"
+          id="search"
           value={ this.state.seach }
           onChange={ this.handleChangeSearch }
           onClick={ () => this.setState({ active: true }) }
+          ref={(input) => { this.nameInput = input; }}
           placeholder="Search"
         />
         <input
