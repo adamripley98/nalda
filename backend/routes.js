@@ -1777,22 +1777,41 @@ module.exports = () => {
         });
       // Otherwise render user data
       } else {
-        // TODO: Populate user's content
-        Article.find({author: id}, (er, articles) => {
+        Article.find({author: id}, (errArticles, articles) => {
           // Error checking
-          if (er) {
+          if (errArticles) {
             res.send({
               success: false,
-              error: er.message,
+              error: errArticles.message,
             });
           } else {
-            // Remove private data before sending back
-            user.password = "";
-            res.send({
-              success: true,
-              error: '',
-              data: user,
-              articles,
+            Listing.find({author: id}, (errListings, listings) => {
+              if (errListings) {
+                res.send({
+                  success: false,
+                  error: errListings.message,
+                });
+              } else {
+                Video.find({author: id}, (errVideo, videos) => {
+                  if (errVideo) {
+                    res.send({
+                      success: false,
+                      error: errVideo,
+                    });
+                  } else {
+                    // Remove private data before sending back
+                    user.password = "";
+                    res.send({
+                      success: true,
+                      error: '',
+                      data: user,
+                      articles,
+                      listings,
+                      videos,
+                    });
+                  }
+                });
+              }
             });
           }
         });

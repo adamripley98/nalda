@@ -66,7 +66,6 @@ class Listing extends React.Component {
     axios.get(`/api/listings/${id}`)
       .then(res => {
         if (res.data.success) {
-          console.log('whats the data', res.data);
           // Set the state
           this.setState({
             error: "",

@@ -29,8 +29,14 @@ class Profile extends Component {
       profilePicture: '',
       error: '',
       pending: true,
-      content: [],
+      content: {},
     };
+
+    // Bind this to helper methods
+    this.renderInfo = this.renderInfo.bind(this);
+    this.renderArticles = this.renderArticles.bind(this);
+    this.renderVideos = this.renderVideos.bind(this);
+    this.renderListings = this.renderListings.bind(this);
   }
 
   /**
@@ -51,7 +57,11 @@ class Profile extends Component {
           userType: resp.data.data.userType,
           profilePicture: resp.data.data.profilePicture,
           error: "",
-          content: resp.data.articles,
+          content: {
+            articles: resp.data.articles,
+            listings: resp.data.listings,
+            videos: resp.data.videos,
+          },
           location: resp.data.data.location.name,
           pending: false,
         });
@@ -70,15 +80,15 @@ class Profile extends Component {
   }
 
   /**
-   * Helper function to render a user's content
+   * Helper function to render a user's articles
    */
-  renderContent() {
+  renderArticles() {
     // Isolate variable
-    const content = this.state.content;
+    const articles = this.state.content.articles;
 
     // Map through and display content
-    if (content && content.length) {
-      return content.map((art) => (
+    if (articles && articles.length) {
+      return articles.map((art) => (
         <Preview
           key={ art._id }
           _id={ art._id }
@@ -96,6 +106,70 @@ class Profile extends Component {
       <div className="col-12">
         <div className="card pad-1 marg-bot-1">
           This author hasn't posted any articles yet!
+        </div>
+      </div>
+    );
+  }
+
+  /**
+   * Helper function to render a user's listings
+   */
+  renderListings() {
+    // Isolate variable
+    const listings = this.state.content.listings;
+
+    // Map through and display content
+    if (listings && listings.length) {
+      return listings.map((listing) => (
+        <Preview
+          _id={ listing._id }
+          title={ listing.title }
+          subtitle={ listing.description }
+          image={ listing.image }
+          key={ listing._id }
+          isListing
+          isThin
+        />
+      ));
+    }
+
+    // If no listings were found
+    return (
+      <div className="col-12">
+        <div className="card pad-1 marg-bot-1">
+          This author hasn't posted any listings yet!
+        </div>
+      </div>
+    );
+  }
+
+  /**
+   * Helper function to render a user's videos
+   */
+  renderVideos() {
+    // Isolate variable
+    const videos = this.state.content.videos;
+
+    // Map through and display content
+    if (videos && videos.length) {
+      return videos.map((video) => (
+        <Preview
+          _id={ video._id }
+          title={ video.title }
+          subtitle={ video.description }
+          image={ `https://img.youtube.com/vi/${video.url.substring(video.url.indexOf("v=") + 2)}/maxresdefault.jpg` }
+          key={ video._id }
+          isVideo
+          isThin
+        />
+      ));
+    }
+
+    // If no videos were found
+    return (
+      <div className="col-12">
+        <div className="card pad-1 marg-bot-1">
+          This author hasn't posted any videos yet!
         </div>
       </div>
     );
@@ -144,7 +218,16 @@ class Profile extends Component {
                 Content created
               </h5>
               <div className="row">
-                { this.renderContent() }
+                Articles
+                { this.renderArticles() }
+              </div>
+              <div className="row">
+                Listings
+                { this.renderListings() }
+              </div>
+              <div className="row">
+                Videos
+                { this.renderVideos() }
               </div>
             </div>
           ) : null
