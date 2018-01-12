@@ -37,7 +37,8 @@ module.exports = () => {
             username: req.body.username,
             location: req.body.location,
             password: createHash(req.body.password),
-            userType: 'user'
+            userType: 'user',
+            profilePicture: 'http://www.racialjusticenetwork.co.uk/wp-content/uploads/2016/12/default-profile-picture.png',
           });
 
           // Saving new user in Mongo

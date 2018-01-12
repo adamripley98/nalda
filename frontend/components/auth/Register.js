@@ -152,6 +152,7 @@ class Register extends Component {
                   resp.data.user.userType,
                   name,
                   location,
+                  resp.data.user.profilePicture,
                 );
               }
             })
@@ -313,7 +314,7 @@ const mapStateToProps = state => {
 // When we call onRegister now, it will dispatch register event
 const mapDispatchToProps = dispatch => {
   return {
-    onRegister: (userId, userType, name, location) => dispatch(register(userId, userType, name, location)),
+    onRegister: (userId, userType, name, location, profilePicture) => dispatch(register(userId, userType, name, location, profilePicture)),
   };
 };
 

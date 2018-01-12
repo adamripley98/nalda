@@ -1296,7 +1296,6 @@ module.exports = () => {
         } else {
           // Update user with new bio
           user.bio = bio;
-          console.log('user', user);
           // Save in Mongo
           user.save((errUser) => {
             // Error saving user
@@ -1414,7 +1413,6 @@ module.exports = () => {
               error: er.message,
             });
           } else {
-            console.log('prof', user.profilePicture);
             // Remove private data before sending back
             user.password = "";
             res.send({

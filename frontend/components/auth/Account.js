@@ -15,14 +15,14 @@ import ErrorMessage from '../shared/ErrorMessage';
 import Button from '../shared/Button';
 import Loading from '../shared/Loading';
 
+// TODO error check on empty inputs
 /**
  * Component to render a user's account information
   */
 class Account extends Component {
   /**
    * Constructor method
-   * TODO allow changing profile pic, location
-   * TODO profile pic needs to be shown
+   * TODO allow changing location
    */
   constructor(props) {
     super(props);
@@ -46,8 +46,7 @@ class Account extends Component {
     this.handleNameClick = this.handleNameClick.bind(this);
     this.handleChangeBio = this.handleChangeBio.bind(this);
     this.handleBioClick = this.handleBioClick.bind(this);
-    this.changeProfilePicture = this.changeProfilePicture.bind(this);
-    this.submitProfilePicture = this.submitProfilePicture.bind(this);
+    this.handleChangeProfilePicture = this.handleChangeProfilePicture.bind(this);
     this.handleProfilePictureClick = this.handleProfilePictureClick.bind(this);
   }
 
@@ -120,22 +119,28 @@ class Account extends Component {
     const changeName = this.props.changeName;
 
     if (this.state.editName) {
-       // Save the updated name
-      axios.post('/api/users/name', {
-        userId: this.props.userId,
-        name: this.state.name,
-      })
-      .then((resp) => {
-        // If there was an error, display it
-        if (!resp.data.success) {
-          this.setState({
-            error: resp.data.error,
-          });
-        } else {
-          // change redux state
-          changeName(this.state.name);
-        }
-      });
+      if (!this.state.name) {
+        this.setState({
+          error: 'Name cannot be empty.',
+        });
+      } else {
+        // Save the updated name
+        axios.post('/api/users/name', {
+          userId: this.props.userId,
+          name: this.state.name,
+        })
+       .then((resp) => {
+         // If there was an error, display it
+         if (!resp.data.success) {
+           this.setState({
+             error: resp.data.error,
+           });
+         } else {
+           // change redux state
+           changeName(this.state.name);
+         }
+       });
+      }
     }
     // Update the state
     this.setState({
@@ -144,11 +149,55 @@ class Account extends Component {
   }
 
   /**
+   * Handle a change to the profile picture state
+   */
+  handleChangeProfilePicture(event) {
+    this.setState({
+      profilePicture: event.target.value,
+    });
+  }
+
+  /**
    * Handle click to edit profile picture
-   * TODO
    */
   handleProfilePictureClick() {
-    return;
+    if (this.state.editProfilePicture) {
+      // Isolate variables
+      const changeProfilePic = this.props.changeProfilePic;
+      const userId = this.props.userId;
+      const profilePicture = this.state.profilePicture;
+
+      // Error checking
+      if (!this.state.profilePicture) {
+        this.setState({
+          error: 'Profile picture cannot be empty',
+        });
+      } else {
+        axios.post('/api/users/profilePicture', {
+          userId,
+          profilePicture,
+        })
+        .then((resp) => {
+          if (!resp.data.success) {
+            this.setState({
+              error: resp.data.error,
+            });
+          } else {
+            // Dispatch redux action to change profile picture
+            changeProfilePic(profilePicture);
+          }
+        })
+        .catch((err) => {
+          this.setState({
+            error: err,
+          });
+        });
+      }
+    }
+    // Update the state
+    this.setState({
+      editProfilePicture: !this.state.editProfilePicture,
+    });
   }
 
   /**
@@ -195,53 +244,6 @@ class Account extends Component {
   }
 
   /**
-   * Helper method for change profile picture
-   */
-  changeProfilePicture(e) {
-    this.setState({
-      profilePicture: e.target.value,
-    });
-  }
-
-  /**
-   * Helper method for submitting new profile picture
-   */
-  submitProfilePicture(e) {
-    // Isolate variables
-    const changeProfilePic = this.props.changeProfilePic;
-    const userId = this.props.userId;
-    const profilePicture = this.state.profilePicture;
-    // Prevent default action
-    e.preventDefault();
-    // Error checking
-    if (!this.state.profilePicture) {
-      this.setState({
-        error: 'Profile picture cannot be empty',
-      });
-    } else {
-      axios.post('/api/users/profilePicture', {
-        userId,
-        profilePicture,
-      })
-      .then((resp) => {
-        if (!resp.data.success) {
-          this.setState({
-            error: resp.data.error,
-          });
-        } else {
-          // Dispatch redux action
-          changeProfilePic(profilePicture);
-        }
-      })
-      .catch((err) => {
-        this.setState({
-          error: err,
-        });
-      });
-    }
-  }
-
-  /**
    * Helper function to render a user's information
    */
   renderInfo() {
@@ -275,20 +277,24 @@ class Account extends Component {
           </tr>
           <tr>
             <td className="bold">
-//               Profile Picture
-//             </td>
-//             <td className="bold">
-//               <input type="text" onChange={this.changeProfilePicture} />
-//             </td>
-//             <td>
-//               <input type="submit" onClick={this.submitProfilePicture} />
-              Profile picture
+               Profile Picture
             </td>
             <td>
-              <div
-                className="profile-picture background-image"
-                style={{ backgroundImage: `url(${ this.state.profilePicture })`}}
-              />
+                <div
+                  className="profile-picture background-image"
+                  style={{
+                    display: this.state.editProfilePicture && "none",
+                    backgroundImage: `url(${ this.props.profilePicture })`
+                  }}
+                />
+                <input
+                  className="form-control"
+                  id="name"
+                  ref={(input) => { this.profileInput = input; }}
+                  value={ this.state.profilePicture }
+                  onChange={ this.handleChangeProfilePicture }
+                  style={{ display: !this.state.editProfilePicture && "none" }}
+                />
             </td>
             <td>
               <i
@@ -419,12 +425,14 @@ Account.propTypes = {
   userId: PropTypes.string,
   changeName: PropTypes.func,
   changeProfilePic: PropTypes.func,
+  profilePicture: PropTypes.string,
 };
 
 // Allows us to access redux state as this.props.userId inside component
 const mapStateToProps = state => {
   return {
     userId: state.authState.userId,
+    profilePicture: state.authState.profilePicture,
   };
 };
 

@@ -44,7 +44,6 @@ class Profile extends Component {
     .then((resp) => {
       // If successful, will set state with user's information
       if (resp.data.success) {
-        console.log('resp.data', resp.data.data);
         this.setState({
           name: resp.data.data.name,
           email: resp.data.data.username,
