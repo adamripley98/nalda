@@ -9,7 +9,6 @@ import ErrorMessage from './shared/ErrorMessage';
 import Button from './shared/Button';
 import Preview from './content/Preview';
 
-// TODO: Should standardize the size of all the pictures
 /**
  * Component for the homepage of the application
  */

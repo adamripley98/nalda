@@ -212,7 +212,7 @@ class ListingForm extends React.Component {
             title: this.state.title,
             image: this.state.image,
             location: {
-              name: document.getElementById('location').value,
+              name: location,
               lat: latitude,
               lng: longitude,
             },

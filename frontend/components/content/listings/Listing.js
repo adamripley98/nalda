@@ -17,7 +17,6 @@ import Stars from './Stars';
 /**
  * Component to render a listing
  * TODO Edit functionality
- * TODO Delete functionality
  */
 class Listing extends React.Component {
   // Constructor method
@@ -320,11 +319,11 @@ class Listing extends React.Component {
   }
 
   // Helper method to render Hours
-  // TODO check if the hours object is empty
   renderHours() {
-    if (this.state.hours) {
-      // Isolate variable
-      const hours = this.state.hours;
+    // Isolate variable
+    const hours = this.state.hours;
+    // If hours are entered, display them
+    if (Object.keys(hours).length !== 0) {
       return (
         // If a date has a start and end time, it will be displayed
         <table className="table">

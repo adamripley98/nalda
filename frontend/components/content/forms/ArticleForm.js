@@ -10,7 +10,6 @@ import uuid from 'uuid-v4';
 
 /**
  * Component to render the new article form
- * TODO flash notifications when a new article is made?
  */
 class ArticleForm extends React.Component {
   // Constructor method
@@ -38,11 +37,19 @@ class ArticleForm extends React.Component {
     this.handleChangeBody = this.handleChangeBody.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.addNewComponent = this.addNewComponent.bind(this);
+    this.inputValid = this.inputValid.bind(this);
   }
 
   // Handle resizing textarea
   componentDidMount() {
     autosize(document.querySelectorAll('textarea'));
+
+    // Autocomplete the user's city
+    const location = document.getElementById("location");
+    const options = {
+      componentRestrictions: {country: 'us'},
+    };
+    new google.maps.places.Autocomplete(location, options);
   }
 
   // Also when the component updates
@@ -101,6 +108,53 @@ class ArticleForm extends React.Component {
     });
   }
 
+  // Helper method to make sure all input is valid
+  inputValid() {
+    // Begin error checking
+    if (!this.state.title) {
+      this.setState({
+        error: "Title must be populated.",
+        pendingSubmit: false,
+      });
+      return false;
+    } else if (!this.state.subtitle) {
+      this.setState({
+        error: "Subtitle must be populated.",
+        pendingSubmit: false,
+      });
+      return false;
+    } else if (!this.state.body) {
+      this.setState({
+        error: "Body must be populated.",
+        pendingSubmit: false,
+      });
+      return false;
+    } else if (this.state.title.length < 4 || this.state.title.length > 100) {
+      this.setState({
+        error: "Title must be between 4 and 100 characters long.",
+        pendingSubmit: false,
+      });
+      return false;
+    } else if (this.state.subtitle.length < 4 || this.state.subtitle.length > 200) {
+      this.setState({
+        error: "Subtitle must be between 4 and 200 characters long.",
+        pendingSubmit: false,
+      });
+      return false;
+    } else if (!document.getElementById("location").value) {
+      this.setState({
+        error: "Location must be populated.",
+        pending: false,
+      });
+      return false;
+    }
+    // Set the error to the empty string
+    this.setState({
+      error: "",
+    });
+    return true;
+  }
+
   // Helper method to handle when the form is submitted
   handleSubmit(event) {
     // Prevent the default submit action
@@ -111,67 +165,52 @@ class ArticleForm extends React.Component {
       pendingSubmit: true,
     });
 
-    // Begin error checking
-    if (!this.state.title) {
-      this.setState({
-        error: "Title must be populated.",
-        pendingSubmit: false,
-      });
-    } else if (!this.state.subtitle) {
-      this.setState({
-        error: "Subtitle must be populated.",
-        pendingSubmit: false,
-      });
-    } else if (!this.state.body) {
-      this.setState({
-        error: "Body must be populated.",
-        pendingSubmit: false,
-      });
-    } else if (this.state.title.length < 4 || this.state.title.length > 100) {
-      this.setState({
-        error: "Title must be between 4 and 100 characters long.",
-        pendingSubmit: false,
-      });
-    } else if (this.state.subtitle.length < 4 || this.state.subtitle.length > 200) {
-      this.setState({
-        error: "Subtitle must be between 4 and 200 characters long.",
-        pendingSubmit: false,
-      });
-    } else {
-      // Set the error to the empty string
-      this.setState({
-        error: "",
-      });
+    // Find the Location
+    const location = document.getElementById("location").value;
 
-      // Otherwise, the request is properly formulated. Post request to routes.js
-      axios.post('/api/articles/new', {
-        title: this.state.title,
-        subtitle: this.state.subtitle,
-        image: this.state.image,
-        body: this.state.body,
-        userId: this.props.userId,
-      })
-        .then((res) => {
-          if (res.data.success) {
-            // If creating the article was successful
-            this.setState({
-              articleId: res.data.data._id,
-              redirectToHome: true,
+    if (this.inputValid()) {
+      // Find the longitude and latitude of the location passed in
+      const geocoder = new google.maps.Geocoder();
+      geocoder.geocode({ 'address': location }, (results, status) => {
+        if (status === google.maps.GeocoderStatus.OK) {
+          const latitude = results[0].geometry.location.lat();
+          const longitude = results[0].geometry.location.lng();
+          // Post to backend
+          axios.post('/api/articles/new', {
+            title: this.state.title,
+            subtitle: this.state.subtitle,
+            image: this.state.image,
+            body: this.state.body,
+            userId: this.props.userId,
+            location: {
+              name: location,
+              lat: latitude,
+              lng: longitude,
+            },
+          })
+            .then((res) => {
+              if (res.data.success) {
+                // If creating the article was successful
+                this.setState({
+                  articleId: res.data.data._id,
+                  redirectToHome: true,
+                });
+              } else {
+                this.setState({
+                  error: res.data.error,
+                  pendingSubmit: false,
+                });
+              }
+            })
+            .catch((err) => {
+              // If there was an error in making the request
+              this.setState({
+                error: err,
+                pendingSubmit: false,
+              });
             });
-          } else {
-            this.setState({
-              error: res.data.error,
-              pendingSubmit: false,
-            });
-          }
-        })
-        .catch((err) => {
-          // If there was an error in making the request
-          this.setState({
-            error: err,
-            pendingSubmit: false,
-          });
-        });
+        }
+      });
     }
   }
 
@@ -222,6 +261,16 @@ class ArticleForm extends React.Component {
                 className="form-control marg-bot-1"
                 value={ this.state.subtitle }
                 onChange={ this.handleChangeSubtitle }
+              />
+
+              <label>
+                Location
+              </label>
+              <input
+                name="title"
+                type="text"
+                id="location"
+                className="form-control marg-bot-1"
               />
 
               <label>

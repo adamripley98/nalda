@@ -12,7 +12,6 @@ import NotFoundSection from './NotFoundSection';
 
 /**
  * Component to render a curators profile
- * TODO load all articles, listings, and videos by the curator
  */
 class Profile extends Component {
   /**

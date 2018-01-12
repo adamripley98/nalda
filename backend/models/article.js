@@ -17,6 +17,12 @@ const articleSchema = new Schema({
     type: Schema.Types.ObjectId, ref: 'User',
   },
   createdAt: String,
+  updatedAt: String,
+  location: {
+    name: String,
+    lat: Number,
+    lng: Number,
+  },
 });
 
 // Creates an index allowing for search functionality

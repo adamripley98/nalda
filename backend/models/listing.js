@@ -6,8 +6,7 @@ const Schema = mongoose.Schema;
  * Listing Schema
  * NOTE hours are an object storing opening and closing times for each day of
  * the week
- * TODO reviews need a user ID so that we can render the user's profile picture
- * and handle changes to the user's name
+ * TODO display reviewer profile picture
  */
 const listingSchema = new Schema({
   title: String,
@@ -56,6 +55,8 @@ const listingSchema = new Schema({
       authorId: String,
     }
   ],
+  createdAt: String,
+  updatedAt: String,
 });
 
 // Creates an index allowing for search functionality

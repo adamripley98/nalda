@@ -31,6 +31,7 @@ class VideoForm extends React.Component {
     this.handleChangeVideo = this.handleChangeVideo.bind(this);
     this.handleChangeDescription = this.handleChangeDescription.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.inputValid = this.inputValid.bind(this);
   }
 
   /**
@@ -38,6 +39,13 @@ class VideoForm extends React.Component {
    */
   componentDidMount() {
     autosize(document.querySelectorAll('textarea'));
+
+    // Autocomplete the user's city
+    const location = document.getElementById("location");
+    const options = {
+      componentRestrictions: {country: 'us'},
+    };
+    new google.maps.places.Autocomplete(location, options);
   }
 
   /**
@@ -67,6 +75,59 @@ class VideoForm extends React.Component {
     });
   }
 
+  // Helper method to check if input is valid
+  inputValid() {
+    // Begin error checking
+    if (!this.state.title) {
+      this.setState({
+        error: "Title must be populated.",
+        pendingSubmit: false,
+      });
+      return false;
+    } else if (!this.state.url) {
+      this.setState({
+        error: "Video url must be populated",
+        pendingSubmit: false,
+      });
+      return false;
+    } else if (this.state.title.length < 4 || this.state.title.length > 100) {
+      this.setState({
+        error: "Title must be between 4 and 100 characters long.",
+        pendingSubmit: false,
+      });
+      return false;
+    } else if (this.state.description.length < 4) {
+      this.setState({
+        error: "Description must be at least 4 characters long",
+        pendingSubmit: false,
+      });
+      return false;
+    } else if (this.state.description.length > 10000) {
+      this.setState({
+        error: "Description must be less than 10000 characters long.",
+        pendingSubmit: false,
+      });
+      return false;
+    } else if (!this.state.url.startsWith("https://www.youtube.com/watch?v=")) {
+      this.setState({
+        error: "Video URL must be properly formatted. That is, it must begin with \"https://www.youtube.com/watch?v=\" followed by the video ID.",
+        pendingSubmit: false,
+      });
+      return false;
+    } else if (!document.getElementById("location").value) {
+      this.setState({
+        error: "Location must be populated.",
+        pending: false,
+      });
+      return false;
+    }
+    // Otherwise, the request is properly formulated
+    this.setState({
+      error: "",
+    });
+    return true;
+  }
+
   /**
    * Helper method to handle when the form is submitted
    */
@@ -79,61 +140,48 @@ class VideoForm extends React.Component {
       pendingSubmit: true,
     });
 
-    // Begin error checking
-    if (!this.state.title) {
-      this.setState({
-        error: "Title must be populated.",
-        pendingSubmit: false,
-      });
-    } else if (!this.state.url) {
-      this.setState({
-        error: "Video url must be populated",
-        pendingSubmit: false,
-      });
-    } else if (this.state.title.length < 4 || this.state.title.length > 100) {
-      this.setState({
-        error: "Title must be between 4 and 100 characters long.",
-        pendingSubmit: false,
-      });
-    } else if (this.state.description.length < 4) {
-      this.setState({
-        error: "Description must be at least 4 characters long",
-        pendingSubmit: false,
-      });
-    } else if (this.state.description.length > 10000) {
-      this.setState({
-        error: "Description must be less than 10000 characters long.",
-        pendingSubmit: false,
-      });
-    } else if (!this.state.url.startsWith("https://www.youtube.com/watch?v=")) {
-      this.setState({
-        error: "Video URL must be properly formatted. That is, it must begin with \"https://www.youtube.com/watch?v=\" followed by the video ID.",
-        pendingSubmit: false,
-      });
-    } else {
-      // Otherwise, the request is properly formulated
-      this.setState({
-        error: "",
-      });
-      // Post to backend creating new video
-      axios.post('/api/videos/new', {
-        title: this.state.title,
-        description: this.state.description,
-        url: this.state.url,
-      })
-      .then((resp) => {
-        if (!resp.data.success) {
-          // Display error on frontend
-          this.setState({
-            error: resp.data.error,
-            pendingSubmit: false,
-          });
-        } else {
-          // Redirect to home after successful submission
-          this.setState({
-            videoId: resp.data.data._id,
-            redirectToHome: true,
-            pendingSubmit: false,
+    // Find the Location
+    const location = document.getElementById("location").value;
+
+    // Check to make sure input is valid
+    if (this.inputValid()) {
+      // Find the longitude and latitude of the location passed in
+      const geocoder = new google.maps.Geocoder();
+      geocoder.geocode({ 'address': location }, (results, status) => {
+        if (status === google.maps.GeocoderStatus.OK) {
+          const latitude = results[0].geometry.location.lat();
+          const longitude = results[0].geometry.location.lng();
+          // Post to backend creating new video
+          axios.post('/api/videos/new', {
+            title: this.state.title,
+            description: this.state.description,
+            url: this.state.url,
+            location: {
+              name: location,
+              lat: latitude,
+              lng: longitude,
+            },
+          })
+          .then((resp) => {
+            if (!resp.data.success) {
+              // Display error on frontend
+              this.setState({
+                error: resp.data.error,
+                pendingSubmit: false,
+              });
+            } else {
+              // Redirect to home after successful submission
+              this.setState({
+                videoId: resp.data.data._id,
+                redirectToHome: true,
+                pendingSubmit: false,
+              });
+            }
+          })
+          .catch((err) => {
+            this.setState({
+              error: err,
+            });
           });
         }
       });
@@ -170,6 +218,7 @@ class VideoForm extends React.Component {
                   ""
                 )
               }
+
               <label>
                 Title
               </label>
@@ -180,6 +229,7 @@ class VideoForm extends React.Component {
                 value={ this.state.title }
                 onChange={ this.handleChangeTitle }
               />
+
               <label>
                 Link to YouTube video
               </label>
@@ -190,6 +240,7 @@ class VideoForm extends React.Component {
                 value={ this.state.video }
                 onChange={ this.handleChangeVideo }
               />
+
               <label>
                 Description
               </label>
@@ -201,6 +252,17 @@ class VideoForm extends React.Component {
                 value={ this.state.description }
                 onChange={ this.handleChangeDescription }
               />
+
+              <label>
+                Location
+              </label>
+              <input
+                name="title"
+                type="text"
+                id="location"
+                className="form-control marg-bot-1"
+              />
+
               <input
                 type="submit"
                 value={ this.state.pendingSubmit ? "Creating video..." : "Create video" }

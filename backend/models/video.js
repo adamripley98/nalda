@@ -6,10 +6,16 @@ const Schema = mongoose.Schema;
 const videoSchema = new Schema({
   title: String,
   description: String,
-  location: String,
   url: String,
   author: {
     type: Schema.Types.ObjectId, ref: 'User',
+  },
+  createdAt: String,
+  updatedAt: String,
+  location: {
+    name: String,
+    lat: Number,
+    lng: Number,
   },
 });
 
