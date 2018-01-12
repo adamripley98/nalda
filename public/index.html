@@ -40,12 +40,39 @@
   <!-- Render the application -->
   <body>
     <div id='root'/>
+    <div id='map' />
   </body>
 
-  <!-- Scripts -->
-  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBU6W9FQ52xntD9kMbii4pAuvCYEDrgYBA&libraries=places"></script>
+  <!-- Bootstrap scripts -->
   <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+
+  <!-- Google places -->
+  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBU6W9FQ52xntD9kMbii4pAuvCYEDrgYBA&libraries=places"></script>
+
+  <!-- Google maps -->
+  <!-- <script>
+    function initMap() {
+      $(document).ready(function() {
+        if (document.getElementById('map')) {
+          var uluru = {lat: -25.363, lng: 131.044};
+          console.log("ULURU");
+          var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 4,
+            center: uluru
+          });
+          console.log("MAP");
+          console.log(map);
+          var marker = new google.maps.Marker({
+            position: uluru,
+            map: map
+          });
+        }
+      })
+    }
+  </script> -->
+
+  <!-- Bundle -->
   <script src="/bundle.js"></script>
 </html>

@@ -31,7 +31,11 @@ class Listing extends React.Component {
       website: "",
       price: "",
       amenities: {},
-      location: "",
+      location: {
+        name: "",
+        lat: null,
+        lng: null,
+      },
       reviews: [],
       error: "",
       pending: true,
@@ -55,12 +59,27 @@ class Listing extends React.Component {
     axios.get(`/api/listings/${id}`)
       .then(res => {
         if (res.data.success) {
+          // Set the state
           this.setState({
             error: "",
             ...res.data.data,
             time: moment(res.data.timestamp).fromNow(),
             pending: false,
           });
+
+          // If there is a location
+          if (res.data.data.location.lng && res.data.data.location.lat) {
+            $(document).ready(function() {
+              var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 17,
+                center: res.data.data.location,
+              });
+              var marker = new google.maps.Marker({
+                position: res.data.data.location,
+                map: map
+              });
+            });
+          }
         } else {
           // If there was an error with the request
           this.setState({
@@ -379,20 +398,35 @@ class Listing extends React.Component {
                   <p className="description">
                     { this.state.description }
                   </p>
+                  {
+                    this.state.hours && (
+                      <div className="hidden-lg-up">
+                        <div className="line" />
+                        <h5 className="subtitle">
+                          Hours
+                        </h5>
+                        { this.renderHours() }
+                      </div>
+                    )
+                  }
                   <div className="line" />
                   <h5 className="subtitle">
                     Amenities
                   </h5>
                   { this.renderAmenities() }
+
                   <div className="line" />
                   <h5 className="subtitle">
                     Location
                   </h5>
-                  <p className="description">
-                  {this.state.location.name}
-                  </p>
+                  <div id="map" />
+
                   <div className="line" />
                   { this.renderReviewsSection() }
+
+                  { /* Render a back to home button */ }
+                  <div className="space-1" />
+                  <Button />
                 </div>
 
                 {/* Contains overview aboute the listing */}
@@ -464,9 +498,8 @@ class Listing extends React.Component {
                       )
                     }
                     {
-                      // TODO: Style hours better, perhaps in its own section
                       this.state.hours && (
-                        <div className="price">
+                        <div className="price hidden-md-down">
                           <p>
                             <strong>
                               Hours:&nbsp;
@@ -478,8 +511,6 @@ class Listing extends React.Component {
                     }
                   </div>
                 </div>
-                <div className="space-1" />
-                <Button />
               </div>
             </div>
             <div className="space-2" />
