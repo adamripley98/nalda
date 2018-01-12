@@ -24,8 +24,8 @@ class Listing extends React.Component {
 
     // Set the state with dummy data
     this.state = {
-      listingId: '',
-      img: "",
+      _id: '',
+      image: "",
       title: "",
       description: "",
       website: "",
@@ -56,7 +56,6 @@ class Listing extends React.Component {
       .then(res => {
         if (res.data.success) {
           this.setState({
-            listingId: id,
             error: "",
             ...res.data.data,
             time: moment(res.data.timestamp).fromNow(),
@@ -65,7 +64,6 @@ class Listing extends React.Component {
         } else {
           // If there was an error with the request
           this.setState({
-            listingId: id,
             error: res.data.error,
             pending: false,
           });
@@ -83,13 +81,15 @@ class Listing extends React.Component {
   // Helper method which will be called by child component (ReviewForm) to update state
   updateReviews() {
     // Find the listing
-    axios.get(`/api/listings/${this.state.listingId}`)
+    axios.get(`/api/listings/${this.state._id}`)
       .then(res => {
         if (res.data.success) {
           // Update state with new review
           this.setState({
             error: "",
             ...res.data.data,
+            // reviews: res.data.reviews,
+            // author: res.data.author,
             time: moment(res.data.timestamp).fromNow(),
             pending: false,
           });
@@ -182,7 +182,7 @@ class Listing extends React.Component {
     }
 
     // Isolate listingId to pass to ReviewForm
-    const listingId = this.props.match.params.id;
+    const _id = this.props.match.params.id;
 
     // Return the section
     return (
@@ -197,7 +197,10 @@ class Listing extends React.Component {
             (count === 0) ? (".") : (` with an average rating of ${ average.toFixed(1) } out of 5.0 stars.`)
           }
         </p>
-        <ReviewForm listingId={listingId} updateReviews={this.updateReviews}/>
+        <ReviewForm
+          listingId={_id}
+          updateReviews={this.updateReviews}
+        />
         { this.renderReviews() }
       </div>
     );
@@ -206,7 +209,7 @@ class Listing extends React.Component {
   // Helper method to render reviews
   renderReviews() {
     // Check if there are reviews to return
-    if (this.state.reviews) {
+    if (this.state.reviews && this.state.reviews.length) {
       // Reverse reviews so they appear newest to oldest
       const reviews = this.state.reviews.slice(0).reverse();
       // Map each review to be its own component
@@ -217,13 +220,12 @@ class Listing extends React.Component {
           key={ uuid() }
           createdAt={ review.createdAt }
           rating={ review.rating }
-          name={ review.name }
+          name={ "adam" }
         />
       ));
     }
 
     // If there are no reviews
-    // TODO: Why isn't this showing up?
     return (
       <div className="card marg-bot-1">
         No one has reviewed this listing yet! You could be the first.
@@ -237,6 +239,7 @@ class Listing extends React.Component {
   }
 
   // Helper method to render Hours
+  // TODO check if the hours object is empty
   renderHours() {
     if (this.state.hours) {
       // Isolate variable
@@ -386,7 +389,7 @@ class Listing extends React.Component {
                     Location
                   </h5>
                   <p className="description">
-                  {this.state.location}
+                  {this.state.location.name}
                   </p>
                   <div className="line" />
                   { this.renderReviewsSection() }

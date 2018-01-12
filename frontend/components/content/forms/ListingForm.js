@@ -10,7 +10,6 @@ import Medium from '../../shared/Medium';
 
 /**
  * Component to render the new article form
- * TODO integrate with website
  */
 class ListingForm extends React.Component {
   // Constructor method
@@ -198,6 +197,9 @@ class ListingForm extends React.Component {
     // Prevent the default submit action
     event.preventDefault();
 
+    // Find the Location
+    const location = document.getElementById("location").value;
+
     // If request is properly formulated, send request to make a new listing (routes.js)
     if (this.inputValid()) {
       // Find the longitude and latitude of the location passed in
@@ -212,7 +214,7 @@ class ListingForm extends React.Component {
             location: {
               name: document.getElementById('location').value,
               lat: latitude,
-              lgn: longitude,
+              lng: longitude,
             },
             description: this.state.description,
             hours: this.state.hours,
@@ -261,26 +263,31 @@ class ListingForm extends React.Component {
     if (!this.state.title) {
       this.setState({
         error: "Title must be populated.",
+        pending: false,
       });
       return false;
     } else if (!this.state.description) {
       this.setState({
         error: "Description must be populated.",
+        pending: false,
       });
       return false;
     } else if (this.state.title.length < 4 || this.state.title.length > 100) {
       this.setState({
         error: "Title must be between 4 and 100 characters long.",
+        pending: false,
       });
       return false;
     } else if (this.state.description.length < 4 || this.state.description.length > 2000) {
       this.setState({
         error: "Subtitle must be between 4 and 2000 characters long.",
+        pending: false,
       });
       return false;
-    } else if (!this.state.location) {
+    } else if (!document.getElementById("location").value) {
       this.setState({
         error: "Location must be populated.",
+        pending: false,
       });
       return false;
     }

@@ -52,12 +52,21 @@ Backend for articles and listings
 - [X] Complete listing backend (already stores listing in Mongo, just need to populate to home screen.
 - [X] Figure out why listings page is not displaying
 - [X] `Listing` back to all listings button
+- [ ] Edit Listings view
+- [ ] Delete Listings view
 
 ## Videos
 
 - [X] Improve styling
 - [X] Video backend
 - [ ] Allow comments
+- [ ] Edit Videos view
+- [ ] Delete Videos view
+
+## Articles
+- [ ] Edit Articles view
+- [ ] Delete Articles view
+
 
 ## Frontend
 
@@ -81,6 +90,8 @@ Backend for articles and listings
 - [X] Style nav bar so it looks okay when no user is logged in (no user or location)
 - [X] Create a curator profile view (Should show name, location, bio, contact info, and all content created)
 - [ ] Update meta tags for all forms of content
+- [ ] Arrows on sort buttons
+- [ ] Show timestamp in preview
 
 ## Backend
 
@@ -121,6 +132,7 @@ Backend for articles and listings
   - [X] Don't return sensitive user data (password)
 - [ ] Change location functionality
 - [ ] Reviews by id instead of name
+- [X] Most recent in reverse order
 
 ## Cam
 - [X] Nav bar style when no one is logged in
@@ -143,12 +155,16 @@ Backend for articles and listings
 - [ ] Go back and take care of all TODO's
 - [ ] Make sure all form submissions check for empty fields on frontend and/or backend
 
+## Other
+- [ ] Google Analytics
+
 ## Search
 - [ ] Search by Location
 - [ ] Issue where "ada" doesn't populate "adam ripley" but "adam" does (I think best way to deal with this is search button)
 - [ ] Don't let it search through reviews
 - [X] Frontend issue where it displays two articles on one line
-- [ ] Clicking a link closes suggestion and clears search bar
+- [X] Clicking a link closes suggestion and clears search bar
+- [ ] Fix refresh hack
 
 ## Bugs
 - [X] Fix authentication route bug
@@ -157,7 +173,7 @@ Backend for articles and listings
   - [X] 'Cannot set headers after they are sent' error crashes app
 - [X] Persist issue, now it makes you log back in all the time. Perhaps passport session is very short?
 - [X] Search doesn't redirect to page
-- [ ] Article preview click doesn't render article
+- [X] Article preview click doesn't render article
 
 ## Features for next update
 - [ ] Sendgrid configuration for sending emails
