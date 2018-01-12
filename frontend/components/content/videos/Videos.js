@@ -10,6 +10,8 @@ import Preview from '../Preview';
 
 /**
  * Component for the homepage of the application
+ * TODO come sort by time properly
+ * TODO add button to sort by date
  */
 class Videos extends React.Component {
   /**
@@ -23,7 +25,8 @@ class Videos extends React.Component {
       videos: [],
       pending: true,
       error: "",
-      titleSortedAscending: false,
+      currentSort: "date",
+      isAscending: false,
     };
 
     // Bind this for helper methods
@@ -60,12 +63,23 @@ class Videos extends React.Component {
       });
   }
 
-  // Method to sort by title
+  /**
+   * Method to sort by title
+   */
   sortByTitle() {
     // Define variable
     const sortedVideos = Object.assign([], this.state.videos);
 
-    if (!this.state.titleSortedAscending) {
+    if (this.state.currentSort === "title") {
+      // If already sorted ascending, reverse to show descending
+      sortedVideos.reverse();
+
+      // Set the state
+      this.setState({
+        videos: sortedVideos,
+        isAscending: !this.state.isAscending,
+      });
+    } else {
       // Sort videos based off title
       sortedVideos.sort((a, b) => {
         if (a.title < b.title) {
@@ -77,16 +91,14 @@ class Videos extends React.Component {
         // names must be equal
         return 0;
       });
-    } else {
-      // If already sorted ascending, reverse to show descending
-      sortedVideos.reverse();
-    }
 
-    // Display sorted articles
-    this.setState({
-      videos: sortedVideos,
-      titleSortedAscending: !this.state.titleSortedAscending,
-    });
+      // Set the state
+      this.setState({
+        videos: sortedVideos,
+        isAscending: false,
+        currentSort: "title",
+      });
+    }
   }
 
   /**
@@ -127,14 +139,29 @@ class Videos extends React.Component {
     return (
       <div className="container home">
         <div className="space-1"/>
-        <h3 className="title">
+        <h3 className="title section-title">
           Videos
         </h3>
-        <div className="buttons marg-bot-1">
-          <div className="btn btn-primary" onClick={this.sortByTitle}>
-            Sort by title
-          </div>
-        </div>
+        {
+          (this.state.videos && this.state.videos.length > 1) ? (
+            <div className="sort-options">
+              <div
+                className={ this.state.currentSort === "title" ? "sort-option active" : "sort-option" }
+                onClick={ this.sortByTitle }>
+                Sort by title {
+                  this.state.currentSort === "title" ? (
+                    this.state.isAscending ? (
+                      <i className="fa fa-chevron-up" aria-hidden />
+                    ) : (
+                      <i className="fa fa-chevron-up rotated" aria-hidden />
+                    )
+                  ) : null
+                }
+              </div>
+            </div>
+          ) : null
+        }
+
         <div className="row">
           {
             this.state.pending ? (
