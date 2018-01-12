@@ -19,19 +19,20 @@ class Nav extends Component {
     // Set the state
     this.state = {
       search: "",
-      active: false,
+      searchActive: false,
     };
 
-    // Bindings so 'this' refers to component
-    this.handleChangeSearch = this.handleChangeSearch.bind(this);
+    // Bind this to helper functions
+    this.searchCallback = this.searchCallback.bind(this);
   }
 
   /**
-   * Handle when a user searches for something
+   * Callback function to handle when the search is active or not
    */
-  handleChangeSearch(event) {
+  searchCallback(searchActive) {
+    // Update the state to the state of the searchbar
     this.setState({
-      search: event.target.value,
+      searchActive,
     });
   }
 
@@ -47,7 +48,7 @@ class Nav extends Component {
         </Link>
 
         { /* Render the search bar on the left of the navbar */ }
-        <Search />
+        <Search callback={ this.searchCallback }/>
 
         { /* Render the user's profile information if the user is logged in */ }
         { /* If the user is not logged in, an empty div is returned */ }

@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 // Import components
 import Loading from '../shared/Loading';
@@ -39,6 +40,13 @@ class Search extends Component {
    * When the state changes
    */
   componentDidUpdate(prevProps, prevState) {
+    // If there was a change in the active state
+    if (prevState.active !== this.state.active) {
+      // Update the state of the parent nav component
+      // Leveraging the callback function supplied from it in the props
+      this.props.callback(this.state.active);
+    }
+
     // If there was no change in search state
     if (prevState.search === this.state.search) {
       return;
@@ -264,5 +272,9 @@ class Search extends Component {
     );
   }
 }
+
+Search.propTypes = {
+  callback: PropTypes.func,
+};
 
 export default Search;
