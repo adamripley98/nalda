@@ -29,8 +29,8 @@ To run the application, run `npm start`. For more responsive hot-reloading on th
   - [ ] Contact page
   - [ ] Password reset
   - [ ] Device authorization (confirm your email)?
-- [ ] Add author field to every form of content
-  - [ ] Videos
+- [X] Add author field to every form of content
+  - [X] Videos
   - [X] Listings
   - [X] Articles
 - [X] Curator show pages
@@ -51,12 +51,12 @@ To run the application, run `npm start`. For more responsive hot-reloading on th
 - [X] Complete listing backend (already stores listing in Mongo, just need to populate to home screen.
 - [X] Figure out why listings page is not displaying
 - [X] `Listing` back to all listings button
-- [ ] Edit Listings view
+- [X] Edit Listings view
 - [X] Delete Listings view
 - [ ] Listings location should also show as an address
 - [X] Store author
 - [X] Add to curator's list of content
-- [ ] Style edit/delete buttons better
+- [X] Style edit/delete buttons better
 - [ ] Sort by date
 - [X] Default sort in `Listings` needs to be reversed
 
@@ -65,7 +65,7 @@ To run the application, run `npm start`. For more responsive hot-reloading on th
 - [X] Improve styling
 - [X] Video backend
 - [ ] Allow comments
-- [ ] Edit Videos view
+- [X] Edit Videos view
 - [X] Delete Videos view
 - [X] Store author
 - [X] Add to curator's list of content
@@ -79,11 +79,11 @@ To run the application, run `npm start`. For more responsive hot-reloading on th
 
 
 ## Articles
-- [ ] Edit Articles view
+- [X] Edit Articles view
 - [X] Delete Articles view
 - [X] Default sort in `Articles` needs to be reversed
-- [ ] Preview needs time stamp
-- [ ] Individual video frontend updates
+- [X] Preview needs time stamp
+- [ ] Individual article frontend updates
   - [ ] Show Location
   - [ ] Show date created
   - [ ] Show author data
@@ -112,7 +112,7 @@ To run the application, run `npm start`. For more responsive hot-reloading on th
 - [X] Style nav bar so it looks okay when no user is logged in (no user or location)
 - [X] Create a curator profile view (Should show name, location, bio, contact info, and all content created)
 - [ ] Update meta tags for all forms of content
-- [ ] Arrows on sort buttons
+- [X] Arrows on sort buttons
 - [ ] Show timestamp in preview
 
 ## Backend
@@ -133,9 +133,9 @@ To run the application, run `npm start`. For more responsive hot-reloading on th
 - [X] Better user auth checks on the backend
 - [X] Better parameter error checking on the backend
 - [X] Link user data to posted article
-- [ ] Give content a timestamp
-  - [ ] Videos
-  - [ ] Listings
+- [X] Give content a timestamp
+  - [X] Videos
+  - [X] Listings
   - [X] Articles
 - [X] Curator profile view
 - [X] Change/forgot password backend
