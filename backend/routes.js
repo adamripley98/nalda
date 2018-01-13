@@ -1544,6 +1544,7 @@ module.exports = () => {
 
                     // Send back data
                     res.send({
+                      author,
                       success: true,
                       data: listing,
                       reviews: reviews,
