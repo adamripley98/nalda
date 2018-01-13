@@ -47,7 +47,6 @@ class ArticleForm extends React.Component {
   componentDidMount() {
     // Isolate the id
     const id = this.props.match.params.id;
-
     // Pull existing data from the database
     axios.get(`/api/articles/${id}`)
       .then(res => {
@@ -60,13 +59,14 @@ class ArticleForm extends React.Component {
           });
 
           // Update the location field
+          console.log('location', res.data.data);
           if (res.data.data.location && res.data.data.location.name) {
             document.getElementById('location').value = res.data.data.location.name;
           }
         } else {
           // There was an error in the request
           this.setState({
-            error: res.data.error.message,
+            error: res.data.error,
             pending: false,
           });
         }

@@ -22,7 +22,7 @@ class ListingForm extends React.Component {
       description: "",
       location: "",
       image: "",
-      rating: 0.0,
+      rating: '',
       price: "$",
       hours: {
         monday: {
@@ -107,12 +107,15 @@ class ListingForm extends React.Component {
     // Pull existing data from the database
     axios.get(`/api/listings/${id}`)
       .then(res => {
+        console.log(res.data.data.rating);
         if (res.data.success) {
           // If there was no error
           this.setState({
             pending: false,
             error: "",
             ...res.data.data,
+            rating: res.data.data.rating,
+            _id: id,
           });
 
           // Update the location field
@@ -136,13 +139,24 @@ class ListingForm extends React.Component {
 
     // Handle resizing textarea
     autosize(document.querySelectorAll('textarea'));
+  }
 
-    // Autocomplete the user's city
-    const location = document.getElementById("location");
-    const options = {
-      componentRestrictions: {country: 'us'},
-    };
-    new google.maps.places.Autocomplete(location, options);
+  /**
+   * When the component updates
+   */
+  componentDidUpdate() {
+    if (!this.state.pending) {
+      // Autocomplete the user's city
+      const location = document.getElementById("location");
+      const options = {
+        componentRestrictions: {country: 'us'},
+      };
+
+      // If a location input was found
+      if (location) {
+        new google.maps.places.Autocomplete(location, options);
+      }
+    }
   }
 
   // Helper method to handle a change to the title state
@@ -245,7 +259,7 @@ class ListingForm extends React.Component {
         if (status === google.maps.GeocoderStatus.OK) {
           const latitude = results[0].geometry.location.lat();
           const longitude = results[0].geometry.location.lng();
-          axios.post('/api/listings/new', {
+          axios.post(`/api/listings/${this.state._id}/edit`, {
             title: this.state.title,
             image: this.state.image,
             location: {
@@ -335,7 +349,6 @@ class ListingForm extends React.Component {
 
   /**
    * Render the component
-   * TODO: Make Hours, Rating, and Price sliders, not text input
    */
   render() {
     return (
@@ -738,6 +751,7 @@ class ListingForm extends React.Component {
                         this.state.image &&
                         this.state.rating &&
                         this.state.price &&
+                        document.getElementById("location") &&
                         document.getElementById("location").value
                       ) ? (
                         "btn btn-primary full-width"
