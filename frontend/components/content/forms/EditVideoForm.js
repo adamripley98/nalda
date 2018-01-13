@@ -1,8 +1,9 @@
 import React from 'react';
 import Medium from '../../shared/Medium';
 import autosize from 'autosize';
-import { Link, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import axios from 'axios';
+import PropTypes from 'prop-types';
 
 // Import components
 import ErrorMessage from '../../shared/ErrorMessage';
@@ -40,6 +41,40 @@ class EditVideoForm extends React.Component {
    * Handle resizing textarea
    */
   componentDidMount() {
+    // Isolate the id
+    const id = this.props.match.params.id;
+
+    // Pull existing data from the database
+    axios.get(`/api/videos/${id}`)
+      .then(res => {
+        if (res.data.success) {
+          // If there was no error
+          this.setState({
+            pending: false,
+            error: "",
+            ...res.data.data,
+          });
+
+          // Update the location field
+          if (res.data.data.location && res.data.data.location.name) {
+            document.getElementById('location').value = res.data.data.location.name;
+          }
+        } else {
+          // There was an error in the request
+          this.setState({
+            error: res.data.error.message,
+            pending: false,
+          });
+        }
+      })
+      .catch(err => {
+        this.setState({
+          error: err,
+          pending: false,
+        });
+      });
+
+    // Autosize textareas to fit input
     autosize(document.querySelectorAll('textarea'));
 
     // Autocomplete the user's city
@@ -77,7 +112,9 @@ class EditVideoForm extends React.Component {
     });
   }
 
-  // Helper method to check if input is valid
+  /**
+   * Helper method to check if input is valid
+   */
   inputValid() {
     // Begin error checking
     if (!this.state.title) {
@@ -205,64 +242,72 @@ class EditVideoForm extends React.Component {
               </h4>
               <ErrorMessage error={ this.state.error } />
 
-              <label>
-                Title
-              </label>
-              <input
-                name="title"
-                type="text"
-                className="form-control marg-bot-1"
-                value={ this.state.title }
-                onChange={ this.handleChangeTitle }
-              />
+              {
+                this.state.pending ? (
+                  <Loading />
+                ) : (
+                  <div>
+                    <label>
+                      Title
+                    </label>
+                    <input
+                      name="title"
+                      type="text"
+                      className="form-control marg-bot-1"
+                      value={ this.state.title }
+                      onChange={ this.handleChangeTitle }
+                    />
 
-              <label>
-                Link to YouTube video
-              </label>
-              <input
-                name="image"
-                type="url"
-                className="form-control marg-bot-1"
-                value={ this.state.video }
-                onChange={ this.handleChangeVideo }
-              />
+                    <label>
+                      Link to YouTube video
+                    </label>
+                    <input
+                      name="image"
+                      type="url"
+                      className="form-control marg-bot-1"
+                      value={ this.state.video }
+                      onChange={ this.handleChangeVideo }
+                    />
 
-              <label>
-                Description
-              </label>
-              <textarea
-                name="description"
-                type="text"
-                className="form-control marg-bot-1"
-                rows="1"
-                value={ this.state.description }
-                onChange={ this.handleChangeDescription }
-              />
+                    <label>
+                      Description
+                    </label>
+                    <textarea
+                      name="description"
+                      type="text"
+                      className="form-control marg-bot-1"
+                      rows="1"
+                      value={ this.state.description }
+                      onChange={ this.handleChangeDescription }
+                    />
 
-              <label>
-                Location
-              </label>
-              <input
-                name="title"
-                type="text"
-                id="location"
-                className="form-control marg-bot-1"
-              />
+                    <label>
+                      Location
+                    </label>
+                    <input
+                      name="title"
+                      type="text"
+                      id="location"
+                      className="form-control marg-bot-1"
+                    />
 
-              <input
-                type="submit"
-                value={ this.state.pendingSubmit ? "Updating video..." : "Update video" }
-                className={
-                  !this.state.pendingSubmit &&
-                  this.state.title &&
-                  this.state.url &&
-                  this.state.description ? (
-                    "btn btn-primary full-width"
-                  ) : (
-                    "btn btn-primary disabled full-width"
-                  )
-                }
-              />
+                    <input
+                      type="submit"
+                      value={ this.state.pendingSubmit ? "Updating video..." : "Update video" }
+                      className={
+                        !this.state.pendingSubmit &&
+                        this.state.title &&
+                        this.state.url &&
+                        this.state.description ? (
+                          "btn btn-primary full-width"
+                        ) : (
+                          "btn btn-primary disabled full-width"
+                        )
+                      }
+                    />
+                  </div>
+                )
+              }
             </form>
           </div>
         </Medium>
@@ -271,5 +316,9 @@ class EditVideoForm extends React.Component {
     );
   }
 }
+
+EditVideoForm.propTypes = {
+  match: PropTypes.object,
+};
 
 export default EditVideoForm;
