@@ -16,8 +16,8 @@ const articleSchema = new Schema({
   author: {
     type: Schema.Types.ObjectId, ref: 'User',
   },
-  createdAt: String,
-  updatedAt: String,
+  createdAt: Number,
+  updatedAt: Number,
   location: {
     name: String,
     lat: Number,

@@ -3,6 +3,8 @@
  * NOTE all of these routes are prefixed with "/api"
  * NOTE these routes serve and accept JSON-formatted data
  * TODO file should be split up into many smaller files
+ *      for example, all routes prefixed with "/articles" can be in their own
+ *      router imported here.
  */
 
 // Import frameworks
@@ -533,7 +535,7 @@ module.exports = () => {
               error: 'Cannot find author.',
             });
           } else {
-            // Default: users can't change videos
+            // By default, user's cannot edit videos
             let canModify = false;
             User.findById(userId, (errUser, user) => {
               if (user) {
@@ -542,10 +544,19 @@ module.exports = () => {
                   canModify = true;
                 }
               }
+
+              // Add the author's information to the video
+              const authorObj = {
+                name: author.name,
+                _id: author._id,
+                profilePicture: author.profilePicture,
+              };
+
               // Send back data
               res.send({
                 success: true,
                 data: video,
+                author: authorObj,
                 canModify,
               });
             });
@@ -828,8 +839,8 @@ module.exports = () => {
                 url,
                 description,
                 author: userId,
-                createdAt: new Date().getTime(),
-                updatedAt: new Date().getTime(),
+                createdAt: Date.now(),
+                updatedAt: Date.now(),
                 location,
               });
 
@@ -1079,8 +1090,8 @@ module.exports = () => {
                     body,
                     location,
                     author: userId,
-                    createdAt: new Date().getTime(),
-                    updatedAt: new Date().getTime(),
+                    createdAt: Date.now(),
+                    updatedAt: Date.now(),
                   });
 
                   // Save the new article in Mongo
@@ -1506,6 +1517,11 @@ module.exports = () => {
                 res.send({
                   success: true,
                   data: listing,
+                  author: {
+                    name: author.name,
+                    _id: author._id,
+                    profilePicture: author.profilePicture,
+                  },
                   timestamp: listing._id.getTimestamp(),
                   canModify,
                 });
@@ -1839,8 +1855,8 @@ module.exports = () => {
                 amenities,
                 location,
                 author: userId,
-                createdAt: new Date().getTime(),
-                updatedAt: new Date().getTime(),
+                createdAt: Date.now(),
+                updatedAt: Date.now(),
               });
 
               // Save the new article in mongo

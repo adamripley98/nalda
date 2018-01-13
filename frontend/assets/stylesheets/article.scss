@@ -8,7 +8,7 @@
   h1 {
     font-weight: bold !important;
     font-size: 2.5rem !important;
-    margin-bottom: 0rem;
+    margin-bottom: 0.5rem;
     color: $dark-gray;
   }
 
@@ -16,6 +16,7 @@
     font-weight: bold;
     color: $gray;
     font-style: italic;
+    margin-bottom: 0rem;
   }
 
   img {
@@ -33,44 +34,5 @@
     border-left: 4px solid $light-gray;
     padding-left: 0.5rem;
     font-size: 1.2rem;
-  }
-
-  .author {
-    width: 100%;
-    padding: 1rem 0rem;
-    display: block;
-    display: flex;
-
-    .author-img {
-      width: 3rem;
-      height: 3rem;
-      border-radius: 50%;
-      background: $gray;
-      display: inline-block;
-      margin-right: 0.5rem;
-      background-position: center;
-      background-repeat: no-repeat;
-      background-size: cover;
-    }
-
-    .text {
-      flex: 1;
-      display: inline-block;
-      margin-bottom: 0rem;
-
-      a.name {
-        margin-top: 0.3rem;
-        font-weight: bold;
-        margin-bottom: 0;
-      }
-
-      p.timestamp {
-        font-weight: normal;
-        font-style: italic;
-        color: $gray;
-        font-size: 0.8rem;
-        margin-bottom: 0;
-      }
-    }
   }
 }

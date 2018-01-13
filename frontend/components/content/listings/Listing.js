@@ -14,6 +14,7 @@ import Button from '../../shared/Button';
 import NotFoundSection from '../../NotFoundSection';
 import Stars from './Stars';
 import ErrorMessage from '../../shared/ErrorMessage';
+import Author from '../../shared/Author';
 
 /**
  * Component to render a listing
@@ -46,6 +47,11 @@ class Listing extends React.Component {
       redirectToHome: false,
       deleteError: "",
       deletePending: false,
+      author: {
+        name: "",
+        _id: "",
+        profilePicture: "",
+      }
     };
 
     // Bind this to helper methods
@@ -73,6 +79,7 @@ class Listing extends React.Component {
           this.setState({
             error: "",
             ...res.data.data,
+            author: res.data.author,
             time: moment(res.data.timestamp).fromNow(),
             pending: false,
             canModify: res.data.canModify,
@@ -518,6 +525,13 @@ class Listing extends React.Component {
                     <h1 className="title">
                       { this.state.title }
                     </h1>
+                    <Author
+                      createdAt={ this.state.createdAt }
+                      updatedAt={ this.state.updatedAt }
+                      name={ this.state.author.name }
+                      _id={ this.state.author._id }
+                      profilePicture={ this.state.author.profilePicture }
+                    />
                   </div>
                   <p className="description">
                     { this.state.description }
@@ -547,9 +561,12 @@ class Listing extends React.Component {
                     ) ? (
                       <div>
                         <div className="line" />
-                        <h5 className="subtitle marg-bot-1">
+                        <h5 className="subtitle">
                           Location
                         </h5>
+                        <p className="marg-bot-1">
+                          { this.state.location.name }
+                        </p>
                         <div id="map" />
                       </div>
                     ) : null
