@@ -1471,27 +1471,54 @@ module.exports = () => {
                 }
               }
               // Make a new copy of the reviews
-              const reviews = listing.reviews.slice();
-              let reviewError = false;
+              // const reviews = listing.reviews.slice();
+              let reviewError = "";
+
+              // console.log('len', reviews.length);
               // Go through each review and change the author data being passed to frontend
-              reviews.forEach((review) => {
+              const reviews = listing.reviews.map((review) => {
+                // Copy the review object
+                const newRev = {
+                  _id: review._id,
+                  authorId: review.authorId,
+                  createdAt: review.createdAt,
+                  content: review.content,
+                  title: review.title,
+                  rating: review.rating,
+                  author: {
+                    name: "",
+                    _id: "",
+                    profilePicture: "",
+                  }
+                };
+
                 // Find author in Mongo
                 User.findById(review.authorId, (errAuthor, revAuthor) => {
                   // Error finding author
                   if (errAuthor) {
                     reviewError = errAuthor.message;
-                    return;
                   // Author can't be found
                   } else if (!revAuthor) {
                     reviewError = "Cannot find review author.";
-                    return;
                   }
+
                   // Successfully found author, update so review contains author's name
-                  review.author = revAuthor;
-                  // Remove private information about author
-                  review.author.password = "";
+                  newRev.author = {
+                    name: revAuthor.name,
+                    _id: revAuthor._id,
+                    profilePicture: revAuthor.profilePicture,
+                  };
+
+                  console.log(newRev);
+
+                  // Return the review
+                  return newRev;
                 });
               });
+
+              console.log("REVIEWS");
+              console.log(reviews);
+
               // Check for error with reviews
               if (reviewError) {
                 res.send({
@@ -1499,6 +1526,7 @@ module.exports = () => {
                   error: reviewError,
                 });
               } else {
+                // console.log('reviews', reviews);
                 // Update the reviews
                 listing.reviews = reviews;
 
