@@ -1389,6 +1389,11 @@ module.exports = () => {
                 res.send({
                   success: true,
                   data: listing,
+                  author: {
+                    name: author.name,
+                    _id: author._id,
+                    profilePicture: author.profilePicture,
+                  },
                   timestamp: listing._id.getTimestamp(),
                   canModify,
                 });
