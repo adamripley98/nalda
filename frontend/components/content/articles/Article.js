@@ -9,6 +9,7 @@ import axios from 'axios';
 import Button from '../../shared/Button';
 import Loading from '../../shared/Loading';
 import NotFoundSection from '../../NotFoundSection';
+import ErrorMessage from '../../shared/ErrorMessage';
 
 /**
  * Component to render an article
@@ -33,11 +34,13 @@ class Article extends React.Component {
       pending: true,
       canModify: false,
       redirectToHome: false,
+      deleteError: "",
+      pendingDelete: false,
     };
+
     // Bind this to helper methods
     this.renderAuthor = this.renderAuthor.bind(this);
     this.deleteArticle = this.deleteArticle.bind(this);
-    this.editArticle = this.editArticle.bind(this);
     this.renderButtons = this.renderButtons.bind(this);
   }
 
@@ -79,6 +82,11 @@ class Article extends React.Component {
    * Helper method to delete specific article
    */
   deleteArticle() {
+    // Set the state to denote the article is being deleted
+    this.setState({
+      pendingDelete: true,
+    });
+
     // Find the id in the url
     const id = this.props.match.params.id;
 
@@ -86,30 +94,33 @@ class Article extends React.Component {
     axios.delete(`/api/articles/${id}`)
     .then((resp) => {
       if (resp.data.success) {
+        // If the request was successful
+        // Collapse the modal upon success
+        $('#deleteModal').modal('toggle');
+
+        // Update the state and redirect to home
         this.setState({
           redirectToHome: true,
+          pendingDelete: false,
         });
       } else {
         this.setState({
-          error: resp.data.error,
+          deleteError: resp.data.error,
+          pendingDelete: false,
         });
       }
     })
     .catch((err) => {
       this.setState({
-        error: err,
+        deleteError: err,
+        pendingDelete: false,
       });
     });
   }
 
-  // Helper method to edit specific article
-  editArticle() {
-    // TODO implement
-    // TODO need to do frontend and backend error checks
-    console.log('edit');
-  }
-
-  // Helper method to render the author
+  /**
+   * Helper method to render the author
+   */
   renderAuthor() {
     return(
       <div className="author">
@@ -132,17 +143,49 @@ class Article extends React.Component {
     if (this.state.canModify) {
       return (
         <div className="buttons right marg-bot-1">
-          <div
+          <Link
             className="btn btn-primary btn-sm"
-            onClick={ () => this.editArticle() }
+            to={`/articles/${this.state._id}/edit`}
           >
             Edit
-          </div>
-          <div
+          </Link>
+          <button
             className="btn btn-danger btn-sm"
-            onClick={ () => this.deleteArticle() }
+            type="button"
+            data-toggle="modal"
+            data-target="#deleteModal"
           >
             Delete
+          </button>
+
+          {/* Render the modal to confirm deleting the article */}
+          <div className="modal fade" id="deleteModal" tabIndex="-1" role="dialog" aria-labelledby="deleteModal" aria-hidden="true">
+            <div className="modal-dialog" role="document">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title" id="exampleModalLabel">
+                    Delete article
+                  </h5>
+                  <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div className="modal-body left">
+                  <ErrorMessage error={ this.state.deleteError } />
+                  Permanently delete article? This cannot be un-done.
+                </div>
+                <div className="modal-footer">
+                  <button type="button" className="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                  <button
+                    type="button"
+                    className={ this.state.deletePending ? "btn btn-danger disabled" : "btn btn-danger" }
+                    onClick={ this.deleteArticle }
+                  >
+                    { this.state.deletePending ? "Deleting article..." : "Delete article" }
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       );

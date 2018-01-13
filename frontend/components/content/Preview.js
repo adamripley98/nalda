@@ -35,7 +35,7 @@ const Preview = ({ _id, title, subtitle, image, isArticle, isListing, isVideo, i
           {
             timestamp && (
               <p className="gray-text marg-bot-0 right italic">
-                { moment(timestamp).fromNow(true) }
+                { moment(new Date(Number(timestamp))).fromNow(true) }
               </p>
             )
           }
