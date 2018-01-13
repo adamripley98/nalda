@@ -105,7 +105,7 @@ class Register extends Component {
         error: "Password and confirm password must match.",
         pending: false,
       });
-    } else if (!location) {
+    } else if (Object.keys(location).length === 0) {
       this.setState({
         error: "Location must be populated.",
         pending: false,
