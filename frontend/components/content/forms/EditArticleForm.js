@@ -1,19 +1,21 @@
 // Import frameworks
 import React from 'react';
-import Medium from '../../shared/Medium';
 import autosize from 'autosize';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+
+// Import components
 import Loading from '../../shared/Loading';
 import ErrorMessage from '../../shared/ErrorMessage';
+import Medium from '../../shared/Medium';
 
 /**
- * Component to render the new article form
+ * Component to render the edit article form
  * TODO make sure that this works with location
  */
-class ArticleForm extends React.Component {
+class EditArticleForm extends React.Component {
   // Constructor method
   constructor(props) {
     super(props);
@@ -57,12 +59,6 @@ class ArticleForm extends React.Component {
             error: "",
             ...res.data.data,
           });
-
-          // Update the location field
-          console.log('location', res.data.data);
-          if (res.data.data.location && res.data.data.location.name) {
-            document.getElementById('location').value = res.data.data.location.name;
-          }
         } else {
           // There was an error in the request
           this.setState({
@@ -77,45 +73,63 @@ class ArticleForm extends React.Component {
           pending: false,
         });
       });
-
-    autosize(document.querySelectorAll('textarea'));
   }
 
-  // Also when the component updates
-  componentDidUpdate() {
-    if (!this.state.pending) {
-      // Autocomplete the user's city
+  /**
+   * When the component updates
+   * Format new textareas accordingly
+   */
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.pending && !this.state.pending) {
+      // Autocomplete the location field for the article
       const location = document.getElementById("location");
-      const options = {
-        componentRestrictions: {country: 'us'},
-      };
-      new google.maps.places.Autocomplete(location, options);
+      if (location) {
+        const options = {
+          componentRestrictions: {country: 'us'},
+        };
+        new google.maps.places.Autocomplete(location, options);
+      }
+
+      // Update the location field
+      document.getElementById('location').value = this.state.location.name;
     }
+
+    // Autosize textarea components
+    // This must be done outside of the if statement because a user can add
+    // more body components which must be resizeable
     autosize(document.querySelectorAll('textarea'));
   }
 
-  // Helper method to handle a change to the title state
+  /**
+   * Helper method to handle a change to the title state
+   */
   handleChangeTitle(event) {
     this.setState({
       title: event.target.value,
     });
   }
 
-  // Helper method to handle a change to the subtitle state
+  /**
+   * Helper method to handle a change to the subtitle state
+   */
   handleChangeSubtitle(event) {
     this.setState({
       subtitle: event.target.value,
     });
   }
 
-  // Helper method to handle a change to the image state
+  /**
+   * Helper method to handle a change to the image state
+   */
   handleChangeImage(event) {
     this.setState({
       image: event.target.value,
     });
   }
 
-  // Helper method to handle a change to the body state
+  /**
+   * Helper method to handle a change to the body state
+   */
   handleChangeBody(event, index) {
     // Manipulate the correct component object
     const bodyObj = this.state.body;
@@ -127,7 +141,9 @@ class ArticleForm extends React.Component {
     });
   }
 
-  // Helper method to add a new component to the body
+  /**
+   * Helper method to add a new component to the body
+   */
   addNewComponent(type) {
     // Create the new component
     const component = {
@@ -145,7 +161,9 @@ class ArticleForm extends React.Component {
     });
   }
 
-  // Helper method to make sure all input is valid
+  /**
+   * Helper method to make sure all input is valid
+   */
   inputValid() {
     // Begin error checking
     if (!this.state.title) {
@@ -192,7 +210,9 @@ class ArticleForm extends React.Component {
     return true;
   }
 
-  // Helper method to handle when the form is submitted
+  /**
+   * Helper method to handle when the form is submitted
+   */
   handleSubmit(event) {
     // Prevent the default submit action
     event.preventDefault();
@@ -251,7 +271,9 @@ class ArticleForm extends React.Component {
     }
   }
 
-  // Render the component
+  /**
+   * Render the component
+   */
   render() {
     return (
       <div>
@@ -407,7 +429,7 @@ class ArticleForm extends React.Component {
   }
 }
 
-ArticleForm.propTypes = {
+EditArticleForm.propTypes = {
   userId: PropTypes.string,
   match: PropTypes.object,
 };
@@ -422,4 +444,4 @@ const mapStateToProps = (state) => {
 // Redux config
 export default connect(
   mapStateToProps,
-)(ArticleForm);
+)(EditArticleForm);

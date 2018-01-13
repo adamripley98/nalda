@@ -11,9 +11,9 @@ import Medium from '../../shared/Medium';
 import Loading from '../../shared/Loading';
 
 /**
- * Component to render the new article form
+ * Component to render the edit article form
  */
-class ListingForm extends React.Component {
+class EditListingForm extends React.Component {
   // Constructor method
   constructor(props) {
     super(props);
@@ -117,11 +117,6 @@ class ListingForm extends React.Component {
             rating: res.data.data.rating,
             _id: id,
           });
-
-          // Update the location field
-          if (res.data.data.location && res.data.data.location.name) {
-            document.getElementById('location').value = res.data.data.location.name;
-          }
         } else {
           // There was an error in the request
           this.setState({
@@ -136,66 +131,82 @@ class ListingForm extends React.Component {
           pending: false,
         });
       });
-
-    // Handle resizing textarea
-    autosize(document.querySelectorAll('textarea'));
   }
 
   /**
    * When the component updates
    */
-  componentDidUpdate() {
-    if (!this.state.pending) {
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.pending && !this.state.pending) {
       // Autocomplete the user's city
       const location = document.getElementById("location");
-      const options = {
-        componentRestrictions: {country: 'us'},
-      };
-
-      // If a location input was found
       if (location) {
+        // If there is a location field
+        // Autocomplete leveraging the Google Maps API
+        const options = {
+          componentRestrictions: { country: 'us' },
+        };
         new google.maps.places.Autocomplete(location, options);
+
+        // Populate the location field with the existing database value
+        document.getElementById('location').value = this.state.location.name;
       }
+
+      // Handle resizing textarea
+      autosize(document.querySelectorAll('textarea'));
     }
   }
 
-  // Helper method to handle a change to the title state
+  /**
+   * Helper method to handle a change to the title state
+   */
   handleChangeTitle(event) {
     this.setState({
       title: event.target.value,
     });
   }
 
-  // Helper method to handle a change to the description state
+  /**
+   * Helper method to handle a change to the description state
+   */
   handleChangeDescription(event) {
     this.setState({
       description: event.target.value,
     });
   }
 
-  // Helper method to handle a change to the image state
+  /**
+   * Helper method to handle a change to the image state
+   */
   handleChangeImage(event) {
     this.setState({
       image: event.target.value,
     });
   }
 
-  // Helper method to handle a change to the rating state
+  /**
+   * Helper method to handle a change to the rating state
+   */
   handleChangeRating(event) {
     this.setState({
       rating: event.target.value,
     });
   }
 
-  // Helper method to handle a change to the price state
+  /**
+   * Helper method to handle a change to the price state
+   */
   handleChangePrice(event) {
     this.setState({
       price: event.target.value,
     });
   }
 
-  // Helper method to handle a change to the hours state
-  // day parameter is monday - friday, startOrFinish denotes whether it is open or close hours being entered
+  /**
+   * Helper method to handle a change to the hours state
+   * Day parameter is Saturday to Sunday
+   * startOrFinish denotes whether it is open or close hours being entered
+   */
   handleChangeHours(event, startOrFinish, day) {
     // Get the object for current hours before the update
     const currentHours = this.state.hours;
@@ -215,14 +226,18 @@ class ListingForm extends React.Component {
     });
   }
 
-  // Helper method to handle a change to the website state
+  /**
+   * Helper method to handle a change to the website state
+   */
   handleChangeWebsite(event) {
     this.setState({
       website: event.target.value,
     });
   }
 
-  // Helper method to handle click on food truck amenity
+  /**
+   * Helper method to handle click on food truck amenity
+   */
   handleClickAmenity(event, name) {
     // Copy over the existing state
     const newAmenityState = {
@@ -238,7 +253,9 @@ class ListingForm extends React.Component {
     });
   }
 
-  // Helper method to handle when the form is submitted
+  /**
+   * Helper method to handle when the form is submitted
+   */
   handleSubmit(event) {
     // Denote that the request is pendingSubmit
     this.setState({
@@ -290,7 +307,7 @@ class ListingForm extends React.Component {
                 });
               }
             })
-            .catch((err) => {
+            .catch(err => {
               this.setState({
                 error: err,
                 pendingSubmit: false,
@@ -306,7 +323,9 @@ class ListingForm extends React.Component {
     }
   }
 
-  // Helper method to check if all input is valid, returns true or false
+  /**
+   * Helper method to check if all input is valid, returns true or false
+   */
   inputValid() {
     // Begin error checking
     if (!this.state.title) {
@@ -361,6 +380,7 @@ class ListingForm extends React.Component {
                 Edit listing
               </h4>
               <ErrorMessage error={ this.state.error } />
+
               {
                 this.state.pending ? (
                   <Loading />
@@ -772,8 +792,8 @@ class ListingForm extends React.Component {
   }
 }
 
-ListingForm.propTypes = {
+EditListingForm.propTypes = {
   match: PropTypes.object,
 };
 
-export default ListingForm;
+export default EditListingForm;

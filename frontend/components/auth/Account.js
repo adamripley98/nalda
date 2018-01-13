@@ -497,7 +497,8 @@ class Account extends Component {
               <h4 className="bold marg-top-2 marg-bot-1">
                 Account information
               </h4>
-              { this.state.error && <ErrorMessage error={ this.state.error } /> }
+              <ErrorMessage error={ this.state.error } />
+
               { this.state.pending ? <Loading /> : this.renderInfo() }
               {
                 !this.state.pending && (

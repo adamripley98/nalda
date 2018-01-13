@@ -11,7 +11,9 @@ import { connect } from 'react-redux';
  * Component to render the new article form
  */
 class ArticleForm extends React.Component {
-  // Constructor method
+  /**
+   * Constructor method
+   */
   constructor(props) {
     super(props);
     this.state = {
@@ -39,7 +41,9 @@ class ArticleForm extends React.Component {
     this.inputValid = this.inputValid.bind(this);
   }
 
-  // Handle resizing textarea
+  /**
+   * Handle resizing textarea
+   */
   componentDidMount() {
     // Expand textareas to fit input
     autosize(document.querySelectorAll('textarea'));
@@ -52,33 +56,44 @@ class ArticleForm extends React.Component {
     new google.maps.places.Autocomplete(location, options);
   }
 
-  // Also when the component updates
+  /**
+   * When the component updates
+   */
   componentDidUpdate() {
+    // Resize all textarea to fit the size of their inputs
     autosize(document.querySelectorAll('textarea'));
   }
 
-  // Helper method to handle a change to the title state
+  /**
+   * Helper method to handle a change to the title state
+   */
   handleChangeTitle(event) {
     this.setState({
       title: event.target.value,
     });
   }
 
-  // Helper method to handle a change to the subtitle state
+  /**
+   * Helper method to handle a change to the subtitle state
+   */
   handleChangeSubtitle(event) {
     this.setState({
       subtitle: event.target.value,
     });
   }
 
-  // Helper method to handle a change to the image state
+  /**
+   * Helper method to handle a change to the image state
+   */
   handleChangeImage(event) {
     this.setState({
       image: event.target.value,
     });
   }
 
-  // Helper method to handle a change to the body state
+  /**
+   * Helper method to handle a change to the body state
+   */
   handleChangeBody(event, index) {
     // Manipulate the correct component object
     const bodyObj = this.state.body;
@@ -90,7 +105,9 @@ class ArticleForm extends React.Component {
     });
   }
 
-  // Helper method to add a new component to the body
+  /**
+   * Helper method to add a new component to the body
+   */
   addNewComponent(type) {
     // Create the new component
     const component = {
@@ -108,7 +125,9 @@ class ArticleForm extends React.Component {
     });
   }
 
-  // Helper method to make sure all input is valid
+  /**
+   * Helper method to make sure all input is valid
+   */
   inputValid() {
     // Begin error checking
     if (!this.state.title) {
@@ -148,6 +167,7 @@ class ArticleForm extends React.Component {
       });
       return false;
     }
+
     // Set the error to the empty string
     this.setState({
       error: "",
@@ -155,7 +175,9 @@ class ArticleForm extends React.Component {
     return true;
   }
 
-  // Helper method to handle when the form is submitted
+  /**
+   * Helper method to handle when the form is submitted
+   */
   handleSubmit(event) {
     // Prevent the default submit action
     event.preventDefault();
@@ -173,8 +195,10 @@ class ArticleForm extends React.Component {
       const geocoder = new google.maps.Geocoder();
       geocoder.geocode({ 'address': location }, (results, status) => {
         if (status === google.maps.GeocoderStatus.OK) {
+          // Isolate the coordinates of the location
           const latitude = results[0].geometry.location.lat();
           const longitude = results[0].geometry.location.lng();
+
           // Post to backend
           axios.post('/api/articles/new', {
             title: this.state.title,
@@ -188,7 +212,7 @@ class ArticleForm extends React.Component {
               lng: longitude,
             },
           })
-            .then((res) => {
+            .then(res => {
               if (res.data.success) {
                 // If creating the article was successful
                 this.setState({
@@ -202,7 +226,7 @@ class ArticleForm extends React.Component {
                 });
               }
             })
-            .catch((err) => {
+            .catch(err => {
               // If there was an error in making the request
               this.setState({
                 error: err,
@@ -214,7 +238,9 @@ class ArticleForm extends React.Component {
     }
   }
 
-  // Render the component
+  /**
+   * Render the component
+   */
   render() {
     return (
       <div>

@@ -189,7 +189,8 @@ class Video extends React.Component {
       <div className="video">
         <div className="container">
           <div className="row">
-            { this.state.error && <ErrorMessage error={ this.state.error } /> }
+            <ErrorMessage error={ this.state.error } />
+
             { this.state.pending ? <Loading /> : (
               <div className="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
                 { this.renderVideo() }

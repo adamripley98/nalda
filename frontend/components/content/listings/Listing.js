@@ -57,6 +57,7 @@ class Listing extends React.Component {
     this.deleteListing = this.deleteListing.bind(this);
     this.editListing = this.editListing.bind(this);
     this.renderButtons = this.renderButtons.bind(this);
+    this.areHours = this.areHours.bind(this);
   }
 
   // Pull the listing data from the database
@@ -367,12 +368,20 @@ class Listing extends React.Component {
     return moment(hour, 'HH:mm').format('h:mm a');
   }
 
+  // Helper method to check if there are hours
+  areHours() {
+    // Check to see if any hour is populated
+    const keys = Object.keys(this.state.hours);
+    const reducer = (acc, curr) => (acc ? true : !!(curr.start && curr.finish));
+    return keys.reduce(reducer, false);
+  }
+
   // Helper method to render Hours
   renderHours() {
     // Isolate variable
     const hours = this.state.hours;
     // If hours are entered, display them
-    if (Object.keys(hours).length !== 0) {
+    if (this.areHours()) {
       return (
         // If a date has a start and end time, it will be displayed
         <table className="table">
@@ -530,11 +539,21 @@ class Listing extends React.Component {
                   </h5>
                   { this.renderAmenities() }
 
-                  <div className="line" />
-                  <h5 className="subtitle">
-                    Location
-                  </h5>
-                  <div id="map" />
+                  {
+                    (
+                      this.state.location.name &&
+                      this.state.location.lat &&
+                      this.state.location.lng
+                    ) ? (
+                      <div>
+                        <div className="line" />
+                        <h5 className="subtitle marg-bot-1">
+                          Location
+                        </h5>
+                        <div id="map" />
+                      </div>
+                    ) : null
+                  }
 
                   <div className="line" />
                   { this.renderReviewsSection() }
