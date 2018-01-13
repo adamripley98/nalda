@@ -1225,9 +1225,10 @@ module.exports = () => {
   /**
    * Route to handle deleting a specific listing
    */
-  router.post('/listings/:id/delete', (req, res) => {
+  router.delete('/listings/:id', (req, res) => {
     // Find the id from the listing url
     const id = req.params.id;
+
     // Pull userId from the backend
     let userId = '';
     if (req.session.passport) {

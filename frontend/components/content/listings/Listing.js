@@ -13,6 +13,7 @@ import Loading from '../../shared/Loading';
 import Button from '../../shared/Button';
 import NotFoundSection from '../../NotFoundSection';
 import Stars from './Stars';
+import ErrorMessage from '../../shared/ErrorMessage';
 
 /**
  * Component to render a listing
@@ -44,6 +45,8 @@ class Listing extends React.Component {
       infoTrigger: false,
       canModify: false,
       redirectToHome: false,
+      deleteError: "",
+      deletePending: false,
     };
 
     // Bind this to helper methods
@@ -113,24 +116,38 @@ class Listing extends React.Component {
 
   // Helper method to delete specific listing
   deleteListing() {
+    // Set the state
+    this.setState({
+      deletePending: true,
+    });
+
     // Find the id in the url
     const id = this.props.match.params.id;
+
     // Post to backend
-    axios.post(`/api/listings/${id}/delete`)
-    .then((resp) => {
+    axios.delete(`/api/listings/${id}`)
+    .then(resp => {
       if (resp.data.success) {
+        // If the request was successful
+        // Collapse the modal upon success
+        $('#deleteModal').modal('toggle')
+
+        // Update the state and direct the user away
         this.setState({
           redirectToHome: true,
+          deletePending: false,
         });
       } else {
         this.setState({
-          error: resp.data.error,
+          deleteError: resp.data.error,
+          deletePending: false,
         });
       }
     })
     .catch((err) => {
       this.setState({
-        error: err,
+        deleteError: err,
+        deletePending: false,
       });
     });
   }
@@ -282,7 +299,7 @@ class Listing extends React.Component {
 
     // If there are no reviews
     return (
-      <div className="card marg-bot-1">
+      <div className="card marg-bot-1 pad-1">
         No one has reviewed this listing yet! You could be the first.
       </div>
     );
@@ -294,17 +311,49 @@ class Listing extends React.Component {
     if (this.state.canModify) {
       return (
         <div className="buttons right marg-bot-1">
-          <div
+          <Link
             className="btn btn-primary btn-sm"
-            onClick={ () => this.editListing() }
+            to={`/listings/${this.state._id}/edit`}
           >
             Edit
-          </div>
-          <div
+          </Link>
+          <button
             className="btn btn-danger btn-sm"
-            onClick={ () => this.deleteListing() }
+            type="button"
+            data-toggle="modal"
+            data-target="#deleteModal"
           >
             Delete
+          </button>
+
+          {/* Render the modal to confirm deleting the listing */}
+          <div className="modal fade" id="deleteModal" tabIndex="-1" role="dialog" aria-labelledby="deleteModal" aria-hidden="true">
+            <div className="modal-dialog" role="document">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title" id="exampleModalLabel">
+                    Delete listing
+                  </h5>
+                  <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div className="modal-body left">
+                  <ErrorMessage error={ this.state.deleteError } />
+                  Permanently delete listing? This cannot be un-done.
+                </div>
+                <div className="modal-footer">
+                  <button type="button" className="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                  <button
+                    type="button"
+                    className={ this.state.deletePending ? "btn btn-danger disabled" : "btn btn-danger" }
+                    onClick={ this.deleteListing }
+                  >
+                    { this.state.deletePending ? "Deleting listing..." : "Delete listing" }
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       );
@@ -449,11 +498,14 @@ class Listing extends React.Component {
               style={{ backgroundImage: `url(${this.state.image})` }}
             />
             { this.state.redirectToHome && <Redirect to="/"/> }
-            { this.renderButtons() }
+
             <div className="container content">
               <div className="row">
                 {/* Contains details about the listing */}
                 <div className="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-0">
+                  {/* Render buttons to edit or delete the listing if the user has permission */}
+                  { this.renderButtons() }
+
                   <div className="header">
                     <h1 className="title">
                       { this.state.title }
