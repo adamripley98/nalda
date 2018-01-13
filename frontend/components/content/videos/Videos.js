@@ -10,7 +10,7 @@ import Preview from '../Preview';
 
 /**
  * Component for the homepage of the application
- * TODO come sort by time properly
+ * TODO sort by time properly
  * TODO add button to sort by date
  */
 class Videos extends React.Component {

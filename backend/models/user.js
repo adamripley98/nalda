@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 /**
- * TODO Profile picture backend
  * NOTE userType will determine what privileges users have and what views they
  * can see: user, admin, curator
  */

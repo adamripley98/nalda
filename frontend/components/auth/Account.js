@@ -9,6 +9,7 @@ import autosize from 'autosize';
 // Import actions
 import {changeFullName} from '../../actions/index.js';
 import {changeProfilePicture} from '../../actions/index.js';
+import {changeUserLocation} from '../../actions/index.js';
 
 // Import components
 import ErrorMessage from '../shared/ErrorMessage';
@@ -22,7 +23,6 @@ import Loading from '../shared/Loading';
 class Account extends Component {
   /**
    * Constructor method
-   * TODO allow changing location
    */
   constructor(props) {
     super(props);
@@ -31,13 +31,13 @@ class Account extends Component {
       email: '',
       type: '',
       bio: '',
-      location: '',
       profilePicture: '',
       error: '',
       pending: true,
       adminPopover: false,
       editName: false,
       editBio: false,
+      editLocation: false,
     };
 
     // Bind this to helper methods
@@ -46,6 +46,7 @@ class Account extends Component {
     this.handleNameClick = this.handleNameClick.bind(this);
     this.handleChangeBio = this.handleChangeBio.bind(this);
     this.handleBioClick = this.handleBioClick.bind(this);
+    this.handleLocationClick = this.handleLocationClick.bind(this);
     this.handleChangeProfilePicture = this.handleChangeProfilePicture.bind(this);
     this.handleProfilePictureClick = this.handleProfilePictureClick.bind(this);
   }
@@ -67,7 +68,6 @@ class Account extends Component {
           email: resp.data.data.username,
           type: resp.data.data.userType,
           bio: resp.data.data.bio,
-          location: resp.data.data.location.name,
           profilePicture: resp.data.data.profilePicture,
           error: "",
           pending: false
@@ -96,10 +96,24 @@ class Account extends Component {
     } else if (this.state.editBio) {
       // Focus on the bio text area upon clicking edit
       this.bioInput.focus();
-
-      // Autosize textareas
-      autosize(document.querySelectorAll('textarea'));
+    } else if (this.state.editLocation) {
+      // Focus on the location text area upon clicking edit
+      this.locationInput.focus();
     }
+
+    // Isolate location
+    const location = document.getElementById('location');
+    if (location) {
+      // Autocomplete the user's city
+      const options = {
+        types: ['(cities)'],
+        componentRestrictions: {country: 'us'},
+      };
+      new google.maps.places.Autocomplete(location, options);
+    }
+
+    // Autosize textareas
+    autosize(document.querySelectorAll('textarea'));
   }
 
   /**
@@ -235,6 +249,72 @@ class Account extends Component {
   }
 
   /**
+   * Helper method to trigger edit bio
+   */
+  handleLocationClick() {
+    // Isolate function
+    const changeLocation = this.props.changeLocation;
+
+    if (this.state.editLocation) {
+      // Check for empty location
+      if (Object.keys(location).length === 0) {
+        this.setState({
+          error: "Location must be populated.",
+          pending: false,
+        });
+      } else {
+        const location = document.getElementById('location').value;
+        // Find the longitude and latitude of the location passed in
+        const geocoder = new google.maps.Geocoder();
+        geocoder.geocode({ 'address': location }, (results, status) => {
+          if (status === google.maps.GeocoderStatus.OK) {
+            const latitude = results[0].geometry.location.lat();
+            const longitude = results[0].geometry.location.lng();
+            // Save the updated location
+            axios.post('/api/users/location', {
+              location: {
+                name: location,
+                lat: latitude,
+                lng: longitude,
+              },
+            })
+            .then((resp) => {
+              // If there was an error, display it
+              if (!resp.data.success) {
+                this.setState({
+                  error: resp.data.error,
+                });
+              } else {
+                // Update the state
+                this.setState({
+                  location,
+                });
+                changeLocation(location);
+              }
+            })
+            .catch((err) => {
+              this.setState({
+                success: false,
+                error: err,
+              });
+            });
+          } else {
+            this.setState({
+              error: "Invalid location",
+              pending: false,
+            });
+          }
+        });
+      }
+    }
+
+    // Update the state
+    this.setState({
+      editLocation: !this.state.editLocation,
+    });
+  }
+
+  /**
    * Helper method to trigger popup
    */
   handleAdminClick() {
@@ -364,10 +444,23 @@ class Account extends Component {
               Location
             </td>
             <td>
-              { this.state.location }
+              <span style={{ display: this.state.editLocation && "none" }}>
+                { this.props.location }
+              </span>
+              <input
+                className="form-control"
+                id="location"
+                type="text"
+                ref={(input) => { this.locationInput = input; }}
+                style={{ display: !this.state.editLocation && "none" }}
+              />
             </td>
             <td>
-              <i className="fa fa-pencil" aria-hidden="true" />
+              <i
+                className="fa fa-pencil"
+                aria-hidden="true"
+                onClick={ this.handleLocationClick}
+              />
             </td>
           </tr>
           <tr>
@@ -426,6 +519,8 @@ Account.propTypes = {
   changeName: PropTypes.func,
   changeProfilePic: PropTypes.func,
   profilePicture: PropTypes.string,
+  location: PropTypes.string,
+  changeLocation: PropTypes.func,
 };
 
 // Allows us to access redux state as this.props.userId inside component
@@ -433,6 +528,7 @@ const mapStateToProps = state => {
   return {
     userId: state.authState.userId,
     profilePicture: state.authState.profilePicture,
+    location: state.authState.location,
   };
 };
 
@@ -442,7 +538,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = (dispatch) => {
   return {
     changeName: (name) => dispatch(changeFullName(name)),
-    changeProfilePic: (profilePicture) => dispatch(changeProfilePicture(profilePicture))
+    changeProfilePic: (profilePicture) => dispatch(changeProfilePicture(profilePicture)),
+    changeLocation: (location) => dispatch(changeUserLocation(location))
   };
 };
 

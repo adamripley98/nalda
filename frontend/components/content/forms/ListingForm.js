@@ -258,8 +258,6 @@ class ListingForm extends React.Component {
   // Helper method to check if all input is valid, returns true or false
   inputValid() {
     // Begin error checking
-    // TODO: Error check for url
-    // TODO: Error check for other fields
     if (!this.state.title) {
       this.setState({
         error: "Title must be populated.",
@@ -300,7 +298,6 @@ class ListingForm extends React.Component {
 
   /**
    * Render the component
-   * TODO: Make Hours, Rating, and Price sliders, not text input
    */
   render() {
     return (

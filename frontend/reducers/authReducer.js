@@ -47,6 +47,12 @@ const authReducer = (state = {}, action) => {
       newState.profilePicture = action.profilePicture;
       return newState;
     }
+    // When a user changes his/her location
+    case 'LOCATIONCHANGE': {
+      const newState = Object.assign({}, state);
+      newState.location = action.location;
+      return newState;
+    }
     default:
       return state;
   }

@@ -14,8 +14,6 @@ import { register } from '../../actions/index.js';
 
 /**
  * Component to render a form for registration
- * TODO add profile picture field to users
- * TODO google is not defined error?
  */
 class Register extends Component {
   /**
@@ -76,9 +74,15 @@ class Register extends Component {
     const verPassword = this.state.verPassword;
     const onRegister = this.props.onRegister;
 
+    // Error checking
     if (!name) {
       this.setState({
         error: "Name must be populated.",
+        pending: false,
+      });
+    } else if (!name.indexOf(" ")) {
+      this.setState({
+        error: "Please enter full name.",
         pending: false,
       });
     } else if (!email) {
@@ -101,7 +105,7 @@ class Register extends Component {
         error: "Password and confirm password must match.",
         pending: false,
       });
-    } else if (!location) {
+    } else if (Object.keys(location).length === 0) {
       this.setState({
         error: "Location must be populated.",
         pending: false,
