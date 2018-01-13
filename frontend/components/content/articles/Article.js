@@ -2,7 +2,6 @@
 import React from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import moment from 'moment';
 import axios from 'axios';
 
 // Import shared components
@@ -10,14 +9,16 @@ import Button from '../../shared/Button';
 import Loading from '../../shared/Loading';
 import NotFoundSection from '../../NotFoundSection';
 import ErrorMessage from '../../shared/ErrorMessage';
-import Timestamp from '../../shared/Timestamp';
+import Author from '../../shared/Author';
 
 /**
  * Component to render an article
  * TODO edit functionality
  */
 class Article extends React.Component {
-  // Constructor method
+  /**
+   * Constructor method
+   */
   constructor(props) {
     super(props);
 
@@ -40,12 +41,13 @@ class Article extends React.Component {
     };
 
     // Bind this to helper methods
-    this.renderAuthor = this.renderAuthor.bind(this);
     this.deleteArticle = this.deleteArticle.bind(this);
     this.renderButtons = this.renderButtons.bind(this);
   }
 
-  // Pull the article data from the database
+  /**
+   * Pull the article data from the database
+   */
   componentDidMount() {
     // Find the id in the url
     const id = this.props.match.params.id;
@@ -92,7 +94,7 @@ class Article extends React.Component {
 
     // Post to backend
     axios.delete(`/api/articles/${id}`)
-    .then((resp) => {
+    .then(resp => {
       if (resp.data.success) {
         // If the request was successful
         // Collapse the modal upon success
@@ -110,7 +112,7 @@ class Article extends React.Component {
         });
       }
     })
-    .catch((err) => {
+    .catch(err => {
       this.setState({
         deleteError: err,
         pendingDelete: false,
@@ -119,26 +121,8 @@ class Article extends React.Component {
   }
 
   /**
-   * Helper method to render the author
+   * Helper method to render buttons to edit and the article
    */
-  renderAuthor() {
-    return(
-      <div className="author">
-        <div className="author-img" style={{ backgroundImage: `url(${this.state.author.profilePicture})` }}/>
-        <div className="text">
-          <Link className="name" to={`/users/${this.state.author._id}`}>
-            { this.state.author.name }
-          </Link>
-          <Timestamp
-            createdAt={ this.state.createdAt }
-            updatedAt={ this.state.updatedAt }
-          />
-        </div>
-      </div>
-    );
-  }
-
-  // Helper method to render buttons to edit and the article
   renderButtons() {
     // If the user is authorized to edit the article
     if (this.state.canModify) {
@@ -235,7 +219,15 @@ class Article extends React.Component {
                     <h3>
                       { this.state.subtitle }
                     </h3>
-                    { this.renderAuthor() }
+
+                    <Author
+                      createdAt={ this.state.createdAt }
+                      updatedAt={ this.state.updatedAt }
+                      name={ this.state.author.name }
+                      profilePicture={ this.state.author.profilePicture }
+                      _id={ this.state.author._id }
+                    />
+
                     <img src={ this.state.image } alt={ this.state.title } className="img-fluid" />
                     {
                       this.state.body.map((component, index) => {

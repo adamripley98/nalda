@@ -535,7 +535,7 @@ module.exports = () => {
               error: 'Cannot find author.',
             });
           } else {
-            // Default: users can't change videos
+            // By default, user's cannot edit videos
             let canModify = false;
             User.findById(userId, (errUser, user) => {
               if (user) {
@@ -544,10 +544,19 @@ module.exports = () => {
                   canModify = true;
                 }
               }
+
+              // Add the author's information to the video
+              const authorObj = {
+                name: author.name,
+                _id: author._id,
+                profilePicture: author.profilePicture,
+              };
+
               // Send back data
               res.send({
                 success: true,
                 data: video,
+                author: authorObj,
                 canModify,
               });
             });

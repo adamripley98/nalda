@@ -1,10 +1,15 @@
 /**
  * Styling for all components related to listings
  */
-
-// General styling for the listing itself
 .listing {
   color: $dark-gray;
+
+  // Style timstamp for the listing
+  .timestamp {
+    color: $gray;
+    font-style: italic;
+    font-size: 0.8rem;
+  }
 
   .preview {
     height: 40vh;
@@ -43,6 +48,8 @@
     }
   }
 
+  // Styling the listing preview which shows up to the right of listing info
+  // on larger screens and fixed at the bottom of the screen on smaller screens
   .listing-preview {
     transition: all 0.2s ease;
     top: 0;

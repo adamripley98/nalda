@@ -8,6 +8,8 @@ import PropTypes from 'prop-types';
 import Button from '../../shared/Button';
 import ErrorMessage from '../../shared/ErrorMessage';
 import Loading from '../../shared/Loading';
+import Timestamp from '../../shared/Timestamp';
+import Author from '../../shared/Author';
 
 /**
  * Component to render a videos
@@ -27,6 +29,11 @@ class Video extends React.Component {
       error: '',
       canModify: false,
       redirectToHome: false,
+      author: {
+        name: "",
+        _id: null,
+        profilePicture: "",
+      },
     };
 
     // Bind this to helper functions
@@ -46,6 +53,7 @@ class Video extends React.Component {
         if (res.data.success) {
           this.setState({
             ...res.data.data,
+            author: res.data.author,
             error: "",
             pending: false,
             canModify: res.data.canModify,
@@ -200,6 +208,13 @@ class Video extends React.Component {
                   <h1 className="title">
                     { this.state.title }
                   </h1>
+                  <Author
+                    createdAt={ this.state.createdAt }
+                    updatedAt={ this.state.updatedAt }
+                    name={ this.state.author.name }
+                    _id={ this.state.author._id }
+                    profilePicture={ this.state.author.profilePicture }
+                  />
                 </div>
                 <p className="description">
                   { this.state.description }

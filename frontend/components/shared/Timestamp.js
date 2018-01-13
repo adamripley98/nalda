@@ -7,6 +7,13 @@ import moment from 'moment';
  * Component to render a timestamp with created at and updated at fields
  */
 const Timestamp = ({ createdAt, updatedAt }) => {
+  // Timestamp styles
+  const style = {
+    color: "#BEBEBE",
+    fontSize: "0.8rem",
+    fontStyle: "italic",
+  };
+
   // If no props are passed in or only updatedAt passed in, return null
   if (!createdAt) {
     return null;
@@ -24,7 +31,7 @@ const Timestamp = ({ createdAt, updatedAt }) => {
 
   // Return the timestamp in a paragraph tag
   return (
-    <p className="timestamp">
+    <p className="timestamp" style={ style }>
       { timestamp }
     </p>
   );

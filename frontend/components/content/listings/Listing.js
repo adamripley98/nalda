@@ -14,6 +14,7 @@ import Button from '../../shared/Button';
 import NotFoundSection from '../../NotFoundSection';
 import Stars from './Stars';
 import ErrorMessage from '../../shared/ErrorMessage';
+import Timestamp from '../../shared/Timestamp';
 
 /**
  * Component to render a listing
@@ -518,6 +519,10 @@ class Listing extends React.Component {
                     <h1 className="title">
                       { this.state.title }
                     </h1>
+                    <Timestamp
+                      createdAt={ this.state.createdAt }
+                      updatedAt={ this.state.updatedAt }
+                    />
                   </div>
                   <p className="description">
                     { this.state.description }
