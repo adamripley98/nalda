@@ -3,6 +3,8 @@
  * NOTE all of these routes are prefixed with "/api"
  * NOTE these routes serve and accept JSON-formatted data
  * TODO file should be split up into many smaller files
+ *      for example, all routes prefixed with "/articles" can be in their own
+ *      router imported here.
  */
 
 // Import frameworks
@@ -534,7 +536,7 @@ module.exports = () => {
               error: 'Cannot find author.',
             });
           } else {
-            // Default: users can't change videos
+            // By default, user's cannot edit videos
             let canModify = false;
             User.findById(userId, (errUser, user) => {
               if (user) {
@@ -543,10 +545,19 @@ module.exports = () => {
                   canModify = true;
                 }
               }
+
+              // Add the author's information to the video
+              const authorObj = {
+                name: author.name,
+                _id: author._id,
+                profilePicture: author.profilePicture,
+              };
+
               // Send back data
               res.send({
                 success: true,
                 data: video,
+                author: authorObj,
                 canModify,
               });
             });
@@ -829,8 +840,8 @@ module.exports = () => {
                 url,
                 description,
                 author: userId,
-                createdAt: new Date().getTime(),
-                updatedAt: new Date().getTime(),
+                createdAt: Date.now(),
+                updatedAt: Date.now(),
                 location,
               });
 
@@ -1080,8 +1091,8 @@ module.exports = () => {
                     body,
                     location,
                     author: userId,
-                    createdAt: new Date().getTime(),
-                    updatedAt: new Date().getTime(),
+                    createdAt: Date.now(),
+                    updatedAt: Date.now(),
                   });
 
                   // Save the new article in Mongo
@@ -1475,7 +1486,6 @@ module.exports = () => {
               // const reviews = listing.reviews.slice();
               let reviewError = "";
 
-              // console.log('len', reviews.length);
               // Go through each review and change the author data being passed to frontend
               const reviews = [];
               async.each(listing.reviews, (review, callback) => {
@@ -1511,20 +1521,17 @@ module.exports = () => {
                     profilePicture: revAuthor.profilePicture,
                   };
 
-                  console.log("NEWREV");
-                  console.log(newRev);
-
                   // Return the review
                   reviews.push(newRev);
                   callback();
                 });
               }, asyncErr => {
                 if (asyncErr) {
-                  console.log("Do something");
+                  res.send({
+                    success: false,
+                    error: 'Async error',
+                  });
                 } else {
-                  console.log("REVIEWS");
-                  console.log(reviews);
-
                   // Check for error with reviews
                   if (reviewError) {
                     res.send({
@@ -1532,7 +1539,6 @@ module.exports = () => {
                       error: reviewError,
                     });
                   } else {
-                    // console.log('reviews', reviews);
                     // Update the reviews
                     listing.reviews = null;
 
@@ -1876,8 +1882,8 @@ module.exports = () => {
                 amenities,
                 location,
                 author: userId,
-                createdAt: new Date().getTime(),
-                updatedAt: new Date().getTime(),
+                createdAt: Date.now(),
+                updatedAt: Date.now(),
               });
 
               // Save the new article in mongo
