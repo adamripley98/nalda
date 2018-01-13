@@ -58,7 +58,7 @@ To run the application, run `npm start`. For more responsive hot-reloading on th
 - [X] Add to curator's list of content
 - [ ] Style edit/delete buttons better
 - [ ] Sort by date
-- [ ] Default sort in `Listings` needs to be reversed
+- [X] Default sort in `Listings` needs to be reversed
 
 ## Videos
 
@@ -70,7 +70,7 @@ To run the application, run `npm start`. For more responsive hot-reloading on th
 - [X] Store author
 - [X] Add to curator's list of content
 - [ ] Sort by date
-- [ ] Default sort in `Videos` needs to be reversed
+- [X] Default sort in `Videos` needs to be reversed
 - [ ] Preview needs time stamp
 - [ ] Individual video frontend updates
   - [ ] Show Location
@@ -81,7 +81,7 @@ To run the application, run `npm start`. For more responsive hot-reloading on th
 ## Articles
 - [ ] Edit Articles view
 - [X] Delete Articles view
-- [ ] Default sort in `Articles` needs to be reversed
+- [X] Default sort in `Articles` needs to be reversed
 - [ ] Preview needs time stamp
 - [ ] Individual video frontend updates
   - [ ] Show Location
@@ -139,8 +139,8 @@ To run the application, run `npm start`. For more responsive hot-reloading on th
   - [X] Articles
 - [X] Curator profile view
 - [X] Change/forgot password backend
-- [ ] Replace dummy data
-  - [ ] Location
+- [X] Replace dummy data
+  - [X] Location
   - [X] Profile picture
   - [X] Bio
 - [X] Replace dummy data in `Account.js`
@@ -152,7 +152,7 @@ To run the application, run `npm start`. For more responsive hot-reloading on th
   - [X] Require admin to make changes (`curator/new`, `admin/new`, `curator/remove`)
   - [X] Require curator or admin to post content (all post routes)
   - [X] Don't return sensitive user data (password)
-- [ ] Change location functionality
+- [X] Change location functionality
 - [X] Reviews by id instead of name
 - [X] Most recent in reverse order
 

@@ -480,6 +480,8 @@ module.exports = () => {
           error: err.message,
         });
       } else {
+        // Send videos back in correct order
+        videos.reverse();
         // If everything went as planned
         res.send({
           success: true,
@@ -748,6 +750,8 @@ module.exports = () => {
           error: err.message,
         });
       } else {
+        // Send listings back in correct order
+        listings.reverse();
         // If everything went as planned
         res.send({
           success: true,
@@ -823,6 +827,10 @@ module.exports = () => {
         articles.forEach((article) => {
           article.createdAt = article._id.getTimestamp();
         });
+
+        // Send articles back in correct order
+        articles.reverse();
+
         // Send back data
         res.send({
           success: true,
