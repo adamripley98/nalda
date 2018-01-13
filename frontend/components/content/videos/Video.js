@@ -1,7 +1,7 @@
 // Import frameworks
 import React from 'react';
 import axios from 'axios';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 // Import components
@@ -32,7 +32,6 @@ class Video extends React.Component {
     // Bind this to helper functions
     this.renderVideo = this.renderVideo.bind(this);
     this.deleteVideo = this.deleteVideo.bind(this);
-    this.editVideo = this.editVideo.bind(this);
     this.renderButtons = this.renderButtons.bind(this);
   }
 
@@ -64,39 +63,48 @@ class Video extends React.Component {
         this.setState({
           error: err,
           pending: false,
+          deleteError: "",
+          deletePending: false,
         });
       });
   }
 
   // Helper method to delete specific video
   deleteVideo() {
+    // Update the state to denote the delete is pending
+    this.setState({
+      deletePending: true,
+    });
+
     // Find the id in the url
     const id = this.props.match.params.id;
+
     // Post to backend
-    axios.post(`/api/videos/${id}/delete`)
+    axios.delete(`/api/videos/${id}`)
     .then((resp) => {
       if (resp.data.success) {
+        // If the request was successful
+        // Collapse the modal upon success
+        $('#deleteModal').modal('toggle');
+
+        // Update the state
         this.setState({
           redirectToHome: true,
+          deletePending: false,
         });
       } else {
         this.setState({
-          error: resp.data.error,
+          deleteError: resp.data.error,
+          deletePending: false,
         });
       }
     })
     .catch((err) => {
       this.setState({
-        error: err,
+        deleteError: err,
+        deletePending: false,
       });
     });
-  }
-
-  // Helper method to edit specific video
-  editVideo() {
-    // TODO implement
-    // TODO need to do frontend and backend error checks
-    console.log('edit');
   }
 
   // Helper method to render buttons to edit and delete the video
@@ -105,17 +113,49 @@ class Video extends React.Component {
     if (this.state.canModify) {
       return (
         <div className="buttons right marg-bot-1">
-          <div
+          <Link
             className="btn btn-primary btn-sm"
-            onClick={ () => this.editVideo() }
+            to={`/videos/${this.state._id}/edit`}
           >
             Edit
-          </div>
-          <div
+          </Link>
+          <button
             className="btn btn-danger btn-sm"
-            onClick={ () => this.deleteVideo() }
+            type="button"
+            data-toggle="modal"
+            data-target="#deleteModal"
           >
             Delete
+          </button>
+
+          {/* Render the modal to confirm deleting the listing */}
+          <div className="modal fade" id="deleteModal" tabIndex="-1" role="dialog" aria-labelledby="deleteModal" aria-hidden="true">
+            <div className="modal-dialog" role="document">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title" id="exampleModalLabel">
+                    Delete video
+                  </h5>
+                  <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div className="modal-body left">
+                  <ErrorMessage error={ this.state.deleteError } />
+                  Permanently delete video? This cannot be un-done.
+                </div>
+                <div className="modal-footer">
+                  <button type="button" className="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                  <button
+                    type="button"
+                    className={ this.state.deletePending ? "btn btn-danger disabled" : "btn btn-danger" }
+                    onClick={ this.deleteVideo }
+                  >
+                    { this.state.deletePending ? "Deleting video..." : "Delete video" }
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       );

@@ -160,17 +160,17 @@ h6,
 
   // Secondary buttons are white with colored text
   &.btn-secondary {
-    font-weight: normal;
+    font-weight: bold;
     color: $primary;
-    border: 1px solid $primary;
     background: white;
+    border: 1px solid white;
 
     &:hover,
     &:active,
     &:focus {
       background: white;
       color: $dark-primary;
-      border: 1px solid $dark-primary;
+      border: 1px solid white;
     }
   }
 }
@@ -653,5 +653,18 @@ a {
     &.active {
       opacity: 1;
     }
+  }
+}
+
+/**
+ * Style modals
+ */
+.fade {
+  background-color: rgba(0, 0, 0, 0.2);
+
+  .modal-content {
+    border: 0px solid transparent;
+    margin-top: 12rem;
+    box-shadow: 0px 32px 72px rgba(0, 0, 0, 0.4);
   }
 }
