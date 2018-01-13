@@ -8,6 +8,7 @@
 // Import frameworks
 const express = require('express');
 const router = express.Router();
+const async = require('async');
 
 // Import database models
 const Article = require('./models/article');
@@ -1476,7 +1477,8 @@ module.exports = () => {
 
               // console.log('len', reviews.length);
               // Go through each review and change the author data being passed to frontend
-              const reviews = listing.reviews.map((review) => {
+              const reviews = [];
+              async.each(listing.reviews, (review, callback) => {
                 // Copy the review object
                 const newRev = {
                   _id: review._id,
@@ -1509,35 +1511,42 @@ module.exports = () => {
                     profilePicture: revAuthor.profilePicture,
                   };
 
+                  console.log("NEWREV");
                   console.log(newRev);
 
                   // Return the review
-                  return newRev;
+                  reviews.push(newRev);
+                  callback();
                 });
+              }, asyncErr => {
+                if (asyncErr) {
+                  console.log("Do something");
+                } else {
+                  console.log("REVIEWS");
+                  console.log(reviews);
+
+                  // Check for error with reviews
+                  if (reviewError) {
+                    res.send({
+                      success: false,
+                      error: reviewError,
+                    });
+                  } else {
+                    // console.log('reviews', reviews);
+                    // Update the reviews
+                    listing.reviews = null;
+
+                    // Send back data
+                    res.send({
+                      success: true,
+                      data: listing,
+                      reviews: reviews,
+                      timestamp: listing._id.getTimestamp(),
+                      canModify,
+                    });
+                  }
+                }
               });
-
-              console.log("REVIEWS");
-              console.log(reviews);
-
-              // Check for error with reviews
-              if (reviewError) {
-                res.send({
-                  success: false,
-                  error: reviewError,
-                });
-              } else {
-                // console.log('reviews', reviews);
-                // Update the reviews
-                listing.reviews = reviews;
-
-                // Send back data
-                res.send({
-                  success: true,
-                  data: listing,
-                  timestamp: listing._id.getTimestamp(),
-                  canModify,
-                });
-              }
             });
           }
         });
@@ -1989,10 +1998,8 @@ module.exports = () => {
                   createdAt: new Date().getTime(),
                   authorId: userId,
                 });
-
                 // Update listing with new review
                 listing.reviews = currentReviews;
-
                 // Resave listing in Mongo
                 listing.save((er) => {
                   // Error saving listing

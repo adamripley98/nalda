@@ -127,20 +127,23 @@
 
   .user-info {
     .profile-picture {
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
+      display: inline-block;
       width: 2.5rem;
       height: 2.5rem;
       margin-right: 1rem;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.25rem;
+      z-index: 2;
       border-radius: 50%;
       background: $gray;
+      background-position: center !important;
+      background-repeat: no-repeat !important;
+      background-size: cover !important;
     }
 
     p {
       color: $gray;
       font-weight: bold;
+      margin-right: 0.5rem;
     }
   }
 
