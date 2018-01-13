@@ -114,11 +114,6 @@ class EditListingForm extends React.Component {
             error: "",
             ...res.data.data,
           });
-
-          // Update the location field
-          if (res.data.data.location && res.data.data.location.name) {
-            document.getElementById('location').value = res.data.data.location.name;
-          }
         } else {
           // There was an error in the request
           this.setState({
@@ -133,16 +128,30 @@ class EditListingForm extends React.Component {
           pending: false,
         });
       });
+  }
 
-    // Handle resizing textarea
-    autosize(document.querySelectorAll('textarea'));
+  /**
+   * When the component updates
+   */
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.pending && !this.state.pending) {
+      // Autocomplete the user's city
+      const location = document.getElementById("location");
+      if (location) {
+        // If there is a location field
+        // Autocomplete leveraging the Google Maps API
+        const options = {
+          componentRestrictions: { country: 'us' },
+        };
+        new google.maps.places.Autocomplete(location, options);
 
-    // Autocomplete the user's city
-    const location = document.getElementById("location");
-    const options = {
-      componentRestrictions: {country: 'us'},
-    };
-    new google.maps.places.Autocomplete(location, options);
+        // Populate the location field with the existing database value
+        document.getElementById('location').value = this.state.location.name;
+      }
+
+      // Handle resizing textarea
+      autosize(document.querySelectorAll('textarea'));
+    }
   }
 
   // Helper method to handle a change to the title state
