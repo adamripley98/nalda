@@ -39,6 +39,7 @@ import VideoForm from '../components/content/forms/VideoForm';
 // Content editing components
 import EditArticleForm from '../components/content/forms/EditArticleForm';
 import EditListingForm from '../components/content/forms/EditListingForm';
+import EditVideoForm from '../components/content/forms/EditVideoForm';
 
 // Other components
 import About from '../components/About';
@@ -143,6 +144,7 @@ class AppContainer extends Component {
                 <Route exact path="/videos" component={Videos} />
                 <Route exact path="/videos/new" component={requireCurator(VideoForm)} />
                 <Route exact path="/videos/:id" component={Video} />
+                <Route exact path="/videos/:id/edit" component={requireCurator(EditVideoForm)} />
 
                 { /* 404 if no other route was matched */ }
                 <Route exact path="/*" component={NotFoundSection}/>

@@ -276,7 +276,7 @@ class EditListingForm extends React.Component {
                 });
               }
             })
-            .catch((err) => {
+            .catch(err => {
               this.setState({
                 error: err,
                 pendingSubmit: false,
@@ -348,6 +348,7 @@ class EditListingForm extends React.Component {
                 Edit listing
               </h4>
               <ErrorMessage error={ this.state.error } />
+
               {
                 this.state.pending ? (
                   <Loading />
@@ -738,6 +739,7 @@ class EditListingForm extends React.Component {
                         this.state.image &&
                         this.state.rating &&
                         this.state.price &&
+                        document.getElementById("location") &&
                         document.getElementById("location").value
                       ) ? (
                         "btn btn-primary full-width"
