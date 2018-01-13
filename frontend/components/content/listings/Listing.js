@@ -129,7 +129,7 @@ class Listing extends React.Component {
       if (resp.data.success) {
         // If the request was successful
         // Collapse the modal upon success
-        $('#deleteModal').modal('toggle')
+        $('#deleteModal').modal('toggle');
 
         // Update the state and direct the user away
         this.setState({

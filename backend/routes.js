@@ -557,14 +557,16 @@ module.exports = () => {
   /**
    * Route to handle deleting a specific video
    */
-  router.post('/videos/:id/delete', (req, res) => {
+  router.delete('/videos/:id', (req, res) => {
     // Find the id from the video url
     const id = req.params.id;
+
     // Pull userId from the backend
     let userId = '';
     if (req.session.passport) {
       userId = req.session.passport.user;
     }
+
     // Find the given video in Mongo and delete it
     Video.findById(id, (errVideo, video) => {
       // Error finding video
@@ -1058,14 +1060,16 @@ module.exports = () => {
   /**
    * Route to handle deleting a specific article
    */
-  router.post('/articles/:id/delete', (req, res) => {
+  router.delete('/articles/:id', (req, res) => {
     // Find the id from the article url
     const id = req.params.id;
+
     // Pull userId from the backend
     let userId = '';
     if (req.session.passport) {
       userId = req.session.passport.user;
     }
+
     // Find the given article in Mongo and delete it
     Article.findById(id, (errArticle, article) => {
       // Error finding article
@@ -1244,6 +1248,7 @@ module.exports = () => {
     if (req.session.passport) {
       userId = req.session.passport.user;
     }
+
     // Find the given listing in Mongo and delete it
     Listing.findById(id, (errListing, listing) => {
       // Error finding listing

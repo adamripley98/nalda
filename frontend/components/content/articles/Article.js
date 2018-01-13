@@ -75,12 +75,15 @@ class Article extends React.Component {
       });
   }
 
-  // Helper method to delete specific article
+  /**
+   * Helper method to delete specific article
+   */
   deleteArticle() {
     // Find the id in the url
     const id = this.props.match.params.id;
+
     // Post to backend
-    axios.post(`/api/articles/${id}/delete`)
+    axios.delete(`/api/articles/${id}`)
     .then((resp) => {
       if (resp.data.success) {
         this.setState({
