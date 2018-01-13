@@ -995,9 +995,12 @@ module.exports = () => {
    * @param subtitle
    * @param image (url)
    * @param body (text of the article)
-   * TODO EDIT NOT CREATE ARTICLE
    */
   router.post('/articles/:id/edit', (req, res) => {
+
+    // Find the id from the url
+    const articleId = req.params.id;
+
     // Isolate userId from Backend
     let userId = "";
     if (req.session.passport) {
@@ -1020,13 +1023,13 @@ module.exports = () => {
         if (errUser) {
           res.send({
             success: false,
-            error: errUser,
+            error: errUser.message,
           });
         } else {
           if (user.userType !== 'admin' && user.userType !== 'curator') {
             res.send({
               success: false,
-              error: 'General users cannot create articles.',
+              error: 'General users cannot edit articles.',
             });
           } else {
             // Isolate variables
@@ -1102,31 +1105,37 @@ module.exports = () => {
                     error: 'Author not found.'
                   });
                 } else {
-                  // Creates a new article with given params
-                  const newArticle = new Article({
-                    title,
-                    subtitle,
-                    image,
-                    body,
-                    location,
-                    author: userId,
-                    createdAt: new Date().getTime(),
-                    updatedAt: new Date().getTime(),
-                  });
-
-                  // Save the new article in Mongo
-                  newArticle.save((errArticle, article) => {
-                    if (errArticle) {
-                      // If there was an error saving the article
+                  // Find article in Mongo
+                  Article.findById(articleId, (articleErr, article) => {
+                    if (articleErr) {
                       res.send({
                         success: false,
-                        error: errArticle.message,
+                        error: articleErr.message,
                       });
                     } else {
-                      // Successfully send back data
-                      res.send({
-                        success: true,
-                        data: article,
+                      // Make changes to given article
+                      article.title = title;
+                      article.subtitle = subtitle;
+                      article.image = image;
+                      article.body = body;
+                      article.location = location;
+                      article.author = userId;
+                      article.updatedAt = new Date().getTime();
+
+                      // Save changes in mongo
+                      article.save((errSave) => {
+                        if (errSave) {
+                          res.send({
+                            success: false,
+                            error: errSave.message,
+                          });
+                        } else {
+                          res.send({
+                            success: true,
+                            error: '',
+                            data: article,
+                          });
+                        }
                       });
                     }
                   });
@@ -1311,8 +1320,8 @@ module.exports = () => {
           success: false,
           error: err.message,
         });
-      // If the listing doesn't exist
       } else if (!listing) {
+        // If the listing doesn't exist
         res.send({
           success: false,
           error: "Article not found",
@@ -1350,8 +1359,8 @@ module.exports = () => {
                 // Find author in Mongo
                 User.findById(review.authorId, (errAuthor, revAuthor) => {
                   // Error finding author
-                  if (err) {
-                    reviewError = err;
+                  if (errAuthor) {
+                    reviewError = errAuthor.message;
                     return;
                   // Author can't be found
                   } else if (!revAuthor) {
@@ -1387,6 +1396,158 @@ module.exports = () => {
         });
       }
     });
+  });
+
+  /**
+   * Route to handle editing a listing
+   * @param title
+   * @param description
+   * @param image (url)
+   * @param location
+   * @param hours
+   * @param rating
+   * @param price
+   * @param website
+   * @param amenities
+   */
+  router.post('/listings/:id/edit', (req, res) => {
+
+    // Find the id from the url
+    const listingId = req.params.id;
+
+    // Isolate userId from Backend
+    let userId = "";
+    if (req.session.passport) {
+      userId = req.session.passport.user;
+    }
+
+    // Begin error checking
+    if (!userId) {
+      res.send({
+        success: false,
+        error: 'You must be logged in to edit.'
+      });
+    } else if (userId !== req.body.userId) {
+      res.send({
+        success: false,
+        error: 'Incorrect user.'
+      });
+    } else {
+      User.findById(userId, (errUser, user) => {
+        if (errUser) {
+          res.send({
+            success: false,
+            error: errUser.message,
+          });
+        } else {
+          if (user.userType !== 'admin' && user.userType !== 'curator') {
+            res.send({
+              success: false,
+              error: 'General users cannot edit listings.',
+            });
+          } else {
+            // Isolate variables
+            const title = req.body.title;
+            const image = req.body.image;
+            const location = req.body.location;
+            const rating = req.body.rating;
+            const description = req.body.description;
+            const amenities = req.body.amenities;
+            const price = req.body.price;
+            const website = req.body.website;
+            const hours = req.body.hours;
+
+            // Keep track of any errors
+            let error = "";
+            const urlRegexp = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
+
+            // Perform error checking on variables
+            if (!title) {
+              error = "Title must be populated.";
+            } else if (!description) {
+              error = "Description must be populated.";
+            } else if (!image) {
+              error = "Image must be populated.";
+            } else if (!rating) {
+              error = "Rating must be populated.";
+            } else if (!urlRegexp.test(image)) {
+              error = "Image must be a valid URL to an image.";
+            } else if (!price) {
+              error = "Price must be populated.";
+            } else if (!amenities) {
+              error = "Amenities must be populated.";
+            } else if (!website) {
+              error = "Website must be populated.";
+            } else if (!hours) {
+              error = "Hours must be populated.";
+            } else if (Object.keys(location).length === 0) {
+              error = "Location must be populated.";
+            }
+
+            // If there was an error or not
+            if (error) {
+              res.send({
+                success: false,
+                error,
+              });
+            } else {
+              // Find the author
+              User.findById(userId, (err, author) => {
+                if (err) {
+                  res.send({
+                    success: false,
+                    error: 'Error finding author ' + err.message
+                  });
+                } else if (!author) {
+                  res.send({
+                    success: false,
+                    error: 'Author not found.'
+                  });
+                } else {
+                  // Find listing in Mongo
+                  Listing.findById(listingId, (listingErr, listing) => {
+                    if (listingErr) {
+                      res.send({
+                        success: false,
+                        error: listingErr.message,
+                      });
+                    } else {
+                      // Make changes to given listing
+                      listing.title = title;
+                      listing.description = description;
+                      listing.image = image;
+                      listing.rating = rating;
+                      listing.price = price;
+                      listing.location = location;
+                      listing.amenities = amenities;
+                      listing.hours = hours;
+                      listing.website = website;
+                      listing.updatedAt = new Date().getTime();
+
+                      // Save changes in mongo
+                      listing.save((errSave) => {
+                        if (errSave) {
+                          res.send({
+                            success: false,
+                            error: errSave.message,
+                          });
+                        } else {
+                          res.send({
+                            success: true,
+                            error: '',
+                            data: listing,
+                          });
+                        }
+                      });
+                    }
+                  });
+                }
+              });
+            }
+          }
+        }
+      });
+    }
   });
 
   /**

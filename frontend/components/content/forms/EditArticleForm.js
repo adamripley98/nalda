@@ -49,7 +49,6 @@ class EditArticleForm extends React.Component {
   componentDidMount() {
     // Isolate the id
     const id = this.props.match.params.id;
-
     // Pull existing data from the database
     axios.get(`/api/articles/${id}`)
       .then(res => {
@@ -63,7 +62,7 @@ class EditArticleForm extends React.Component {
         } else {
           // There was an error in the request
           this.setState({
-            error: res.data.error.message,
+            error: res.data.error,
             pending: false,
           });
         }

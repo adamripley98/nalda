@@ -22,7 +22,7 @@ class EditListingForm extends React.Component {
       description: "",
       location: "",
       image: "",
-      rating: 0.0,
+      rating: '',
       price: "$",
       hours: {
         monday: {
@@ -107,12 +107,15 @@ class EditListingForm extends React.Component {
     // Pull existing data from the database
     axios.get(`/api/listings/${id}`)
       .then(res => {
+        console.log(res.data.data.rating);
         if (res.data.success) {
           // If there was no error
           this.setState({
             pending: false,
             error: "",
             ...res.data.data,
+            rating: res.data.data.rating,
+            _id: id,
           });
         } else {
           // There was an error in the request
@@ -273,7 +276,7 @@ class EditListingForm extends React.Component {
         if (status === google.maps.GeocoderStatus.OK) {
           const latitude = results[0].geometry.location.lat();
           const longitude = results[0].geometry.location.lng();
-          axios.post('/api/listings/new', {
+          axios.post(`/api/listings/${this.state._id}/edit`, {
             title: this.state.title,
             image: this.state.image,
             location: {
@@ -365,7 +368,6 @@ class EditListingForm extends React.Component {
 
   /**
    * Render the component
-   * TODO: Make Hours, Rating, and Price sliders, not text input
    */
   render() {
     return (
