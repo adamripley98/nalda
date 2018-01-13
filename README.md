@@ -204,6 +204,7 @@ To run the application, run `npm start`. For more responsive hot-reloading on th
 - [X] Persist issue, now it makes you log back in all the time. Perhaps passport session is very short?
 - [X] Search doesn't redirect to page
 - [X] Article preview click doesn't render article
+- [ ] Reviews profile picture? Reviews can leave more than one.
 
 ## Features for next update
 - [ ] Sendgrid configuration for sending emails

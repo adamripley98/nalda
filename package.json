@@ -15,6 +15,7 @@
   "author": "Adam Ripley, Cameron Cabo",
   "license": "ISC",
   "dependencies": {
+    "async": "^2.6.0",
     "autosize": "^4.0.0",
     "aws-sdk": "^2.175.0",
     "axios": "^0.17.1",

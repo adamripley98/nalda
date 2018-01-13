@@ -10,6 +10,7 @@
 // Import frameworks
 const express = require('express');
 const router = express.Router();
+const async = require('async');
 
 // Import database models
 const Article = require('./models/article');
@@ -1482,50 +1483,76 @@ module.exports = () => {
                 }
               }
               // Make a new copy of the reviews
-              const reviews = listing.reviews.slice();
-              let reviewError = false;
+              // const reviews = listing.reviews.slice();
+              let reviewError = "";
+
               // Go through each review and change the author data being passed to frontend
-              reviews.forEach((review) => {
+              const reviews = [];
+              async.each(listing.reviews, (review, callback) => {
+                // Copy the review object
+                const newRev = {
+                  _id: review._id,
+                  authorId: review.authorId,
+                  createdAt: review.createdAt,
+                  content: review.content,
+                  title: review.title,
+                  rating: review.rating,
+                  author: {
+                    name: "",
+                    _id: "",
+                    profilePicture: "",
+                  }
+                };
+
                 // Find author in Mongo
                 User.findById(review.authorId, (errAuthor, revAuthor) => {
                   // Error finding author
                   if (errAuthor) {
                     reviewError = errAuthor.message;
-                    return;
                   // Author can't be found
                   } else if (!revAuthor) {
                     reviewError = "Cannot find review author.";
-                    return;
                   }
-                  // Successfully found author, update so review contains author's name
-                  review.author = revAuthor;
-                  // Remove private information about author
-                  review.author.password = "";
-                });
-              });
-              // Check for error with reviews
-              if (reviewError) {
-                res.send({
-                  success: false,
-                  error: reviewError,
-                });
-              } else {
-                // Update the reviews
-                listing.reviews = reviews;
 
-                // Send back data
-                res.send({
-                  success: true,
-                  data: listing,
-                  author: {
-                    name: author.name,
-                    _id: author._id,
-                    profilePicture: author.profilePicture,
-                  },
-                  timestamp: listing._id.getTimestamp(),
-                  canModify,
+                  // Successfully found author, update so review contains author's name
+                  newRev.author = {
+                    name: revAuthor.name,
+                    _id: revAuthor._id,
+                    profilePicture: revAuthor.profilePicture,
+                  };
+
+                  // Return the review
+                  reviews.push(newRev);
+                  callback();
                 });
-              }
+              }, asyncErr => {
+                if (asyncErr) {
+                  res.send({
+                    success: false,
+                    error: 'Async error',
+                  });
+                } else {
+                  // Check for error with reviews
+                  if (reviewError) {
+                    res.send({
+                      success: false,
+                      error: reviewError,
+                    });
+                  } else {
+                    // Update the reviews
+                    listing.reviews = null;
+
+                    // Send back data
+                    res.send({
+                      success: true,
+                      data: listing,
+                      reviews: reviews,
+                      timestamp: listing._id.getTimestamp(),
+                      canModify,
+                    });
+                  }
+                }
+              });
             });
           }
         });
@@ -1977,10 +2004,8 @@ module.exports = () => {
                   createdAt: new Date().getTime(),
                   authorId: userId,
                 });
-
                 // Update listing with new review
                 listing.reviews = currentReviews;
-
                 // Resave listing in Mongo
                 listing.save((er) => {
                   // Error saving listing
