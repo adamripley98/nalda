@@ -87,10 +87,12 @@ class EditArticleForm extends React.Component {
 
       // Autocomplete the user's city
       const location = document.getElementById("location");
-      const options = {
-        componentRestrictions: {country: 'us'},
-      };
-      new google.maps.places.Autocomplete(location, options);
+      if (location) {
+        const options = {
+          componentRestrictions: {country: 'us'},
+        };
+        new google.maps.places.Autocomplete(location, options);
+      }
 
       // Update the location field
       document.getElementById('location').value = this.state.location.name;

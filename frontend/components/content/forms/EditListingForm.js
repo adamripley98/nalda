@@ -154,43 +154,56 @@ class EditListingForm extends React.Component {
     }
   }
 
-  // Helper method to handle a change to the title state
+  /**
+   * Helper method to handle a change to the title state
+   */
   handleChangeTitle(event) {
     this.setState({
       title: event.target.value,
     });
   }
 
-  // Helper method to handle a change to the description state
+  /**
+   * Helper method to handle a change to the description state
+   */
   handleChangeDescription(event) {
     this.setState({
       description: event.target.value,
     });
   }
 
-  // Helper method to handle a change to the image state
+  /**
+   * Helper method to handle a change to the image state
+   */
   handleChangeImage(event) {
     this.setState({
       image: event.target.value,
     });
   }
 
-  // Helper method to handle a change to the rating state
+  /**
+   * Helper method to handle a change to the rating state
+   */
   handleChangeRating(event) {
     this.setState({
       rating: event.target.value,
     });
   }
 
-  // Helper method to handle a change to the price state
+  /**
+   * Helper method to handle a change to the price state
+   */
   handleChangePrice(event) {
     this.setState({
       price: event.target.value,
     });
   }
 
-  // Helper method to handle a change to the hours state
-  // day parameter is monday - friday, startOrFinish denotes whether it is open or close hours being entered
+  /**
+   * Helper method to handle a change to the hours state
+   * Day parameter is Saturday to Sunday
+   * startOrFinish denotes whether it is open or close hours being entered
+   */
   handleChangeHours(event, startOrFinish, day) {
     // Get the object for current hours before the update
     const currentHours = this.state.hours;
@@ -210,14 +223,18 @@ class EditListingForm extends React.Component {
     });
   }
 
-  // Helper method to handle a change to the website state
+  /**
+   * Helper method to handle a change to the website state
+   */
   handleChangeWebsite(event) {
     this.setState({
       website: event.target.value,
     });
   }
 
-  // Helper method to handle click on food truck amenity
+  /**
+   * Helper method to handle click on food truck amenity
+   */
   handleClickAmenity(event, name) {
     // Copy over the existing state
     const newAmenityState = {
@@ -233,7 +250,9 @@ class EditListingForm extends React.Component {
     });
   }
 
-  // Helper method to handle when the form is submitted
+  /**
+   * Helper method to handle when the form is submitted
+   */
   handleSubmit(event) {
     // Denote that the request is pendingSubmit
     this.setState({
@@ -301,7 +320,9 @@ class EditListingForm extends React.Component {
     }
   }
 
-  // Helper method to check if all input is valid, returns true or false
+  /**
+   * Helper method to check if all input is valid, returns true or false
+   */
   inputValid() {
     // Begin error checking
     if (!this.state.title) {
