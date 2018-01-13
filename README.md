@@ -29,8 +29,8 @@ To run the application, run `npm start`. For more responsive hot-reloading on th
   - [ ] Contact page
   - [ ] Password reset
   - [ ] Device authorization (confirm your email)?
-- [ ] Add author field to every form of content
-  - [ ] Videos
+- [x] Add author field to every form of content
+  - [x] Videos
   - [X] Listings
   - [X] Articles
 - [X] Curator show pages
@@ -51,12 +51,12 @@ To run the application, run `npm start`. For more responsive hot-reloading on th
 - [X] Complete listing backend (already stores listing in Mongo, just need to populate to home screen.
 - [X] Figure out why listings page is not displaying
 - [X] `Listing` back to all listings button
-- [ ] Edit Listings view
+- [x] Edit Listings view
 - [X] Delete Listings view
-- [ ] Listings location should also show as an address
+- [x] Listings location should also show as an address
 - [X] Store author
 - [X] Add to curator's list of content
-- [ ] Style edit/delete buttons better
+- [x] Style edit/delete buttons better
 - [ ] Sort by date
 - [X] Default sort in `Listings` needs to be reversed
 

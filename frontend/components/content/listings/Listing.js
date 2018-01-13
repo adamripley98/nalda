@@ -561,9 +561,12 @@ class Listing extends React.Component {
                     ) ? (
                       <div>
                         <div className="line" />
-                        <h5 className="subtitle marg-bot-1">
+                        <h5 className="subtitle">
                           Location
                         </h5>
+                        <p className="marg-bot-1">
+                          { this.state.location.name }
+                        </p>
                         <div id="map" />
                       </div>
                     ) : null
