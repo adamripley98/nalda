@@ -539,11 +539,21 @@ class Listing extends React.Component {
                   </h5>
                   { this.renderAmenities() }
 
-                  <div className="line" />
-                  <h5 className="subtitle">
-                    Location
-                  </h5>
-                  <div id="map" />
+                  {
+                    (
+                      this.state.location.name &&
+                      this.state.location.lat &&
+                      this.state.location.lng
+                    ) ? (
+                      <div>
+                        <div className="line" />
+                        <h5 className="subtitle marg-bot-1">
+                          Location
+                        </h5>
+                        <div id="map" />
+                      </div>
+                    ) : null
+                  }
 
                   <div className="line" />
                   { this.renderReviewsSection() }
