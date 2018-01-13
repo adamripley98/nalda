@@ -9,6 +9,7 @@ import autosize from 'autosize';
 // Import actions
 import {changeFullName} from '../../actions/index.js';
 import {changeProfilePicture} from '../../actions/index.js';
+import {changeUserLocation} from '../../actions/index.js';
 
 // Import components
 import ErrorMessage from '../shared/ErrorMessage';
@@ -22,7 +23,6 @@ import Loading from '../shared/Loading';
 class Account extends Component {
   /**
    * Constructor method
-   * TODO allow changing location
    */
   constructor(props) {
     super(props);
@@ -31,7 +31,6 @@ class Account extends Component {
       email: '',
       type: '',
       bio: '',
-      location: '',
       profilePicture: '',
       error: '',
       pending: true,
@@ -47,7 +46,6 @@ class Account extends Component {
     this.handleNameClick = this.handleNameClick.bind(this);
     this.handleChangeBio = this.handleChangeBio.bind(this);
     this.handleBioClick = this.handleBioClick.bind(this);
-    this.handleChangeLocation = this.handleChangeLocation.bind(this);
     this.handleLocationClick = this.handleLocationClick.bind(this);
     this.handleChangeProfilePicture = this.handleChangeProfilePicture.bind(this);
     this.handleProfilePictureClick = this.handleProfilePictureClick.bind(this);
@@ -70,7 +68,6 @@ class Account extends Component {
           email: resp.data.data.username,
           type: resp.data.data.userType,
           bio: resp.data.data.bio,
-          location: resp.data.data.location.name,
           profilePicture: resp.data.data.profilePicture,
           error: "",
           pending: false
@@ -252,19 +249,12 @@ class Account extends Component {
   }
 
   /**
-   * Handle a change to the location state
-   */
-  handleChangeLocation(event) {
-    // TODO handle this
-    this.setState({
-      location: event.target.value,
-    });
-  }
-
-  /**
    * Helper method to trigger edit bio
    */
   handleLocationClick() {
+    // Isolate function
+    const changeLocation = this.props.changeLocation;
+
     if (this.state.editLocation) {
       // Check for empty location
       if (Object.keys(location).length === 0) {
@@ -296,10 +286,10 @@ class Account extends Component {
                 });
               } else {
                 // Update the state
-                // TODO redux
                 this.setState({
                   location,
                 });
+                changeLocation(location);
               }
             })
             .catch((err) => {
@@ -455,15 +445,13 @@ class Account extends Component {
             </td>
             <td>
               <span style={{ display: this.state.editLocation && "none" }}>
-                { this.state.location }
+                { this.props.location }
               </span>
               <input
                 className="form-control"
                 id="location"
                 type="text"
                 ref={(input) => { this.locationInput = input; }}
-                // value={ this.state.location }
-                // onChange={ this.handleChangeLocation }
                 style={{ display: !this.state.editLocation && "none" }}
               />
             </td>
@@ -531,6 +519,8 @@ Account.propTypes = {
   changeName: PropTypes.func,
   changeProfilePic: PropTypes.func,
   profilePicture: PropTypes.string,
+  location: PropTypes.string,
+  changeLocation: PropTypes.func,
 };
 
 // Allows us to access redux state as this.props.userId inside component
@@ -538,6 +528,7 @@ const mapStateToProps = state => {
   return {
     userId: state.authState.userId,
     profilePicture: state.authState.profilePicture,
+    location: state.authState.location,
   };
 };
 
@@ -547,7 +538,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = (dispatch) => {
   return {
     changeName: (name) => dispatch(changeFullName(name)),
-    changeProfilePic: (profilePicture) => dispatch(changeProfilePicture(profilePicture))
+    changeProfilePic: (profilePicture) => dispatch(changeProfilePicture(profilePicture)),
+    changeLocation: (location) => dispatch(changeUserLocation(location))
   };
 };
 
