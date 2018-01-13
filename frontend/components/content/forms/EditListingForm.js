@@ -11,7 +11,7 @@ import Medium from '../../shared/Medium';
 import Loading from '../../shared/Loading';
 
 /**
- * Component to render the new article form
+ * Component to render the edit article form
  */
 class EditListingForm extends React.Component {
   // Constructor method

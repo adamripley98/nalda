@@ -12,7 +12,7 @@ import ErrorMessage from '../../shared/ErrorMessage';
 import Medium from '../../shared/Medium';
 
 /**
- * Component to render the new article form
+ * Component to render the edit article form
  * TODO make sure that this works with location
  */
 class EditArticleForm extends React.Component {
@@ -85,7 +85,7 @@ class EditArticleForm extends React.Component {
       // Autosize textarea components
       autosize(document.querySelectorAll('textarea'));
 
-      // Autocomplete the user's city
+      // Autocomplete the location field for the article
       const location = document.getElementById("location");
       if (location) {
         const options = {

@@ -1,5 +1,5 @@
+// Import frameworks
 import React from 'react';
-import Medium from '../../shared/Medium';
 import autosize from 'autosize';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
@@ -8,9 +8,10 @@ import PropTypes from 'prop-types';
 // Import components
 import ErrorMessage from '../../shared/ErrorMessage';
 import Loading from '../../shared/Loading';
+import Medium from '../../shared/Medium';
 
 /**
- * Component to render the new video form
+ * Component to render the edit video form
  */
 class EditVideoForm extends React.Component {
   /**
@@ -38,7 +39,8 @@ class EditVideoForm extends React.Component {
   }
 
   /**
-   * Handle resizing textarea
+   * When the component mounts
+   * Pull data from the backend and populate the form fields
    */
   componentDidMount() {
     // Isolate the id
@@ -54,11 +56,6 @@ class EditVideoForm extends React.Component {
             error: "",
             ...res.data.data,
           });
-
-          // Update the location field
-          if (res.data.data.location && res.data.data.location.name) {
-            document.getElementById('location').value = res.data.data.location.name;
-          }
         } else {
           // There was an error in the request
           this.setState({
@@ -73,16 +70,30 @@ class EditVideoForm extends React.Component {
           pending: false,
         });
       });
+  }
 
-    // Autosize textareas to fit input
-    autosize(document.querySelectorAll('textarea'));
+  /**
+   * When the component updates, check if it has recently finished pending. If
+   * this is the case, then update the state accordingly and configure the
+   * Google Maps API
+   */
+  componentDiDUpdate(prevProps, prevState) {
+    if (prevState.pending && !this.state.pending) {
+      // Autosize textareas to fit input
+      autosize(document.querySelectorAll('textarea'));
 
-    // Autocomplete the user's city
-    const location = document.getElementById("location");
-    const options = {
-      componentRestrictions: {country: 'us'},
-    };
-    new google.maps.places.Autocomplete(location, options);
+      // Autocomplete the location field for the video
+      const location = document.getElementById("location");
+      if (location) {
+        const options = {
+          componentRestrictions: {country: 'us'},
+        };
+        new google.maps.places.Autocomplete(location, options);
+
+        // Update the location field
+        document.getElementById('location').value = this.state.location.name;
+      }
+    }
   }
 
   /**
