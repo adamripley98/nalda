@@ -1772,6 +1772,55 @@ module.exports = () => {
   });
 
   /**
+   * Update a user's location
+   * @param location
+   */
+  router.post('/users/location', (req, res) => {
+    let userId = "";
+    if (req.session.passport) {
+      userId = req.session.passport.user;
+    }
+    // No one is logged in on backend
+    if (!userId) {
+      res.send({
+        success: false,
+        error: "",
+      });
+    } else {
+      User.findById(userId, (err, user) => {
+        if (err) {
+          res.send({
+            success: false,
+            error: err.message,
+          });
+        } else if (!user) {
+          res.send({
+            success: false,
+            error: 'User not found.',
+          });
+        } else {
+          // Update the user's location
+          user.location = req.body.location;
+          // Save the changes in Mongo
+          user.save((errSave) => {
+            if (errSave) {
+              res.send({
+                success: false,
+                error: errSave.message,
+              });
+            } else {
+              res.send({
+                success: true,
+                error: '',
+              });
+            }
+          });
+        }
+      });
+    }
+  });
+
+  /**
    * Find a given user's profile
    */
   router.get('/users/:id', (req, res) => {

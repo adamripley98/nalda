@@ -46,3 +46,11 @@ export function changeProfilePicture(profilePicture) {
     profilePicture,
   };
 }
+
+// Dispatch an action to change location
+export function changeUserLocation(location) {
+  return {
+    type: 'LOCATIONCHANGE',
+    location,
+  };
+}
