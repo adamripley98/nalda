@@ -10,6 +10,7 @@ import Button from '../../shared/Button';
 import Loading from '../../shared/Loading';
 import NotFoundSection from '../../NotFoundSection';
 import ErrorMessage from '../../shared/ErrorMessage';
+import Timestamp from '../../shared/Timestamp';
 
 /**
  * Component to render an article
@@ -42,7 +43,6 @@ class Article extends React.Component {
     this.renderAuthor = this.renderAuthor.bind(this);
     this.deleteArticle = this.deleteArticle.bind(this);
     this.renderButtons = this.renderButtons.bind(this);
-    this.renderTimestamp = this.renderTimestamp.bind(this);
   }
 
   // Pull the article data from the database
@@ -119,29 +119,6 @@ class Article extends React.Component {
   }
 
   /**
-   * Helper method to render timestamp
-   */
-  renderTimestamp() {
-    // Construct the timstamp string
-    let timestamp = "Created ";
-    timestamp += moment(this.state.createdAt).fromNow();
-
-    // Add updated if applicable
-    if (this.state.createdAt !== this.state.updatedAt) {
-      timestamp += (". Updated " + moment(this.state.updatedAt).fromNow());
-    }
-
-    console.log(timestamp);
-
-    // Return the timestamp formatted
-    return (
-      <p className="timestamp">
-        { timestamp }
-      </p>
-    );
-  }
-
-  /**
    * Helper method to render the author
    */
   renderAuthor() {
@@ -152,7 +129,10 @@ class Article extends React.Component {
           <Link className="name" to={`/users/${this.state.author._id}`}>
             { this.state.author.name }
           </Link>
-          { this.renderTimestamp() }
+          <Timestamp
+            createdAt={ this.state.createdAt }
+            updatedAt={ this.state.updatedAt }
+          />
         </div>
       </div>
     );
