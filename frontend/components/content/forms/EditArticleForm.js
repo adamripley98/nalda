@@ -79,17 +79,18 @@ class ArticleForm extends React.Component {
       });
 
     autosize(document.querySelectorAll('textarea'));
-
-    // Autocomplete the user's city
-    const location = document.getElementById("location");
-    const options = {
-      componentRestrictions: {country: 'us'},
-    };
-    new google.maps.places.Autocomplete(location, options);
   }
 
   // Also when the component updates
   componentDidUpdate() {
+    if (!this.state.pending) {
+      // Autocomplete the user's city
+      const location = document.getElementById("location");
+      const options = {
+        componentRestrictions: {country: 'us'},
+      };
+      new google.maps.places.Autocomplete(location, options);
+    }
     autosize(document.querySelectorAll('textarea'));
   }
 

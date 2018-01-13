@@ -998,6 +998,10 @@ module.exports = () => {
    * TODO EDIT NOT CREATE ARTICLE
    */
   router.post('/articles/:id/edit', (req, res) => {
+
+    // Find the id from the url
+    const articleId = req.params.id;
+
     // Isolate userId from Backend
     let userId = "";
     if (req.session.passport) {
@@ -1102,31 +1106,37 @@ module.exports = () => {
                     error: 'Author not found.'
                   });
                 } else {
-                  // Creates a new article with given params
-                  const newArticle = new Article({
-                    title,
-                    subtitle,
-                    image,
-                    body,
-                    location,
-                    author: userId,
-                    createdAt: new Date().getTime(),
-                    updatedAt: new Date().getTime(),
-                  });
-
-                  // Save the new article in Mongo
-                  newArticle.save((errArticle, article) => {
-                    if (errArticle) {
-                      // If there was an error saving the article
+                  // Find article in Mongo
+                  Article.findById(articleId, (articleErr, article) => {
+                    if (articleErr) {
                       res.send({
                         success: false,
-                        error: errArticle.message,
+                        error: articleErr.message,
                       });
                     } else {
-                      // Successfully send back data
-                      res.send({
-                        success: true,
-                        data: article,
+                      // Make changes to given article
+                      article.title = title;
+                      article.subtitle = subtitle;
+                      article.image = image;
+                      article.body = body;
+                      article.location = location;
+                      article.author = userId;
+                      article.updatedAt = new Date().getTime();
+
+                      // Save changes in mongo
+                      article.save((errSave) => {
+                        if (errSave) {
+                          res.send({
+                            success: false,
+                            error: errSave,
+                          });
+                        } else {
+                          res.send({
+                            success: true,
+                            error: '',
+                            data: article,
+                          });
+                        }
                       });
                     }
                   });
