@@ -1,13 +1,15 @@
 // Import frameworks
 import React from 'react';
-import Medium from '../../shared/Medium';
 import autosize from 'autosize';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+
+// Import components
 import Loading from '../../shared/Loading';
 import ErrorMessage from '../../shared/ErrorMessage';
+import Medium from '../../shared/Medium';
 
 /**
  * Component to render the new article form
@@ -58,11 +60,6 @@ class EditArticleForm extends React.Component {
             error: "",
             ...res.data.data,
           });
-
-          // Update the location field
-          if (res.data.data.location && res.data.data.location.name) {
-            document.getElementById('location').value = res.data.data.location.name;
-          }
         } else {
           // There was an error in the request
           this.setState({
@@ -77,44 +74,59 @@ class EditArticleForm extends React.Component {
           pending: false,
         });
       });
-
-    autosize(document.querySelectorAll('textarea'));
-
-    // Autocomplete the user's city
-    const location = document.getElementById("location");
-    const options = {
-      componentRestrictions: {country: 'us'},
-    };
-    new google.maps.places.Autocomplete(location, options);
   }
 
-  // Also when the component updates
-  componentDidUpdate() {
-    autosize(document.querySelectorAll('textarea'));
+  /**
+   * When the component updates
+   * Format new textareas accordingly
+   */
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.pending && !this.state.pending) {
+      // Autosize textarea components
+      autosize(document.querySelectorAll('textarea'));
+
+      // Autocomplete the user's city
+      const location = document.getElementById("location");
+      const options = {
+        componentRestrictions: {country: 'us'},
+      };
+      new google.maps.places.Autocomplete(location, options);
+
+      // Update the location field
+      document.getElementById('location').value = this.state.location.name;
+    }
   }
 
-  // Helper method to handle a change to the title state
+  /**
+   * Helper method to handle a change to the title state
+   */
   handleChangeTitle(event) {
     this.setState({
       title: event.target.value,
     });
   }
 
-  // Helper method to handle a change to the subtitle state
+  /**
+   * Helper method to handle a change to the subtitle state
+   */
   handleChangeSubtitle(event) {
     this.setState({
       subtitle: event.target.value,
     });
   }
 
-  // Helper method to handle a change to the image state
+  /**
+   * Helper method to handle a change to the image state
+   */
   handleChangeImage(event) {
     this.setState({
       image: event.target.value,
     });
   }
 
-  // Helper method to handle a change to the body state
+  /**
+   * Helper method to handle a change to the body state
+   */
   handleChangeBody(event, index) {
     // Manipulate the correct component object
     const bodyObj = this.state.body;
@@ -126,7 +138,9 @@ class EditArticleForm extends React.Component {
     });
   }
 
-  // Helper method to add a new component to the body
+  /**
+   * Helper method to add a new component to the body
+   */
   addNewComponent(type) {
     // Create the new component
     const component = {
@@ -144,7 +158,9 @@ class EditArticleForm extends React.Component {
     });
   }
 
-  // Helper method to make sure all input is valid
+  /**
+   * Helper method to make sure all input is valid
+   */
   inputValid() {
     // Begin error checking
     if (!this.state.title) {
@@ -191,7 +207,9 @@ class EditArticleForm extends React.Component {
     return true;
   }
 
-  // Helper method to handle when the form is submitted
+  /**
+   * Helper method to handle when the form is submitted
+   */
   handleSubmit(event) {
     // Prevent the default submit action
     event.preventDefault();
@@ -250,7 +268,9 @@ class EditArticleForm extends React.Component {
     }
   }
 
-  // Render the component
+  /**
+   * Render the component
+   */
   render() {
     return (
       <div>
