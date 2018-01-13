@@ -10,7 +10,7 @@ import Stars from './Stars';
 const Review = ({title, content, createdAt, rating, name, profilePicture }) => {
   // Format the timestamp
   const timestamp = moment(new Date(createdAt)).fromNow();
-
+  console.log('prof', profilePicture);
   // Render the component
   return (
     <div className="review-wrapper">

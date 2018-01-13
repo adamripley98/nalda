@@ -79,6 +79,7 @@ class Listing extends React.Component {
           this.setState({
             error: "",
             ...res.data.data,
+            reviews: res.data.reviews,
             author: res.data.author,
             time: moment(res.data.timestamp).fromNow(),
             pending: false,
@@ -169,6 +170,7 @@ class Listing extends React.Component {
           this.setState({
             error: "",
             ...res.data.data,
+            reviews: res.data.reviews,
             time: moment(res.data.timestamp).fromNow(),
             pending: false,
           });
@@ -291,6 +293,7 @@ class Listing extends React.Component {
     if (this.state.reviews && this.state.reviews.length) {
       // Reverse reviews so they appear newest to oldest
       const reviews = this.state.reviews.slice(0).reverse();
+      console.log('rrr', reviews);
       // Map each review to be its own component
       return reviews.map(review => (
         <Review
@@ -299,7 +302,8 @@ class Listing extends React.Component {
           key={ uuid() }
           createdAt={ review.createdAt }
           rating={ review.rating }
-          name={ "adam" }
+          name={ review.author.name }
+          profilePicture = { review.author.profilePicture }
         />
       ));
     }
