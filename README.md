@@ -55,8 +55,10 @@ To run the application, run `npm start`. For more responsive hot-reloading on th
 - [X] Delete Listings view
 - [ ] Listings location should also show as an address
 - [X] Store author
-- [ ] Add to curator's list of content
+- [X] Add to curator's list of content
 - [ ] Style edit/delete buttons better
+- [ ] Sort by date
+- [ ] Default sort in `Listings` needs to be reversed
 
 ## Videos
 
@@ -66,11 +68,26 @@ To run the application, run `npm start`. For more responsive hot-reloading on th
 - [ ] Edit Videos view
 - [X] Delete Videos view
 - [X] Store author
-- [ ] Add to curator's list of content
+- [X] Add to curator's list of content
+- [ ] Sort by date
+- [ ] Default sort in `Videos` needs to be reversed
+- [ ] Preview needs time stamp
+- [ ] Individual video frontend updates
+  - [ ] Show Location
+  - [ ] Show date created
+  - [ ] Show author data
+
 
 ## Articles
 - [ ] Edit Articles view
 - [X] Delete Articles view
+- [ ] Default sort in `Articles` needs to be reversed
+- [ ] Preview needs time stamp
+- [ ] Individual video frontend updates
+  - [ ] Show Location
+  - [ ] Show date created
+  - [ ] Show author data
+
 
 
 ## Frontend

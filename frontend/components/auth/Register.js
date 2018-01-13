@@ -58,7 +58,6 @@ class Register extends Component {
 
   /**
    * Handle when the register form is submitted
-   * TODO profile picture
    */
   handleRegisterSubmit(event) {
     // Prevent the default submit action

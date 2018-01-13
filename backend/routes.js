@@ -680,6 +680,7 @@ module.exports = () => {
             const title = req.body.title;
             const url = req.body.url;
             const description = req.body.description;
+            const location = req.body.location;
 
             let error = "";
             const urlRegexp = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
@@ -707,6 +708,9 @@ module.exports = () => {
                 url,
                 description,
                 author: userId,
+                createdAt: new Date().getTime(),
+                updatedAt: new Date().getTime(),
+                location,
               });
 
             // Save the new video in Mongo
@@ -875,6 +879,7 @@ module.exports = () => {
             const subtitle = req.body.subtitle;
             const image = req.body.image;
             const body = req.body.body;
+            const location = req.body.location;
 
             // Keep track of any errors
             let error = "";
@@ -893,6 +898,8 @@ module.exports = () => {
               error = "Image must be a valid URL to an image.";
             } else if (typeof body !== "object" || !Array.isArray(body)) {
               error = "Body must be an array";
+            } else if (Object.keys(location).length === 0) {
+              error = "Location must be populated.";
             } else {
               // Ensure that each article component is properly formatted
               for (let i = 0; i < body.length && !error; i++) {
@@ -946,7 +953,10 @@ module.exports = () => {
                     subtitle,
                     image,
                     body,
+                    location,
                     author: userId,
+                    createdAt: new Date().getTime(),
+                    updatedAt: new Date().getTime(),
                   });
 
                   // Save the new article in Mongo
@@ -1396,6 +1406,8 @@ module.exports = () => {
                 amenities,
                 location,
                 author: userId,
+                createdAt: new Date().getTime(),
+                updatedAt: new Date().getTime(),
               });
 
               // Save the new article in mongo

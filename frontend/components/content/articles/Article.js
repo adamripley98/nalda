@@ -12,7 +12,6 @@ import NotFoundSection from '../../NotFoundSection';
 
 /**
  * Component to render an article
- * TODO error handling
  * TODO edit functionality
  */
 class Article extends React.Component {

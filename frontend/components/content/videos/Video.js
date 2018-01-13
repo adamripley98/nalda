@@ -12,7 +12,6 @@ import Loading from '../../shared/Loading';
 /**
  * Component to render a videos
  * TODO Edit functionality
- * TODO Delete functionality
  */
 class Video extends React.Component {
   // Constructor method
