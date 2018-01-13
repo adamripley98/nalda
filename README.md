@@ -14,6 +14,21 @@ __Stack used:__
 
 To run the application, run `npm start`. For more responsive hot-reloading on the backend and frontend, run `npm run frontend` and `npm run backend` concurrently.
 
+# API
+```javascript
+
+// General
+GET '/api/'
+
+// Articles
+GET '/api/articles'
+
+// Listings
+GET '/api/listings'
+
+// Videos
+GET '/api/videos'
+```
 # Feature tracking
 
 ## Admins
