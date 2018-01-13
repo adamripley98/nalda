@@ -84,7 +84,7 @@ class Sidebar extends Component {
         { this.state.redirectToLogin && (<Redirect to="/login"/>) }
 
         {/* Display any errors */}
-        {this.state.error && <ErrorMessage/>}
+        <ErrorMessage error={this.state.error} />
 
         {/* Render the clickable menu bars */}
         <div className="menu">

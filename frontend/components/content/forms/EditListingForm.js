@@ -13,7 +13,7 @@ import Loading from '../../shared/Loading';
 /**
  * Component to render the new article form
  */
-class ListingForm extends React.Component {
+class EditListingForm extends React.Component {
   // Constructor method
   constructor(props) {
     super(props);
@@ -758,8 +758,8 @@ class ListingForm extends React.Component {
   }
 }
 
-ListingForm.propTypes = {
+EditListingForm.propTypes = {
   match: PropTypes.object,
 };
 
-export default ListingForm;
+export default EditListingForm;

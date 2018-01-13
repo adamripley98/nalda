@@ -6,11 +6,12 @@ import axios from 'axios';
 
 // Import components
 import ErrorMessage from '../../shared/ErrorMessage';
+import Loading from '../../shared/Loading';
 
 /**
  * Component to render the new video form
  */
-class VideoForm extends React.Component {
+class EditVideoForm extends React.Component {
   /**
    * Constructor method
    */
@@ -24,6 +25,7 @@ class VideoForm extends React.Component {
       videoId: "",
       redirectToHome: false,
       pendingSubmit: false,
+      pending: true,
     };
 
     // Bind this to helper methods
@@ -197,12 +199,10 @@ class VideoForm extends React.Component {
         { this.state.redirectToHome && <Redirect to={`/videos/${this.state.videoId}`}/> }
         <Medium>
           <div className="card thin-form no-pad">
-            <div className="tabs">
-              <Link className="tab" to="/articles/new">Article</Link>
-              <Link className="tab" to="/listings/new">Listing</Link>
-              <Link className="tab active" to="/videos/new">Video</Link>
-            </div>
             <form className="pad-1" onSubmit={ this.handleSubmit }>
+              <h4 className="dark-gray-text title">
+                Edit video
+              </h4>
               <ErrorMessage error={ this.state.error } />
 
               <label>
@@ -251,7 +251,7 @@ class VideoForm extends React.Component {
 
               <input
                 type="submit"
-                value={ this.state.pendingSubmit ? "Creating video..." : "Create video" }
+                value={ this.state.pendingSubmit ? "Updating video..." : "Update video" }
                 className={
                   !this.state.pendingSubmit &&
                   this.state.title &&
@@ -272,4 +272,4 @@ class VideoForm extends React.Component {
   }
 }
 
-export default VideoForm;
+export default EditVideoForm;

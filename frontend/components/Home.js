@@ -152,7 +152,8 @@ class Home extends React.Component {
     return (
       <div className="container home">
         <div className="space-1"/>
-        { this.state.error && <ErrorMessage error={ this.state.error } /> }
+        <ErrorMessage error={ this.state.error } />
+
         <h3 className="title section-title">
           Recent articles
         </h3>

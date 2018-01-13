@@ -153,9 +153,8 @@ class ReviewForm extends React.Component {
     // Else, if the user is logged in, render the form
     return (
       <form onSubmit={ this.handleSubmit } id="reviewForm" className="thin-form">
-        {
-          this.state.error && <ErrorMessage error={ this.state.error } />
-        }
+        <ErrorMessage error={ this.state.error } />
+
         {
           this.state.active ? (
             <div>

@@ -13,7 +13,7 @@ import ErrorMessage from '../../shared/ErrorMessage';
  * Component to render the new article form
  * TODO make sure that this works with location
  */
-class ArticleForm extends React.Component {
+class EditArticleForm extends React.Component {
   // Constructor method
   constructor(props) {
     super(props);
@@ -406,7 +406,7 @@ class ArticleForm extends React.Component {
   }
 }
 
-ArticleForm.propTypes = {
+EditArticleForm.propTypes = {
   userId: PropTypes.string,
   match: PropTypes.object,
 };
@@ -421,4 +421,4 @@ const mapStateToProps = (state) => {
 // Redux config
 export default connect(
   mapStateToProps,
-)(ArticleForm);
+)(EditArticleForm);

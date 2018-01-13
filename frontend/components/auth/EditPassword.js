@@ -122,7 +122,7 @@ class EditPassword extends Component {
             </h4>
 
             { /* Render an error if there is one */}
-            { this.state.error && <ErrorMessage error={ this.state.error } /> }
+            <ErrorMessage error={ this.state.error } />
 
             <label>
               Old password
