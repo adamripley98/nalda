@@ -1427,11 +1427,6 @@ module.exports = () => {
         success: false,
         error: 'You must be logged in to edit.'
       });
-    } else if (userId !== req.body.userId) {
-      res.send({
-        success: false,
-        error: 'Incorrect user.'
-      });
     } else {
       User.findById(userId, (errUser, user) => {
         if (errUser) {
