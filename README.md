@@ -215,6 +215,7 @@ To run the application, run `npm start`. For more responsive hot-reloading on th
 - [ ] Searching should not search through reviews
 - [ ] Users can leave comments on videos and articles
 - [ ] Multiple curators on the same content
+- [ ] Login/Register OAuth with google and facebook
 
 ## Questions
 

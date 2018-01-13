@@ -550,7 +550,6 @@ class Listing extends React.Component {
                       )
                     }
                     {
-                      // TODO: Style rating better, perhaps stars
                       this.state.rating && (
                         <div className="price">
                           <strong>

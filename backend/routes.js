@@ -446,7 +446,6 @@ module.exports = () => {
                       curator.userType = '';
                       curator.username = '';
                     });
-                    // TODO: Display all of their content as well
                     // If there were no errors, send back all data
                     res.send({
                       success: true,
@@ -639,7 +638,6 @@ module.exports = () => {
    * @param title
    * @param url
    * @param description
-   * TODO error checking
    */
   router.post('/videos/new', (req, res) => {
     let userId = '';
@@ -702,7 +700,6 @@ module.exports = () => {
               });
             } else {
               // Create a new video with given data
-              // TODO: Add location
               const newVideo = new Video({
                 title,
                 url,
@@ -823,8 +820,6 @@ module.exports = () => {
         // Add a timestamp field for sorting
         articles.forEach((article) => {
           article.createdAt = article._id.getTimestamp();
-          // TODO Don't save in mongo
-          article.save();
         });
         // Send back data
         res.send({
@@ -1483,7 +1478,6 @@ module.exports = () => {
           });
         } else {
           // TODO Will eventually also want to store reviews in user model
-          // TODO Update to be by id instead of name
           // If no errors can now save new reviews
           // First find given listing
           Listing.findById(req.body.listingId, (errListing, listing) => {
@@ -1558,7 +1552,6 @@ module.exports = () => {
 
   /**
    * Update a user's name
-   * TODO: Error check and ensure full name was entered
    */
   router.post('/users/name', (req, res) => {
     // Isolate variables from the request
@@ -1706,7 +1699,6 @@ module.exports = () => {
    * Update a user's profile picture
    * @param userId
    * @param profilePicture
-   * TODO: Error check and ensure full name was entered
    */
   router.post('/users/profilePicture', (req, res) => {
     // Isolate variables
@@ -1729,45 +1721,52 @@ module.exports = () => {
         success: false,
         error: 'Can only change your own profile picture.',
       });
-      // find and update given user
     } else {
-      User.findById(userId, (err, user) => {
-        if (err) {
-          // Error finding user
-          res.send({
-            success: false,
-            error: err.message,
-          });
-        } else if (!user) {
-          res.send({
-            success: false,
-            error: 'User cannot be found.',
-          });
-        } else {
-          // Update the user
-          user.profilePicture = profilePicture;
-          // Save the changes
-          user.save((errSave) => {
-            if (err) {
-              res.send({
-                success: false,
-                error: errSave.message,
-              });
-            } else {
-              res.send({
-                success: true,
-                error: '',
-              });
-            }
-          });
-        }
-      });
+      const imgRegexp = /\.(jpeg|jpg|gif|png)$/;
+      if (req.body.profilePicture && !imgRegexp.test(req.body.profilePicture)) {
+        res.send({
+          success: false,
+          error: "Image url must end in \"jpeg\", \"png\", \"gif\", or \"jpg\".",
+        });
+      } else {
+        // find and update given user
+        User.findById(userId, (err, user) => {
+          if (err) {
+            // Error finding user
+            res.send({
+              success: false,
+              error: err.message,
+            });
+          } else if (!user) {
+            res.send({
+              success: false,
+              error: 'User cannot be found.',
+            });
+          } else {
+            // Update the user
+            user.profilePicture = profilePicture;
+            // Save the changes
+            user.save((errSave) => {
+              if (err) {
+                res.send({
+                  success: false,
+                  error: errSave.message,
+                });
+              } else {
+                res.send({
+                  success: true,
+                  error: '',
+                });
+              }
+            });
+          }
+        });
+      }
     }
   });
 
   /**
    * Find a given user's profile
-   * TODO error checking
    */
   router.get('/users/:id', (req, res) => {
     // Find the id from the url

@@ -8,67 +8,90 @@ const router = express.Router();
  */
 module.exports = () => {
   router.post('/register', (req, res) => {
-    // Ensure password meets validity conditions
-    if (invalidPassword(req.body.password, req.body.verPassword)) {
+    // Error checking
+    if (!req.body.name) {
       res.send({
         success: false,
-        error: invalidPassword(req.body.password, req.body.verPassword),
+        error: 'Name field must be populated.',
+      });
+    } else if (!req.body.username) {
+      res.send({
+        success: false,
+        error: 'Email field must be populated.',
+      });
+    } else if (!req.body.name.indexOf(" ")) {
+      res.send({
+        success: false,
+        error: 'Enter full name.',
+      });
+    } else if (Object.keys(req.body.location).length === 0) {
+      res.send({
+        success: false,
+        error: 'Location field must be populated.',
       });
     } else {
-      // Will attempt to find user in database
-      User.findOne({ 'username': req.body.username }, (err, user) => {
-        if (err) {
-        	res.send({
-        		success: false,
-        		error: 'Unknown registration error: ' + err,
-        	});
-        } else
-	    	// Error if the user already exists
-        if (user) {
-				  res.send({
-					  success: false,
-				    error: 'User with username ' + req.body.username + ' already exists',
-				  });
-        } else {
-          // If no error and user doesn't already exist, create a user
-          // Default sets userType to user, admin can change to admin or curator
-          const newUser = new User({
-            name: req.body.name,
-            username: req.body.username,
-            location: req.body.location,
-            password: createHash(req.body.password),
-            userType: 'user',
-            profilePicture: 'https://s3.amazonaws.com/nalda/default-profile-picture.png',
-          });
+      // Ensure password meets validity conditions
+      if (invalidPassword(req.body.password, req.body.verPassword)) {
+        res.send({
+          success: false,
+          error: invalidPassword(req.body.password, req.body.verPassword),
+        });
+      } else {
+        // Will attempt to find user in database
+        User.findOne({ 'username': req.body.username }, (err, user) => {
+          if (err) {
+          	res.send({
+          		success: false,
+          		error: 'Unknown registration error: ' + err,
+          	});
+          } else
+  	    	// Error if the user already exists
+          if (user) {
+  				  res.send({
+  					  success: false,
+  				    error: 'User with username ' + req.body.username + ' already exists',
+  				  });
+          } else {
+            // If no error and user doesn't already exist, create a user
+            // Default sets userType to user, admin can change to admin or curator
+            const newUser = new User({
+              name: req.body.name,
+              username: req.body.username,
+              location: req.body.location,
+              password: createHash(req.body.password),
+              userType: 'user',
+              profilePicture: 'https://s3.amazonaws.com/nalda/default-profile-picture.png',
+            });
 
-          // Saving new user in Mongo
-          newUser.save((errUser, usr) => {
-            if (errUser) {
-              res.send({
-                success: false,
-                error: 'Unknown registration error: ' + errUser,
-              });
-            } else {
-              // Built in passport method for logging in
-              req.login(usr, (errLogin) => {
-                if (errLogin) {
-                  res.send({
-                    success: false,
-                    error: 'Error logging in new user: ' + errLogin,
-                  });
-                } else {
-                  // Finally, if registration is successful, send back user
-                  res.send({
-                    success: true,
-                    error: '',
-                    user: usr,
-                  });
-                }
-              });
-            }
-          });
-        }
-		  });
+            // Saving new user in Mongo
+            newUser.save((errUser, usr) => {
+              if (errUser) {
+                res.send({
+                  success: false,
+                  error: 'Unknown registration error: ' + errUser,
+                });
+              } else {
+                // Built in passport method for logging in
+                req.login(usr, (errLogin) => {
+                  if (errLogin) {
+                    res.send({
+                      success: false,
+                      error: 'Error logging in new user: ' + errLogin,
+                    });
+                  } else {
+                    // Finally, if registration is successful, send back user
+                    res.send({
+                      success: true,
+                      error: '',
+                      user: usr,
+                    });
+                  }
+                });
+              }
+            });
+          }
+  		  });
+      }
     }
   });
 
