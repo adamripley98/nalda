@@ -12,6 +12,7 @@ import Medium from '../../shared/Medium';
 
 /**
  * Component to render the edit video form
+ * TODO Autocomplete not working
  */
 class EditVideoForm extends React.Component {
   /**
@@ -55,6 +56,7 @@ class EditVideoForm extends React.Component {
             pending: false,
             error: "",
             ...res.data.data,
+            videoId: id,
           });
         } else {
           // There was an error in the request
@@ -202,7 +204,7 @@ class EditVideoForm extends React.Component {
           const latitude = results[0].geometry.location.lat();
           const longitude = results[0].geometry.location.lng();
           // Post to backend creating new video
-          axios.post('/api/videos/new', {
+          axios.post(`/api/videos/${this.state.videoId}/edit`, {
             title: this.state.title,
             description: this.state.description,
             url: this.state.url,
@@ -222,7 +224,6 @@ class EditVideoForm extends React.Component {
             } else {
               // Redirect to home after successful submission
               this.setState({
-                videoId: resp.data.data._id,
                 redirectToHome: true,
                 pendingSubmit: false,
               });
@@ -276,7 +277,7 @@ class EditVideoForm extends React.Component {
                       name="image"
                       type="url"
                       className="form-control marg-bot-1"
-                      value={ this.state.video }
+                      value={ this.state.url }
                       onChange={ this.handleChangeVideo }
                     />
 
