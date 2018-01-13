@@ -82,9 +82,6 @@ class EditArticleForm extends React.Component {
    */
   componentDidUpdate(prevProps, prevState) {
     if (prevState.pending && !this.state.pending) {
-      // Autosize textarea components
-      autosize(document.querySelectorAll('textarea'));
-
       // Autocomplete the location field for the article
       const location = document.getElementById("location");
       if (location) {
@@ -97,6 +94,11 @@ class EditArticleForm extends React.Component {
       // Update the location field
       document.getElementById('location').value = this.state.location.name;
     }
+
+    // Autosize textarea components
+    // This must be done outside of the if statement because a user can add
+    // more body components which must be resizeable
+    autosize(document.querySelectorAll('textarea'));
   }
 
   /**

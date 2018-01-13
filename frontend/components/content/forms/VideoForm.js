@@ -38,6 +38,7 @@ class VideoForm extends React.Component {
    * Handle resizing textarea
    */
   componentDidMount() {
+    // Resize textarea to fit input
     autosize(document.querySelectorAll('textarea'));
 
     // Autocomplete the user's city
@@ -75,7 +76,9 @@ class VideoForm extends React.Component {
     });
   }
 
-  // Helper method to check if input is valid
+  /**
+   * Helper method to check if input is valid
+   */
   inputValid() {
     // Begin error checking
     if (!this.state.title) {
@@ -149,8 +152,10 @@ class VideoForm extends React.Component {
       const geocoder = new google.maps.Geocoder();
       geocoder.geocode({ 'address': location }, (results, status) => {
         if (status === google.maps.GeocoderStatus.OK) {
+          // Find the coordinates of the location
           const latitude = results[0].geometry.location.lat();
           const longitude = results[0].geometry.location.lng();
+
           // Post to backend creating new video
           axios.post('/api/videos/new', {
             title: this.state.title,
@@ -162,27 +167,28 @@ class VideoForm extends React.Component {
               lng: longitude,
             },
           })
-          .then((resp) => {
-            if (!resp.data.success) {
-              // Display error on frontend
+            .then(resp => {
+              if (!resp.data.success) {
+                // Display error on frontend
+                this.setState({
+                  error: resp.data.error,
+                  pendingSubmit: false,
+                });
+              } else {
+                // Redirect to home after successful submission
+                this.setState({
+                  videoId: resp.data.data._id,
+                  redirectToHome: true,
+                  pendingSubmit: false,
+                });
+              }
+            })
+            .catch(err => {
+              // If there was an error during the request
               this.setState({
-                error: resp.data.error,
-                pendingSubmit: false,
+                error: err,
               });
-            } else {
-              // Redirect to home after successful submission
-              this.setState({
-                videoId: resp.data.data._id,
-                redirectToHome: true,
-                pendingSubmit: false,
-              });
-            }
-          })
-          .catch((err) => {
-            this.setState({
-              error: err,
             });
-          });
         }
       });
     }
@@ -194,7 +200,10 @@ class VideoForm extends React.Component {
   render() {
     return (
       <div>
+        {/* Redirect to the video if it has been created */}
         { this.state.redirectToHome && <Redirect to={`/videos/${this.state.videoId}`}/> }
+
+        {/* Else, render the form to create a video */}
         <Medium>
           <div className="card thin-form no-pad">
             <div className="tabs">
