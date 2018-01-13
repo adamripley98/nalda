@@ -9,7 +9,7 @@ import Stars from './Stars';
  */
 const Review = ({title, content, createdAt, rating, name }) => {
   // Format the timestamp
-  const timestamp = moment(createdAt).fromNow();
+  const timestamp = moment(new Date(createdAt)).fromNow();
 
   // Render the component
   return (
