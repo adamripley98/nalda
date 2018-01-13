@@ -3,6 +3,8 @@
  * NOTE all of these routes are prefixed with "/api"
  * NOTE these routes serve and accept JSON-formatted data
  * TODO file should be split up into many smaller files
+ *      for example, all routes prefixed with "/articles" can be in their own
+ *      router imported here.
  */
 
 // Import frameworks
@@ -709,8 +711,8 @@ module.exports = () => {
                 url,
                 description,
                 author: userId,
-                createdAt: new Date().getTime(),
-                updatedAt: new Date().getTime(),
+                createdAt: Date.now(),
+                updatedAt: Date.now(),
                 location,
               });
 
@@ -960,8 +962,8 @@ module.exports = () => {
                     body,
                     location,
                     author: userId,
-                    createdAt: new Date().getTime(),
-                    updatedAt: new Date().getTime(),
+                    createdAt: Date.now(),
+                    updatedAt: Date.now(),
                   });
 
                   // Save the new article in Mongo
@@ -1564,8 +1566,8 @@ module.exports = () => {
                 amenities,
                 location,
                 author: userId,
-                createdAt: new Date().getTime(),
-                updatedAt: new Date().getTime(),
+                createdAt: Date.now(),
+                updatedAt: Date.now(),
               });
 
               // Save the new article in mongo

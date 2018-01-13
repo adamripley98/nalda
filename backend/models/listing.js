@@ -55,8 +55,8 @@ const listingSchema = new Schema({
       authorId: String,
     }
   ],
-  createdAt: String,
-  updatedAt: String,
+  createdAt: Number,
+  updatedAt: Number,
 });
 
 // Creates an index allowing for search functionality

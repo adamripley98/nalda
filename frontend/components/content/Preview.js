@@ -34,7 +34,7 @@ const Preview = ({ _id, title, subtitle, image, isArticle, isListing, isVideo, i
           </h6>
           {
             timestamp && (
-              <p className="gray-text marg-bot-0 right italic">
+              <p className="gray-text marg-bot-0 marg-top-05 right italic">
                 { moment(new Date(Number(timestamp))).fromNow(true) }
               </p>
             )
@@ -55,7 +55,7 @@ Preview.propTypes = {
   isVideo: PropTypes.bool,
   isArticle: PropTypes.bool,
   isThin: PropTypes.bool,
-  timestamp: PropTypes.string,
+  timestamp: PropTypes.number,
 };
 
 export default Preview;
