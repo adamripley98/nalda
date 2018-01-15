@@ -58,7 +58,7 @@ class ListingForm extends React.Component {
       listingId: "",
       redirectToHome: "",
       website: "",
-      amenities: {
+      categories: {
         foodTrucks: false,
         lateNights: false,
         healthy: false,
@@ -92,7 +92,7 @@ class ListingForm extends React.Component {
     this.handleChangePrice = this.handleChangePrice.bind(this);
     this.handleChangeWebsite = this.handleChangeWebsite.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleClickAmenity = this.handleClickAmenity.bind(this);
+    this.handleClickCategory = this.handleClickCategory.bind(this);
   }
 
   /**
@@ -190,20 +190,20 @@ class ListingForm extends React.Component {
   }
 
   /**
-   * Helper method to handle click on food truck amenity
+   * Helper method to handle click on food truck category
    */
-  handleClickAmenity(event, name) {
+  handleClickCategory(event, name) {
     // Copy over the existing state
-    const newAmenityState = {
-      ...this.state.amenities,
+    const newCategoryState = {
+      ...this.state.categories,
     };
 
     // Update the state for the passed in field
-    newAmenityState[name] = !this.state.amenities[name];
+    newCategoryState[name] = !this.state.categories[name];
 
     // Update the component state
     this.setState({
-      amenities: newAmenityState,
+      categories: newCategoryState,
     });
   }
 
@@ -246,7 +246,7 @@ class ListingForm extends React.Component {
             rating: this.state.rating,
             price: this.state.price,
             website: this.state.website,
-            amenities: this.state.amenities,
+            categories: this.state.categories,
           })
             .then((resp) => {
               // Display any errors
@@ -541,30 +541,30 @@ class ListingForm extends React.Component {
               />
 
               <label>
-                Amenities
+                Categories
               </label>
-              <div className="amenities-form marg-bot-1">
-                {/* Begin first row of amenities */}
+              <div className="categories-form marg-bot-1">
+                {/* Begin first row of categories */}
                 <div className="row">
                   <div className="col-12 col-md-6">
                     <p className="bold">
                       No time, gotta run
                     </p>
                     <p
-                      onClick={ (e) => this.handleClickAmenity(e, "foodTrucks") }
-                      className={ this.state.amenities.foodTrucks && "active" }
+                      onClick={ (e) => this.handleClickCategory(e, "foodTrucks") }
+                      className={ this.state.categories.foodTrucks && "active" }
                     >
                       Food trucks
                     </p>
                     <p
-                      onClick={ (e) => this.handleClickAmenity(e, "lateNights") }
-                      className={ this.state.amenities.lateNights && "active" }
+                      onClick={ (e) => this.handleClickCategory(e, "lateNights") }
+                      className={ this.state.categories.lateNights && "active" }
                     >
                       Late nights
                     </p>
                     <p
-                      onClick={ (e) => this.handleClickAmenity(e, "healthy") }
-                      className={ this.state.amenities.healthy && "active" }
+                      onClick={ (e) => this.handleClickCategory(e, "healthy") }
+                      className={ this.state.categories.healthy && "active" }
                     >
                       Healthy
                     </p>
@@ -574,48 +574,48 @@ class ListingForm extends React.Component {
                       Hangout spots
                     </p>
                     <p
-                      onClick={ (e) => this.handleClickAmenity(e, "forTheSweetTooth") }
-                      className={ this.state.amenities.forTheSweetTooth && "active" }
+                      onClick={ (e) => this.handleClickCategory(e, "forTheSweetTooth") }
+                      className={ this.state.categories.forTheSweetTooth && "active" }
                     >
                       For the sweet tooth
                     </p>
                     <p
-                      onClick={ (e) => this.handleClickAmenity(e, "forTheStudyGrind") }
-                      className={ this.state.amenities.forTheStudyGrind && "active" }
+                      onClick={ (e) => this.handleClickCategory(e, "forTheStudyGrind") }
+                      className={ this.state.categories.forTheStudyGrind && "active" }
                     >
                       For the study grind
                     </p>
                     <p
-                      onClick={ (e) => this.handleClickAmenity(e, "openLate") }
-                      className={ this.state.amenities.openLate && "active" }
+                      onClick={ (e) => this.handleClickCategory(e, "openLate") }
+                      className={ this.state.categories.openLate && "active" }
                     >
                       It’s midnight and I’m hungry
                     </p>
                   </div>
                 </div>
-                {/* Close first row of amenities */}
+                {/* Close first row of categories */}
 
-                {/* Start second row of amenities */}
+                {/* Start second row of categories */}
                 <div className="row">
                   <div className="col-12 col-md-6">
                     <p className="bold">
                       Wanna drink?
                     </p>
                     <p
-                      onClick={ (e) => this.handleClickAmenity(e, "bars") }
-                      className={ this.state.amenities.bars && "active" }
+                      onClick={ (e) => this.handleClickCategory(e, "bars") }
+                      className={ this.state.categories.bars && "active" }
                     >
                       Bars
                     </p>
                     <p
-                      onClick={ (e) => this.handleClickAmenity(e, "byos") }
-                      className={ this.state.amenities.byos && "active" }
+                      onClick={ (e) => this.handleClickCategory(e, "byos") }
+                      className={ this.state.categories.byos && "active" }
                     >
                       BYOs
                     </p>
                     <p
-                      onClick={ (e) => this.handleClickAmenity(e, "speakeasies") }
-                      className={ this.state.amenities.speakeasies && "active" }
+                      onClick={ (e) => this.handleClickCategory(e, "speakeasies") }
+                      className={ this.state.categories.speakeasies && "active" }
                     >
                       Speakeasies
                     </p>
@@ -625,42 +625,42 @@ class ListingForm extends React.Component {
                       Lazy weekend
                     </p>
                     <p
-                      onClick={ (e) => this.handleClickAmenity(e, "parentsVisiting") }
-                      className={ this.state.amenities.parentsVisiting && "active" }
+                      onClick={ (e) => this.handleClickCategory(e, "parentsVisiting") }
+                      className={ this.state.categories.parentsVisiting && "active" }
                     >
                       Parents are visiting?!
                     </p>
                     <p
-                      onClick={ (e) => this.handleClickAmenity(e, "gotPlasteredLastNight") }
-                      className={ this.state.amenities.gotPlasteredLastNight && "active" }
+                      onClick={ (e) => this.handleClickCategory(e, "gotPlasteredLastNight") }
+                      className={ this.state.categories.gotPlasteredLastNight && "active" }
                     >
                       Got plastered last night…
                     </p>
                   </div>
                 </div>
-                {/* End second row of amenities */}
+                {/* End second row of categories */}
 
-                {/* Begin third row of amenities */}
+                {/* Begin third row of categories */}
                 <div className="row">
                   <div className="col-12 col-md-6">
                     <p className="bold">
                       Special occasions
                     </p>
                     <p
-                      onClick={ (e) => this.handleClickAmenity(e, "dateNight") }
-                      className={ this.state.amenities.dateNight && "active" }
+                      onClick={ (e) => this.handleClickCategory(e, "dateNight") }
+                      className={ this.state.categories.dateNight && "active" }
                     >
                       Date night
                     </p>
                     <p
-                      onClick={ (e) => this.handleClickAmenity(e, "formals") }
-                      className={ this.state.amenities.formals && "active" }
+                      onClick={ (e) => this.handleClickCategory(e, "formals") }
+                      className={ this.state.categories.formals && "active" }
                     >
                       Formals
                     </p>
                     <p
-                      onClick={ (e) => this.handleClickAmenity(e, "birthdays") }
-                      className={ this.state.amenities.birthdays && "active" }
+                      onClick={ (e) => this.handleClickCategory(e, "birthdays") }
+                      className={ this.state.categories.birthdays && "active" }
                     >
                       Birthdays
                     </p>
@@ -670,45 +670,45 @@ class ListingForm extends React.Component {
                       Dinner with friends
                     </p>
                     <p
-                      onClick={ (e) => this.handleClickAmenity(e, "treatYourself") }
-                      className={ this.state.amenities.treatYourself && "active" }
+                      onClick={ (e) => this.handleClickCategory(e, "treatYourself") }
+                      className={ this.state.categories.treatYourself && "active" }
                     >
                       Treat yourself
                     </p>
                     <p
-                      onClick={ (e) => this.handleClickAmenity(e, "adulting") }
-                      className={ this.state.amenities.adulting && "active" }
+                      onClick={ (e) => this.handleClickCategory(e, "adulting") }
+                      className={ this.state.categories.adulting && "active" }
                     >
                       #adulting
                     </p>
                     <p
-                      onClick={ (e) => this.handleClickAmenity(e, "feelingLazy") }
-                      className={ this.state.amenities.feelingLazy && "active" }
+                      onClick={ (e) => this.handleClickCategory(e, "feelingLazy") }
+                      className={ this.state.categories.feelingLazy && "active" }
                     >
                       Feeling lazy
                     </p>
                   </div>
                 </div>
-                {/* End third row of amenities */}
+                {/* End third row of categories */}
 
                 <p className="bold">
                   Adventure
                 </p>
                 <p
-                  onClick={ (e) => this.handleClickAmenity(e, "holeInTheWall") }
-                  className={ this.state.amenities.holeInTheWall && "active" }
+                  onClick={ (e) => this.handleClickCategory(e, "holeInTheWall") }
+                  className={ this.state.categories.holeInTheWall && "active" }
                 >
                   Hole in the wall
                 </p>
                 <p
-                  onClick={ (e) => this.handleClickAmenity(e, "showoffToYourFriends") }
-                  className={ this.state.amenities.showoffToYourFriends && "active" }
+                  onClick={ (e) => this.handleClickCategory(e, "showoffToYourFriends") }
+                  className={ this.state.categories.showoffToYourFriends && "active" }
                 >
                   Showoff to your friends
                 </p>
                 <p
-                  onClick={ (e) => this.handleClickAmenity(e, "forTheGram") }
-                  className={ this.state.amenities.forTheGram && "active" }
+                  onClick={ (e) => this.handleClickCategory(e, "forTheGram") }
+                  className={ this.state.categories.forTheGram && "active" }
                 >
                   #forthegram
                 </p>

@@ -37,10 +37,25 @@
 
     .title {
       font-weight: bold;
+      margin-bottom: 0rem;
     }
 
     .subtitle {
       font-weight: bold;
+    }
+
+    .categories {
+      margin-bottom: 0.5rem;
+
+      .category {
+        background: $light-gray;
+        font-size: 0.8rem;
+        display: inline-block;
+        width: auto;
+        padding: 0.2rem 0.4rem;
+        border-radius: 0.2rem;
+        margin-right: 0.4rem;
+      }
     }
 
     .amenity {
@@ -132,26 +147,18 @@
 .review-wrapper {
   display: flex;
 
-  .user-info {
-    .profile-picture {
-      display: inline-block;
-      width: 2.5rem;
-      height: 2.5rem;
-      margin-right: 1rem;
-      margin-bottom: 0.25rem;
-      z-index: 2;
-      border-radius: 50%;
-      background: $gray;
-      background-position: center !important;
-      background-repeat: no-repeat !important;
-      background-size: cover !important;
-    }
-
-    p {
-      color: $gray;
-      font-weight: bold;
-      margin-right: 0.5rem;
-    }
+  .profile-picture {
+    display: inline-block;
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-right: 1rem;
+    margin-bottom: 0.25rem;
+    z-index: 2;
+    border-radius: 50%;
+    background: $gray;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
   }
 
   .review {
@@ -160,6 +167,24 @@
     border-radius: 0.4rem;
     padding: 1rem;
     margin-bottom: 1rem;
+
+    .name {
+      color: $gray;
+      font-weight: bold;
+      font-size: 0.8rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .title-and-rating {
+      display: flex;
+      flex-direction: row-reverse;
+
+      h6 {
+        margin-top: 0.4rem;
+        margin-bottom: 0.4rem;
+        flex: 1;
+      }
+    }
 
     p {
       margin-bottom: 0rem;
@@ -178,6 +203,21 @@
       right: 2rem;
       font-size: 0.8rem;
     }
+  }
+}
+
+/**
+ * Left-justify review ratings on smaller screens
+ */
+@media screen and (max-width: 712px) {
+  .review-wrapper .review .title-and-rating {
+    display: block;
+  }
+}
+
+@media screen and (max-device-width: 712px) {
+  .review-wrapper .review .title-and-rating {
+    display: block;
   }
 }
 

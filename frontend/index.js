@@ -1,4 +1,4 @@
-// Import typical frameworks
+// Import frameworks
 import React from 'react';
 import { render } from 'react-dom';
 

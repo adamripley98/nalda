@@ -1128,7 +1128,6 @@ module.exports = () => {
    * @param body (text of the article)
    */
   router.post('/articles/:id/edit', (req, res) => {
-
     // Find the id from the url
     const articleId = req.params.id;
 
@@ -1571,10 +1570,9 @@ module.exports = () => {
    * @param rating
    * @param price
    * @param website
-   * @param amenities
+   * @param categories
    */
   router.post('/listings/:id/edit', (req, res) => {
-
     // Find the id from the url
     const listingId = req.params.id;
 
@@ -1610,7 +1608,7 @@ module.exports = () => {
             const location = req.body.location;
             const rating = req.body.rating;
             const description = req.body.description;
-            const amenities = req.body.amenities;
+            const categories = req.body.categories;
             const price = req.body.price;
             const website = req.body.website;
             const hours = req.body.hours;
@@ -1632,8 +1630,6 @@ module.exports = () => {
               error = "Image must be a valid URL to an image.";
             } else if (!price) {
               error = "Price must be populated.";
-            } else if (!amenities) {
-              error = "Amenities must be populated.";
             } else if (!website) {
               error = "Website must be populated.";
             } else if (!hours) {
@@ -1677,7 +1673,7 @@ module.exports = () => {
                       listing.rating = rating;
                       listing.price = price;
                       listing.location = location;
-                      listing.amenities = amenities;
+                      listing.categories = categories;
                       listing.hours = hours;
                       listing.website = website;
                       listing.updatedAt = new Date().getTime();
@@ -1839,13 +1835,13 @@ module.exports = () => {
             const rating = req.body.rating;
             const price = req.body.price;
             const website = req.body.website;
-            const amenities = req.body.amenities;
+            const categories = req.body.categories;
             const location = req.body.location;
 
             let error = "";
 
             // Error checking
-            // TODO: error check for hours and amenities
+            // TODO: error check for hours and categories
             if (!title) {
               error = "Title must be populated.";
             } else if (!description) {
@@ -1880,7 +1876,7 @@ module.exports = () => {
                 rating,
                 price,
                 website,
-                amenities,
+                categories,
                 location,
                 author: userId,
                 createdAt: Date.now(),

@@ -14,23 +14,23 @@ const Review = ({title, content, createdAt, rating, name, profilePicture }) => {
   // Render the component
   return (
     <div className="review-wrapper">
-      <div className="user-info">
-        <div
-          className="profile-picture background-image"
-          style={{ backgroundImage: `url(${profilePicture})` }}
-        />
-        <p>
-          { name }
-        </p>
-      </div>
+      <div
+        className="profile-picture background-image"
+        style={{ backgroundImage: `url(${profilePicture})` }}
+      />
       <div className="review">
         <p className="timestamp">
           { timestamp }
         </p>
-        <Stars rating={ rating } />
-        <h6>
-          { title }
-        </h6>
+        <p className="name">
+          { name }
+        </p>
+        <div className="title-and-rating">
+          <Stars rating={ rating } />
+          <h6>
+            { title }
+          </h6>
+        </div>
         <p>
           { content }
         </p>

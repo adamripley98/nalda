@@ -5,29 +5,34 @@
   margin-top: 1rem;
   margin-bottom: 1rem;
 
-  h1 {
+  // Titles
+  .title {
     font-weight: bold !important;
-    font-size: 2.5rem !important;
+    font-size: 3rem !important;
     margin-bottom: 0.5rem;
-    color: $dark-gray;
   }
 
-  h3 {
+  // Subtitles
+  .subtitle {
     font-weight: bold;
     color: $gray;
     font-style: italic;
     margin-bottom: 0rem;
   }
 
+  // Images
   img {
     margin-bottom: 1rem;
     border-radius: 0.4rem;
+    width: 100%;
   }
 
+  // General text styling
   p {
     line-height: 1.5;
   }
 
+  // Styling block quotes
   .quote {
     color: $gray;
     font-style: italic;

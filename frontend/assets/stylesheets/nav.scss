@@ -157,10 +157,12 @@
       padding-top: 1rem;
       padding-right: 1rem;
 
-      .login {
-        padding-right: 1rem;
-        height: 100%;
+      button.login {
+        padding: 0.4rem 0.8rem;
+        margin-right: 0.4rem;
         color: $gray;
+        outline: 0 !important;
+        line-height: 1;
 
         &:hover,
         &:active,
@@ -174,6 +176,7 @@
         background: $primary;
         padding: 0.4rem 0.8rem;
         border-radius: 0.4rem;
+        line-height: 1;
 
         &:hover,
         &:active,
@@ -430,7 +433,7 @@
  * Also hide links prompting the user to login and register
  * NOTE these links can still be accessed by toggling the side menu
  */
-@media screen and (max-width: 648px) {
+@media screen and (max-width: 718px) {
   .nav .search .form-control {
     &.small {
       display: block;
@@ -446,7 +449,7 @@
   }
 }
 
-@media screen and (max-device-width: 648px) {
+@media screen and (max-device-width: 718px) {
   .nav .search .form-control {
     &.small {
       display: block;

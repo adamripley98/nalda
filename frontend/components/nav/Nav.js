@@ -78,9 +78,14 @@ class Nav extends Component {
           ) : (
             <div className="user-info">
               <div className="sign-in-links">
-                <Link to="/login" className="login">
+                <button
+                  className="btn login"
+                  type="button"
+                  data-toggle="modal"
+                  data-target="#loginModal"
+                >
                   Login
-                </Link>
+                </button>
                 <Link to="/register" className="register">
                   Register
                 </Link>

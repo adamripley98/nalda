@@ -24,7 +24,7 @@ class Footer extends React.Component {
                 About Nalda
               </Link>
               <Link to="/contact">
-                Contact Us
+                Contact us
               </Link>
               <Link to="/credits">
                 Site credits
