@@ -433,7 +433,7 @@
  * Also hide links prompting the user to login and register
  * NOTE these links can still be accessed by toggling the side menu
  */
-@media screen and (max-width: 648px) {
+@media screen and (max-width: 718px) {
   .nav .search .form-control {
     &.small {
       display: block;
@@ -449,7 +449,7 @@
   }
 }
 
-@media screen and (max-device-width: 648px) {
+@media screen and (max-device-width: 718px) {
   .nav .search .form-control {
     &.small {
       display: block;

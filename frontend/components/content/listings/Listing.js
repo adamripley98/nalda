@@ -33,7 +33,7 @@ class Listing extends React.Component {
       description: "",
       website: "",
       price: "",
-      amenities: {},
+      categories: {},
       location: {
         name: "",
         lat: null,
@@ -191,14 +191,16 @@ class Listing extends React.Component {
       });
   }
 
-  // Helper method to render amenities
-  renderAmenities() {
-    // If amenities are in the state (this should always be the case)
-    if (this.state.amenities && Object.keys(this.state.amenities).length) {
-      // Get all keys from the amenities object
-      const keys = Object.keys(this.state.amenities);
+  /**
+   * Helper method to render categories
+   */
+  renderCategories() {
+    // If there are categories to display
+    if (this.state.categories && Object.keys(this.state.categories).length) {
+      // Get all keys from the object
+      const keys = Object.keys(this.state.categories);
 
-      // Map from amenities to properly formatted text
+      // Map from categories to properly formatted text
       const map = {
         foodTrucks: "Food truck",
         lateNights: "Late nights",
@@ -222,20 +224,55 @@ class Listing extends React.Component {
         forTheGram: "#forTheGram",
       };
 
-      // Return an amenity div tag for each amenity which is true in the state
-      // That is, if the curator marked that the listing has said amenity
-      return keys.map(amenity => (
-        this.state.amenities[amenity] ? (
-          <div className="amenity" key={ amenity }>
-            { map[amenity] }
+      // Return an category div tag for each category which is true in the state
+      // That is, if the curator marked that the listing has said category
+      return keys.map(category => (
+        this.state.categories[category] ? (
+          <div className="category" key={ category }>
+            { map[category] ? map[category] : category }
           </div>
         ) : null
       ));
     }
 
-    // If there are no amentities return nothing
+    // If there are no categories
     return (
-      <div className="card pad-1 marg-bot-1">
+      <div className="card border pad-1 marg-bot-1">
+        No amenities have been marked for this listing.
+      </div>
+    );
+  }
+
+  /**
+   * Helper method to render amenities
+   */
+  renderAmenities() {
+    // If amenities are in the state (this should always be the case)
+    if (this.state.amenities && Object.keys(this.state.amenities).length) {
+      // Get all keys from the amenities object
+      const keys = Object.keys(this.state.amenities);
+
+      // Map from amenities to properly formatted text
+      const map = {
+        wifi: "WiFi",
+        vegetarian: "Vegetarian",
+        handicap: "Handicap accessible",
+      };
+
+      // Return an amenity div tag for each amenity which is true in the state
+      // That is, if the curator marked that the listing has said amenity
+      return keys.map(amenity => (
+        this.state.amenities[amenity] ? (
+          <div className="amenity" key={ amenity }>
+            { map[amenity] ? map[amenity] : amenity }
+          </div>
+        ) : null
+      ));
+    }
+
+    // If there are no amentities
+    return (
+      <div className="card border pad-1 marg-bot-1">
         No amenities have been marked for this listing.
       </div>
     );
@@ -537,6 +574,9 @@ class Listing extends React.Component {
                       _id={ this.state.author._id }
                       profilePicture={ this.state.author.profilePicture }
                     />
+                  </div>
+                  <div className="categories">
+                    { this.renderCategories() }
                   </div>
                   <p className="description">
                     { this.state.description }

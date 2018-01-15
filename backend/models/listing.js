@@ -24,7 +24,7 @@ const listingSchema = new Schema({
   author: {
     type: Schema.Types.ObjectId, ref: 'User',
   },
-  amenities: {
+  categories: {
     foodTrucks: Boolean,
     lateNights: Boolean,
     healthy: Boolean,
@@ -45,6 +45,12 @@ const listingSchema = new Schema({
     holeInTheWall: Boolean,
     showoffToYourFriends: Boolean,
     forTheGram: Boolean,
+  },
+  amenities: {
+    wifi: Boolean,
+    vegetarian: Boolean,
+    handicap: Boolean,
+    cashOnly: Boolean,
   },
   reviews: [
     {

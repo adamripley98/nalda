@@ -44,6 +44,10 @@ h6,
 .card {
   background: white;
   border: 0px solid transparent;
+
+  &.border {
+    border: 1px solid $border;
+  }
 }
 
 // Modular class to make some text gray
