@@ -152,7 +152,10 @@ class Article extends React.Component {
                     Delete article
                   </h5>
                   <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                    <span className="bars" aria-hidden="true">
+                      <span className="bar" />
+                      <span className="bar" />
+                    </span>
                   </button>
                 </div>
                 <div className="modal-body left">

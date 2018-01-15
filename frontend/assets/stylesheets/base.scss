@@ -683,29 +683,49 @@ a {
 
     button.close {
       border-radius: 50%;
-      padding: 0rem 0.4rem 0.1rem 0.35rem;
-      border: 1px solid $border;
+      padding: 0.3rem;
+      border: 1px solid $gray;
       outline: 0 !important;
+      transition: all 0.2s ease;
 
-      span {
-        color: $gray;
+      .bars {
+        display: block;
+        width: 0.56568rem;
+        height: 0.56568rem;
+        transform: translateY(0.27rem) translateX(-0.12rem);
+      }
+
+      .bar {
+        position: absolute;
+        display: block;
+        background: $gray;
+        height: 1px;
+        width: 0.8rem;
+        transition: all 0.2s ease;
+
+        &:first-child {
+          transform: rotate(45deg);
+        }
+
+        &:last-child {
+          transform: rotate(-45deg);
+        }
       }
 
       &:hover {
-        border: 1px solid $gray;
+        border: 1px solid $dark-gray;
 
-        span {
-          color: $dark-gray;
+        .bar {
+          background: $dark-gray;
         }
       }
 
       &:active,
       &:focus {
         border: 1px solid $dark-gray;
-        background: $border;
 
-        span {
-          color: $dark-gray;
+        .bar {
+          background: $dark-gray;
         }
       }
     }
