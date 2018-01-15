@@ -45,6 +45,9 @@ import EditVideoForm from '../components/content/forms/EditVideoForm';
 // Other components
 import About from '../components/About';
 import Contact from '../components/Contact';
+import Credits from '../components/Credits';
+import Terms from '../components/Terms';
+import Privacy from '../components/Privacy';
 import Admin from '../components/Admin';
 import NotFoundSection from '../components/NotFoundSection';
 import Profile from '../components/Profile';
@@ -131,6 +134,9 @@ class AppContainer extends Component {
                 { /* General routes */ }
                 <Route exact path="/about" component={About}/>
                 <Route exact path="/contact" component={Contact}/>
+                <Route exact path="/terms" component={Terms}/>
+                <Route exact path="/privacy" component={Privacy}/>
+                <Route exact path="/credits" component={Credits}/>
                 <Route exact path="/" component={Home}/>
 
                 { /* Admin routes */ }
