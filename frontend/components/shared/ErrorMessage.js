@@ -12,7 +12,7 @@ const ErrorMessage = ({ error }) => {
         <p className="bold marg-bot-05">
           An error occured:
         </p>
-        <p className="marg-bot-0">
+        <p className="marg-bot-0 normal">
           { error }
         </p>
       </div>

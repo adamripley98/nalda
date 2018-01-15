@@ -157,10 +157,12 @@
       padding-top: 1rem;
       padding-right: 1rem;
 
-      .login {
-        padding-right: 1rem;
-        height: 100%;
+      button.login {
+        padding: 0.4rem 0.8rem;
+        margin-right: 0.4rem;
         color: $gray;
+        outline: 0 !important;
+        line-height: 1;
 
         &:hover,
         &:active,
@@ -174,6 +176,7 @@
         background: $primary;
         padding: 0.4rem 0.8rem;
         border-radius: 0.4rem;
+        line-height: 1;
 
         &:hover,
         &:active,
