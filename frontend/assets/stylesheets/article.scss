@@ -6,15 +6,14 @@
   margin-bottom: 1rem;
 
   // Titles
-  h1 {
+  .title {
     font-weight: bold !important;
-    font-size: 2.5rem !important;
+    font-size: 3rem !important;
     margin-bottom: 0.5rem;
-    color: $dark-gray;
   }
 
   // Subtitles
-  h3 {
+  .subtitle {
     font-weight: bold;
     color: $gray;
     font-style: italic;

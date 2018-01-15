@@ -196,27 +196,28 @@ class Article extends React.Component {
 
     return (
       <div className="container">
-        <div className="row">
-          <div className="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2 article">
-            {
-              (this.state.pending) ? (
+          {
+            (this.state.pending) ? (
+              <div>
                 <Loading />
+              </div>
+            ) : (
+              this.state.error ? (
+                <NotFoundSection
+                  title="Article not found"
+                  content="Uh-oh! Looks like the article you were looking for was either removed or does not exist."
+                  url="/articles"
+                  urlText="Back to all articles"
+                />
               ) : (
-                this.state.error ? (
-                  <NotFoundSection
-                    title="Article not found"
-                    content="Uh-oh! Looks like the article you were looking for was either removed or does not exist."
-                    url="/articles"
-                    urlText="Back to all articles"
-                  />
-                ) : (
-                  <div>
+                <div className="row article">
+                  <div className="col-12 col-md-10 offset-md-1">
                     { this.state.redirectToHome && <Redirect to="/"/> }
                     { this.renderButtons() }
-                    <h1>
+                    <h1 className="title">
                       { this.state.title }
                     </h1>
-                    <h3>
+                    <h3 className="subtitle">
                       { this.state.subtitle }
                     </h3>
 
@@ -228,7 +229,14 @@ class Article extends React.Component {
                       _id={ this.state.author._id }
                     />
 
-                    <img src={ this.state.image } alt={ this.state.title } className="img-fluid" />
+                    <img
+                      src={ this.state.image }
+                      alt={ this.state.title }
+                      className="img-fluid"
+                    />
+                  </div>
+
+                  <div className="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
                     {
                       this.state.body.map((component, index) => {
                         if (component.componentType === "text") {
@@ -261,11 +269,10 @@ class Article extends React.Component {
                     <div className="space-1" />
                     <Button />
                   </div>
-                )
+                </div>
               )
-            }
-          </div>
-        </div>
+            )
+          }
       </div>
     );
   }
