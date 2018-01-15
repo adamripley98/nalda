@@ -40,6 +40,12 @@ h6,
   font-weight: 600;
 }
 
+// Styling cards used throughout the app
+.card {
+  background: white;
+  border: 0px solid transparent;
+}
+
 // Modular class to make some text gray
 .gray {
   color: $gray !important;
@@ -214,7 +220,6 @@ a {
   padding: 1rem;
   margin: 1.5rem 0rem;
   background: white;
-  border: 1px solid $border;
   border-radius: 0.4rem;
 
   // Make it such that you can't drag textareas to greater lengths
