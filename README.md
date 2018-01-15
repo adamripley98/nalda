@@ -70,6 +70,7 @@ GET '/api/videos'
 - [X] Edit Listings view
 =======
 - [x] Edit Listings view
+- [ ] Free / other price option
 >>>>>>> timestamps
 - [X] Delete Listings view
 - [x] Listings location should also show as an address

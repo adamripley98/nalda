@@ -646,7 +646,7 @@ class Listing extends React.Component {
                       this.state.rating && (
                         <div className="price">
                           <strong>
-                            Rating:&nbsp;
+                            Nalda's Rating:&nbsp;
                           </strong>
                           <Stars rating={ this.state.rating } />
                         </div>
