@@ -16,18 +16,30 @@ To run the application, run `npm start`. For more responsive hot-reloading on th
 
 # API
 ```javascript
+/* General */
+GET '/api/'                    // Route to confirm the API is working
+GET '/api/home'                // Get homepage content
 
-// General
-GET '/api/'
+/* Articles */
+GET '/api/articles'            // Get all articles
+GET '/api/articles/:id'        // Get a specific article
+POST '/api/articles/new'       // Create a new article
+POST '/api/articles/:id/edit'  // Edit a specific article
+DELETE '/api/articles/:id'     // Delete a specific article
 
-// Articles
-GET '/api/articles'
+/* Listings */
+GET '/api/listings'            // Get all listings
+GET '/api/listings/:id'        // Get a specific listing
+POST '/api/listings/new'       // Create a new listing
+POST '/api/listings/:id/edit'  // Edit a specific listing
+DELETE '/api/listings/:id'     // Delete a specific listing
 
-// Listings
-GET '/api/listings'
-
-// Videos
-GET '/api/videos'
+/* Videos */
+GET '/api/videos'              // Get all videos
+GET '/api/videos/:id'          // Get a specific video
+POST '/api/videos/new'         // Create a new video
+POST '/api/videos/:id/edit'    // Edit a specific video
+DELETE '/api/videos/:id'       // Delete a specific article
 ```
 # Feature tracking
 
