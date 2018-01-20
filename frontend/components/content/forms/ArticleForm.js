@@ -6,6 +6,7 @@ import { Link, Redirect } from 'react-router-dom';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import Author from '../../shared/Author';
 
 /**
  * Component to render the new article form
@@ -252,7 +253,15 @@ class ArticleForm extends React.Component {
               <Link className="tab" to="/listings/new">Listing</Link>
               <Link className="tab" to="/videos/new">Video</Link>
             </div>
-            <form className="pad-1" onSubmit={ this.handleSubmit }>
+
+            {/* Render the author information */}
+            <Author
+              name={ this.props.name }
+              _id={ this.props.userId }
+              profilePicture={ this.props.profilePicture }
+            />
+
+            <form onSubmit={ this.handleSubmit } id="article-form">
               {
                 this.state.error ? (
                   <div className="alert alert-danger">
@@ -267,112 +276,124 @@ class ArticleForm extends React.Component {
                   ""
                 )
               }
-              <label>
-                Title
-              </label>
-              <input
+              <textarea
+                rows="1"
                 name="title"
                 type="text"
-                className="form-control marg-bot-1"
+                id="title"
+                placeholder="Title"
+                className="form-control marg-bot-05 special"
                 value={ this.state.title }
                 onChange={ this.handleChangeTitle }
               />
 
-              <label>
-                Subtitle
-              </label>
-              <input
+              <textarea
+                rows="1"
                 name="subtitle"
                 type="text"
-                className="form-control marg-bot-1"
+                id="subtitle"
+                placeholder="Subtitle"
+                className="form-control marg-bot-1 special"
                 value={ this.state.subtitle }
                 onChange={ this.handleChangeSubtitle }
               />
 
-              <label>
-                Location
-              </label>
-              <input
-                name="title"
-                type="text"
-                id="location"
-                className="form-control marg-bot-1"
-              />
+              {
+                this.state.image && (
+                  <img src={ this.state.image } alt={ this.state.title } className="img-fluid" />
+                )
+              }
 
-              <label>
-                Image (url to an image)
-              </label>
               <input
                 name="image"
                 type="text"
+                placeholder="Enter a URL to an image"
                 className="form-control marg-bot-1"
                 value={ this.state.image }
                 onChange={ this.handleChangeImage }
               />
 
-              <label>
-                Body
-              </label>
+              <input
+                name="title"
+                type="text"
+                id="location"
+                className="form-control marg-bot-2"
+              />
+
               {
                 this.state.body.map((component, index) => {
-                  // Determine the placeholder for the component
-                  let placeholder;
+                  // Determine the placeholder and class names for the component
+                  let placeholder = "";
+                  let className = "";
                   if (component.componentType === "text") {
-                    placeholder = "Enter text...";
+                    placeholder = "Tell your story...";
+                    className = "special";
                   } else if (component.componentType === "image") {
-                    placeholder = "Enter URL to an image...";
+                    placeholder = "Enter a URL to an image...";
+                    className = "image";
                   } else if (component.componentType === "quote") {
-                    placeholder = "Enter quote...";
+                    placeholder = "Enter a quote...";
+                    className = "special quote";
                   }
 
                   // Return the textarea associated with the component
                   return (
-                    <div className="component" key={ index }>
-                      <textarea
-                        placeholder={ placeholder }
-                        name="body"
-                        type="text"
-                        className="form-control marg-bot-1"
-                        rows="1"
-                        value={ this.state.body[index].body }
-                        onChange={ (e) => this.handleChangeBody(e, index) }
-                      />
+                    <div key={ index }>
                       {
-                        (index !== 0 || this.state.body.length > 1) && (
-                          <i
-                            className="fa fa-trash-o"
-                            aria-hidden="true"
-                            onClick={() => {
-                              const bodyObj = this.state.body;
-                              bodyObj.splice(index, 1);
-                              this.setState({
-                                body: bodyObj,
-                              });
-                            }}
+                        (component.componentType === "image" && this.state.body[index].body) && (
+                          <img
+                            src={ this.state.body[index].body }
+                            alt={ this.state.title }
+                            className="img-fluid"
                           />
                         )
                       }
+                      <div className="component">
+                        <textarea
+                          placeholder={ placeholder }
+                          name="body"
+                          type="text"
+                          className={ "form-control marg-bot-1 " + className }
+                          rows="1"
+                          value={ this.state.body[index].body }
+                          onChange={ (e) => this.handleChangeBody(e, index) }
+                        />
+                        {
+                          (index !== 0 || this.state.body.length > 1) && (
+                            <i
+                              className="fa fa-trash-o"
+                              aria-hidden="true"
+                              onClick={() => {
+                                const bodyObj = this.state.body;
+                                bodyObj.splice(index, 1);
+                                this.setState({
+                                  body: bodyObj,
+                                });
+                              }}
+                            />
+                          )
+                        }
+                      </div>
                     </div>
                   );
                 })
               }
 
-              <label>
-                Add a new section
-              </label>
+              <div className="line" />
+
               <div className="icons marg-bot-1">
                 <i
-                  className="fa fa-align-justify"
+                  className="fa fa-align-justify fa-fw"
                   aria-hidden="true"
                   onClick={ () => this.addNewComponent("text") }
                 />
                 <i
-                  className="fa fa-picture-o"
+                  className="fa fa-picture-o fa-fw"
                   aria-hidden="true"
                   onClick={ () => this.addNewComponent("image") }
                 />
                 <i
-                  className="fa fa-quote-right"
+                  className="fa fa-quote-right fa-fw"
                   aria-hidden="true"
                   onClick={ () => this.addNewComponent("quote") }
                 />
@@ -404,12 +425,16 @@ class ArticleForm extends React.Component {
 
 ArticleForm.propTypes = {
   userId: PropTypes.string,
+  name: PropTypes.string,
+  profilePicture: PropTypes.string,
 };
 
 // Necessary so we can access this.props.userId
 const mapStateToProps = (state) => {
   return {
     userId: state.authState.userId,
+    name: state.authState.name,
+    profilePicture: state.authState.profilePicture,
   };
 };
 

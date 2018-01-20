@@ -41,3 +41,49 @@
     font-size: 1.2rem;
   }
 }
+
+/**
+ * Style form for creating and editing articles
+ */
+#article-form {
+  .form-control.special {
+    border-bottom: 0px solid transparent;
+    padding: 0rem;
+
+    &:active,
+    &:focus,
+    &:hover {
+      border-left: 2px solid $border;
+    }
+  }
+
+  // Style the title
+  #title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: black;
+  }
+
+  // Style the subtitle
+  #subtitle {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: $dark-gray;
+  }
+
+  // Style images
+  img {
+    border-radius: 0.4rem;
+    width: 100% !important;
+    margin-bottom: 0.5rem;
+  }
+
+  // Style blockquote components
+  .quote {
+    padding-left: 1rem !important;
+    border-left: 4px solid $border !important;
+    color: gray;
+    font-style: italic;
+    font-size: 1.2rem;
+  }
+}

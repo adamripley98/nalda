@@ -280,7 +280,7 @@ class EditArticleForm extends React.Component {
         { this.state.redirectToHome && <Redirect to={`/articles/${this.state.articleId}`}/> }
         <Medium>
           <div className="card thin-form no-pad">
-            <form className="pad-1" onSubmit={ this.handleSubmit }>
+            <form onSubmit={ this.handleSubmit } id="article-form">
               <h4 className="dark-gray-text title marg-bot-1">
                 Edit article
               </h4>

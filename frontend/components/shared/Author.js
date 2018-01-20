@@ -13,13 +13,17 @@ const Author = ({ createdAt, updatedAt, name, _id, profilePicture }) => (
   <div className="author">
     <div className="author-img" style={{ backgroundImage: `url(${profilePicture})` }}/>
     <div className="text">
-      <Link className="name" to={`/users/${_id}`}>
+      <Link className={ createdAt ? "name" : "name no-timestamp" } to={`/users/${_id}`}>
         { name }
       </Link>
-      <Timestamp
-        createdAt={ createdAt }
-        updatedAt={ updatedAt }
-      />
+      {
+        createdAt && (
+          <Timestamp
+            createdAt={ createdAt }
+            updatedAt={ updatedAt }
+          />
+        )
+      }
     </div>
   </div>
 );
