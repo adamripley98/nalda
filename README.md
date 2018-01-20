@@ -29,7 +29,7 @@ DELETE '/api/articles/:id'     // Delete a specific article
 
 /* Listings */
 GET '/api/listings'            // Get all listings
-GET '/api/listings/:id'        // Get a specific listing
+GET '/api/listings/:id'        // Ggitet a specific listing
 POST '/api/listings/new'       // Create a new listing
 POST '/api/listings/:id/edit'  // Edit a specific listing
 DELETE '/api/listings/:id'     // Delete a specific listing
@@ -67,6 +67,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [X] Make it so you can click and view author pages, author page should also list all their
 - [ ] Users can leave comments on videos and articles, update in backend (users and articles/videos models)
 - [ ] Reviews and comments should be stored in user model too.
+- [ ] Switch from `name` to `firstName` and `lastName`
 
 ## Listings
 
@@ -78,21 +79,13 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [X] Complete listing backend (already stores listing in Mongo, just need to populate to home screen.
 - [X] Figure out why listings page is not displaying
 - [X] `Listing` back to all listings button
-<<<<<<< HEAD
 - [X] Edit Listings view
-=======
-- [x] Edit Listings view
 - [ ] Free / other price option
->>>>>>> timestamps
 - [X] Delete Listings view
 - [x] Listings location should also show as an address
 - [X] Store author
 - [X] Add to curator's list of content
-<<<<<<< HEAD
 - [X] Style edit/delete buttons better
-=======
-- [x] Style edit/delete buttons better
->>>>>>> timestamps
 - [ ] Sort by date
 - [X] Default sort in `Listings` needs to be reversed
 

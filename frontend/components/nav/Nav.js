@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 // Import components
 import Sidebar from './Sidebar';
 import Search from './Search';
+import Modal from '../auth/Modal';
 
 /**
  * Renders the navbar at the top of the screen on all pages.
@@ -19,6 +20,7 @@ class Nav extends Component {
     // Set the state
     this.state = {
       search: "",
+      isLogin: true,
       searchActive: false,
     };
 
@@ -83,12 +85,19 @@ class Nav extends Component {
                   type="button"
                   data-toggle="modal"
                   data-target="#loginModal"
+                  onClick={ () => this.setState({ isLogin: true }) }
                 >
                   Login
                 </button>
-                <Link to="/register" className="register">
+                <button
+                  className="btn register"
+                  type="button"
+                  data-toggle="modal"
+                  data-target="#loginModal"
+                  onClick={ () => this.setState({ isLogin: false }) }
+                >
                   Register
-                </Link>
+                </button>
               </div>
             </div>
           )
@@ -97,6 +106,8 @@ class Nav extends Component {
         { /* Render the sidebar */ }
         { /* This includes the three-bar menu toggle which is always visible */ }
         <Sidebar />
+
+        { !this.props.userId ? <Modal isLogin={ this.state.isLogin }/> : null }
       </nav>
     );
   }

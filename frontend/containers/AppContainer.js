@@ -15,7 +15,6 @@ import Footer from '../components/shared/Footer';
 
 // Authorization components
 import Login from '../components/auth/Login';
-import LoginModal from '../components/auth/LoginModal';
 import Register from '../components/auth/Register';
 import requireCurator from '../components/auth/RequireCurator';
 import requireAdmin from '../components/auth/RequireAdmin';
@@ -110,13 +109,6 @@ class AppContainer extends Component {
           <div>
             <Nav />
             <div className="nav-space" />
-            {
-              this.props.userId ? (
-                null
-              ) : (
-                <LoginModal />
-              )
-            }
             <div className="app-content">
               <Switch>
 
