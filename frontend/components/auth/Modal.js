@@ -95,21 +95,21 @@ class Modal extends Component {
               {
                 this.state.isLogin ? (
                   <p className="marg-bot-0 center gray-text">
-                    Don't have an account? <Link
-                      to="/register"
+                    Don't have an account? <a
+                      className="link-style"
                       onClick={ () => this.setState({ isLogin: false }) }
                     >
                       Register here.
-                    </Link>
+                    </a>
                   </p>
                 ) : (
                   <p className="marg-bot-0 center gray-text">
-                    Already have an account? <Link
-                      to="/register"
+                    Already have an account? <a
+                      className="link-style"
                       onClick={ () => this.setState({ isLogin: true }) }
                     >
                       Login here.
-                    </Link>
+                    </a>
                   </p>
                 )
               }

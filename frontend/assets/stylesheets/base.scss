@@ -198,6 +198,8 @@ h6,
 
 // Remove underline on all anchor tags
 a {
+  cursor: hand;
+  cursor: pointer;
   text-decoration: none !important;
   color: $primary;
 
@@ -205,6 +207,16 @@ a {
   &:focus,
   &:hover {
     color: $dark-primary;
+  }
+
+  &.link-style {
+    color: $primary !important;
+
+    &:active,
+    &:focus,
+    &:hover {
+      color: $dark-primary !important;
+    }
   }
 
   &:active,
