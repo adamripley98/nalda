@@ -15,7 +15,6 @@ import Footer from '../components/shared/Footer';
 
 // Authorization components
 import Login from '../components/auth/Login';
-import Register from '../components/auth/Register';
 import requireCurator from '../components/auth/RequireCurator';
 import requireAdmin from '../components/auth/RequireAdmin';
 import requireLogin from '../components/auth/RequireLogin';
@@ -114,7 +113,6 @@ class AppContainer extends Component {
 
                 { /* User registration routes */ }
                 <Route exact path="/login" component={Login}/>
-                <Route exact path="/register" component={Register}/>
 
                 { /* Other user routes */ }
                 <Route exact path="/account" component={requireLogin(Account)} />

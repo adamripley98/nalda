@@ -171,12 +171,30 @@ class Sidebar extends Component {
                   <Link onClick={this.toggleMenu} to="/contact" className="link">
                     Contact
                   </Link>
-                  <Link onClick={this.toggleMenu} to="/register" className="link line-above">
-                    Register
-                  </Link>
-                  <Link onClick={this.toggleMenu} to="/login" className="link">
+                  <button
+                    className="btn link"
+                    type="button"
+                    data-toggle="modal"
+                    data-target="#loginModal"
+                    onClick={ () => {
+                      this.toggleMenu();
+                      this.props.modalCallback(true);
+                    }}
+                  >
                     Login
-                  </Link>
+                  </button>
+                  <button
+                    className="btn link"
+                    type="button"
+                    data-toggle="modal"
+                    data-target="#loginModal"
+                    onClick={ () => {
+                      this.toggleMenu();
+                      this.props.modalCallback(false);
+                    }}
+                  >
+                    Register
+                  </button>
                 </div>
               )
             }
@@ -194,6 +212,7 @@ Sidebar.propTypes = {
   userId: PropTypes.string,
   userType: PropTypes.string,
   onLogout: PropTypes.func,
+  modalCallback: PropTypes.func,
 };
 
 // Allows us to access redux state as this.props.userId inside component

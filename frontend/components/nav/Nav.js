@@ -26,6 +26,7 @@ class Nav extends Component {
 
     // Bind this to helper functions
     this.searchCallback = this.searchCallback.bind(this);
+    this.modalCallback = this.modalCallback.bind(this);
   }
 
   /**
@@ -35,6 +36,17 @@ class Nav extends Component {
     // Update the state to the state of the searchbar
     this.setState({
       searchActive,
+    });
+  }
+
+  /**
+   * Callback function to handle when the login modal is in login or register
+   * states
+   */
+  modalCallback(isLogin) {
+    // Update the state
+    this.setState({
+      isLogin: isLogin,
     });
   }
 
@@ -50,7 +62,7 @@ class Nav extends Component {
         </Link>
 
         { /* Render the search bar on the left of the navbar */ }
-        <Search callback={ this.searchCallback }/>
+        <Search callback={ this.searchCallback } />
 
         { /* Render the user's profile information if the user is logged in */ }
         { /* If the user is not logged in, an empty div is returned */ }
@@ -85,7 +97,7 @@ class Nav extends Component {
                   type="button"
                   data-toggle="modal"
                   data-target="#loginModal"
-                  onClick={ () => this.setState({ isLogin: true }) }
+                  onClick={ () => this.modalCallback(true) }
                 >
                   Login
                 </button>
@@ -94,7 +106,7 @@ class Nav extends Component {
                   type="button"
                   data-toggle="modal"
                   data-target="#loginModal"
-                  onClick={ () => this.setState({ isLogin: false }) }
+                  onClick={ () => this.modalCallback(false) }
                 >
                   Register
                 </button>
@@ -105,7 +117,7 @@ class Nav extends Component {
 
         { /* Render the sidebar */ }
         { /* This includes the three-bar menu toggle which is always visible */ }
-        <Sidebar />
+        <Sidebar modalCallback={ this.modalCallback } />
 
         { !this.props.userId ? <Modal isLogin={ this.state.isLogin }/> : null }
       </nav>

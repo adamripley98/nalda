@@ -116,7 +116,7 @@ class Login extends Component {
         <Thin>
           <form className="thin-form" method="POST" onSubmit={ this.handleLoginSubmit }>
             <h2 className="marg-bot-1 bold">
-              Login
+              Login to continue
             </h2>
 
             <ErrorMessage error={ this.state.error } />
@@ -151,10 +151,6 @@ class Login extends Component {
               }
               value={ this.state.pending ? "Logging in..." : "Login" }
             />
-
-            <p className="marg-top-1 marg-bot-0">
-              Don't have an account? <Link to="/register">Register here.</Link>
-            </p>
           </form>
         </Thin>
       </div>
