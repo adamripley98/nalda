@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import $ from 'jquery';
 
 // Import actions
 import { login } from '../../actions/index.js';

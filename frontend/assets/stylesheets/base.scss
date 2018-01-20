@@ -476,34 +476,24 @@ a {
 .tabs {
   width: 100%;
   display: flex;
-  border-radius: 0.4rem 0.4rem 0rem 0rem;
+  border-bottom: 1px solid $border;
 
   .tab {
     flex: 1;
     color: $gray;
     padding: 0.5rem 1rem;
     font-weight: bold;
-    background: $light-gray;
-    border-bottom: 1px solid $border;
     font-size: 1.2rem;
+    text-align: center;
 
     &:hover {
       color: $dark-gray;
-    }
-
-    &:first-child {
-      border-right: 1px solid $border;
-      border-top-left-radius: 0.4rem;
-    }
-
-    &:last-child {
-      border-left: 1px solid $border;
-      border-top-right-radius: 0.4rem;
+      border-bottom: 4px solid $border;
     }
 
     &.active {
       background: white;
-      border-bottom: 1px solid transparent;
+      border-bottom: 4px solid $primary !important;
       color: black;
     }
   }

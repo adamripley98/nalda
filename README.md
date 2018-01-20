@@ -29,7 +29,7 @@ DELETE '/api/articles/:id'     // Delete a specific article
 
 /* Listings */
 GET '/api/listings'            // Get all listings
-GET '/api/listings/:id'        // Ggitet a specific listing
+GET '/api/listings/:id'        // Get a specific listing
 POST '/api/listings/new'       // Create a new listing
 POST '/api/listings/:id/edit'  // Edit a specific listing
 DELETE '/api/listings/:id'     // Delete a specific listing
@@ -65,14 +65,12 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [X] Default create users with type `user`. Admin can switch them to `admin` or `curator`
 - [X] Give users ability to set and change profile pictures, update this in new article/listing/video backend
 - [X] Make it so you can click and view author pages, author page should also list all their
-- [ ] Users can leave comments on videos and articles, update in backend (users and articles/videos models)
 - [ ] Reviews should be stored in user model too.
 
 ## Listings
 
 - [X] Store an array of times or two fields for each day
 - [X] Store reviews on listings
-- [ ] Store comments on articles
 - [X] Form for adding reviews
 - [X] Complete listing view
 - [X] Complete listing backend (already stores listing in Mongo, just need to populate to home screen.
@@ -115,10 +113,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
   - [x] Show date created
   - [x] Show author data
 
-
-
 ## Frontend
-
 - [X] Setting up SCSS
 - [X] Video styling
 - [X] Individual listing view
@@ -135,12 +130,12 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [X] Side Nav Bar should close once an option is clicked
 - [X] Nav bar should only show name and location when a user is logged in
 - [ ] Icons for all amenities
+- [ ] Update preview styling
 - [X] Get rid of article reducer
 - [X] Style nav bar so it looks okay when no user is logged in (no user or location)
 - [X] Create a curator profile view (Should show name, location, bio, contact info, and all content created)
 - [ ] Update meta tags for all forms of content
 - [X] Arrows on sort buttons
-- [ ] Show timestamp in preview
 
 ## Backend
 
