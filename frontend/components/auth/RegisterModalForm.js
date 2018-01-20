@@ -21,7 +21,7 @@ class RegisterModalForm extends Component {
     this.state = {
       firstName: '',
       lastName: '',
-      username: '',
+      email: '',
       password: '',
       confirmPassword: '',
       error: '',
@@ -252,7 +252,7 @@ class RegisterModalForm extends Component {
             type="text"
             id="emailInput"
             className="form-control marg-bot-1"
-            value={ this.state.username }
+            value={ this.state.email }
             onChange={ this.handleChangeEmail }
             placeholder="Email"
           />

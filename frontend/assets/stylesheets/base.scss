@@ -796,6 +796,23 @@ a {
   }
 }
 
+// Make the modal full-screen on larger screens
+@media screen and (max-width: 648px) {
+  .fade .modal-dialog {
+    .modal-content {
+      margin-top: 4rem;
+    }
+  }
+}
+
+@media screen and (max-device-width: 648px) {
+  .fade .modal-dialog {
+    .modal-content {
+      margin-top: 4rem;
+    }
+  }
+}
+
 /**
  * Styling author info
  */

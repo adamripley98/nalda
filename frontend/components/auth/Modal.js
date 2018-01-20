@@ -32,17 +32,17 @@ class Modal extends Component {
    * When the component mounts
    */
   componentDidMount() {
-    if (this.state.isLogin) {
-      // Autofocus on the email input when the modal mounts
-      $('#loginModal').on('shown.bs.modal', () => {
-        $('#emailInput').focus();
-      });
-    } else {
-      // Autofocus on the first anem input when the modal mounts
-      $('#loginModal').on('shown.bs.modal', () => {
-        $('#firstNameInput').focus();
-      });
-    }
+    // Autofocus on the email input when the modal mounts
+    $('#loginModal').on('shown.bs.modal', () => {
+      console.log("SHOWN");
+      const email = $('#emailInput');
+      if (email) {
+        email.focus();
+      } else {
+        const firstName = $('#firstNameInput');
+        if (firstName) firstName.focus();
+      }
+    });
   }
 
   /**

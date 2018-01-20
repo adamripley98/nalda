@@ -142,7 +142,7 @@ class Articles extends React.Component {
     // If no articles were found
     return (
       <div className="col-12">
-        <div className="card pad-1 marg-bot-1">
+        <div className="card pad-1 marg-bot-1 border">
           No articles were found. Check back soon for more content!
         </div>
       </div>

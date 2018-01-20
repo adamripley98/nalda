@@ -125,7 +125,7 @@ class Videos extends React.Component {
     // If there were no videos found
     return (
       <div className="col-12">
-        <div className="card pad-1 marg-bot-1">
+        <div className="card pad-1 marg-bot-1 border">
           No videos were found. Check back soon for more content!
         </div>
       </div>
