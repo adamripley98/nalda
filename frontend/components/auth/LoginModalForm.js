@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import $ from 'jquery';
 
 // Import actions
 import { login } from '../../actions/index.js';
@@ -47,9 +46,11 @@ class LoginModalForm extends Component {
 
     // Prevent the default form action
     event.preventDefault();
+
     // Find the needed variables
     const onLogin = this.props.onLogin;
-    // Frontend validations
+
+    // Fontend variable validations
     if (!this.state.username) {
       this.setState({
         error: "Username must be populated.",

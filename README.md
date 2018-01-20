@@ -66,8 +66,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [X] Give users ability to set and change profile pictures, update this in new article/listing/video backend
 - [X] Make it so you can click and view author pages, author page should also list all their
 - [ ] Users can leave comments on videos and articles, update in backend (users and articles/videos models)
-- [ ] Reviews and comments should be stored in user model too.
-- [ ] Switch from `name` to `firstName` and `lastName`
+- [ ] Reviews should be stored in user model too.
 
 ## Listings
 
@@ -93,7 +92,6 @@ DELETE '/api/videos/:id'       // Delete a specific article
 
 - [X] Improve styling
 - [X] Video backend
-- [ ] Allow comments
 - [X] Edit Videos view
 - [X] Delete Videos view
 - [X] Store author
@@ -103,8 +101,8 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [ ] Preview needs time stamp
 - [ ] Individual video frontend updates
   - [ ] Show Location
-  - [ ] Show date created
-  - [ ] Show author data
+  - [x] Show date created
+  - [x] Show author data
 
 
 ## Articles
@@ -114,8 +112,8 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [X] Preview needs time stamp
 - [ ] Individual article frontend updates
   - [ ] Show Location
-  - [ ] Show date created
-  - [ ] Show author data
+  - [x] Show date created
+  - [x] Show author data
 
 
 

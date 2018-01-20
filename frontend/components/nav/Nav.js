@@ -119,7 +119,7 @@ class Nav extends Component {
         { /* This includes the three-bar menu toggle which is always visible */ }
         <Sidebar modalCallback={ this.modalCallback } />
 
-        { !this.props.userId ? <Modal isLogin={ this.state.isLogin }/> : null }
+        { !this.props.userId && <Modal isLogin={ this.state.isLogin }/> }
       </nav>
     );
   }

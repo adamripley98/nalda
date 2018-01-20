@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import $ from 'jquery';
 
 // Import actions
 import { login } from '../../actions/index.js';
@@ -23,7 +22,7 @@ class RegisterModalForm extends Component {
       lastName: '',
       email: '',
       password: '',
-      confirmPassword: '',
+      verPassword: '',
       error: '',
       pending: false,
     };
@@ -140,10 +139,8 @@ class RegisterModalForm extends Component {
                   pending: false,
                 });
               } else {
-                // If successful, redirect to home page
-                this.setState({
-                  redirectToHome: true,
-                });
+                // Collapse the modal
+                $('#loginModal').modal('toggle');
 
                 // Dispatch a register event
                 onRegister(
@@ -221,7 +218,7 @@ class RegisterModalForm extends Component {
     return (
       <form
         method="POST"
-        onSubmit={ this.handleLoginSubmit }
+        onSubmit={ this.handleRegisterSubmit }
       >
         <div className="modal-body left">
           <ErrorMessage error={ this.state.error } />
@@ -281,7 +278,6 @@ class RegisterModalForm extends Component {
             className="form-control marg-bot-1"
             value={this.state.verPassword}
             onChange={ this.handleChangeVerifyPassword }
-            required="true"
           />
 
           <input
