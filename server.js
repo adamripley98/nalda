@@ -66,14 +66,17 @@ passport.use('local', new LocalStrategy({
     if (err) {
       return done(err);
     }
+
     // If no user is present, authentication failed
     if (!user) {
       return done(null, false, { message: 'Incorrect email.' });
     }
+
     // If passwords do not match, auth failed
     if (!isValidPassword(user, password)) {
       return done(null, false, { message: 'Incorrect password.' });
     }
+
     // Authentication is successful
     return done(null, user);
   });
@@ -85,7 +88,7 @@ passport.use(
   new FacebookStrategy({
     clientID: FACEBOOK_APP_ID,
     clientSecret: FACEBOOK_APP_SECRET,
-    callbackURL: "http://localhost:3000/auth/facebook/callback"
+    callbackURL: "https://nalda.herokuapp.com/auth/facebook/callback"
   },
   (accessToken, refreshToken, profile, cb) => {
     console.log("PROFILE");
