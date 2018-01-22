@@ -4,11 +4,14 @@ const mongoose = require('mongoose');
 const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 3000;
+const FACEBOOK_APP_ID = process.env.FACEBOOK_APP_ID;
+const FACEBOOK_APP_SECRET = process.env.FACEBOOK_APP_SECRET;
 const passport = require('passport');
 const bodyParser = require('body-parser');
 const routes = require('./backend/routes')(passport);
 const bCrypt = require('bcrypt-nodejs');
 const LocalStrategy = require('passport-local');
+const FacebookStrategy = require('passport-facebook').Strategy;
 
 // Import Models
 const User = require('./backend/models/user');
@@ -18,6 +21,7 @@ const login = require('./backend/passport/login');
 const register = require('./backend/passport/register');
 const logout = require('./backend/passport/logout');
 const changePassword = require('./backend/passport/changePassword');
+const facebook = require('./backend/passport/facebook');
 
 // Connecting to mongo
 const connect = process.env.MONGODB_URI;
@@ -76,6 +80,22 @@ passport.use('local', new LocalStrategy({
 }
 ));
 
+// Facebook strategy
+passport.use(
+  new FacebookStrategy({
+    clientID: FACEBOOK_APP_ID,
+    clientSecret: FACEBOOK_APP_SECRET,
+    callbackURL: "http://localhost:3000/auth/facebook/callback"
+  },
+  (accessToken, refreshToken, profile, cb) => {
+    console.log("PROFILE");
+    console.log(profile);
+    // User.findOrCreate({ facebookId: profile.id }, (err, user) => {
+    //   return cb(err, user);
+    // });
+  }
+));
+
 // Method to check encrypted password
 const isValidPassword = (user, password) => {
   return bCrypt.compareSync(password, user.password);
@@ -86,6 +106,7 @@ app.use('/api/', login(passport));
 app.use('/api/', register(passport));
 app.use('/api/', logout(passport));
 app.use('/api/', changePassword(passport));
+app.use('/', facebook(passport));
 app.use('/api/', routes);
 
 app.get('*', (request, response) => {
