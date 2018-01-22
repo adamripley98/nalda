@@ -1,6 +1,7 @@
 // Import other backend files
 const login = require('./login');
 const register = require('./register');
+const facebook = require('./facebook');
 
 // Import user model
 const User = require('../models/user');
@@ -22,4 +23,5 @@ module.exports = (passport) => {
   // Setting up passport strategies for login & register
   login(passport);
   register(passport);
+  facebook(passport);
 };
