@@ -160,12 +160,12 @@ class LoginModalForm extends Component {
           />
           <div className="row">
             <div className="col-12 col-sm-6 marg-bot-1">
-              <div
+              <a
                 className="btn btn-primary full-width btn-sm"
-                onClick={ this.loginWithFacebook }
+                href="/api/auth/facebook"
               >
                 Login with Facebook
-              </div>
+              </a>
             </div>
             <div className="col-12 col-sm-6 marg-bot-1">
               <div className="btn btn-primary full-width btn-sm">

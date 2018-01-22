@@ -33,7 +33,6 @@ class Modal extends Component {
   componentDidMount() {
     // Autofocus on the email input when the modal mounts
     $('#loginModal').on('shown.bs.modal', () => {
-      console.log("SHOWN");
       const email = $('#emailInput');
       if (email) {
         email.focus();

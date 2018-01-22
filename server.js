@@ -6,6 +6,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const FACEBOOK_APP_ID = process.env.FACEBOOK_APP_ID;
 const FACEBOOK_APP_SECRET = process.env.FACEBOOK_APP_SECRET;
+const FACEBOOK_APP_CALLBACK = process.env.FACEBOOK_APP_CALLBACK;
 const passport = require('passport');
 const bodyParser = require('body-parser');
 const routes = require('./backend/routes')(passport);
@@ -88,7 +89,7 @@ passport.use(
   new FacebookStrategy({
     clientID: FACEBOOK_APP_ID,
     clientSecret: FACEBOOK_APP_SECRET,
-    callbackURL: "https://nalda.herokuapp.com/auth/facebook/callback"
+    callbackURL: FACEBOOK_APP_CALLBACK,
   },
   (accessToken, refreshToken, profile, cb) => {
     console.log("PROFILE");
@@ -109,7 +110,7 @@ app.use('/api/', login(passport));
 app.use('/api/', register(passport));
 app.use('/api/', logout(passport));
 app.use('/api/', changePassword(passport));
-app.use('/', facebook(passport));
+app.use('/api/', facebook(passport));
 app.use('/api/', routes);
 
 app.get('*', (request, response) => {
