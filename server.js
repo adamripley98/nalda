@@ -10,6 +10,7 @@ const FACEBOOK_APP_CALLBACK = process.env.FACEBOOK_APP_CALLBACK;
 const passport = require('passport');
 const bodyParser = require('body-parser');
 const routes = require('./backend/routes')(passport);
+const ssl = require('./backend/ssl');
 const bCrypt = require('bcrypt-nodejs');
 const LocalStrategy = require('passport-local');
 const FacebookStrategy = require('passport-facebook').Strategy;
@@ -106,6 +107,7 @@ const isValidPassword = (user, password) => {
 };
 
 // Routing backend middleware
+app.use('/', ssl);
 app.use('/api/', login(passport));
 app.use('/api/', register(passport));
 app.use('/api/', logout(passport));
