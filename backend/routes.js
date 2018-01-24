@@ -33,16 +33,50 @@ module.exports = () => {
   router.get('/sync', (req, res) => {
     // If passport state is not present, user is not logged in on the backend
     if (!req.session.passport) {
-      // States are NOT synced!
+      // States are NOT synced, user is not logged in through express!
       res.send({
         success: false,
         data: 'States are not synced!'
       });
     } else {
-      // States are synced!
-      res.send({
-        success: true,
-        data: 'States are synced!',
+      // User is logged in on backend, check if it is through facebook
+      const userId = req.session.passport.user;
+      User.findById(userId, (err, user) => {
+        if (err) {
+          res.send({
+            success: false,
+            error: err.message,
+          });
+        } else if (!user) {
+          res.send({
+            success: false,
+            error: 'User not found.',
+          });
+        } else {
+          // If user uses facebook login
+          if (user.facebookId) {
+            const userToLogIn = {
+              name: user.name,
+              profilePicture: user.profilePicture,
+              userType: user.userType,
+              userId: user._id,
+            };
+            console.log('userToLogin', userToLogIn);
+            res.send({
+              success: true,
+              error: '',
+              facebook: true,
+              user: userToLogIn,
+            });
+          } else {
+            // User is logged in with email/password, don't need to do anything
+            res.send({
+              success: true,
+              error: '',
+              facebook: false,
+            });
+          }
+        }
       });
     }
   });

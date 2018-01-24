@@ -8,6 +8,7 @@ import axios from 'axios';
 
 // Import actions
 import { logout } from '../actions/index.js';
+import { login } from '../actions/index.js';
 
 // Shared and general components
 import Nav from '../components/nav/Nav';
@@ -73,6 +74,7 @@ class AppContainer extends Component {
   componentDidMount() {
     // Isolate variables
     const onLogout = this.props.onLogout;
+    const onLogin = this.props.onLogin;
     const userId = this.props.userId;
 
     // Call to backend (routes.js)
@@ -91,6 +93,15 @@ class AppContainer extends Component {
         this.setState({
           redirectToLogin: true,
         });
+      } else {
+        const user = resp.data.user;
+        // If user is logged in through facebook on backend, update on Frontend
+        if (resp.data.facebook) {
+          // Send redux event
+          // onLogout();
+          // TODO Remove dummy location
+          onLogin(user.userId, user.userType, user.name, "Philadelphia, PA", user.profilePicture);
+        }
       }
     })
     .catch((err) => {
@@ -169,6 +180,7 @@ class AppContainer extends Component {
 AppContainer.propTypes = {
   userId: PropTypes.string,
   onLogout: PropTypes.func,
+  onLogin: PropTypes.func,
 };
 
 // Necessary so we can access this.props.userId
@@ -182,6 +194,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onLogout: () => dispatch(logout()),
+    onLogin: (userId, userType, name, location, profilePicture) => dispatch(login(userId, userType, name, location, profilePicture)),
   };
 };
 

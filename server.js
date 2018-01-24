@@ -119,15 +119,15 @@ passport.use(
             profilePicture: `https://graph.facebook.com/${profile.id}/picture?type=large`,
           });
           // Save new user in mongo
-          newUser.save((errSave, u) => {
+          newUser.save((errSave) => {
             console.log('in save');
             if (errSave) {
               return cb(errSave, null);
             }
             // If successful return profile
             // TODO log user in
-            console.log('what is u', u);
-            return cb(null, u);
+            console.log('what is new user', newUser);
+            return cb(null, newUser);
           });
         } else {
           // User already exists
