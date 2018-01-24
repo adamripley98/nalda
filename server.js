@@ -97,43 +97,45 @@ passport.use(
     console.log("PROFILE");
     console.log(profile);
     // If profile is found, search mongo for him
-    User.find({facebookId: profile.id}, (err, user) => {
-      console.log('in find', user.length);
-      if (err) {
-        console.log('in err');
-        return cb(err, null);
-        // If no user, create him in Mongo
-      } else if (!user.length) {
-        console.log('in no user');
-        console.log('json');
-        console.log(profile._json.email);
-        console.log('email');
-        console.log(profile.emails[0].value);
-        // Create a new user
-        const newUser = new User({
-          name: profile.displayName,
-          username: profile._json.email,
-          userType: 'user',
-          facebookId: profile.id,
-          profilePicture: `https://graph.facebook.com/${profile.id}/picture?type=large`,
-        });
-        // Save new user in mongo
-        newUser.save((errSave, u) => {
-          console.log('in save');
-          if (errSave) {
-            return cb(errSave, null);
-          }
-          // If successful return profile
+    process.nextTick(() => {
+      User.find({facebookId: profile.id}, (err, user) => {
+        console.log('in find', user.length);
+        if (err) {
+          console.log('in err');
+          return cb(err, null);
+          // If no user, create him in Mongo
+        } else if (!user.length) {
+          console.log('in no user');
+          console.log('json');
+          console.log(profile._json.email);
+          console.log('email');
+          console.log(profile.emails[0].value);
+          // Create a new user
+          const newUser = new User({
+            name: profile.displayName,
+            username: profile._json.email,
+            userType: 'user',
+            facebookId: profile.id,
+            profilePicture: `https://graph.facebook.com/${profile.id}/picture?type=large`,
+          });
+          // Save new user in mongo
+          newUser.save((errSave, u) => {
+            console.log('in save');
+            if (errSave) {
+              return cb(errSave, null);
+            }
+            // If successful return profile
+            // TODO log user in
+            console.log('what is u', u);
+            return cb(null, u);
+          });
+        } else {
+          // User already exists
           // TODO log user in
-          console.log('what is u', u);
-          return cb(null, u);
-        });
-      } else {
-        // User already exists
-        // TODO log user in
-        console.log('in else');
-        return cb(null, user);
-      }
+          console.log('in else');
+          return cb(null, user);
+        }
+      });
     });
   }
 ));
