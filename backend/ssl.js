@@ -16,7 +16,8 @@ module.exports = () => {
   /**
    * Route to signify that the SSL certificate is working
    */
-  router.get('/.well-known/acme-challenge/:content', (req, res) => {
+  router.get('/:content', (req, res) => {
+    console.log("IN IT");
     res.send('QWxcfNd-M_z-bcNx20QQykD4wNI6Z4RL5t-zjzfVJL4.2p3-v58-YTA3HJDTRTpUfSDYFD0zik-T5uJnVGsz-lE');
   });
 
