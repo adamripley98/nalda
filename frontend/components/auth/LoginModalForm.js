@@ -28,7 +28,6 @@ class LoginModalForm extends Component {
     this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
     this.handleChangeEmail = this.handleChangeEmail.bind(this);
     this.handleChangePassword = this.handleChangePassword.bind(this);
-    this.loginWithFacebook = this.loginWithFacebook.bind(this);
   }
 
   /**
@@ -114,22 +113,6 @@ class LoginModalForm extends Component {
     });
   }
 
-  /**
-   * Helper method to login with facebook
-   */
-  loginWithFacebook() {
-    console.log("Click");
-    axios.get('/auth/facebook')
-      .then(res => {
-        console.log("RES");
-        console.log(res);
-      })
-      .catch(err => {
-        console.log("ERROR");
-        console.log(err);
-      });
-  }
-
   // Renders actual Login component
   render() {
     return (
@@ -158,21 +141,6 @@ class LoginModalForm extends Component {
             onChange={ this.handleChangePassword }
             placeholder="Password"
           />
-          <div className="row">
-            <div className="col-12 col-sm-6 marg-bot-1">
-              <a
-                className="btn btn-primary full-width btn-sm"
-                href="/api/auth/facebook"
-              >
-                Login with Facebook
-              </a>
-            </div>
-            <div className="col-12 col-sm-6 marg-bot-1">
-              <div className="btn btn-primary full-width btn-sm">
-                Login with Google
-              </div>
-            </div>
-          </div>
           <input
             type="submit"
             className={
@@ -184,6 +152,28 @@ class LoginModalForm extends Component {
             }
             value={ this.state.pending ? "Logging in..." : "Login" }
           />
+          <div className="gray-text center text-segment">
+            <div className="line-through" />
+            <p>
+              Or continue with
+            </p>
+            <div className="line-through" />
+          </div>
+          <div className="row">
+            <div className="col-12 col-sm-6 marg-bot-1">
+              <a
+                className="btn full-width btn-sm facebook"
+                href="/api/auth/facebook"
+              >
+                <i className="fa fa-facebook" aria-hidden="true" /> &nbsp; Facebook
+              </a>
+            </div>
+            <div className="col-12 col-sm-6 marg-bot-1">
+              <div className="btn full-width btn-sm google">
+                <i className="fa fa-google" aria-hidden="true" /> &nbsp; Google
+              </div>
+            </div>
+          </div>
         </div>
       </form>
     );

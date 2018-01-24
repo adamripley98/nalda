@@ -173,6 +173,32 @@ h6,
     }
   }
 
+  &.facebook {
+    border: 2px solid #3b5998;
+    color: #3b5998;
+    background: transparent;
+
+    &:hover,
+    &:focus,
+    &:active {
+      border: 2px solid #2c467c;
+      color: #2c467c;
+    }
+  }
+
+  &.google {
+    border: 2px solid $dark-gray;
+    color: $dark-gray;
+    background: transparent;
+
+    &:hover,
+    &:focus,
+    &:active {
+      border: 2px solid $darker-gray;
+      color: $darker-gray;
+    }
+  }
+
   // Secondary buttons are white with colored text
   &.btn-secondary {
     font-weight: bold;
@@ -224,6 +250,31 @@ a {
   &:hover,
   &:visited {
     text-decoration: none !important;
+  }
+}
+
+.text-segment {
+  width: 100%;
+  text-align: center;
+  padding: 1rem 0rem;
+  display: flex;
+
+  p {
+    background: white;
+    font-weight: normal;
+    font-size: 1rem;
+    margin-bottom: 0rem;
+    padding: 0rem 0.5rem;
+    width: auto;
+    display: inline-block;
+    z-index: 10;
+  }
+
+  .line-through {
+    flex: 1;
+    background: $border;
+    height: 1px;
+    margin-top: 0.7rem;
   }
 }
 
