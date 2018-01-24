@@ -17,8 +17,7 @@ module.exports = () => {
    * Route to signify that the SSL certificate is working
    */
   router.get('/:content', (req, res) => {
-    console.log("IN IT");
-    res.send('QWxcfNd-M_z-bcNx20QQykD4wNI6Z4RL5t-zjzfVJL4.2p3-v58-YTA3HJDTRTpUfSDYFD0zik-T5uJnVGsz-lE');
+    res.send('sQqntnAKnzqPmtp6DSZzYgrGbSKs_t1ZdF5sJYOhSu4.2p3-v58-YTA3HJDTRTpUfSDYFD0zik-T5uJnVGsz-lE');
   });
 
   // Return the router for use throughout the application
