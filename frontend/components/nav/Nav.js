@@ -72,13 +72,12 @@ class Nav extends Component {
             <div className="user-info">
               <div className="user-text">
                 { /* Render the user's location information */ }
-                // TODO get rid of dummy location for fb login
                 <div className="location">
                   {
                     this.props.location && this.props.location.indexOf(",") > 0 ? (
                       this.props.location.substring(0, this.props.location.lastIndexOf(","))
                     ) : (
-                      this.props.location || "Philadelphia"
+                      this.props.location || "Philadelphia, PA"
                     )
                   }
                 </div>

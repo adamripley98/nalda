@@ -22,7 +22,6 @@ module.exports = (passport) => {
           error: 'Invalid email or password.'
         });
       } else {
-        console.log('req ses before local', req.session);
         // Built in passport login method
         req.logIn(user, (loginErr) => {
           // Error logging in
@@ -32,7 +31,6 @@ module.exports = (passport) => {
               error: loginErr,
             });
           } else {
-            console.log('req ses after', req.session);
             // Finally, if there is no error, send back user
             res.send({
               success: true,

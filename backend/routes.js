@@ -61,7 +61,6 @@ module.exports = () => {
               userType: user.userType,
               userId: user._id,
             };
-            console.log('userToLogin', userToLogIn);
             res.send({
               success: true,
               error: '',

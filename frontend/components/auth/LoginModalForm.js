@@ -28,7 +28,6 @@ class LoginModalForm extends Component {
     this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
     this.handleChangeEmail = this.handleChangeEmail.bind(this);
     this.handleChangePassword = this.handleChangePassword.bind(this);
-    this.loginWithFacebook = this.loginWithFacebook.bind(this);
   }
 
   /**
@@ -112,22 +111,6 @@ class LoginModalForm extends Component {
     this.setState({
       password: event.target.value,
     });
-  }
-
-  /**
-   * Helper method to login with facebook
-   */
-  loginWithFacebook() {
-    console.log("Click");
-    axios.get('/auth/facebook')
-      .then(res => {
-        console.log("RES");
-        console.log(res);
-      })
-      .catch(err => {
-        console.log("ERROR");
-        console.log(err);
-      });
   }
 
   // Renders actual Login component

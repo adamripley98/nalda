@@ -11,12 +11,8 @@ const User = require('../models/user');
  */
 module.exports = (passport) => {
   passport.serializeUser((user, done) => {
-    console.log('enters serialize');
-    console.log('user in serialize', user);
-    console.log('id in serialze', user._id);
-    console.log('type', typeof user._id);
+    // TODO fix weird issue where facebook is passing user in as array
     const userId = user._id || user[0]._id;
-    console.log('what is userId', userId);
     done(null, userId);
   });
 

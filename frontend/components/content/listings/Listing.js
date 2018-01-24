@@ -330,7 +330,6 @@ class Listing extends React.Component {
     if (this.state.reviews && this.state.reviews.length) {
       // Reverse reviews so they appear newest to oldest
       const reviews = this.state.reviews.slice(0).reverse();
-      console.log('rrr', reviews);
       // Map each review to be its own component
       return reviews.map(review => (
         <Review
