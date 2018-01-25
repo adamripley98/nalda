@@ -107,7 +107,6 @@ class EditListingForm extends React.Component {
     // Pull existing data from the database
     axios.get(`/api/listings/${id}`)
       .then(res => {
-        console.log(res.data.data.rating);
         if (res.data.success) {
           // If there was no error
           this.setState({

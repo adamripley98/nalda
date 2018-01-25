@@ -91,13 +91,39 @@ passport.use(
     clientID: FACEBOOK_APP_ID,
     clientSecret: FACEBOOK_APP_SECRET,
     callbackURL: FACEBOOK_APP_CALLBACK,
+    profileFields: ['id', 'displayName', 'photos', 'email', 'gender', 'name']
+    // profileFields: ['id', 'name', 'username', 'displayName', 'photos', 'email'],
   },
   (accessToken, refreshToken, profile, cb) => {
-    console.log("PROFILE");
-    console.log(profile);
-    // User.findOrCreate({ facebookId: profile.id }, (err, user) => {
-    //   return cb(err, user);
-    // });
+    // If profile is found, search mongo for him
+    process.nextTick(() => {
+      User.find({facebookId: profile.id}, (err, user) => {
+        if (err) {
+          return cb(err, null);
+          // If no user, create him in Mongo
+        } else if (!user.length) {
+          // Create a new user
+          const newUser = new User({
+            name: profile.displayName,
+            username: profile._json.email,
+            userType: 'user',
+            facebookId: profile.id,
+            profilePicture: `https://graph.facebook.com/${profile.id}/picture?type=large`,
+          });
+          // Save new user in mongo
+          newUser.save((errSave) => {
+            if (errSave) {
+              return cb(errSave, null);
+            }
+            // If successful return profile
+            return cb(null, newUser);
+          });
+        } else {
+          // User already exists
+          return cb(null, user);
+        }
+      });
+    });
   }
 ));
 
