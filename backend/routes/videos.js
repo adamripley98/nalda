@@ -7,6 +7,7 @@
 // Import frameworks
 const express = require('express');
 const router = express.Router();
+const async = require('async');
 
 // Import database models
 const Video = require('../models/video');
@@ -14,6 +15,8 @@ const User = require('../models/user');
 
 // Import helper methods
 const {notCuratorOrAdmin} = require('../helperMethods/authChecking');
+const {AuthorOrAdminCheck} = require('../helperMethods/authChecking');
+
 
 // Export the following methods for routing
 module.exports = () => {
@@ -119,80 +122,35 @@ module.exports = () => {
    */
   router.delete('/:id', (req, res) => {
     // Find the id from the video url
-    const id = req.params.id;
+    const videoId = req.params.id;
 
-    // Pull userId from the backend
-    let userId = '';
-    if (req.session.passport) {
-      userId = req.session.passport.user;
-    }
-
-    // Find the given video in Mongo and delete it
-    Video.findById(id, (errVideo, video) => {
-      // Error finding video
-      if (errVideo) {
-        res.send({
-          success: false,
-          error: errVideo.message,
-        });
-      // Cannot find video
-      } else if (!video) {
-        res.send({
-          success: false,
-          error: 'No video found.',
-        });
-      } else {
-        // Check to make sure user is logged in on backend
-        if (!userId) {
+    // Check to make sure user is an admin or the author
+    const authCheck = AuthorOrAdminCheck(req, videoId, Video);
+    console.log('authcheck', authCheck);
+    process.nextTick()
+    // Return any authentication errors
+    if (!authCheck.success) {
+      res.send({
+        success: false,
+        error: authCheck.error,
+      });
+    } else {
+      // User CAN delete videos, remove from mongo
+      authCheck.doc.remove((errRemove) => {
+        if (errRemove) {
           res.send({
             success: false,
-            error: 'You must be logged in to delete videos.',
+            error: errRemove.message,
           });
+        // Send back success
         } else {
-          // Find user to check if they can delete docs
-          User.findById(userId, (errUser, user) => {
-            // Error finding user
-            if (errUser) {
-              res.send({
-                success: false,
-                error: errUser.message,
-              });
-            // Cannot find user
-            } else if (!user) {
-              res.send({
-                success: false,
-                error: 'You must be logged in.'
-              });
-            } else {
-              // User found, check if user has privileges to delete a video (author or admin)
-              if (user.userType === 'admin' || user._id === video.author) {
-                // User CAN delete videos, remove from mongo
-                video.remove((errRemove) => {
-                  if (errRemove) {
-                    res.send({
-                      success: false,
-                      error: errRemove.message,
-                    });
-                  // Send back success
-                  } else {
-                    res.send({
-                      success: true,
-                      error: '',
-                    });
-                  }
-                });
-              } else {
-                // User CANNOT delete videos
-                res.send({
-                  success: false,
-                  error: 'You do not have privileges to delete videos.'
-                });
-              }
-            }
+          res.send({
+            success: true,
+            error: '',
           });
         }
-      }
-    });
+      });
+    }
   });
 
   /**

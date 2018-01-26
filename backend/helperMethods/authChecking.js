@@ -1,3 +1,7 @@
+/**
+ * Helper methods to ensure varying levels of authentication on the backend
+ */
+
 // Import models
 const User = require('../models/user');
 
@@ -69,31 +73,76 @@ const notLoggedIn = (req) => {
   return false;
 };
 
-// const notAuthorOrAdmin = (req) => {
-//   // Isolate userId from Backend
-//   let userId = "";
-//   if (req.session.passport) {
-//     userId = req.session.passport.user;
-//   }
-//
-//   // Begin error checking
-//   if (!userId) {
-//     return 'You must be logged in to edit.';
-//   }
-//   // Find user in Mongo
-//   User.findById(userId, (errUser, user) => {
-//     if (errUser) {
-//       return errUser.message;
-//     } else if (user.userType !== 'admin' && user.userType !== 'curator') {
-//       return 'General users cannot edit listings.';
-//     }
-//     // User is admin or curator
-//     return false;
-//   });
-// };
+const AuthorOrAdminCheck = (req, docId, Document) => {
+  // Pull userId from the backend
+  let userId = '';
+  if (req.session.passport) {
+    userId = req.session.passport.user;
+  }
+  console.log('enteres authcheckign');
+  // Find the given document in Mongo
+  Document.findById(docId, (errDoc, doc) => {
+    console.log('enters doc find');
+    // Error finding document
+    if (errDoc) {
+      console.log('errdoc', errDoc);
+      return {
+        success: false,
+        error: errDoc.message,
+      };
+    // Cannot find document
+    } else if (!doc) {
+      console.log('no doc');
+      return {
+        success: false,
+        error: 'No document found.',
+      };
+    }
+    console.log('ok');
+    // Check to make sure user is logged in on backend
+    if (!userId) {
+      console.log('no userid');
+      return {
+        success: false,
+        error: 'You must be logged in.',
+      };
+    }
+    console.log('we here!');
+    // Find user to check if they are author or admin
+    User.findById(userId, (errUser, user) => {
+      console.log('finding user');
+      // Error finding user
+      if (errUser) {
+        return {
+          success: false,
+          error: errUser.message,
+        };
+      // Cannot find user
+      } else if (!user) {
+        return {
+          success: false,
+          error: 'You must be logged in.',
+        };
+      // User is not author or admin
+      } else if (user.userType !== 'admin' && user._id !== doc.author) {
+        return {
+          success: false,
+          error: 'You do not have the right privileges.',
+        };
+      }
+      // User has privilege to do this, return document
+      console.log('user should have priv');
+      return {
+        success: true,
+        doc,
+      };
+    });
+  });
+};
 
 module.exports = {
   notCuratorOrAdmin,
   notAdmin,
   notLoggedIn,
+  AuthorOrAdminCheck,
 };
