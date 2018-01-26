@@ -55,7 +55,22 @@ const notAdmin = (req) => {
   });
 };
 
+const notLoggedIn = (req) => {
+  // Isolate userId from backend
+  let userId = "";
+  if (req.session.passport) {
+    userId = req.session.passport.user;
+  }
+  // User is not logged in
+  if (!userId) {
+    return 'Must be logged in.';
+  }
+  // User is logged in
+  return false;
+};
+
 module.exports = {
   notCuratorOrAdmin,
   notAdmin,
+  notLoggedIn,
 };

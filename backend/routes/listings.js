@@ -13,6 +13,9 @@ const async = require('async');
 const Listing = require('../models/listing');
 const User = require('../models/user');
 
+// Import helper methods
+const {notCuratorOrAdmin} = require('../helperMethods/authChecking');
+
 // Export the following methods for routing
 module.exports = () => {
 /**
@@ -37,55 +40,6 @@ module.exports = () => {
         });
       }
     });
-  });
-
-  /**
-   * Route to receive user's information from Mongo
-   * @param userID
-   */
-  router.get('/account', (req, res) => {
-    // Isolate userId from backend
-    let userId = "";
-    if (req.session.passport) {
-      userId = req.session.passport.user;
-    }
-    if (!userId) {
-      res.send({
-        success: false,
-        error: 'Must be logged in.'
-      });
-    // Check to make sure user is accessing their own data
-    } else if (userId !== req.query.userId) {
-      res.send({
-        success: false,
-        error: 'You may only access your own information.'
-      });
-    } else {
-      // Find user in Mongo
-      User.findById(userId, (err, user) => {
-        if (err) {
-          // If there was an error with the request
-          res.send({
-            success: false,
-            error: err.message,
-          });
-          // If no user exists
-        } else if (!user) {
-          res.send({
-            success: false,
-            error: 'Can not find user',
-          });
-        } else {
-          // If everything went as planned, send back user
-          // Remove private user info first
-          user.password = '';
-          res.send({
-            success: true,
-            data: user,
-          });
-        }
-      });
-    }
   });
 
   /**
@@ -454,113 +408,91 @@ module.exports = () => {
  * @param website
  */
   router.post('/new', (req, res) => {
-    let userId = '';
-    if (req.session.passport) {
-      userId = req.session.passport.user;
-    }
-    // User is not logged in, cannot post
-    if (!userId) {
+
+    // Check to make sure poster is an admin or curator
+    const authError = notCuratorOrAdmin(req);
+
+    // Return any authentication errors
+    if (authError) {
       res.send({
         success: false,
-        error: 'You must be logged in to post.'
+        error: authError,
       });
     } else {
-      // Ensure poster is an admin or curator
-      User.findById(userId, (errUser, user) => {
-        if (errUser) {
-          res.send({
-            success: false,
-            error: errUser,
-          });
-        } else if (!user) {
-          res.send({
-            success: false,
-            error: 'Cannot find user',
-          });
-        } else {
-          // Check if user is authorized to post
-          if (user.userType !== 'admin' && user.userType !== 'curator') {
+      // Isolate variables from the body
+      const title = req.body.title;
+      const description = req.body.description;
+      const image = req.body.image;
+      const hours = req.body.hours;
+      const rating = req.body.rating;
+      const price = req.body.price;
+      const website = req.body.website;
+      const categories = req.body.categories;
+      const location = req.body.location;
+      const userId  = req.session.passport.user;
+
+      let error = "";
+
+      // Error checking
+      // TODO: error check for hours and categories
+      if (!title) {
+        error = "Title must be populated.";
+      } else if (!description) {
+        error = "Description must be populated.";
+      } else if (!image) {
+        error = "Image must be populated.";
+      } else if (!rating) {
+        error = "Rating must be populated.";
+      } else if (!price) {
+        error = "Price must be populated.";
+      } else if (!website) {
+        error = "Website must be populated.";
+      } else if (!location.name) {
+        error = "Location must be populated.";
+      } else if (!location.lat || !location.lng) {
+        error = "Location must be valid.";
+      }
+
+      // Handle error if there is one
+      if (error) {
+        res.send({
+          success: false,
+          error,
+        });
+      } else {
+        // Creates a new listing with given params
+        const newListing = new Listing({
+          title,
+          description,
+          image,
+          hours,
+          rating,
+          price,
+          website,
+          categories,
+          location,
+          author: userId,
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+        });
+
+        // Save the new article in mongo
+        newListing.save((er, listing) => {
+          if (er) {
+            // Pass on any error to the user
             res.send({
               success: false,
-              error: 'General users cannot post new listings',
+              error: er.message,
             });
           } else {
-            // Isolate variables from the body
-            const title = req.body.title;
-            const description = req.body.description;
-            const image = req.body.image;
-            const hours = req.body.hours;
-            const rating = req.body.rating;
-            const price = req.body.price;
-            const website = req.body.website;
-            const categories = req.body.categories;
-            const location = req.body.location;
-
-            let error = "";
-
-            // Error checking
-            // TODO: error check for hours and categories
-            if (!title) {
-              error = "Title must be populated.";
-            } else if (!description) {
-              error = "Description must be populated.";
-            } else if (!image) {
-              error = "Image must be populated.";
-            } else if (!rating) {
-              error = "Rating must be populated.";
-            } else if (!price) {
-              error = "Price must be populated.";
-            } else if (!website) {
-              error = "Website must be populated.";
-            } else if (!location.name) {
-              error = "Location must be populated.";
-            } else if (!location.lat || !location.lng) {
-              error = "Location must be valid.";
-            }
-
-            // Handle error if there is one
-            if (error) {
-              res.send({
-                success: false,
-                error,
-              });
-            } else {
-              // Creates a new listing with given params
-              const newListing = new Listing({
-                title,
-                description,
-                image,
-                hours,
-                rating,
-                price,
-                website,
-                categories,
-                location,
-                author: userId,
-                createdAt: Date.now(),
-                updatedAt: Date.now(),
-              });
-
-              // Save the new article in mongo
-              newListing.save((er, listing) => {
-                if (er) {
-                  // Pass on any error to the user
-                  res.send({
-                    success: false,
-                    error: er.message,
-                  });
-                } else {
-                  // Send the data along if it was successfully stored
-                  res.send({
-                    success: true,
-                    data: listing,
-                  });
-                }
-              });
-            }
+            // Send the data along if it was successfully stored
+            res.send({
+              success: true,
+              data: listing,
+            });
           }
-        }
-      });
+        });
+      }
     }
   });
 

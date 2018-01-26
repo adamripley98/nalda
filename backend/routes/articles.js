@@ -184,6 +184,7 @@ module.exports = () => {
     const articleId = req.params.id;
 
     // Check to make sure editor is an admin or curator
+    // TODO new method called notAuthorOrAdmin
     const authError = notCuratorOrAdmin(req);
 
     // Return any authentication errors
