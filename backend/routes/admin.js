@@ -79,85 +79,58 @@ module.exports = () => {
    * @param userToAdd
    */
   router.post('/curator/new', (req, res) => {
-    let userId = '';
-    // Assign userId to user in backend
-    if (req.session.passport) {
-      userId = req.session.passport.user;
-    }
-    // If user doesn't exist
-    if (!userId) {
+    // Check to make sure poster is an admin
+    const authError = notAdmin(req);
+
+    // Return any authentication errors
+    if (authError) {
       res.send({
         success: false,
-        error: 'Must be logged in.',
+        error: authError,
       });
     } else {
-      // Find the admin in Mongo
-      User.findById(userId, (errAdmin, admin) => {
-        // Error finding admin
-        if (errAdmin) {
+      // If user is an admin, finds given user in Mongo
+      User.findOne({username: req.body.userToAdd}, (err, user) => {
+        // Lets them know that if there is an error
+        if (err) {
           res.send({
             success: false,
-            error: errAdmin.message,
+            error: err.message,
           });
-        // Can't find admin
-        } else if (!admin) {
+        // Makes sure that user exists
+        } else if (!user) {
           res.send({
             success: false,
-            error: 'User not found.'
+            error: req.body.userToAdd + ' does not seem to exist!'
+          });
+        } else if (user.userType === "curator") {
+          res.send({
+            success: false,
+            error: user.name + ' is already a curator.'
+          });
+        } else if (user.userType === "admin") {
+          res.send({
+            success: false,
+            error: 'Cannot revoke admin privileges.'
           });
         } else {
-          // Check if user is an admin
-          if (admin.userType !== 'admin') {
-            res.send({
-              success: false,
-              error: 'You must be an admin to post.'
-            });
-          } else {
-            // finds given user in Mongo
-            User.findOne({username: req.body.userToAdd}, (err, user) => {
-              // Lets them know that if there is an error
-              if (err) {
-                res.send({
-                  success: false,
-                  error: err.message,
-                });
-              // Makes sure that user exists
-              } else if (!user) {
-                res.send({
-                  success: false,
-                  error: req.body.userToAdd + ' does not seem to exist!'
-                });
-              } else if (user.userType === "curator") {
-                res.send({
-                  success: false,
-                  error: user.name + ' is already a curator.'
-                });
-              } else if (user.userType === "admin") {
-                res.send({
-                  success: false,
-                  error: 'Cannot revoke admin privileges.'
-                });
-              } else {
-                // Makes given user an admin
-                user.userType = "curator";
-                // Save changes in mongo
-                user.save((errSave) => {
-                  if (errSave) {
-                    res.send({
-                      success: false,
-                      error: errSave.message,
-                    });
-                  } else {
-                    // If no error saving new user, returns successfully
-                    res.send({
-                      success: true,
-                      error: '',
-                    });
-                  }
-                });
-              }
-            });
-          }
+          // Makes given user an admin
+          user.userType = "curator";
+          // Save changes in mongo
+          user.save((errSave) => {
+            if (errSave) {
+              res.send({
+                success: false,
+                error: errSave.message,
+              });
+            } else {
+              // If no error saving new user, returns successfully
+              res.send({
+                success: true,
+                error: '',
+              });
+            }
+          });
         }
       });
     }
@@ -168,80 +141,53 @@ module.exports = () => {
    * @param userToAdd
    */
   router.post('/curator/remove', (req, res) => {
-    let userId = '';
-    // Assign userId to user in backend
-    if (req.session.passport) {
-      userId = req.session.passport.user;
-    }
-    // If user doesn't exist
-    if (!userId) {
+    // Check to make sure poster is an admin
+    const authError = notAdmin(req);
+
+    // Return any authentication errors
+    if (authError) {
       res.send({
         success: false,
-        error: 'Must be logged in.',
+        error: authError,
       });
     } else {
-      // Find the admin in Mongo
-      User.findById(userId, (errAdmin, admin) => {
-        // Error finding admin
-        if (errAdmin) {
+      // finds given user in Mongo
+      User.findOne({username: req.body.userToAdd}, (err, user) => {
+        // Lets them know that if there is an error
+        if (err) {
           res.send({
             success: false,
-            error: errAdmin.message,
+            error: err.message,
           });
-        // Can't find admin
-        } else if (!admin) {
+        // Makes sure that user exists
+        } else if (!user) {
           res.send({
             success: false,
-            error: 'User not found.'
+            error: req.body.userToAdd + ' does not seem to exist!'
           });
         } else {
-          // Check if user is an admin
-          if (admin.userType !== 'admin') {
-            res.send({
-              success: false,
-              error: 'You must be an admin to post.'
-            });
-          } else {
-            // finds given user in Mongo
-            User.findOne({username: req.body.userToAdd}, (err, user) => {
-              // Lets them know that if there is an error
-              if (err) {
+          // Revokes curator privileges, don't have power to revoke admin privilege though
+          if (user.userType === "curator") {
+            user.userType = "user";
+            // Save changes in mongo
+            user.save((errSave) => {
+              if (errSave) {
                 res.send({
                   success: false,
-                  error: err.message,
-                });
-              // Makes sure that user exists
-              } else if (!user) {
-                res.send({
-                  success: false,
-                  error: req.body.userToAdd + ' does not seem to exist!'
+                  error: errSave.message,
                 });
               } else {
-                // Revokes curator privileges, don't have power to revoke admin privilege though
-                if (user.userType === "curator") {
-                  user.userType = "user";
-                  // Save changes in mongo
-                  user.save((errSave) => {
-                    if (errSave) {
-                      res.send({
-                        success: false,
-                        error: errSave.message,
-                      });
-                    } else {
-                      // If no error saving new user, returns successfully
-                      res.send({
-                        success: true,
-                        error: '',
-                      });
-                    }
-                  });
-                } else {
-                  res.send({
-                    success: false,
-                    error: 'Cannot revoke admin privileges.',
-                  });
-                }
+                // If no error saving new user, returns successfully
+                res.send({
+                  success: true,
+                  error: '',
+                });
               }
+            });
+          } else {
+            res.send({
+              success: false,
+              error: 'Cannot revoke admin privileges.',
             });
           }
         }
