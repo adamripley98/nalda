@@ -69,6 +69,29 @@ const notLoggedIn = (req) => {
   return false;
 };
 
+// const notAuthorOrAdmin = (req) => {
+//   // Isolate userId from Backend
+//   let userId = "";
+//   if (req.session.passport) {
+//     userId = req.session.passport.user;
+//   }
+//
+//   // Begin error checking
+//   if (!userId) {
+//     return 'You must be logged in to edit.';
+//   }
+//   // Find user in Mongo
+//   User.findById(userId, (errUser, user) => {
+//     if (errUser) {
+//       return errUser.message;
+//     } else if (user.userType !== 'admin' && user.userType !== 'curator') {
+//       return 'General users cannot edit listings.';
+//     }
+//     // User is admin or curator
+//     return false;
+//   });
+// };
+
 module.exports = {
   notCuratorOrAdmin,
   notAdmin,
