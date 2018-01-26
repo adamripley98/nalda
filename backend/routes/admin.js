@@ -11,6 +11,9 @@ const router = express.Router();
 // Import database models
 const User = require('../models/user');
 
+// Import helper methods
+const {notAdmin} = require('../helperMethods/authChecking');
+
 // Export the following methods for routing
 module.exports = () => {
   /**
@@ -19,80 +22,53 @@ module.exports = () => {
    * @param userToAdd
    */
   router.post('/admin/new', (req, res) => {
-    let userId = '';
-    // Assign userId to user in backend
-    if (req.session.passport) {
-      userId = req.session.passport.user;
-    }
-    // If user doesn't exist
-    if (!userId) {
+    // Check to make sure poster is an admin
+    const authError = notAdmin(req);
+
+    // Return any authentication errors
+    if (authError) {
       res.send({
         success: false,
-        error: 'Must be logged in.',
+        error: authError,
       });
     } else {
-      // Find the admin in Mongo
-      User.findById(userId, (errAdmin, admin) => {
-        // Error finding admin
-        if (errAdmin) {
+      // If user is an admin, finds given user to add in Mongo
+      User.findOne({username: req.body.userToAdd}, (err, user) => {
+        // Lets them know that if there is an error
+        if (err) {
           res.send({
             success: false,
-            error: errAdmin.message,
+            error: err.message,
           });
-        // Can't find admin
-        } else if (!admin) {
+        // Makes sure that user exists
+        } else if (!user) {
           res.send({
             success: false,
-            error: 'User not found.'
+            error: req.body.userToAdd + ' does not seem to exist!'
+          });
+        } else if (user.userType === "admin") {
+          res.send({
+            success: false,
+            error: user.name + ' is already an admin.',
           });
         } else {
-          // Check if user is an admin
-          if (admin.userType !== 'admin') {
-            res.send({
-              success: false,
-              error: 'You must be an admin to post.'
-            });
-          } else {
-            // If user is an admin, finds given user to add in Mongo
-            User.findOne({username: req.body.userToAdd}, (err, user) => {
-              // Lets them know that if there is an error
-              if (err) {
-                res.send({
-                  success: false,
-                  error: err.message,
-                });
-              // Makes sure that user exists
-              } else if (!user) {
-                res.send({
-                  success: false,
-                  error: req.body.userToAdd + ' does not seem to exist!'
-                });
-              } else if (user.userType === "admin") {
-                res.send({
-                  success: false,
-                  error: user.name + ' is already an admin.',
-                });
-              } else {
-                // Makes given user an admin
-                user.userType = "admin";
-                // Save changes in Mongo
-                user.save((errSave) => {
-                  if (errSave) {
-                    res.send({
-                      success: false,
-                      error: errSave.message,
-                    });
-                  } else {
-                    // If no error saving new user, returns successfully
-                    res.send({
-                      success: true,
-                      error: '',
-                    });
-                  }
-                });
-              }
-            });
-          }
+          // Makes given user an admin
+          user.userType = "admin";
+          // Save changes in Mongo
+          user.save((errSave) => {
+            if (errSave) {
+              res.send({
+                success: false,
+                error: errSave.message,
+              });
+            } else {
+              // If no error saving new user, returns successfully
+              res.send({
+                success: true,
+                error: '',
+              });
+            }
+          });
         }
       });
     }

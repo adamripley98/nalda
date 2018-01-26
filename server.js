@@ -30,9 +30,9 @@ const articles = require('./backend/routes/articles')();
 const listings = require('./backend/routes/listings')();
 const videos = require('./backend/routes/videos')();
 const users = require('./backend/routes/users')();
-const admin = require('./backend/routes/users')();
-const contact = require('./backend/routes/users')();
-const reviews = require('./backend/routes/users')();
+const admin = require('./backend/routes/admin')();
+const contact = require('./backend/routes/contact')();
+const reviews = require('./backend/routes/reviews')();
 
 // Connecting to mongo
 const connect = process.env.MONGODB_URI;

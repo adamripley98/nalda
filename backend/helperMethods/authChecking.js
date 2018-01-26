@@ -28,6 +28,34 @@ const notCuratorOrAdmin = (req) => {
   });
 };
 
+const notAdmin = (req) => {
+  let userId = '';
+  // Assign userId to user in backend
+  if (req.session.passport) {
+    userId = req.session.passport.user;
+  }
+  // If user doesn't exist
+  if (!userId) {
+    return 'Must be logged in';
+  }
+  // Find the admin in Mongo
+  User.findById(userId, (errAdmin, admin) => {
+    // Error finding admin
+    if (errAdmin) {
+      return errAdmin.message;
+    // Can't find admin
+    } else if (!admin) {
+      return 'User not found.';
+    // User isn't am admin
+    } else if (admin.userType !== 'admin') {
+      return 'You must be an admin.';
+    }
+    // If no errors
+    return false;
+  });
+};
+
 module.exports = {
-  notCuratorOrAdmin
+  notCuratorOrAdmin,
+  notAdmin,
 };
