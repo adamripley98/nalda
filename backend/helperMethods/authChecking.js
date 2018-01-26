@@ -11,7 +11,7 @@ const notCuratorOrAdmin = (req) => {
 
   // No user is logged in
   if (!userId) {
-    return 'You must be logged in to post.';
+    return 'You must be logged in.';
   }
 
   // Search for user in Mongo
@@ -21,7 +21,7 @@ const notCuratorOrAdmin = (req) => {
       return errUser.message;
     // User isn't admin or curator
     } else if (user.userType !== 'admin' && user.userType !== 'curator') {
-      return 'General users cannot create articles.';
+      return 'General users do not have this privilege.';
     }
     // Return no error
     return false;
@@ -36,7 +36,7 @@ const notAdmin = (req) => {
   }
   // If user doesn't exist
   if (!userId) {
-    return 'Must be logged in';
+    return 'Must be logged in.';
   }
   // Find the admin in Mongo
   User.findById(userId, (errAdmin, admin) => {

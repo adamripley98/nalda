@@ -14,75 +14,78 @@ const Listing = require('../models/listing');
 const Video = require('../models/video');
 const User = require('../models/user');
 
+// Import helper methods
+const {notLoggedIn} = require('../helperMethods/authChecking');
+
 // Export the following methods for routing
 module.exports = () => {
   /**
    * Update a user's name
    */
   router.post('/name', (req, res) => {
+    // Check to make sure poster is logged in
+    const authError = notLoggedIn(req);
+
     // Isolate variables from the request
     const name = req.body.name;
-    let userId = "";
-    if (req.session.passport) {
-      userId = req.session.passport.user;
-    }
-    // User is not logged in
-    if (!userId) {
+
+    // Return any authentication errors
+    if (authError) {
       res.send({
         success: false,
-        error: 'You must be logged in to change your name.'
-      });
-    // Frontend and backend userId do not match
-    } else
-    // Error checking
-    if (!name) {
-      res.send({
-        success: false,
-        error: "Name must be populated",
-      });
-    } else if (!name.indexOf(" ")) {
-      res.send({
-        success: false,
-        error: "Name must contain at least 1 space",
+        error: authError,
       });
     } else {
-      // The name is properly formatted
-      // Search for user in Mongo
-      User.findById(userId, (err, user) => {
-        // Error finding user
-        if (err) {
-          res.send({
-            success: false,
-            error: err.message,
-          });
-        // User doesn't exist in Mongo
-        } else if (!user) {
-          res.send({
-            success: false,
-            error: 'Cannot find user.'
-          });
-        } else {
-          // Update user with new name
-          user.name = name;
+      // Error checking
+      if (!name) {
+        res.send({
+          success: false,
+          error: "Name must be populated",
+        });
+      } else if (!name.indexOf(" ")) {
+        res.send({
+          success: false,
+          error: "Name must contain at least 1 space",
+        });
+      } else {
+        // The name is properly formatted
+        // Search for user in Mongo
+        User.findById(req.session.passport.user, (err, user) => {
+          // Error finding user
+          if (err) {
+            res.send({
+              success: false,
+              error: err.message,
+            });
+          // User doesn't exist in Mongo
+          } else if (!user) {
+            res.send({
+              success: false,
+              error: 'Cannot find user.'
+            });
+          } else {
+            // Update user with new name
+            user.name = name;
 
-          // Save in Mongo
-          user.save((errUser) => {
-            // Error saving user
-            if (errUser) {
-              res.send({
-                success: false,
-                error: errUser.message,
-              });
-            } else {
-              // User name updated successfully
-              res.send({
-                success: true,
-                error: '',
-              });
-            }
-          });
-        }
-      });
+            // Save in Mongo
+            user.save((errUser) => {
+              // Error saving user
+              if (errUser) {
+                res.send({
+                  success: false,
+                  error: errUser.message,
+                });
+              } else {
+                // User name updated successfully
+                res.send({
+                  success: true,
+                  error: '',
+                });
+              }
+            });
+          }
+        });
+      }
     }
   });
 
@@ -92,60 +95,60 @@ module.exports = () => {
   router.post('/bio', (req, res) => {
     // Isolate variables from the request
     const bio = req.body.bio;
-    let userId = "";
-    if (req.session.passport) {
-      userId = req.session.passport.user;
-    }
-    // User is not logged in
-    if (!userId) {
+
+    // Check to make sure poster is logged in
+    const authError = notLoggedIn(req);
+
+    // Return any authentication errors
+    if (authError) {
       res.send({
         success: false,
-        error: 'You must be logged in to change a bio.'
-      });
-      // User id on backend and frontend do not match
-    } else
-    // Error checking
-    if (bio.length > 500) {
-      res.send({
-        success: false,
-        error: "Bio length cannot exceed 500 characters.",
+        error: authError,
       });
     } else {
-      // Search for user in Mongo
-      User.findById(userId, (err, user) => {
-        // Error finding user
-        if (err) {
-          res.send({
-            success: false,
-            error: err.message,
-          });
-        // User doesn't exist in Mongo
-        } else if (!user) {
-          res.send({
-            success: false,
-            error: 'Cannot find user.'
-          });
-        } else {
-          // Update user with new bio
-          user.bio = bio;
-          // Save in Mongo
-          user.save((errUser) => {
-            // Error saving user
-            if (errUser) {
-              res.send({
-                success: false,
-                error: errUser.message,
-              });
-            } else {
-              // User bio updated successfully
-              res.send({
-                success: true,
-                error: '',
-              });
-            }
-          });
-        }
-      });
+      // Error checking
+      if (bio.length > 500) {
+        res.send({
+          success: false,
+          error: "Bio length cannot exceed 500 characters.",
+        });
+      } else {
+        // Search for user in Mongo
+        User.findById(req.session.passport.user, (err, user) => {
+          // Error finding user
+          if (err) {
+            res.send({
+              success: false,
+              error: err.message,
+            });
+          // User doesn't exist in Mongo
+          } else if (!user) {
+            res.send({
+              success: false,
+              error: 'Cannot find user.'
+            });
+          } else {
+            // Update user with new bio
+            user.bio = bio;
+            // Save in Mongo
+            user.save((errUser) => {
+              // Error saving user
+              if (errUser) {
+                res.send({
+                  success: false,
+                  error: errUser.message,
+                });
+              } else {
+                // User bio updated successfully
+                res.send({
+                  success: true,
+                  error: '',
+                });
+              }
+            });
+          }
+        });
+      }
     }
   });
 
@@ -155,20 +158,18 @@ module.exports = () => {
    * @param profilePicture
    */
   router.post('/profilePicture', (req, res) => {
+    // Check to make sure poster is logged in
+    const authError = notLoggedIn(req);
+
     // Isolate variables
-    let userId = "";
     const profilePicture = req.body.profilePicture;
 
-    if (req.session.passport) {
-      userId = req.session.passport.user;
-    }
-    // User is not logged in on backend
-    if (!userId) {
+    // Return any authentication errors
+    if (authError) {
       res.send({
         success: false,
-        error: 'Must be logged in to change profile picture.',
+        error: authError,
       });
-    // Backend user doesn't match frontend user
     } else {
       const imgRegexp = /\.(jpeg|jpg|gif|png)$/;
       if (req.body.profilePicture && !imgRegexp.test(req.body.profilePicture)) {
@@ -178,7 +179,7 @@ module.exports = () => {
         });
       } else {
         // find and update given user
-        User.findById(userId, (err, user) => {
+        User.findById(req.session.passport.user, (err, user) => {
           if (err) {
             // Error finding user
             res.send({
@@ -218,18 +219,17 @@ module.exports = () => {
    * @param location
    */
   router.post('/location', (req, res) => {
-    let userId = "";
-    if (req.session.passport) {
-      userId = req.session.passport.user;
-    }
-    // No one is logged in on backend
-    if (!userId) {
+    // Check to make sure poster is logged in
+    const authError = notLoggedIn(req);
+
+    // Return any authentication errors
+    if (authError) {
       res.send({
         success: false,
-        error: "",
+        error: authError,
       });
     } else {
-      User.findById(userId, (err, user) => {
+      User.findById(req.session.passport.user, (err, user) => {
         if (err) {
           res.send({
             success: false,
@@ -308,6 +308,7 @@ module.exports = () => {
                     });
                   } else {
                     // Remove private data before sending back
+                    // TODO Remove private data better
                     user.password = "";
                     res.send({
                       success: true,

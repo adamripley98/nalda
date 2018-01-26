@@ -27,7 +27,7 @@ module.exports = () => {
    * @param content
    */
   router.post('/new', (req, res) => {
-    // Check to make sure poster is an admin or curator
+    // Check to make sure poster is logged in
     const authError = notLoggedIn(req);
 
     // Return any authentication errors

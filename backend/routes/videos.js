@@ -12,6 +12,9 @@ const router = express.Router();
 const Video = require('../models/video');
 const User = require('../models/user');
 
+// Import helper methods
+const {notCuratorOrAdmin} = require('../helperMethods/authChecking');
+
 // Export the following methods for routing
 module.exports = () => {
   /**
@@ -319,96 +322,70 @@ module.exports = () => {
    * @param description
    */
   router.post('/new', (req, res) => {
-    let userId = '';
-    // Assign userId to user in backend
-    if (req.session.passport) {
-      userId = req.session.passport.user;
-    }
-    // If user doesn't exist
-    if (!userId) {
+    // Check to make sure poster is an admin or curator
+    const authError = notCuratorOrAdmin(req);
+
+    // Return any authentication errors
+    if (authError) {
       res.send({
         success: false,
-        error: 'Must be logged in.',
+        error: authError,
       });
     } else {
-      // Find the poster in Mongo
-      User.findById(userId, (errPost, poster) => {
-        // Error finding admin
-        if (errPost) {
-          res.send({
-            success: false,
-            error: errPost.message,
-          });
-        // Can't find poster
-        } else if (!poster) {
-          res.send({
-            success: false,
-            error: 'User not found.'
-          });
-        } else {
-            // Check if user is an admin
-          if (poster.userType !== 'admin' && poster.userType !== 'curator') {
+      // Isolate variables
+      const title = req.body.title;
+      const url = req.body.url;
+      const description = req.body.description;
+      const location = req.body.location;
+      const userId = req.session.passport.user;
+
+      let error = "";
+      const urlRegexp = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
+
+      // Perform error checking on variables
+      if (!title) {
+        error = "Title must be populated.";
+      } else if (!description) {
+        error = "Subtitle must be populated.";
+      } else if (!urlRegexp.test(url)) {
+        error = "Image must be a valid URL to an image.";
+      }
+
+      // If there was an error or not
+      if (error) {
+        res.send({
+          success: false,
+          error,
+        });
+      } else {
+        // Create a new video with given data
+        const newVideo = new Video({
+          title,
+          url,
+          description,
+          author: userId,
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+          location,
+        });
+
+      // Save the new video in Mongo
+        newVideo.save((errVideo, video) => {
+          if (errVideo) {
+            // If there was an error saving the video
             res.send({
               success: false,
-              error: 'You must be an admin or curator to post.'
+              error: errVideo.message,
             });
           } else {
-            // Isolate variables
-            const title = req.body.title;
-            const url = req.body.url;
-            const description = req.body.description;
-            const location = req.body.location;
-
-            let error = "";
-            const urlRegexp = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
-
-            // Perform error checking on variables
-            if (!title) {
-              error = "Title must be populated.";
-            } else if (!description) {
-              error = "Subtitle must be populated.";
-            } else if (!urlRegexp.test(url)) {
-              error = "Image must be a valid URL to an image.";
-            }
-
-            // If there was an error or not
-            if (error) {
-              res.send({
-                success: false,
-                error,
-              });
-            } else {
-              // Create a new video with given data
-              const newVideo = new Video({
-                title,
-                url,
-                description,
-                author: userId,
-                createdAt: Date.now(),
-                updatedAt: Date.now(),
-                location,
-              });
-
-            // Save the new video in Mongo
-              newVideo.save((errVideo, video) => {
-                if (errVideo) {
-                  // If there was an error saving the video
-                  res.send({
-                    success: false,
-                    error: errVideo.message,
-                  });
-                } else {
-                  // Successfully send back data
-                  res.send({
-                    success: true,
-                    data: video,
-                  });
-                }
-              });
-            }
+            // Successfully send back data
+            res.send({
+              success: true,
+              data: video,
+            });
           }
-        }
-      });
+        });
+      }
     }
   });
 
