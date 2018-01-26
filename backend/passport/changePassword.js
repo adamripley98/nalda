@@ -5,7 +5,7 @@ const router = express.Router();
 
 // Import model
 const User = require('../models/user');
-
+// TODO Security
 /**
  * Update a user's password
  * @param String oldPassword

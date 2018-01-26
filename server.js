@@ -18,12 +18,21 @@ const FacebookStrategy = require('passport-facebook').Strategy;
 // Import Models
 const User = require('./backend/models/user');
 
-// Import other routes
+// Import auth routes
 const login = require('./backend/passport/login');
 const register = require('./backend/passport/register');
 const logout = require('./backend/passport/logout');
 const changePassword = require('./backend/passport/changePassword');
 const facebook = require('./backend/passport/facebook');
+
+// Import other routes
+const articles = require('./backend/routes/articles')();
+const listings = require('./backend/routes/listings')();
+const videos = require('./backend/routes/videos')();
+const users = require('./backend/routes/users')();
+const admin = require('./backend/routes/admin')();
+const contact = require('./backend/routes/contact')();
+const reviews = require('./backend/routes/reviews')();
 
 // Connecting to mongo
 const connect = process.env.MONGODB_URI;
@@ -133,13 +142,19 @@ const isValidPassword = (user, password) => {
 };
 
 // Routing backend middleware
-app.use('/.well-known/acme-challenge/', ssl);
 app.use('/api/', login(passport));
 app.use('/api/', register(passport));
 app.use('/api/', logout(passport));
 app.use('/api/', changePassword(passport));
 app.use('/api/', facebook(passport));
 app.use('/api/', routes);
+app.use('/api/articles/', articles);
+app.use('/api/listings/', listings);
+app.use('/api/videos/', videos);
+app.use('/api/users/', users);
+app.use('/api/', admin);
+app.use('/api/contact/', contact);
+app.use('/api/reviews/', reviews);
 
 app.get('*', (request, response) => {
   response.sendFile(__dirname + '/public/index.html'); // For React/Redux
