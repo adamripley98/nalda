@@ -12,6 +12,9 @@ const router = express.Router();
 const Article = require('../models/article');
 const User = require('../models/user');
 
+// Import helper methods
+const {notCuratorOrAdmin} = require('../helperMethods/authChecking');
+
 // Export the following methods for routing
 module.exports = () => {
   /**
@@ -44,10 +47,6 @@ module.exports = () => {
     });
   });
 
-  const checkCuratorOrAdmin = () => {
-    console.log('checking');
-  };
-
   /**
    * Route to handle a new article submission
    * @param title
@@ -56,140 +55,120 @@ module.exports = () => {
    * @param body (text of the article)
    */
   router.post('/new', (req, res) => {
-    checkCuratorOrAdmin();
-    // Isolate userId from Backend
-    let userId = "";
-    if (req.session.passport) {
-      userId = req.session.passport.user;
-    }
+    // Check to make sure poster is an admin or curator
+    const authError = notCuratorOrAdmin(req);
 
-    // Begin error checking
-    if (!userId) {
+    // Return any authentication errors
+    if (authError) {
       res.send({
         success: false,
-        error: 'You must be logged in to post.'
+        error: authError,
       });
     } else {
-      User.findById(userId, (errUser, user) => {
-        if (errUser) {
-          res.send({
-            success: false,
-            error: errUser,
-          });
-        } else {
-          if (user.userType !== 'admin' && user.userType !== 'curator') {
-            res.send({
-              success: false,
-              error: 'General users cannot create articles.',
-            });
-          } else {
-            // Isolate variables
-            const title = req.body.title;
-            const subtitle = req.body.subtitle;
-            const image = req.body.image;
-            const body = req.body.body;
-            const location = req.body.location;
+      // Isolate variables
+      const title = req.body.title;
+      const subtitle = req.body.subtitle;
+      const image = req.body.image;
+      const body = req.body.body;
+      const location = req.body.location;
+      const userId = req.session.passport.user;
 
-            // Keep track of any errors
-            let error = "";
-            const urlRegexp = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
+      // Keep track of any errors
+      let error = "";
+      const urlRegexp = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
 
-            // Perform error checking on variables
-            if (!title) {
-              error = "Title must be populated.";
-            } else if (!subtitle) {
-              error = "Subtitle must be populated.";
-            } else if (!image) {
-              error = "Image must be populated.";
-            } else if (!body || !body.length) {
-              error = "Body must be populated.";
-            } else if (!urlRegexp.test(image)) {
-              error = "Image must be a valid URL to an image.";
-            } else if (typeof body !== "object" || !Array.isArray(body)) {
-              error = "Body must be an array";
-            } else if (Object.keys(location).length === 0) {
-              error = "Location must be populated.";
-            } else {
-              // Ensure that each article component is properly formatted
-              for (let i = 0; i < body.length && !error; i++) {
-                // Find the component at the given index
-                const component = body[i];
-                if (!component) {
-                  error = "Each component must be defined.";
-                } else if (!component.body) {
-                  error = "Each component must be populated with text.";
-                } else if (component.componentType !== "text" &&
-                           component.componentType !== "image" &&
-                           component.componentType !== "quote"
-                ) {
-                  error = "Component type must be valid.";
-                } else if (component.componentType === "image") {
-                  // Ensure that the URL to the image is proper
-                  // This means that it is both a URL and an image file
-                  const imgRegexp = /\.(jpeg|jpg|gif|png)$/;
-                  if (!imgRegexp.test(component.body)) {
-                    error = "Image url must end in \"jpeg\", \"png\", \"gif\", or \"jpg\".";
-                  } else if (!urlRegexp.test(component.body)) {
-                    error = "Image url must be a valid URL.";
-                  }
-                }
-              }
-            }
-
-            // If there was an error or not
-            if (error) {
-              res.send({
-                success: false,
-                error,
-              });
-            } else {
-              // Find the author
-              User.findById(userId, (err, author) => {
-                if (err) {
-                  res.send({
-                    success: false,
-                    error: 'Error finding author ' + err.message
-                  });
-                } else if (!author) {
-                  res.send({
-                    success: false,
-                    error: 'Author not found.'
-                  });
-                } else {
-                  // Creates a new article with given params
-                  const newArticle = new Article({
-                    title,
-                    subtitle,
-                    image,
-                    body,
-                    location,
-                    author: userId,
-                    createdAt: Date.now(),
-                    updatedAt: Date.now(),
-                  });
-
-                  // Save the new article in Mongo
-                  newArticle.save((errArticle, article) => {
-                    if (errArticle) {
-                      // If there was an error saving the article
-                      res.send({
-                        success: false,
-                        error: errArticle.message,
-                      });
-                    } else {
-                      // Successfully send back data
-                      res.send({
-                        success: true,
-                        data: article,
-                      });
-                    }
-                  });
-                }
-              });
+      // Perform error checking on variables
+      if (!title) {
+        error = "Title must be populated.";
+      } else if (!subtitle) {
+        error = "Subtitle must be populated.";
+      } else if (!image) {
+        error = "Image must be populated.";
+      } else if (!body || !body.length) {
+        error = "Body must be populated.";
+      } else if (!urlRegexp.test(image)) {
+        error = "Image must be a valid URL to an image.";
+      } else if (typeof body !== "object" || !Array.isArray(body)) {
+        error = "Body must be an array";
+      } else if (Object.keys(location).length === 0) {
+        error = "Location must be populated.";
+      } else {
+        // Ensure that each article component is properly formatted
+        for (let i = 0; i < body.length && !error; i++) {
+          // Find the component at the given index
+          const component = body[i];
+          if (!component) {
+            error = "Each component must be defined.";
+          } else if (!component.body) {
+            error = "Each component must be populated with text.";
+          } else if (component.componentType !== "text" &&
+                     component.componentType !== "image" &&
+                     component.componentType !== "quote"
+          ) {
+            error = "Component type must be valid.";
+          } else if (component.componentType === "image") {
+            // Ensure that the URL to the image is proper
+            // This means that it is both a URL and an image file
+            const imgRegexp = /\.(jpeg|jpg|gif|png)$/;
+            if (!imgRegexp.test(component.body)) {
+              error = "Image url must end in \"jpeg\", \"png\", \"gif\", or \"jpg\".";
+            } else if (!urlRegexp.test(component.body)) {
+              error = "Image url must be a valid URL.";
             }
           }
         }
-      });
+      }
+      // If there was an error or not
+      if (error) {
+        res.send({
+          success: false,
+          error,
+        });
+      } else {
+        // Find the author
+        User.findById(userId, (err, author) => {
+          if (err) {
+            res.send({
+              success: false,
+              error: 'Error finding author ' + err.message
+            });
+          } else if (!author) {
+            res.send({
+              success: false,
+              error: 'Author not found.'
+            });
+          } else {
+            // Creates a new article with given params
+            const newArticle = new Article({
+              title,
+              subtitle,
+              image,
+              body,
+              location,
+              author: userId,
+              createdAt: Date.now(),
+              updatedAt: Date.now(),
+            });
+
+            // Save the new article in Mongo
+            newArticle.save((errArticle, article) => {
+              if (errArticle) {
+                // If there was an error saving the article
+                res.send({
+                  success: false,
+                  error: errArticle.message,
+                });
+              } else {
+                // Successfully send back data
+                res.send({
+                  success: true,
+                  data: article,
+                });
+              }
+            });
+          }
+        });
+      }
     }
   });
 
@@ -204,144 +183,126 @@ module.exports = () => {
     // Find the id from the url
     const articleId = req.params.id;
 
-    // Isolate userId from Backend
-    let userId = "";
-    if (req.session.passport) {
-      userId = req.session.passport.user;
-    }
+    // Check to make sure editor is an admin or curator
+    const authError = notCuratorOrAdmin(req);
 
-    // Begin error checking
-    if (!userId) {
+    // Return any authentication errors
+    if (authError) {
       res.send({
         success: false,
-        error: 'You must be logged in to post.'
+        error: authError,
       });
     } else {
-      User.findById(userId, (errUser, user) => {
-        if (errUser) {
-          res.send({
-            success: false,
-            error: errUser.message,
-          });
-        } else {
-          if (user.userType !== 'admin' && user.userType !== 'curator') {
-            res.send({
-              success: false,
-              error: 'General users cannot edit articles.',
-            });
-          } else {
-            // Isolate variables
-            const title = req.body.title;
-            const subtitle = req.body.subtitle;
-            const image = req.body.image;
-            const body = req.body.body;
-            const location = req.body.location;
+      // Isolate variables
+      const title = req.body.title;
+      const subtitle = req.body.subtitle;
+      const image = req.body.image;
+      const body = req.body.body;
+      const location = req.body.location;
+      const userId = req.session.passport.user;
 
-            // Keep track of any errors
-            let error = "";
-            const urlRegexp = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
+      // Keep track of any errors
+      let error = "";
+      const urlRegexp = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
 
-            // Perform error checking on variables
-            if (!title) {
-              error = "Title must be populated.";
-            } else if (!subtitle) {
-              error = "Subtitle must be populated.";
-            } else if (!image) {
-              error = "Image must be populated.";
-            } else if (!body || !body.length) {
-              error = "Body must be populated.";
-            } else if (!urlRegexp.test(image)) {
-              error = "Image must be a valid URL to an image.";
-            } else if (typeof body !== "object" || !Array.isArray(body)) {
-              error = "Body must be an array";
-            } else if (Object.keys(location).length === 0) {
-              error = "Location must be populated.";
-            } else {
-              // Ensure that each article component is properly formatted
-              for (let i = 0; i < body.length && !error; i++) {
-                // Find the component at the given index
-                const component = body[i];
-                if (!component) {
-                  error = "Each component must be defined.";
-                } else if (!component.body) {
-                  error = "Each component must be populated with text.";
-                } else if (component.componentType !== "text" &&
-                           component.componentType !== "image" &&
-                           component.componentType !== "quote"
-                ) {
-                  error = "Component type must be valid.";
-                } else if (component.componentType === "image") {
-                  // Ensure that the URL to the image is proper
-                  // This means that it is both a URL and an image file
-                  const imgRegexp = /\.(jpeg|jpg|gif|png)$/;
-                  if (!imgRegexp.test(component.body)) {
-                    error = "Image url must end in \"jpeg\", \"png\", \"gif\", or \"jpg\".";
-                  } else if (!urlRegexp.test(component.body)) {
-                    error = "Image url must be a valid URL.";
-                  }
-                }
-              }
-            }
-
-            // If there was an error or not
-            if (error) {
-              res.send({
-                success: false,
-                error,
-              });
-            } else {
-              // Find the author
-              User.findById(userId, (err, author) => {
-                if (err) {
-                  res.send({
-                    success: false,
-                    error: 'Error finding author ' + err.message
-                  });
-                } else if (!author) {
-                  res.send({
-                    success: false,
-                    error: 'Author not found.'
-                  });
-                } else {
-                  // Find article in Mongo
-                  Article.findById(articleId, (articleErr, article) => {
-                    if (articleErr) {
-                      res.send({
-                        success: false,
-                        error: articleErr.message,
-                      });
-                    } else {
-                      // Make changes to given article
-                      article.title = title;
-                      article.subtitle = subtitle;
-                      article.image = image;
-                      article.body = body;
-                      article.location = location;
-                      article.author = userId;
-                      article.updatedAt = new Date().getTime();
-                      // Save changes in mongo
-                      article.save((errSave) => {
-                        if (errSave) {
-                          res.send({
-                            success: false,
-                            error: errSave.message,
-                          });
-                        } else {
-                          res.send({
-                            success: true,
-                            error: '',
-                            data: article,
-                          });
-                        }
-                      });
-                    }
-                  });
-                }
-              });
+      // Perform error checking on variables
+      if (!title) {
+        error = "Title must be populated.";
+      } else if (!subtitle) {
+        error = "Subtitle must be populated.";
+      } else if (!image) {
+        error = "Image must be populated.";
+      } else if (!body || !body.length) {
+        error = "Body must be populated.";
+      } else if (!urlRegexp.test(image)) {
+        error = "Image must be a valid URL to an image.";
+      } else if (typeof body !== "object" || !Array.isArray(body)) {
+        error = "Body must be an array";
+      } else if (Object.keys(location).length === 0) {
+        error = "Location must be populated.";
+      } else {
+        // Ensure that each article component is properly formatted
+        for (let i = 0; i < body.length && !error; i++) {
+          // Find the component at the given index
+          const component = body[i];
+          if (!component) {
+            error = "Each component must be defined.";
+          } else if (!component.body) {
+            error = "Each component must be populated with text.";
+          } else if (component.componentType !== "text" &&
+                     component.componentType !== "image" &&
+                     component.componentType !== "quote"
+          ) {
+            error = "Component type must be valid.";
+          } else if (component.componentType === "image") {
+            // Ensure that the URL to the image is proper
+            // This means that it is both a URL and an image file
+            const imgRegexp = /\.(jpeg|jpg|gif|png)$/;
+            if (!imgRegexp.test(component.body)) {
+              error = "Image url must end in \"jpeg\", \"png\", \"gif\", or \"jpg\".";
+            } else if (!urlRegexp.test(component.body)) {
+              error = "Image url must be a valid URL.";
             }
           }
         }
-      });
+      }
+
+      // If there was an error or not
+      if (error) {
+        res.send({
+          success: false,
+          error,
+        });
+      } else {
+        // Find the author
+        User.findById(userId, (err, author) => {
+          if (err) {
+            res.send({
+              success: false,
+              error: 'Error finding author ' + err.message
+            });
+          } else if (!author) {
+            res.send({
+              success: false,
+              error: 'Author not found.'
+            });
+          } else {
+            // Find article in Mongo
+            Article.findById(articleId, (articleErr, article) => {
+              if (articleErr) {
+                res.send({
+                  success: false,
+                  error: articleErr.message,
+                });
+              } else {
+                // Make changes to given article
+                article.title = title;
+                article.subtitle = subtitle;
+                article.image = image;
+                article.body = body;
+                article.location = location;
+                article.author = userId;
+                article.updatedAt = new Date().getTime();
+                // Save changes in mongo
+                article.save((errSave) => {
+                  if (errSave) {
+                    res.send({
+                      success: false,
+                      error: errSave.message,
+                    });
+                  } else {
+                    res.send({
+                      success: true,
+                      error: '',
+                      data: article,
+                    });
+                  }
+                });
+              }
+            });
+          }
+        });
+      }
     }
   });
 
