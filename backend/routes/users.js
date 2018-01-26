@@ -22,23 +22,17 @@ module.exports = () => {
   router.post('/name', (req, res) => {
     // Isolate variables from the request
     const name = req.body.name;
-    const userId = req.body.userId;
-    let userIdBackend = "";
+    let userId = "";
     if (req.session.passport) {
-      userIdBackend = req.session.passport.user;
+      userId = req.session.passport.user;
     }
     // User is not logged in
-    if (!userIdBackend) {
+    if (!userId) {
       res.send({
         success: false,
         error: 'You must be logged in to change your name.'
       });
     // Frontend and backend userId do not match
-    } else if (userId !== userIdBackend) {
-      res.send({
-        success: false,
-        error: 'You may only change your own name.'
-      });
     } else
     // Error checking
     if (!name) {
@@ -98,23 +92,17 @@ module.exports = () => {
   router.post('/bio', (req, res) => {
     // Isolate variables from the request
     const bio = req.body.bio;
-    const userId = req.body.userId;
-    let userIdBackend = "";
+    let userId = "";
     if (req.session.passport) {
-      userIdBackend = req.session.passport.user;
+      userId = req.session.passport.user;
     }
     // User is not logged in
-    if (!userIdBackend) {
+    if (!userId) {
       res.send({
         success: false,
         error: 'You must be logged in to change a bio.'
       });
       // User id on backend and frontend do not match
-    } else if (userIdBackend !== userId) {
-      res.send({
-        success: false,
-        error: 'You may only change your own bio.',
-      });
     } else
     // Error checking
     if (bio.length > 500) {
@@ -168,25 +156,19 @@ module.exports = () => {
    */
   router.post('/profilePicture', (req, res) => {
     // Isolate variables
-    let userIdBackend = "";
-    const userId = req.body.userId;
+    let userId = "";
     const profilePicture = req.body.profilePicture;
 
     if (req.session.passport) {
-      userIdBackend = req.session.passport.user;
+      userId = req.session.passport.user;
     }
     // User is not logged in on backend
-    if (!userIdBackend) {
+    if (!userId) {
       res.send({
         success: false,
         error: 'Must be logged in to change profile picture.',
       });
     // Backend user doesn't match frontend user
-    } else if (userIdBackend !== userId) {
-      res.send({
-        success: false,
-        error: 'Can only change your own profile picture.',
-      });
     } else {
       const imgRegexp = /\.(jpeg|jpg|gif|png)$/;
       if (req.body.profilePicture && !imgRegexp.test(req.body.profilePicture)) {

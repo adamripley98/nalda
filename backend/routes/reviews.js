@@ -34,11 +34,6 @@ module.exports = () => {
         error: 'You must be logged in to leave reviews.'
       });
     // Backend user and frontend user do not match
-    } else if (userId !== req.body.userId) {
-      res.send({
-        success: false,
-        error: 'You cannot post as another user.',
-      });
     } else
     // Ensure all fields are populated before leaving review
     if (!req.body.rating || !req.body.title || !req.body.content) {
@@ -48,7 +43,7 @@ module.exports = () => {
       });
     } else {
       // If user is logged in, first find author in MongoDB
-      User.findById(req.body.userId, (errUser, user) => {
+      User.findById(userId, (errUser, user) => {
         // Error finding user
         if (errUser) {
           res.send({

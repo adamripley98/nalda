@@ -44,6 +44,10 @@ module.exports = () => {
     });
   });
 
+  const checkCuratorOrAdmin = () => {
+    console.log('checking');
+  };
+
   /**
    * Route to handle a new article submission
    * @param title
@@ -52,6 +56,7 @@ module.exports = () => {
    * @param body (text of the article)
    */
   router.post('/new', (req, res) => {
+    checkCuratorOrAdmin();
     // Isolate userId from Backend
     let userId = "";
     if (req.session.passport) {
@@ -63,11 +68,6 @@ module.exports = () => {
       res.send({
         success: false,
         error: 'You must be logged in to post.'
-      });
-    } else if (userId !== req.body.userId) {
-      res.send({
-        success: false,
-        error: 'Incorrect user.'
       });
     } else {
       User.findById(userId, (errUser, user) => {
@@ -215,11 +215,6 @@ module.exports = () => {
       res.send({
         success: false,
         error: 'You must be logged in to post.'
-      });
-    } else if (userId !== req.body.userId) {
-      res.send({
-        success: false,
-        error: 'Incorrect user.'
       });
     } else {
       User.findById(userId, (errUser, user) => {
