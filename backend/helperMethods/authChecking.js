@@ -6,8 +6,7 @@
 const User = require('../models/user');
 
 // Helper method to check if a user is an admin or a curator
-const CuratorOrAdminCheck = (req) => {
-  console.log('enters check');
+const CuratorOrAdminCheck = (req, cb) => {
   // Isolate userId from Backend
   let userId = "";
   if (req.session.passport) {
@@ -16,36 +15,40 @@ const CuratorOrAdminCheck = (req) => {
 
   // No user is logged in
   if (!userId) {
-    return {
+    cb({
       success: false,
       error: 'You must be logged in.',
-    };
+    });
+    return;
   }
 
   // Search for user in Mongo
   User.findById(userId, (errUser, user) => {
     // If error finding user
     if (errUser) {
-      return {
+      cb({
         success: false,
         error: errUser.message,
-      };
+      });
+      return;
     // User isn't admin or curator
     } else if (user.userType !== 'admin' && user.userType !== 'curator') {
-      return {
+      cb({
         success: false,
         error: 'General users do not have this privilege.',
-      };
+      });
+      return;
     }
     // Return no error
-    return {
+    cb({
       success: true,
       error: '',
-    };
+    });
+    return;
   });
 };
 
-const AdminCheck = (req) => {
+const AdminCheck = (req, cb) => {
   let userId = '';
   // Assign userId to user in backend
   if (req.session.passport) {
@@ -53,41 +56,46 @@ const AdminCheck = (req) => {
   }
   // If user doesn't exist
   if (!userId) {
-    return {
+    cb({
       success: false,
       error: 'Must be logged in.',
-    };
+    });
+    return;
   }
   // Find the admin in Mongo
   User.findById(userId, (errAdmin, admin) => {
     // Error finding admin
     if (errAdmin) {
-      return {
+      cb({
         success: false,
         error: errAdmin.message,
-      };
+      });
+      return;
     // Can't find admin
     } else if (!admin) {
-      return {
+      cb({
         success: false,
         error: 'User not found.',
-      };
+      });
+      return;
     // User isn't am admin
     } else if (admin.userType !== 'admin') {
-      return {
+      cb({
         success: false,
         error: 'You must be an admin.',
-      };
+      });
+      return;
     }
     // If no errors
-    return {
+    cb({
       success: true,
       error: '',
-    };
+    });
+    return;
   });
 };
 
-const UserCheck = (req) => {
+const UserCheck = (req, cb) => {
   // Isolate userId from backend
   let userId = "";
   if (req.session.passport) {
@@ -95,81 +103,81 @@ const UserCheck = (req) => {
   }
   // User is not logged in
   if (!userId) {
-    return {
+    cb({
       success: false,
       error: 'Must be logged in.',
-    };
+    });
+    return;
   }
   // User is logged in
-  return {
+  cb({
     success: true,
     error: '',
-  };
+  });
+  return;
 };
 
-const AuthorOrAdminCheck = (req, docId, Document) => {
+const AuthorOrAdminCheck = (req, docId, Document, cb) => {
   // Pull userId from the backend
   let userId = '';
   if (req.session.passport) {
     userId = req.session.passport.user;
   }
-  console.log('enteres authcheckign');
   // Find the given document in Mongo
   Document.findById(docId, (errDoc, doc) => {
-    console.log('enters doc find');
     // Error finding document
     if (errDoc) {
-      console.log('errdoc', errDoc);
-      return {
+      cb({
         success: false,
         error: errDoc.message,
-      };
+      });
+      return;
     // Cannot find document
     } else if (!doc) {
-      console.log('no doc');
-      return {
+      cb({
         success: false,
         error: 'No document found.',
-      };
+      });
+      return;
     }
-    console.log('ok');
     // Check to make sure user is logged in on backend
     if (!userId) {
-      console.log('no userid');
-      return {
+      cb({
         success: false,
         error: 'You must be logged in.',
-      };
+      });
+      return;
     }
-    console.log('we here!');
     // Find user to check if they are author or admin
     User.findById(userId, (errUser, user) => {
-      console.log('finding user');
       // Error finding user
       if (errUser) {
-        return {
+        cb({
           success: false,
           error: errUser.message,
-        };
+        });
+        return;
       // Cannot find user
       } else if (!user) {
-        return {
+        cb({
           success: false,
           error: 'You must be logged in.',
-        };
+        });
+        return;
       // User is not author or admin
       } else if (user.userType !== 'admin' && user._id !== doc.author) {
-        return {
+        cb({
           success: false,
           error: 'You do not have the right privileges.',
-        };
+        });
+        return;
       }
       // User has privilege to do this, return document
-      console.log('user should have priv');
-      return {
+      cb({
         success: true,
         doc,
-      };
+      });
+      return;
     });
   });
 };

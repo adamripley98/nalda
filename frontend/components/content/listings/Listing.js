@@ -61,7 +61,6 @@ class Listing extends React.Component {
     this.handleClickInfoTrigger = this.handleClickInfoTrigger.bind(this);
     this.updateReviews = this.updateReviews.bind(this);
     this.deleteListing = this.deleteListing.bind(this);
-    this.editListing = this.editListing.bind(this);
     this.renderButtons = this.renderButtons.bind(this);
     this.areHours = this.areHours.bind(this);
   }
@@ -114,12 +113,6 @@ class Listing extends React.Component {
           pending: false,
         });
       });
-  }
-
-  // Helper method to edit listing
-  editListing() {
-    // TODO implement
-    console.log('edit');
   }
 
   // Helper method to delete specific listing
