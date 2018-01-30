@@ -14,7 +14,7 @@ const Video = require('../models/video');
 const User = require('../models/user');
 
 // Import helper methods
-const {notCuratorOrAdmin} = require('../helperMethods/authChecking');
+const {CuratorOrAdminCheck} = require('../helperMethods/authChecking');
 const {AuthorOrAdminCheck} = require('../helperMethods/authChecking');
 
 
@@ -127,7 +127,6 @@ module.exports = () => {
     // Check to make sure user is an admin or the author
     const authCheck = AuthorOrAdminCheck(req, videoId, Video);
     console.log('authcheck', authCheck);
-    process.nextTick()
     // Return any authentication errors
     if (!authCheck.success) {
       res.send({
@@ -281,13 +280,13 @@ module.exports = () => {
    */
   router.post('/new', (req, res) => {
     // Check to make sure poster is an admin or curator
-    const authError = notCuratorOrAdmin(req);
-
+    const authCheck = CuratorOrAdminCheck(req);
+    // TODO make async
     // Return any authentication errors
-    if (authError) {
+    if (!authCheck.success) {
       res.send({
         success: false,
-        error: authError,
+        error: authCheck.error,
       });
     } else {
       // Isolate variables

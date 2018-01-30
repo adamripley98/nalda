@@ -13,7 +13,7 @@ const Listing = require('../models/listing');
 const User = require('../models/user');
 
 // Import helper methods
-const {notLoggedIn} = require('../helperMethods/authChecking');
+const {UserCheck} = require('../helperMethods/authChecking');
 
 // Export the following methods for routing
 module.exports = () => {
@@ -28,13 +28,13 @@ module.exports = () => {
    */
   router.post('/new', (req, res) => {
     // Check to make sure poster is logged in
-    const authError = notLoggedIn(req);
-
+    const authCheck = UserCheck(req);
+    // TODO async
     // Return any authentication errors
-    if (authError) {
+    if (!authCheck.success) {
       res.send({
         success: false,
-        error: authError,
+        error: authCheck.error,
       });
     } else {
       const userId = req.session.passport.user;

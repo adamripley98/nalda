@@ -15,7 +15,7 @@ const Video = require('./models/video');
 const User = require('./models/user');
 
 // Import helper methods
-const {notLoggedIn} = require('./helperMethods/authChecking');
+const {UserCheck} = require('./helperMethods/authChecking');
 
 // Export the following methods for routing
 module.exports = () => {
@@ -215,13 +215,13 @@ module.exports = () => {
    */
   router.get('/account', (req, res) => {
     // Check to make sure poster is logged in
-    const authError = notLoggedIn(req);
-
+    const authCheck = UserCheck(req);
+    // TODO async
     // Return any authentication errors
-    if (authError) {
+    if (!authCheck.success) {
       res.send({
         success: false,
-        error: authError,
+        error: authCheck.error,
       });
     // Check to make sure user is accessing their own data
     // TODO Will need to change once we don't pass userId from frontend

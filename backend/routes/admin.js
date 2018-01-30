@@ -12,7 +12,7 @@ const router = express.Router();
 const User = require('../models/user');
 
 // Import helper methods
-const {notAdmin} = require('../helperMethods/authChecking');
+const {AdminCheck} = require('../helperMethods/authChecking');
 
 // Export the following methods for routing
 module.exports = () => {
@@ -23,13 +23,13 @@ module.exports = () => {
    */
   router.post('/admin/new', (req, res) => {
     // Check to make sure poster is an admin
-    const authError = notAdmin(req);
-
+    const authCheck = AdminCheck(req);
+    // TODO async
     // Return any authentication errors
-    if (authError) {
+    if (!authCheck.success) {
       res.send({
         success: false,
-        error: authError,
+        error: authCheck.error,
       });
     } else {
       // If user is an admin, finds given user to add in Mongo
@@ -80,13 +80,13 @@ module.exports = () => {
    */
   router.post('/curator/new', (req, res) => {
     // Check to make sure poster is an admin
-    const authError = notAdmin(req);
-
+    const authCheck = AdminCheck(req);
+    // TODO async
     // Return any authentication errors
-    if (authError) {
+    if (!authCheck.success) {
       res.send({
         success: false,
-        error: authError,
+        error: authCheck.error,
       });
     } else {
       // If user is an admin, finds given user in Mongo
@@ -142,13 +142,13 @@ module.exports = () => {
    */
   router.post('/curator/remove', (req, res) => {
     // Check to make sure poster is an admin
-    const authError = notAdmin(req);
-
+    const authCheck = AdminCheck(req);
+    // TODO async
     // Return any authentication errors
-    if (authError) {
+    if (!authCheck.success) {
       res.send({
         success: false,
-        error: authError,
+        error: authCheck.error,
       });
     } else {
       // finds given user in Mongo

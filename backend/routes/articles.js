@@ -13,7 +13,7 @@ const Article = require('../models/article');
 const User = require('../models/user');
 
 // Import helper methods
-const {notCuratorOrAdmin} = require('../helperMethods/authChecking');
+const {CuratorOrAdminCheck} = require('../helperMethods/authChecking');
 
 // Export the following methods for routing
 module.exports = () => {
@@ -56,13 +56,13 @@ module.exports = () => {
    */
   router.post('/new', (req, res) => {
     // Check to make sure poster is an admin or curator
-    const authError = notCuratorOrAdmin(req);
-
+    const authReturn = CuratorOrAdminCheck(req);
+    // TODO make async
     // Return any authentication errors
-    if (authError) {
+    if (authReturn.error) {
       res.send({
         success: false,
-        error: authError,
+        error: authReturn.error,
       });
     } else {
       // Isolate variables
@@ -185,13 +185,13 @@ module.exports = () => {
 
     // Check to make sure editor is an admin or curator
     // TODO new method called notAuthorOrAdmin
-    const authError = notCuratorOrAdmin(req);
-
+    const authCheck = CuratorOrAdminCheck(req);
+    // TODO async
     // Return any authentication errors
-    if (authError) {
+    if (!authCheck.success) {
       res.send({
         success: false,
-        error: authError,
+        error: authCheck.error,
       });
     } else {
       // Isolate variables

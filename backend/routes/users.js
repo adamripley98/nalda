@@ -15,7 +15,7 @@ const Video = require('../models/video');
 const User = require('../models/user');
 
 // Import helper methods
-const {notLoggedIn} = require('../helperMethods/authChecking');
+const {UserCheck} = require('../helperMethods/authChecking');
 
 // Export the following methods for routing
 module.exports = () => {
@@ -24,16 +24,16 @@ module.exports = () => {
    */
   router.post('/name', (req, res) => {
     // Check to make sure poster is logged in
-    const authError = notLoggedIn(req);
+    const authCheck = UserCheck(req);
 
     // Isolate variables from the request
     const name = req.body.name;
-
+    // TODO async
     // Return any authentication errors
-    if (authError) {
+    if (!authCheck.success) {
       res.send({
         success: false,
-        error: authError,
+        error: authCheck.error,
       });
     } else {
       // Error checking
@@ -97,13 +97,13 @@ module.exports = () => {
     const bio = req.body.bio;
 
     // Check to make sure poster is logged in
-    const authError = notLoggedIn(req);
-
+    const authCheck = UserCheck(req);
+    // TODO async
     // Return any authentication errors
-    if (authError) {
+    if (!authCheck.success) {
       res.send({
         success: false,
-        error: authError,
+        error: authCheck.error,
       });
     } else {
       // Error checking
@@ -159,16 +159,16 @@ module.exports = () => {
    */
   router.post('/profilePicture', (req, res) => {
     // Check to make sure poster is logged in
-    const authError = notLoggedIn(req);
+    const authCheck = UserCheck(req);
 
     // Isolate variables
     const profilePicture = req.body.profilePicture;
-
+    // TODO async
     // Return any authentication errors
-    if (authError) {
+    if (!authCheck.success) {
       res.send({
         success: false,
-        error: authError,
+        error: authCheck.error,
       });
     } else {
       const imgRegexp = /\.(jpeg|jpg|gif|png)$/;
@@ -220,13 +220,13 @@ module.exports = () => {
    */
   router.post('/location', (req, res) => {
     // Check to make sure poster is logged in
-    const authError = notLoggedIn(req);
-
+    const authCheck = UserCheck(req);
+    // TODO async
     // Return any authentication errors
-    if (authError) {
+    if (!authCheck.success) {
       res.send({
         success: false,
-        error: authError,
+        error: authCheck.error,
       });
     } else {
       User.findById(req.session.passport.user, (err, user) => {

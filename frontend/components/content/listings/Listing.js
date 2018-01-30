@@ -535,7 +535,6 @@ class Listing extends React.Component {
   // Render the component
   render() {
     // Return the component
-    console.log('errr', this.state.error);
     return (
       this.state.pending ? (
         <Loading />
