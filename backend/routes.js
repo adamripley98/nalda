@@ -15,7 +15,7 @@ const Video = require('./models/video');
 const User = require('./models/user');
 
 // Import helper methods
-const {notLoggedIn} = require('./helperMethods/authChecking');
+const {UserCheck} = require('./helperMethods/authChecking');
 
 // Export the following methods for routing
 module.exports = () => {
@@ -215,47 +215,47 @@ module.exports = () => {
    */
   router.get('/account', (req, res) => {
     // Check to make sure poster is logged in
-    const authError = notLoggedIn(req);
-
-    // Return any authentication errors
-    if (authError) {
-      res.send({
-        success: false,
-        error: authError,
-      });
-    // Check to make sure user is accessing their own data
-    // TODO Will need to change once we don't pass userId from frontend
-    } else if (req.session.passport.user !== req.query.userId) {
-      res.send({
-        success: false,
-        error: 'You may only access your own information.'
-      });
-    } else {
-        // Find user in Mongo
-      User.findById(req.session.passport.user, (err, user) => {
-        if (err) {
-        // If there was an error with the request
-          res.send({
-            success: false,
-            error: err.message,
-          });
-          // If no user exists
-        } else if (!user) {
-          res.send({
-            success: false,
-            error: 'Can not find user',
-          });
-        } else {
-          // If everything went as planned, send back user
-          // Remove private user info first
-          user.password = '';
-          res.send({
-            success: true,
-            data: user,
-          });
-        }
-      });
-    }
+    UserCheck(req, (authRes) => {
+      // Return any authentication errors
+      if (!authRes.success) {
+        res.send({
+          success: false,
+          error: authRes.error,
+        });
+      // Check to make sure user is accessing their own data
+      // TODO Will need to change once we don't pass userId from frontend
+      } else if (req.session.passport.user !== req.query.userId) {
+        res.send({
+          success: false,
+          error: 'You may only access your own information.'
+        });
+      } else {
+          // Find user in Mongo
+        User.findById(req.session.passport.user, (err, user) => {
+          if (err) {
+          // If there was an error with the request
+            res.send({
+              success: false,
+              error: err.message,
+            });
+            // If no user exists
+          } else if (!user) {
+            res.send({
+              success: false,
+              error: 'Can not find user',
+            });
+          } else {
+            // If everything went as planned, send back user
+            // Remove private user info first
+            user.password = '';
+            res.send({
+              success: true,
+              data: user,
+            });
+          }
+        });
+      }
+    });
   });
 
 
