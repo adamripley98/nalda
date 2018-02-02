@@ -3,10 +3,6 @@ const path = require('path');
 const mongoose = require('mongoose');
 const express = require('express');
 const app = express();
-const PORT = process.env.PORT || 3000;
-const FACEBOOK_APP_ID = process.env.FACEBOOK_APP_ID;
-const FACEBOOK_APP_SECRET = process.env.FACEBOOK_APP_SECRET;
-const FACEBOOK_APP_CALLBACK = process.env.FACEBOOK_APP_CALLBACK;
 const passport = require('passport');
 const bodyParser = require('body-parser');
 const routes = require('./backend/routes')(passport);
@@ -14,6 +10,16 @@ const ssl = require('./backend/ssl')(passport);
 const bCrypt = require('bcrypt-nodejs');
 const LocalStrategy = require('passport-local');
 const FacebookStrategy = require('passport-facebook').Strategy;
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+
+// Import environmental variables
+const PORT = process.env.PORT || 3000;
+const FACEBOOK_APP_ID = process.env.FACEBOOK_APP_ID;
+const FACEBOOK_APP_SECRET = process.env.FACEBOOK_APP_SECRET;
+const FACEBOOK_APP_CALLBACK = process.env.FACEBOOK_APP_CALLBACK;
+const GOOGLE_APP_ID = process.env.GOOGLE_APP_ID;
+const GOOGLE_APP_SECRET = process.env.GOOGLE_APP_SECRET;
+const GOOGLE_APP_CALLBACK = process.env.GOOGLE_APP_CALLBACK;
 
 // Import Models
 const User = require('./backend/models/user');
@@ -24,6 +30,7 @@ const register = require('./backend/passport/register');
 const logout = require('./backend/passport/logout');
 const changePassword = require('./backend/passport/changePassword');
 const facebook = require('./backend/passport/facebook');
+const google = require('./backend/passport/google');
 
 // Import other routes
 const articles = require('./backend/routes/articles')();
@@ -135,6 +142,16 @@ passport.use(
     });
   }
 ));
+
+// Google OAuth Strategy setup
+passport.use(new GoogleStrategy({
+  clientID: GOOGLE_APP_ID,
+  clientSecret: GOOGLE_APP_SECRET,
+  callbackURL: GOOGLE_APP_CALLBACK,
+}, (accessToken, refreshToken, profile, cb) => {
+  console.log('profile', profile);
+  // TODO Create or find user
+}));
 
 // Method to check encrypted password
 const isValidPassword = (user, password) => {
