@@ -33,6 +33,12 @@ class Home extends React.Component {
    * Pulls articles, listings, and videos simulatneously
    */
   componentDidMount() {
+    // Janky way of dealing with Facebook Oauth url issue
+    if (window.location.hash === '#_=_') {
+      history.replaceState
+        ? history.replaceState(null, null, window.location.href.split('#')[0])
+        : window.location.hash = '';
+    }
     // Pull all articles, listings, and videos from the database
     axios.get('/api/home')
       .then((resp) => {

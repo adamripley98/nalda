@@ -74,10 +74,10 @@ class Nav extends Component {
                 { /* Render the user's location information */ }
                 <div className="location">
                   {
-                    this.props.location.indexOf(",") > 0 ? (
+                    this.props.location && this.props.location.indexOf(",") > 0 ? (
                       this.props.location.substring(0, this.props.location.lastIndexOf(","))
                     ) : (
-                      this.props.location
+                      this.props.location || "Philadelphia, PA"
                     )
                   }
                 </div>

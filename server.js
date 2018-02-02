@@ -18,12 +18,21 @@ const FacebookStrategy = require('passport-facebook').Strategy;
 // Import Models
 const User = require('./backend/models/user');
 
-// Import other routes
+// Import auth routes
 const login = require('./backend/passport/login');
 const register = require('./backend/passport/register');
 const logout = require('./backend/passport/logout');
 const changePassword = require('./backend/passport/changePassword');
 const facebook = require('./backend/passport/facebook');
+
+// Import other routes
+const articles = require('./backend/routes/articles')();
+const listings = require('./backend/routes/listings')();
+const videos = require('./backend/routes/videos')();
+const users = require('./backend/routes/users')();
+const admin = require('./backend/routes/admin')();
+const contact = require('./backend/routes/contact')();
+const reviews = require('./backend/routes/reviews')();
 
 // Connecting to mongo
 const connect = process.env.MONGODB_URI;
@@ -91,13 +100,39 @@ passport.use(
     clientID: FACEBOOK_APP_ID,
     clientSecret: FACEBOOK_APP_SECRET,
     callbackURL: FACEBOOK_APP_CALLBACK,
+    profileFields: ['id', 'displayName', 'photos', 'email', 'gender', 'name']
+    // profileFields: ['id', 'name', 'username', 'displayName', 'photos', 'email'],
   },
   (accessToken, refreshToken, profile, cb) => {
-    console.log("PROFILE");
-    console.log(profile);
-    // User.findOrCreate({ facebookId: profile.id }, (err, user) => {
-    //   return cb(err, user);
-    // });
+    // If profile is found, search mongo for him
+    process.nextTick(() => {
+      User.find({facebookId: profile.id}, (err, user) => {
+        if (err) {
+          return cb(err, null);
+          // If no user, create him in Mongo
+        } else if (!user.length) {
+          // Create a new user
+          const newUser = new User({
+            name: profile.displayName,
+            username: profile._json.email,
+            userType: 'user',
+            facebookId: profile.id,
+            profilePicture: `https://graph.facebook.com/${profile.id}/picture?type=large`,
+          });
+          // Save new user in mongo
+          newUser.save((errSave) => {
+            if (errSave) {
+              return cb(errSave, null);
+            }
+            // If successful return profile
+            return cb(null, newUser);
+          });
+        } else {
+          // User already exists
+          return cb(null, user);
+        }
+      });
+    });
   }
 ));
 
@@ -107,13 +142,19 @@ const isValidPassword = (user, password) => {
 };
 
 // Routing backend middleware
-app.use('/.well-known/acme-challenge/', ssl);
 app.use('/api/', login(passport));
 app.use('/api/', register(passport));
 app.use('/api/', logout(passport));
 app.use('/api/', changePassword(passport));
 app.use('/api/', facebook(passport));
 app.use('/api/', routes);
+app.use('/api/articles/', articles);
+app.use('/api/listings/', listings);
+app.use('/api/videos/', videos);
+app.use('/api/users/', users);
+app.use('/api/', admin);
+app.use('/api/contact/', contact);
+app.use('/api/reviews/', reviews);
 
 app.get('*', (request, response) => {
   response.sendFile(__dirname + '/public/index.html'); // For React/Redux

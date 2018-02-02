@@ -61,7 +61,6 @@ class Listing extends React.Component {
     this.handleClickInfoTrigger = this.handleClickInfoTrigger.bind(this);
     this.updateReviews = this.updateReviews.bind(this);
     this.deleteListing = this.deleteListing.bind(this);
-    this.editListing = this.editListing.bind(this);
     this.renderButtons = this.renderButtons.bind(this);
     this.areHours = this.areHours.bind(this);
   }
@@ -114,12 +113,6 @@ class Listing extends React.Component {
           pending: false,
         });
       });
-  }
-
-  // Helper method to edit listing
-  editListing() {
-    // TODO implement
-    console.log('edit');
   }
 
   // Helper method to delete specific listing
@@ -330,7 +323,6 @@ class Listing extends React.Component {
     if (this.state.reviews && this.state.reviews.length) {
       // Reverse reviews so they appear newest to oldest
       const reviews = this.state.reviews.slice(0).reverse();
-      console.log('rrr', reviews);
       // Map each review to be its own component
       return reviews.map(review => (
         <Review
@@ -536,7 +528,6 @@ class Listing extends React.Component {
   // Render the component
   render() {
     // Return the component
-    console.log('errr', this.state.error);
     return (
       this.state.pending ? (
         <Loading />

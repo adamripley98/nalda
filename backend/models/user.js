@@ -21,7 +21,8 @@ const userSchema = new Schema({
   bio: String,
   content: {
     type: Schema.Types.ObjectId, ref: 'User',
-  }
+  },
+  facebookId: String,
 });
 
 // Creates an index allowing for search functionality
