@@ -9,6 +9,7 @@ module.exports = (passport) => {
   router.get('/auth/google', passport.authenticate('facebook'));
 
   router.get('/auth/google/callback', (req, res, next) => {
+    console.log('goesin');
     passport.authenticate('facebook', (errPassport, user) => {
       if (errPassport) {
         // TODO redirect to error

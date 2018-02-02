@@ -20,6 +20,7 @@ module.exports = (passport) => {
         req.logIn(user, (loginErr) => {
           // Error logging in
           if (loginErr) {
+            console.log('err', loginErr);
             // TODO Handle better, redirect somewhere
             res.send({
               success: false,
