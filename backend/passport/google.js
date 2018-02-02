@@ -6,11 +6,10 @@ const router = express.Router();
  * Backend file for logging in with google
  */
 module.exports = (passport) => {
-  router.get('/auth/google', passport.authenticate('facebook'));
+  router.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
   router.get('/auth/google/callback', (req, res, next) => {
-    console.log('goesin');
-    passport.authenticate('facebook', (errPassport, user) => {
+    passport.authenticate('google', (errPassport, user) => {
       if (errPassport) {
         // TODO redirect to error
         res.send({

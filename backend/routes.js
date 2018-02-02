@@ -29,6 +29,9 @@ module.exports = () => {
     });
   });
 
+  /**
+   * Route to make sure that backend and frontend states are synced.
+   */
   router.get('/sync', (req, res) => {
     // If passport state is not present, user is not logged in on the backend
     if (!req.session.passport) {
@@ -52,19 +55,18 @@ module.exports = () => {
             error: 'User not found.',
           });
         } else {
-          // If user uses facebook login
-          if (user.facebookId) {
+          // If user uses facebook or google login
+          if (user.facebookId || user.googleId) {
             const userToLogIn = {
               name: user.name,
               profilePicture: user.profilePicture,
               userType: user.userType,
               userId: user._id,
             };
-            console.log('userToLogin', userToLogIn);
             res.send({
               success: true,
               error: '',
-              facebook: true,
+              oAuthLogin: true,
               user: userToLogIn,
             });
           } else {
@@ -72,7 +74,7 @@ module.exports = () => {
             res.send({
               success: true,
               error: '',
-              facebook: false,
+              oAuthLogin: false,
             });
           }
         }

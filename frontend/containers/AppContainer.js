@@ -70,6 +70,7 @@ class AppContainer extends Component {
   /**
     * This method ensures that the state stored in redux persist does not outlast the backend setState.
     * If the backend and frontend states aren't synced, redirects to login and wipes redux state.
+    * If the user attempted to login with facebook/google, will dispatch login action
    */
   componentDidMount() {
     // Isolate variables
@@ -94,7 +95,7 @@ class AppContainer extends Component {
       } else {
         const user = resp.data.user;
         // If user is logged in through facebook on backend, update on Frontend
-        if (resp.data.facebook) {
+        if (resp.data.oAuthLogin) {
           // Send redux event
           // TODO Remove dummy location
           onLogin(user.userId, user.userType, user.name, "Philadelphia, PA", user.profilePicture);

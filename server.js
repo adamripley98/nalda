@@ -119,6 +119,7 @@ passport.use(
           // If no user, create him in Mongo
         } else if (!user.length) {
           // Create a new user
+          // TODO location
           const newUser = new User({
             name: profile.displayName,
             username: profile._json.email,
@@ -149,8 +150,36 @@ passport.use(new GoogleStrategy({
   clientSecret: GOOGLE_APP_SECRET,
   callbackURL: GOOGLE_APP_CALLBACK,
 }, (accessToken, refreshToken, profile, cb) => {
-  console.log('profile', profile);
-  // TODO Create or find user
+  process.nextTick(() => {
+    console.log('prof id', profile);
+    User.find({googleId: profile.id}, (err, user) => {
+      if (err) {
+        return cb(err, null);
+        // If no user, create him in Mongo
+      } else if (!user.length) {
+        // Create a new user
+        // TODO location
+        const newUser = new User({
+          name: profile.displayName,
+          username: profile.emails[0].value,
+          userType: 'user',
+          googleId: profile.id,
+          profilePicture: profile.photos[0].value,
+        });
+        // Save new user in mongo
+        newUser.save((errSave) => {
+          if (errSave) {
+            return cb(errSave, null);
+          }
+          // If successful return profile
+          return cb(null, newUser);
+        });
+      } else {
+        // User already exists
+        return cb(null, user);
+      }
+    });
+  });
 }));
 
 // Method to check encrypted password
@@ -164,6 +193,7 @@ app.use('/api/', register(passport));
 app.use('/api/', logout(passport));
 app.use('/api/', changePassword(passport));
 app.use('/api/', facebook(passport));
+app.use('/api/', google(passport));
 app.use('/api/', routes);
 app.use('/api/articles/', articles);
 app.use('/api/listings/', listings);
