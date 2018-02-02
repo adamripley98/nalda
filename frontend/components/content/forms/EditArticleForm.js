@@ -347,6 +347,8 @@ class EditArticleForm extends React.Component {
                           placeholder = "Enter URL to an image...";
                         } else if (component.componentType === "quote") {
                           placeholder = "Enter quote...";
+                        } else if (component.componentType === "header") {
+                          placeholder = "Type some header text...";
                         }
 
                         // Return the textarea associated with the component
@@ -399,6 +401,11 @@ class EditArticleForm extends React.Component {
                         className="fa fa-quote-right"
                         aria-hidden="true"
                         onClick={ () => this.addNewComponent("quote") }
+                      />
+                      <i
+                        className="fa fa-i-cursor"
+                        aria-hidden="true"
+                        onClick={ () => this.addNewComponent("header") }
                       />
                     </div>
 

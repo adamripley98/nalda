@@ -99,6 +99,9 @@ class ListingForm extends React.Component {
    * When the component mounts
    */
   componentDidMount() {
+    // Update the title
+    document.title = "Nalda | New Listing";
+
     // Handle resizing textarea
     autosize(document.querySelectorAll('textarea'));
 

@@ -1,7 +1,7 @@
 // Import framworks
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Link, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -30,6 +30,14 @@ class Login extends Component {
     this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
     this.handleChangeEmail = this.handleChangeEmail.bind(this);
     this.handleChangePassword = this.handleChangePassword.bind(this);
+  }
+
+  /**
+   * When the component mounts
+   */
+  componentDidMount() {
+    // Update the title
+    document.title = "Nalda | Login";
   }
 
   // When login button clicked, will attempt to login on backend (login.js)
@@ -149,7 +157,30 @@ class Login extends Component {
               value={ this.state.pending ? "Logging in..." : "Login" }
             />
           </form>
-          Already have an account? <Link to="/register">Register here.</Link>
+
+          {/* Render other options */}
+          <div className="gray-text center text-segment">
+            <div className="line-through" />
+            <p>
+              Or continue with
+            </p>
+            <div className="line-through" />
+          </div>
+          <div className="row">
+            <div className="col-12 col-sm-6 marg-bot-1">
+              <a
+                className="btn full-width btn-sm facebook"
+                href="/api/auth/facebook"
+              >
+                <i className="fa fa-facebook" aria-hidden="true" /> &nbsp; Facebook
+              </a>
+            </div>
+            <div className="col-12 col-sm-6 marg-bot-1">
+              <div className="btn full-width btn-sm google">
+                <i className="fa fa-google" aria-hidden="true" /> &nbsp; Google
+              </div>
+            </div>
+          </div>
         </Thin>
       </div>
     );

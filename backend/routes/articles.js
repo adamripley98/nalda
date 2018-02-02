@@ -103,7 +103,8 @@ module.exports = () => {
               error = "Each component must be populated with text.";
             } else if (component.componentType !== "text" &&
                        component.componentType !== "image" &&
-                       component.componentType !== "quote"
+                       component.componentType !== "quote" &&
+                       component.componentType !== "header"
             ) {
               error = "Component type must be valid.";
             } else if (component.componentType === "image") {
@@ -231,7 +232,8 @@ module.exports = () => {
               error = "Each component must be populated with text.";
             } else if (component.componentType !== "text" &&
                        component.componentType !== "image" &&
-                       component.componentType !== "quote"
+                       component.componentType !== "quote" &&
+                       component.componentType !== "header"
             ) {
               error = "Component type must be valid.";
             } else if (component.componentType === "image") {

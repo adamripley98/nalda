@@ -46,6 +46,9 @@ class ArticleForm extends React.Component {
    * Handle resizing textarea
    */
   componentDidMount() {
+    // Upate the title
+    document.title = "Nalda | New Article";
+
     // Expand textareas to fit input
     autosize(document.querySelectorAll('textarea'));
 
@@ -334,6 +337,9 @@ class ArticleForm extends React.Component {
                   } else if (component.componentType === "quote") {
                     placeholder = "Enter a quote...";
                     className = "special quote";
+                  } else if (component.componentType === "header") {
+                    placeholder = "Type some header text...";
+                    className = "special header";
                   }
 
                   // Return the textarea associated with the component
@@ -396,6 +402,11 @@ class ArticleForm extends React.Component {
                   className="fa fa-quote-right fa-fw"
                   aria-hidden="true"
                   onClick={ () => this.addNewComponent("quote") }
+                />
+                <i
+                  className="fa fa-i-cursor fa-fw"
+                  aria-hidden="true"
+                  onClick={ () => this.addNewComponent("header") }
                 />
               </div>
 

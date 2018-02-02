@@ -40,6 +40,13 @@
     padding-left: 0.5rem;
     font-size: 1.2rem;
   }
+
+  // Styling headers
+  .header {
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-top: 1.25rem;
+  }
 }
 
 /**
@@ -85,5 +92,11 @@
     color: gray;
     font-style: italic;
     font-size: 1.2rem;
+  }
+
+  // Style headers
+  .header {
+    font-weight: bold;
+    font-size: 1.4rem;
   }
 }

@@ -263,6 +263,12 @@ class Article extends React.Component {
                               { component.body }
                             </p>
                           );
+                        } else if (component.componentType === "header") {
+                          return (
+                            <h3 key={ index } className="header">
+                              { component.body }
+                            </h3>
+                          );
                         }
 
                         // If there was not a component type match
