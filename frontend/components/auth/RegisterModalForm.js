@@ -244,7 +244,6 @@ class RegisterModalForm extends Component {
             </div>
           </div>
 
-          <i className="fa fa-envelope fa-fw in-input" aria-hidden />
           <input
             type="text"
             id="emailInput"
@@ -253,16 +252,16 @@ class RegisterModalForm extends Component {
             onChange={ this.handleChangeEmail }
             placeholder="Email"
           />
+          <i className="fa fa-envelope fa-fw in-input" aria-hidden />
 
-          <i className="fa fa-location-arrow fa-fw in-input" aria-hidden />
           <input
             type="text"
             id="location"
             className="form-control marg-bot-1"
             required="true"
           />
+          <i className="fa fa-location-arrow fa-fw in-input" aria-hidden />
 
-          <i className="fa fa-unlock-alt fa-fw in-input" aria-hidden />
           <input
             type="password"
             className="form-control marg-bot-1"
@@ -270,8 +269,8 @@ class RegisterModalForm extends Component {
             onChange={ this.handleChangePassword }
             placeholder="Password"
           />
-
           <i className="fa fa-unlock-alt fa-fw in-input" aria-hidden />
+
           <input
             type="password"
             placeholder="Confirm password"
@@ -279,6 +278,7 @@ class RegisterModalForm extends Component {
             value={this.state.verPassword}
             onChange={ this.handleChangeVerifyPassword }
           />
+          <i className="fa fa-unlock-alt fa-fw in-input" aria-hidden />
 
           <input
             type="submit"
@@ -300,6 +300,30 @@ class RegisterModalForm extends Component {
             }
             value={ this.state.pending ? "Registering..." : "Register" }
           />
+
+          {/* Render other options */}
+          <div className="gray-text center text-segment">
+            <div className="line-through" />
+            <p>
+              Or continue with
+            </p>
+            <div className="line-through" />
+          </div>
+          <div className="row">
+            <div className="col-12 col-sm-6 marg-bot-1">
+              <a
+                className="btn full-width btn-sm facebook"
+                href="/api/auth/facebook"
+              >
+                <i className="fa fa-facebook" aria-hidden="true" /> &nbsp; Facebook
+              </a>
+            </div>
+            <div className="col-12 col-sm-6 marg-bot-1">
+              <div className="btn full-width btn-sm google">
+                <i className="fa fa-google" aria-hidden="true" /> &nbsp; Google
+              </div>
+            </div>
+          </div>
         </div>
       </form>
     );

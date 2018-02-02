@@ -113,30 +113,27 @@ class Login extends Component {
     return (
       <div>
         {(this.props.userId) && <Redirect to="/"/>}
+        <div className="space-2" />
         <Thin>
-          <form className="thin-form" method="POST" onSubmit={ this.handleLoginSubmit }>
+          <form className="big" method="POST" onSubmit={ this.handleLoginSubmit }>
             <h2 className="marg-bot-1 bold">
               Login to continue
             </h2>
 
             <ErrorMessage error={ this.state.error } />
 
-            <label>
-              Email
-            </label>
             <input
+              placeholder="Email"
               type="text"
-              className="form-control marg-bot-1"
+              className="form-control marg-bot-1 border"
               value={ this.state.username }
               onChange={ this.handleChangeEmail }
             />
 
-            <label>
-              Password
-            </label>
             <input
+              placeholder="Password"
               type="password"
-              className="form-control marg-bot-1"
+              className="form-control marg-bot-1 border"
               value={ this.state.password }
               onChange={ this.handleChangePassword }
             />
@@ -144,14 +141,15 @@ class Login extends Component {
               type="submit"
               className={
                 !this.state.pending && this.state.password && this.state.username ? (
-                  "btn btn-primary full-width"
+                  "btn btn-primary full-width border"
                 ) : (
-                  "btn btn-primary disabled full-width"
+                  "btn btn-primary disabled full-width border"
                 )
               }
               value={ this.state.pending ? "Logging in..." : "Login" }
             />
           </form>
+          Already have an account? <Link to="/register">Register here.</Link>
         </Thin>
       </div>
     );

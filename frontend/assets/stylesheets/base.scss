@@ -44,7 +44,7 @@ h5,
 h6,
 .bold {
   font-family: 'adelle-sans', sans-serif;
-  font-weight: 600;
+  font-weight: bold;
 }
 
 // Styling cards used throughout the app
@@ -761,14 +761,29 @@ a {
       .form-control {
         padding: 0.75rem;
         border-width: 2px;
+
+        &:hover {
+          & + .in-input {
+            color: $gray;
+          }
+        }
+
+        &:active,
+        &:focus {
+          & + .in-input {
+            color: $primary;
+          }
+        }
       }
 
       .in-input {
+        transition: all 0.2s ease;
         position: absolute;
         color: $border;
         right: 3rem;
         font-size: 1.4rem;
         margin-top: 0.75rem;
+        transform: translateY(-4rem);
       }
 
       .btn {

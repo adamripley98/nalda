@@ -123,7 +123,6 @@ class LoginModalForm extends Component {
         <div className="modal-body left">
           <ErrorMessage error={ this.state.error } />
 
-          <i className="fa fa-envelope fa-fw in-input" aria-hidden />
           <input
             type="text"
             id="emailInput"
@@ -132,8 +131,8 @@ class LoginModalForm extends Component {
             onChange={ this.handleChangeEmail }
             placeholder="Email"
           />
+          <i className="fa fa-envelope fa-fw in-input" aria-hidden />
 
-          <i className="fa fa-unlock-alt fa-fw in-input" aria-hidden />
           <input
             type="password"
             className="form-control marg-bot-1"
@@ -141,6 +140,8 @@ class LoginModalForm extends Component {
             onChange={ this.handleChangePassword }
             placeholder="Password"
           />
+          <i className="fa fa-unlock-alt fa-fw in-input" aria-hidden />
+
           <input
             type="submit"
             className={
