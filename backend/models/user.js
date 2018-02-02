@@ -23,6 +23,7 @@ const userSchema = new Schema({
     type: Schema.Types.ObjectId, ref: 'User',
   },
   facebookId: String,
+  googleId: String,
 });
 
 // Creates an index allowing for search functionality
