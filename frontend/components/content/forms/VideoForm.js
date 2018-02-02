@@ -38,6 +38,9 @@ class VideoForm extends React.Component {
    * Handle resizing textarea
    */
   componentDidMount() {
+    // Update the title
+    document.title = "Nalda | New Video";
+
     // Resize textarea to fit input
     autosize(document.querySelectorAll('textarea'));
 

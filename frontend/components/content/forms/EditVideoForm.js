@@ -44,6 +44,9 @@ class EditVideoForm extends React.Component {
    * Pull data from the backend and populate the form fields
    */
   componentDidMount() {
+    // Update the title
+    document.title = "Nalda | Edit Video";
+    
     // Isolate the id
     const id = this.props.match.params.id;
 

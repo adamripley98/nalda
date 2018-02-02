@@ -47,6 +47,9 @@ class EditArticleForm extends React.Component {
 
   // Handle resizing textarea
   componentDidMount() {
+    // Update the title
+    document.title = "Nalda | Edit Article";
+
     // Isolate the id
     const id = this.props.match.params.id;
     // Pull existing data from the database
