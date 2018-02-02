@@ -163,11 +163,13 @@
         color: $gray;
         outline: 0 !important;
         line-height: 1;
+        background: white !important;
 
         &:hover,
         &:active,
         &:focus {
           color: $dark-gray;
+          background: white !important;
         }
       }
 

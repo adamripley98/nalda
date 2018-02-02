@@ -1,0 +1,16 @@
+/**
+ * Additional styling for forms
+ */
+.form-control.border {
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  border-radius: 0.4rem;
+
+  &:hover {
+    border: 2px solid $gray;
+  }
+
+  &:focus,
+  &:active {
+    border: 2px solid $primary;
+  }
+}

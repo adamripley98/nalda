@@ -33,6 +33,10 @@ class Contact extends Component {
 
   // Resize textarea to fit input
   componentDidMount() {
+    // Update the title
+    document.title = "Nalda | Contact";
+
+    // Autosize textarea
     autosize(document.querySelectorAll('textarea'));
   }
 
@@ -94,60 +98,60 @@ class Contact extends Component {
   // Render the component
   render() {
     return (
-      <Thin>
-        <form className="thin-form" onSubmit={this.handleSubmit}>
-          <h2 className="bold marg-bot-1">Contact us</h2>
-          <p className="marg-bot-1">
-            Questions or comments about the app? Interested in joining the Nalda team? Reach out and we will get back to you shortly.
-          </p>
-          <ErrorMessage error={ this.state.error } />
-          <div className="row">
-            <div className="col-12 col-sm-6">
-              <label>
-                Name
-              </label>
-              <input
+      <div className="container">
+        <div className="row">
+          <div className="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2 col-xl-6 offset-xl-3">
+            <div className="space-2" />
+            <form onSubmit={this.handleSubmit}>
+              <h2 className="bold marg-bot-1">Contact us</h2>
+              <p className="marg-bot-1">
+                Questions or comments about the app? Interested in joining the Nalda team? Reach out and we will get back to you shortly.
+              </p>
+              <ErrorMessage error={ this.state.error } />
+              <div className="row">
+                <div className="col-12 col-sm-6">
+                  <input
+                    type="text"
+                    className="form-control marg-bot-1 border"
+                    value={ this.state.name }
+                    onChange={ this.handleChangeName }
+                    placeholder="Full name"
+                    autoFocus="true"
+                  />
+                </div>
+                <div className="col-12 col-sm-6">
+                  <input
+                    type="text"
+                    className="form-control marg-bot-1 border"
+                    value={ this.state.email }
+                    onChange={ this.handleChangeEmail }
+                    placeholder="Email"
+                  />
+                </div>
+              </div>
+              <textarea
                 type="text"
-                className="form-control marg-bot-1"
-                value={ this.state.name }
-                onChange={ this.handleChangeName }
+                className="form-control marg-bot-1 border"
+                value={ this.state.message }
+                onChange={ this.handleChangeMessage }
+                placeholder="Message..."
+                rows="5"
               />
-            </div>
-            <div className="col-12 col-sm-6">
-              <label>
-                Email
-              </label>
               <input
-                type="text"
-                className="form-control marg-bot-1"
-                value={ this.state.email }
-                onChange={ this.handleChangeEmail }
+                type="submit"
+                value="Send message"
+                className={
+                  this.state.name && this.state.email && this.state.message ? (
+                    "btn btn-primary full-width cursor"
+                  ) : (
+                    "btn btn-primary full-width disabled"
+                  )
+                }
               />
-            </div>
+            </form>
           </div>
-          <label>
-            Message
-          </label>
-          <textarea
-            type="text"
-            className="form-control marg-bot-1"
-            value={ this.state.message }
-            onChange={ this.handleChangeMessage }
-            rows="1"
-          />
-          <input
-            type="submit"
-            value="Send message"
-            className={
-              this.state.name && this.state.email && this.state.message ? (
-                "btn btn-primary full-width cursor"
-              ) : (
-                "btn btn-primary full-width disabled"
-              )
-            }
-          />
-        </form>
-      </Thin>
+        </div>
+      </div>
     );
   }
 }

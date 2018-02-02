@@ -33,6 +33,10 @@ class Articles extends React.Component {
 
   // Load articles from Mongo once thre component mounts
   componentDidMount() {
+    // Update the title
+    document.title = "Nalda | Articles";
+
+    // Pull the data
     axios.get('/api/articles')
     .then((resp) => {
       if (resp.data.success) {

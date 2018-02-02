@@ -39,6 +39,10 @@ class Listings extends React.Component {
    * Load listings from Mongo once the component mounts
    */
   componentDidMount() {
+    // Update the title
+    document.title = "Nalda | Listings";
+    
+    // Pull data
     axios.get('/api/listings')
       .then((resp) => {
         if (resp.data.success) {

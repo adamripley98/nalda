@@ -15,6 +15,7 @@ import NotFoundSection from '../../NotFoundSection';
 import Stars from './Stars';
 import ErrorMessage from '../../shared/ErrorMessage';
 import Author from '../../shared/Author';
+import Head from '../../shared/Head';
 
 /**
  * Component to render a listing
@@ -541,6 +542,9 @@ class Listing extends React.Component {
           />
         ) : (
           <div className="listing">
+            {/* Render the head */}
+            <Head title={ this.state.title } />
+
             <div
               className="background-image preview background-fixed"
               style={{ backgroundImage: `url(${this.state.image})` }}

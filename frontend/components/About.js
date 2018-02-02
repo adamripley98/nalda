@@ -5,7 +5,17 @@ import React, { Component } from 'react';
 import Thin from './shared/Thin';
 
 class About extends Component {
-  // Renders about component
+  /**
+   * When the component mounts
+   */
+  componentDidMount() {
+    // Update the title
+    document.title = "Nalda | About";
+  }
+
+  /**
+   * Renders about component
+   */
   render() {
     return (
       <Thin>

@@ -37,6 +37,10 @@ class Videos extends React.Component {
    * Load listings from Mongo once the component mounts
    */
   componentDidMount() {
+    // Update the title
+    document.title = "Nalda | Videos";
+    
+    // Pull the data
     axios.get('/api/videos')
       .then((resp) => {
         if (resp.data.success) {
