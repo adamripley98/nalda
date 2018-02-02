@@ -17,6 +17,9 @@ const Preview = ({ _id, title, subtitle, image, isArticle, isListing, isVideo, i
     type = "videos";
   }
 
+  // Update the subtitle to a shortened version if need be
+  const formattedSubtitle = subtitle.length > 100 ? subtitle.substring(0, 100) + "..." : subtitle;
+
   // Return the content preview
   return (
     <div className={ isThin ? "col-12 col-md-6" : "col-6 col-xl-3" } key={ _id } >
@@ -30,7 +33,7 @@ const Preview = ({ _id, title, subtitle, image, isArticle, isListing, isVideo, i
             { title }
           </h2>
           <h6 className="subtitle">
-            { subtitle }
+            { formattedSubtitle }
           </h6>
           {
             timestamp && (

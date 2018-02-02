@@ -9,6 +9,7 @@
 @import './listing';
 @import './profile';
 @import './video';
+@import './home';
 
 /**
  * General styles relevant to the whole application
@@ -516,11 +517,12 @@ a {
   .title {
     font-weight: bold;
     margin-bottom: 0.25rem !important;
+    font-size: 1.6rem;
   }
 
   .subtitle {
     margin-bottom: 0;
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     color: $dark-gray;
   }
 }

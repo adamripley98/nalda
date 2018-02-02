@@ -150,6 +150,20 @@ class Home extends React.Component {
   render() {
     return (
       <div className="container home">
+        <div className="featured">
+          <div className="feature left">
+            Stuff
+          </div>
+
+          <div className="feature center">
+            Stuff
+          </div>
+
+          <div className="feature right">
+            Stuff
+          </div>
+        </div>
+
         <div className="space-1"/>
         <ErrorMessage error={ this.state.error } />
 
