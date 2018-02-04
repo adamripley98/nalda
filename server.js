@@ -6,7 +6,6 @@ const app = express();
 const passport = require('passport');
 const bodyParser = require('body-parser');
 const routes = require('./backend/routes')(passport);
-const ssl = require('./backend/ssl')(passport);
 const bCrypt = require('bcrypt-nodejs');
 const LocalStrategy = require('passport-local');
 const FacebookStrategy = require('passport-facebook').Strategy;

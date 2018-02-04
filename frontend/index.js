@@ -14,12 +14,12 @@ import './assets/stylesheets/base.scss';
 
 // Create store for redux
 const store = createStore(
-   rootReducer,
-   undefined,
-   compose(
-     applyMiddleware(logger),
-   )
- );
+  rootReducer,
+  undefined,
+  compose(
+    applyMiddleware(logger),
+  )
+);
 
 // Allows persisting between refreshes
 const persistor = persistStore(store);

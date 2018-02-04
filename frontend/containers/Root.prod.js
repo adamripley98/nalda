@@ -4,7 +4,6 @@ import { Provider } from 'react-redux';
 import AppContainer from './AppContainer.js';
 import { PersistGate } from 'redux-persist/es/integration/react';
 
-
 // Wrapper component
 export default function Root({ store, persistor }) {
   return (
