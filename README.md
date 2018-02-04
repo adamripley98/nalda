@@ -218,7 +218,11 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [X] Persist issue, now it makes you log back in all the time. Perhaps passport session is very short?
 - [X] Search doesn't redirect to page
 - [X] Article preview click doesn't render article
-- [ ] Reviews profile picture? Reviews can leave more than one.
+- [ ] Reviews can leave more than one.
+- [ ] Register doesn't log user in?
+- [X] Admin route goes to /articles/admin
+- [X] User page not always found
+- [X] Users profiles shouldn't be displayed, only admin/curators
 
 ## Features for next update
 - [ ] Sendgrid configuration for sending emails
@@ -238,7 +242,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [ ] Searching should not search through reviews
 - [ ] Users can leave comments on videos and articles
 - [ ] Multiple curators on the same content
-- [ ] Login/Register OAuth with google and facebook
+- [X] Login/Register OAuth with google and facebook
 
 ## Questions
 

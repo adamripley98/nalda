@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import autosize from 'autosize';
 import axios from 'axios';
 import uuid from 'uuid-v4';
+import { Link } from 'react-router-dom';
+
 
 // Import components
 import Thin from './shared/Thin';
@@ -36,7 +38,6 @@ class Admin extends Component {
   componentDidMount() {
     // Resize textarea to fit input
     autosize(document.querySelectorAll('textarea'));
-    console.log('enters');
     // Pull data to display on admin panel
     axios.get('/api/admin')
     .then((resp) => {
@@ -154,18 +155,22 @@ class Admin extends Component {
   }
 
   // Helper method to display all curators and admins
-  // TODO display nicer, link to their profiles
+  // TODO display nicer
   displayCuratorsAndAdmins() {
     if (this.state.admins  && this.state.admins.length && this.state.curators && this.state.curators.length) {
       const admins = this.state.admins.map(admin => (
         <div key={ uuid() }>
-          <p>{admin.name}</p>
+          <Link key={ uuid() } to={`/users/${admin.userId}`}>
+            { admin.name }
+          </Link>
         </div>
       ));
 
       const curators = this.state.curators.map(curator => (
         <div key={ uuid() }>
-          <p>{curator.name}</p>
+          <Link key={ uuid() } to={`/users/${curator.userId}`}>
+            { curator.name }
+          </Link><br/>
         </div>
       ));
 
