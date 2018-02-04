@@ -28,7 +28,6 @@ module.exports = () => {
     // Isolate variables
     const reviewId = req.query.reviewId;
     const listingId = req.query.listingId;
-    console.log('entereing');
     // Check to make sure poster is able to delete reviews
     ReviewCheck(req, reviewId, listingId, (authRes) => {
       // Authentication error
@@ -38,7 +37,6 @@ module.exports = () => {
           error: authRes.error,
         });
       } else {
-        console.log('successful');
         // Isolate variable
         const listing = authRes.listing;
         const reviews = [];
