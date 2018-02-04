@@ -218,7 +218,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [X] Persist issue, now it makes you log back in all the time. Perhaps passport session is very short?
 - [X] Search doesn't redirect to page
 - [X] Article preview click doesn't render article
-- [ ] Reviews can leave more than one.
+- [X] Reviews can leave more than one.
 - [X] Register doesn't log user in?
 - [X] Admin route goes to /articles/admin
 - [X] User page not always found
@@ -228,6 +228,8 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [X] Video edit location clearing?
 - [ ] Clear hashtag from url after google login
 - [ ] Fix issues with reviews and content displaying not chronologically
+- [ ] UpdateReviews method is unnecessary - just use setState
+- [ ] Delete review authentication check
 
 
 ## Features for next update
