@@ -4,6 +4,7 @@
 
 // Import models
 const User = require('../models/user');
+const Listing = require('../models/listing');
 
 // Helper method to check if a user is an admin or a curator
 const CuratorOrAdminCheck = (req, cb) => {
@@ -48,6 +49,7 @@ const CuratorOrAdminCheck = (req, cb) => {
   });
 };
 
+// Helper method to check if a user is an admin
 const AdminCheck = (req, cb) => {
   let userId = '';
   // Assign userId to user in backend
@@ -95,6 +97,7 @@ const AdminCheck = (req, cb) => {
   });
 };
 
+// Helper method to check if a user is logged in
 const UserCheck = (req, cb) => {
   // Isolate userId from backend
   let userId = "";
@@ -117,6 +120,78 @@ const UserCheck = (req, cb) => {
   return;
 };
 
+// Helper method to check if a user can delete/edit a review
+const ReviewCheck = (req, reviewId, listingId, cb) => {
+  // Isolate userId from backend
+  let userId = "";
+  let successful = false;
+
+  if (req.session.passport) {
+    userId = req.session.passport.user;
+  }
+  // User is not logged in
+  if (!userId) {
+    cb({
+      success: false,
+      error: 'Must be logged in.',
+    });
+    return;
+  }
+  // Find user in mongo
+  User.findById(userId, (errUser, user) => {
+    // Error check
+    if (errUser) {
+      cb({
+        success: false,
+        error: errUser.message,
+      });
+      return;
+    }
+    // Find given listing in Mongo
+    Listing.findById(listingId, (errList, listing) => {
+      // Error finding listing
+      if (errList) {
+        cb({
+          success: false,
+          error: errList.message,
+        });
+        return;
+      }
+
+      // User is an admin, has privileges
+      if (user.userType === 'admin' || listing.author.toString() === userId) {
+        successful = true;
+      } else {
+        const reviews = listing.reviews;
+        // Check if user is review author
+        for (var i = 0; i < reviews.length; i++) {
+          if (reviews[i]._id.toString() === reviewId) {
+            // If user left given review
+            if (reviews[i].authorId === userId) {
+              successful = true;
+            }
+          }
+        }
+        if (successful) {
+          cb({
+            success: true,
+            error: '',
+            listing,
+          });
+          return;
+        }
+        // Does not have privileges
+        cb({
+          success: false,
+          error: 'You do not have delete privileges.',
+        });
+        return;
+      }
+    });
+  });
+};
+
+// Helper method to check if a user is an admin or author of a document
 const AuthorOrAdminCheck = (req, docId, Document, cb) => {
   // Pull userId from the backend
   let userId = '';
@@ -187,4 +262,5 @@ module.exports = {
   AdminCheck,
   UserCheck,
   AuthorOrAdminCheck,
+  ReviewCheck,
 };

@@ -15,6 +15,7 @@ const User = require('../models/user');
 
 // Import helper methods
 const {UserCheck} = require('../helperMethods/authChecking');
+const {ReviewCheck} = require('../helperMethods/authChecking');
 
 // Export the following methods for routing
 module.exports = () => {
@@ -24,18 +25,20 @@ module.exports = () => {
    * @param listingId
    **/
   router.delete('/', (req, res) => {
-    // TODO check to make sure authenticated
     // Isolate variables
     const reviewId = req.query.reviewId;
     const listingId = req.query.listingId;
-    // Find listing in Mongo
-    Listing.findById(listingId, (err, listing) => {
-      if (err) {
+    // Check to make sure poster is able to delete reviews
+    ReviewCheck(req, reviewId, listingId, (authRes) => {
+      // Authentication error
+      if (!authRes.success) {
         res.send({
           success: false,
-          error: err.message,
+          error: authRes.error,
         });
       } else {
+        // Isolate variable
+        const listing = authRes.listing;
         const reviews = [];
         // Delete review
         listing.reviews.forEach((rev) => {
@@ -62,6 +65,7 @@ module.exports = () => {
       }
     });
   });
+
   /**
    * Route to add a new review
    * TODO error checking
