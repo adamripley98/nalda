@@ -61,7 +61,7 @@ class Profile extends Component {
             listings: resp.data.listings,
             videos: resp.data.videos,
           },
-          location: resp.data.data.location.name,
+          location: resp.data.data.location ? resp.data.data.location.name : "",
           pending: false,
         });
       } else {
@@ -247,7 +247,7 @@ class Profile extends Component {
     } else if (this.state.error) {
       return (
         <NotFoundSection
-          title="Curator not found"
+          title="Profile not found"
           content="Seems like the user you were looking for was either moved or does not exist."
         />
       );

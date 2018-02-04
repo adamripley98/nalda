@@ -69,13 +69,13 @@ class AppContainer extends Component {
   /**
     * This method ensures that the state stored in redux persist does not outlast the backend setState.
     * If the backend and frontend states aren't synced, redirects to login and wipes redux state.
+    * If the user attempted to login with facebook/google, will dispatch login action
    */
   componentDidMount() {
     // Isolate variables
     const onLogout = this.props.onLogout;
     const onLogin = this.props.onLogin;
     const userId = this.props.userId;
-
     // Call to backend (routes.js)
     axios.get('/api/sync', {
       params: {
@@ -85,7 +85,6 @@ class AppContainer extends Component {
     .then((resp) => {
       // Redux persist and backend state are NOT synced. Need to wipe redux state and redirect to login
       if (!resp.data.success) {
-        console.log('states not synced.');
         // Dispatch the logout action
         onLogout();
         // Set the state to redirect to login
@@ -95,9 +94,8 @@ class AppContainer extends Component {
       } else {
         const user = resp.data.user;
         // If user is logged in through facebook on backend, update on Frontend
-        if (resp.data.facebook) {
+        if (resp.data.oAuthLogin) {
           // Send redux event
-          // onLogout();
           // TODO Remove dummy location
           onLogin(user.userId, user.userType, user.name, "Philadelphia, PA", user.profilePicture);
         }

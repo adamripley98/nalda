@@ -6,7 +6,6 @@ const Schema = mongoose.Schema;
  * Listing Schema
  * NOTE hours are an object storing opening and closing times for each day of
  * the week
- * TODO display reviewer profile picture
  */
 const listingSchema = new Schema({
   title: String,

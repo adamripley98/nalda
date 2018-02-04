@@ -17,6 +17,51 @@ const {AdminCheck} = require('../helperMethods/authChecking');
 // Export the following methods for routing
 module.exports = () => {
   /**
+   * Route to pull data to admin panel
+   */
+  router.get('/admin', (req, res) => {
+    // Check to make sure admin is logged in
+    AdminCheck(req, (authRes) => {
+      // Return any authentication errors
+      if (!authRes.success) {
+        res.send({
+          success: false,
+          error: authRes.error,
+        });
+      } else {
+        const curators = [];
+        const admins = [];
+        // Find all curators and admins
+        User.find({$or: [{userType: "admin"}, {userType: "curator"}]}, (err, users) => {
+          if (err) {
+            res.send({
+              success: false,
+              error: err.message,
+            });
+          } else {
+            // Display pertinent information
+            users.forEach((user) => {
+              if (user.userType === 'curator') {
+                curators.push({name: user.name, username: user.username, userId: user._id});
+              } else if (user.userType === 'admin') {
+                admins.push({name: user.name, username: user.username, userId: user._id});
+              }
+            });
+            res.send({
+              success: true,
+              error: '',
+              data: {
+                curators,
+                admins,
+              }
+            });
+          }
+        });
+      }
+    });
+  });
+
+  /**
    * Route to handle adding new admins
    * Admins are allowed to add more admins/curators and create content
    * @param userToAdd

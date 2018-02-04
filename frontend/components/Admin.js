@@ -2,6 +2,9 @@
 import React, { Component } from 'react';
 import autosize from 'autosize';
 import axios from 'axios';
+import uuid from 'uuid-v4';
+import { Link } from 'react-router-dom';
+
 
 // Import components
 import Thin from './shared/Thin';
@@ -20,6 +23,8 @@ class Admin extends Component {
       email: "",
       error: "",
       success: "",
+      curator: [],
+      admin: [],
     };
 
     // Bind this to helper methods
@@ -27,11 +32,31 @@ class Admin extends Component {
     this.onSubmitAdmin = this.onSubmitAdmin.bind(this);
     this.onSubmitCurator = this.onSubmitCurator.bind(this);
     this.onSubmitRemoveCurator = this.onSubmitRemoveCurator.bind(this);
+    this.displayCuratorsAndAdmins = this.displayCuratorsAndAdmins.bind(this);
   }
 
-  // Resize textarea to fit input
   componentDidMount() {
+    // Resize textarea to fit input
     autosize(document.querySelectorAll('textarea'));
+    // Pull data to display on admin panel
+    axios.get('/api/admin')
+    .then((resp) => {
+      if (resp.data.success) {
+        this.setState({
+          curators: resp.data.data.curators,
+          admins: resp.data.data.admins,
+        });
+      } else {
+        this.setState({
+          error: resp.data.error,
+        });
+      }
+    })
+    .catch((err) => {
+      this.setState({
+        error: err,
+      });
+    });
   }
 
   // Handle when a user types into the email field
@@ -129,78 +154,116 @@ class Admin extends Component {
     });
   }
 
+  // Helper method to display all curators and admins
+  // TODO display nicer
+  displayCuratorsAndAdmins() {
+    if (this.state.admins  && this.state.admins.length && this.state.curators && this.state.curators.length) {
+      const admins = this.state.admins.map(admin => (
+        <div key={ uuid() }>
+          <Link key={ uuid() } to={`/users/${admin.userId}`}>
+            { admin.name }
+          </Link>
+        </div>
+      ));
+
+      const curators = this.state.curators.map(curator => (
+        <div key={ uuid() }>
+          <Link key={ uuid() } to={`/users/${curator.userId}`}>
+            { curator.name }
+          </Link><br/>
+        </div>
+      ));
+
+      return (
+        <div>
+          <h3 className="bold">Admins</h3>
+
+          { admins }
+
+          <h3 className="bold">Curators</h3>
+
+          { curators }
+        </div>
+      );
+    }
+    return null;
+  }
+
   // Render the component
   render() {
     return (
       <Thin>
-        <form className="thin-form">
-          <h2 className="bold marg-bot-1">Admin panel</h2>
-          <p className="marg-bot-1">
-            Enter a user's email address in order to add them as an admin or as a content curator or to remove them as a content creator.
-          </p>
-          <ErrorMessage error={ this.state.error } />
-          {
-            this.state.success ? (
-              <div className="alert alert-success marg-bot-1">
-                { this.state.success }
+        <div>
+          <form className="thin-form">
+            <h2 className="bold marg-bot-1">Admin panel</h2>
+            <p className="marg-bot-1">
+              Enter a user's email address in order to add them as an admin or as a content curator or to remove them as a content creator.
+            </p>
+            <ErrorMessage error={ this.state.error } />
+            {
+              this.state.success ? (
+                <div className="alert alert-success marg-bot-1">
+                  { this.state.success }
+                </div>
+              ) : null
+            }
+            <label>
+              Email address
+            </label>
+            <textarea
+              type="text"
+              className="form-control marg-bot-1"
+              value={ this.state.email }
+              onChange={ this.handleChangeEmail }
+              rows="1"
+            />
+            <div className="row">
+              <div className="col-6">
+                <button
+                  onClick={(e) => this.onSubmitAdmin(e)}
+                  className={
+                    this.state.email ? (
+                      "btn btn-primary full-width cursor"
+                    ) : (
+                      "btn btn-primary full-width disabled"
+                    )
+                  }
+                >
+                  Add as admin
+                </button>
               </div>
-            ) : null
-          }
-          <label>
-            Email address
-          </label>
-          <textarea
-            type="text"
-            className="form-control marg-bot-1"
-            value={ this.state.email }
-            onChange={ this.handleChangeEmail }
-            rows="1"
-          />
-          <div className="row">
-            <div className="col-6">
-              <button
-                onClick={(e) => this.onSubmitAdmin(e)}
-                className={
-                  this.state.email ? (
-                    "btn btn-primary full-width cursor"
-                  ) : (
-                    "btn btn-primary full-width disabled"
-                  )
-                }
-              >
-                Add as admin
-              </button>
+              <div className="col-6">
+                <button
+                  onClick={(e) => this.onSubmitCurator(e)}
+                  className={
+                    this.state.email ? (
+                      "btn btn-primary full-width cursor"
+                    ) : (
+                      "btn btn-primary full-width disabled"
+                    )
+                  }
+                >
+                  Add as curator
+                </button>
+              </div>
+              <div className="col-12 marg-top-1">
+                <button
+                  onClick={(e) => this.onSubmitRemoveCurator(e)}
+                  className={
+                    this.state.email ? (
+                      "btn btn-primary full-width cursor"
+                    ) : (
+                      "btn btn-primary full-width disabled"
+                    )
+                  }
+                >
+                  Remove curator
+                </button>
+              </div>
             </div>
-            <div className="col-6">
-              <button
-                onClick={(e) => this.onSubmitCurator(e)}
-                className={
-                  this.state.email ? (
-                    "btn btn-primary full-width cursor"
-                  ) : (
-                    "btn btn-primary full-width disabled"
-                  )
-                }
-              >
-                Add as curator
-              </button>
-            </div>
-            <div className="col-12 marg-top-1">
-              <button
-                onClick={(e) => this.onSubmitRemoveCurator(e)}
-                className={
-                  this.state.email ? (
-                    "btn btn-primary full-width cursor"
-                  ) : (
-                    "btn btn-primary full-width disabled"
-                  )
-                }
-              >
-                Remove curator
-              </button>
-            </div>
-          </div>
-        </form>
+          </form>
+          { this.displayCuratorsAndAdmins() }
+        </div>
       </Thin>
     );
   }

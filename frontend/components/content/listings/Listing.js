@@ -52,7 +52,8 @@ class Listing extends React.Component {
         name: "",
         _id: "",
         profilePicture: "",
-      }
+      },
+      listingId: '',
     };
 
     // Bind this to helper methods
@@ -64,6 +65,7 @@ class Listing extends React.Component {
     this.deleteListing = this.deleteListing.bind(this);
     this.renderButtons = this.renderButtons.bind(this);
     this.areHours = this.areHours.bind(this);
+    this.deleteReview = this.deleteReview.bind(this);
   }
 
   // Pull the listing data from the database
@@ -84,6 +86,7 @@ class Listing extends React.Component {
             time: moment(res.data.timestamp).fromNow(),
             pending: false,
             canModify: res.data.canModify,
+            listingId: id,
           });
 
           // If there is a location
@@ -279,6 +282,29 @@ class Listing extends React.Component {
     });
   }
 
+  // Helper method to delete reviews
+  deleteReview(reviewId) {
+    axios.delete('/api/reviews', {params: {
+      reviewId,
+      listingId: this.state.listingId,
+    }})
+    .then((resp) => {
+      if (resp.data.success) {
+        this.updateReviews();
+      } else {
+        this.setState({
+          error: resp.data.error,
+        });
+      }
+    })
+    .catch((err) => {
+      this.setState({
+        error: err,
+      });
+    });
+  }
+
+
   // Helper method to render the entire reviews section
   renderReviewsSection() {
     // Count the number of reviews
@@ -330,10 +356,13 @@ class Listing extends React.Component {
           title={ review.title }
           content={ review.content }
           key={ uuid() }
+          reviewId = {review._id}
           createdAt={ review.createdAt }
           rating={ review.rating }
           name={ review.author.name }
           profilePicture = { review.author.profilePicture }
+          canChange = {review.canChange }
+          deleteReview = {this.deleteReview}
         />
       ));
     }

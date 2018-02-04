@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 // Import actions
-import { login } from '../../actions/index.js';
+import { register } from '../../actions/index.js';
 
 // Import components
 import ErrorMessage from '../shared/ErrorMessage';
@@ -319,9 +319,12 @@ class RegisterModalForm extends Component {
               </a>
             </div>
             <div className="col-12 col-sm-6 marg-bot-1">
-              <div className="btn full-width btn-sm google">
+              <a
+                className="btn full-width btn-sm google"
+                href="/api/auth/google"
+              >
                 <i className="fa fa-google" aria-hidden="true" /> &nbsp; Google
-              </div>
+              </a>
             </div>
           </div>
         </div>
@@ -345,7 +348,7 @@ const mapStateToProps = state => {
 // Allows us to dispatch a login event by calling this.props.onLogin
 const mapDispatchToProps = dispatch => {
   return {
-    onLogin: (userId, userType, name, location, profilePicture) => dispatch(login(userId, userType, name, location, profilePicture))
+    onRegister: (userId, userType, name, location, profilePicture) => dispatch(register(userId, userType, name, location, profilePicture))
   };
 };
 

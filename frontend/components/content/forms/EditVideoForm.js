@@ -46,7 +46,7 @@ class EditVideoForm extends React.Component {
   componentDidMount() {
     // Update the title
     document.title = "Nalda | Edit Video";
-    
+
     // Isolate the id
     const id = this.props.match.params.id;
 
@@ -82,7 +82,7 @@ class EditVideoForm extends React.Component {
    * this is the case, then update the state accordingly and configure the
    * Google Maps API
    */
-  componentDiDUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps, prevState) {
     if (prevState.pending && !this.state.pending) {
       // Autosize textareas to fit input
       autosize(document.querySelectorAll('textarea'));
