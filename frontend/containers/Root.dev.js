@@ -4,12 +4,11 @@ import {Provider} from 'react-redux';
 import AppContainer from './AppContainer.js';
 import { PersistGate } from 'redux-persist/es/integration/react';
 
-
 export default function Root({ store, persistor }) {
   return (
       <Provider store={store}>
         <PersistGate persistor={persistor}>
-              <AppContainer />
+          <AppContainer />
         </PersistGate>
       </Provider>
   );
