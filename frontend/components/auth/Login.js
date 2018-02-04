@@ -176,9 +176,12 @@ class Login extends Component {
               </a>
             </div>
             <div className="col-12 col-sm-6 marg-bot-1">
-              <div className="btn full-width btn-sm google">
+              <a
+                className="btn full-width btn-sm google"
+                href="/api/auth/google"
+              >
                 <i className="fa fa-google" aria-hidden="true" /> &nbsp; Google
-              </div>
+              </a>
             </div>
           </div>
         </Thin>

@@ -219,10 +219,16 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [X] Search doesn't redirect to page
 - [X] Article preview click doesn't render article
 - [ ] Reviews can leave more than one.
-- [ ] Register doesn't log user in?
+- [X] Register doesn't log user in?
 - [X] Admin route goes to /articles/admin
 - [X] User page not always found
 - [X] Users profiles shouldn't be displayed, only admin/curators
+
+## Adam
+- [X] Video edit location clearing?
+- [ ] Clear hashtag from url after google login
+- [ ] Fix issues with reviews and content displaying not chronologically
+
 
 ## Features for next update
 - [ ] Sendgrid configuration for sending emails

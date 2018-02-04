@@ -7,7 +7,7 @@ import Stars from './Stars';
 /**
  * Component to render a listing
  */
-const Review = ({title, content, createdAt, rating, name, profilePicture }) => {
+const Review = ({title, content, reviewId, createdAt, rating, name, profilePicture, canChange, deleteReview }) => {
   // Format the timestamp
   const timestamp = moment(new Date(createdAt)).fromNow();
   // Render the component
@@ -33,6 +33,7 @@ const Review = ({title, content, createdAt, rating, name, profilePicture }) => {
         <p>
           { content }
         </p>
+        {canChange ? <div onClick={() => deleteReview(reviewId)}>DELETE REVIEW!!!!!</div> : null}
       </div>
     </div>
   );
@@ -45,6 +46,9 @@ Review.propTypes = {
   rating: PropTypes.number,
   profilePicture: PropTypes.string,
   name: PropTypes.string,
+  canChange: PropTypes.bool,
+  deleteReview: PropTypes.func,
+  reviewId: PropTypes.string,
 };
 
 export default Review;

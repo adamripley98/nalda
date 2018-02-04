@@ -7,6 +7,7 @@
 // Import frameworks
 const express = require('express');
 const router = express.Router();
+const async = require('async');
 
 // Import database models
 const Listing = require('../models/listing');
@@ -17,6 +18,50 @@ const {UserCheck} = require('../helperMethods/authChecking');
 
 // Export the following methods for routing
 module.exports = () => {
+  /**
+   * Route to delete a review
+   * @param reviewId
+   * @param listingId
+   **/
+  router.delete('/', (req, res) => {
+    // TODO check to make sure authenticated
+    // Isolate variables
+    const reviewId = req.query.reviewId;
+    const listingId = req.query.listingId;
+    // Find listing in Mongo
+    Listing.findById(listingId, (err, listing) => {
+      if (err) {
+        res.send({
+          success: false,
+          error: err.message,
+        });
+      } else {
+        const reviews = [];
+        // Delete review
+        listing.reviews.forEach((rev) => {
+          if (rev._id.toString() !== reviewId) {
+            reviews.push(rev);
+          }
+        });
+        // Update reviews
+        listing.reviews = reviews;
+        // Save in mongo
+        listing.save((errSave) => {
+          if (errSave) {
+            res.send({
+              success: false,
+              error: errSave,
+            });
+          } else {
+            res.send({
+              success: true,
+              error: '',
+            });
+          }
+        });
+      }
+    });
+  });
   /**
    * Route to add a new review
    * TODO error checking
@@ -85,46 +130,56 @@ module.exports = () => {
 
                   // Check if user has already left a review
                   let leftReviewAlready = false;
-                  currentReviews.forEach((review) => {
-                    if (review.authorId === user._id) {
+                  async.each(currentReviews, (review, callback) => {
+                    if (review.authorId === user._id.toString()) {
                       leftReviewAlready = true;
                     }
-                  });
-
-                  // If already left a review send back error
-                  if (leftReviewAlready) {
-                    res.send({
-                      success: false,
-                      error: "Users may only leave one review."
-                    });
-                  } else {
-                    // Add new review to array of current reviews
-                    currentReviews.push({
-                      rating: req.body.rating,
-                      title: req.body.title,
-                      content: req.body.content,
-                      createdAt: new Date().getTime(),
-                      authorId: userId,
-                    });
-                    // Update listing with new review
-                    listing.reviews = currentReviews;
-                    // Resave listing in Mongo
-                    listing.save((er) => {
-                      // Error saving listing
-                      if (er) {
+                    // Continue looping
+                    callback();
+                  }, asyncErr => {
+                    if (asyncErr) {
+                      // TODO
+                      res.send({
+                        success: false,
+                        error: asyncErr,
+                      });
+                    } else {
+                      // If already left a review send back error
+                      if (leftReviewAlready) {
                         res.send({
                           success: false,
-                          error: 'Error saving review' + er.message,
+                          error: "Users may only leave one review."
                         });
                       } else {
-                        // Finally, if review is saved successfully
-                        res.send({
-                          success: true,
-                          error: '',
+                        // Add new review to array of current reviews
+                        currentReviews.push({
+                          rating: req.body.rating,
+                          title: req.body.title,
+                          content: req.body.content,
+                          createdAt: new Date().getTime(),
+                          authorId: userId,
+                        });
+                        // Update listing with new review
+                        listing.reviews = currentReviews;
+                        // Resave listing in Mongo
+                        listing.save((er) => {
+                          // Error saving listing
+                          if (er) {
+                            res.send({
+                              success: false,
+                              error: 'Error saving review' + er.message,
+                            });
+                          } else {
+                            // Finally, if review is saved successfully
+                            res.send({
+                              success: true,
+                              error: '',
+                            });
+                          }
                         });
                       }
-                    });
-                  }
+                    }
+                  });
                 }
               });
             }
