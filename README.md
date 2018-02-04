@@ -223,13 +223,15 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [X] Admin route goes to /articles/admin
 - [X] User page not always found
 - [X] Users profiles shouldn't be displayed, only admin/curators
+- [ ] Video image not showing up on thumbnail
 
 ## Adam
 - [X] Video edit location clearing?
 - [ ] Clear hashtag from url after google login
 - [ ] Fix issues with reviews and content displaying not chronologically
 - [ ] UpdateReviews method is unnecessary - just use setState
-- [ ] Delete review authentication check
+- [X] Delete review authentication check
+- [ ] Location for google and facebook oAuth, get rid of dummy location data
 
 
 ## Features for next update
@@ -240,18 +242,16 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [ ] Make it easier for an admin to enter hours (some sort of autofill)
 - [ ] Recommending content for users to look at
   * To begin they can be location based and random
-- [ ] Split up `routes.js` into many smaller files
+- [X] Split up `routes.js` into many smaller files
 - [ ] Sort reviews functionality (time, rating)
 - [ ] Give user model a "private" field (object containing info like password, email, etc) & have API not return it.
-- [ ] Have listing location be a map picture
-- [ ] Add author to listings and videos? At least on backend
+- [X] Have listing location be a map picture
+- [X] Add author to listings and videos? At least on backend
 - [ ] Improve search performance
-- [ ] Delete reviews functionality
+- [X] Delete reviews functionality
 - [ ] Searching should not search through reviews
 - [ ] Users can leave comments on videos and articles
 - [ ] Multiple curators on the same content
 - [X] Login/Register OAuth with google and facebook
 
 ## Questions
-
-* Should there be timestamps on listings and videos?

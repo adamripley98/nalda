@@ -28,6 +28,7 @@ class LoginModalForm extends Component {
     this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
     this.handleChangeEmail = this.handleChangeEmail.bind(this);
     this.handleChangePassword = this.handleChangePassword.bind(this);
+    this.handlePasswordReset = this.handlePasswordReset.bind(this);
   }
 
   /**
@@ -97,6 +98,35 @@ class LoginModalForm extends Component {
           });
         });
     }
+  }
+
+  /**
+   * Handle when a user wants to reset password
+   */
+   // TODO implement
+  handlePasswordReset() {
+    axios.post('/api/forgot', {
+      username: this.state.username,
+    })
+    .then((resp) => {
+      if (resp.data.success) {
+        // TODO display successful flash notification
+        console.log(resp.data);
+      } else {
+        console.log(resp.data);
+        this.setState({
+          error: resp.data.error,
+        });
+      }
+    })
+    .catch((err) => {
+      if (err) {
+        console.log("ERRR", err.message);
+        this.setState({
+          error: err.message,
+        });
+      }
+    });
   }
 
   // Handle when a user types into the email
@@ -178,6 +208,14 @@ class LoginModalForm extends Component {
               </a>
             </div>
           </div>
+          <p className="marg-bot-0 center gray-text">
+            Forgot password? <a
+              className="link-style"
+              onClick={ () => this.handlePasswordReset() }
+            >
+              Reset here.
+            </a>
+          </p>
         </div>
       </form>
     );

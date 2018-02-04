@@ -15,6 +15,7 @@
   "author": "Adam Ripley, Cameron Cabo",
   "license": "ISC",
   "dependencies": {
+    "@sendgrid/mail": "^6.2.1",
     "async": "^2.6.0",
     "autosize": "^4.0.0",
     "aws-sdk": "^2.175.0",
@@ -39,7 +40,7 @@
     "moment": "^2.20.1",
     "mongoose": "^4.13.2",
     "node-sass": "^4.5.2",
-    "nodemailer": "^4.4.1",
+    "nodemailer": "^4.4.2",
     "passport": "^0.4.0",
     "passport-facebook": "^2.1.1",
     "passport-google-oauth20": "^1.0.0",
