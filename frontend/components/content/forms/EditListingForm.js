@@ -102,7 +102,7 @@ class EditListingForm extends React.Component {
   componentDidMount() {
     // Update the title
     document.title = "Nalda | Edit Listing";
-    
+
     // Isolate the id
     const id = this.props.match.params.id;
 

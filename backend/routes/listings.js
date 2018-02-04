@@ -114,7 +114,8 @@ module.exports = () => {
                     name: "",
                     _id: "",
                     profilePicture: "",
-                  }
+                  },
+                  canChange: false,
                 };
 
                 // Find author in Mongo
@@ -133,6 +134,11 @@ module.exports = () => {
                     _id: revAuthor._id,
                     profilePicture: revAuthor.profilePicture,
                   };
+
+                  // Check if user has review delete privileges: admin, listing author, or review author
+                  if (canModify || userId === review.authorId) {
+                    newRev.canChange = true;
+                  }
 
                   // Return the review
                   reviews.push(newRev);
@@ -154,7 +160,6 @@ module.exports = () => {
                   } else {
                     // Update the reviews
                     listing.reviews = null;
-
                     // Send back data
                     res.send({
                       author,

@@ -151,7 +151,6 @@ passport.use(new GoogleStrategy({
   callbackURL: GOOGLE_APP_CALLBACK,
 }, (accessToken, refreshToken, profile, cb) => {
   process.nextTick(() => {
-    console.log('prof id', profile);
     User.find({googleId: profile.id}, (err, user) => {
       if (err) {
         return cb(err, null);

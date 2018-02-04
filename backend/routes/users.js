@@ -283,6 +283,11 @@ module.exports = () => {
           error: 'User does not exist.'
         });
       // Otherwise render user data
+      } else if (user.userType === 'user') {
+        res.send({
+          success: false,
+          error: 'User does not exist.',
+        });
       } else {
         Article.find({author: id}, (errArticles, articles) => {
           // Error checking
@@ -303,7 +308,7 @@ module.exports = () => {
                   if (errVideo) {
                     res.send({
                       success: false,
-                      error: errVideo,
+                      error: errVideo.message,
                     });
                   } else {
                     // Remove private data before sending back

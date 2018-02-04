@@ -140,7 +140,7 @@ class Sidebar extends Component {
                   { /* Render admin panel only if admin */ }
                   {
                     (this.props.userType === 'admin') && (
-                      <Link onClick={this.toggleMenu} to="admin" className="link">
+                      <Link onClick={this.toggleMenu} to="/admin" className="link">
                         Admin
                       </Link>
                     )
