@@ -45,7 +45,7 @@
     }
 
     .categories {
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.1rem;
 
       .category {
         background: $light-gray;
@@ -55,6 +55,7 @@
         padding: 0.2rem 0.4rem;
         border-radius: 0.2rem;
         margin-right: 0.4rem;
+        margin-bottom: 0.4rem;
       }
     }
 
@@ -204,6 +205,24 @@
       font-size: 0.8rem;
     }
   }
+
+  .delete {
+    text-align: right;
+    display: inline-block;
+    margin-left: 0.5rem;
+    cursor: hand;
+    cursor: pointer;
+
+    .fa {
+      color: $gray;
+
+      &:hover,
+      &:focus,
+      &:active {
+        color: $dark-gray;
+      }
+    }
+  }
 }
 
 /**
@@ -253,7 +272,8 @@
 /**
  * Styling the form for amenities for listings in the ListingForm component
  */
-.amenities-form {
+.amenities-form,
+.categories-form {
   .bold {
     width: 100%;
     color: $gray;

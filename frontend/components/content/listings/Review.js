@@ -20,6 +20,13 @@ const Review = ({title, content, reviewId, createdAt, rating, name, profilePictu
       <div className="review">
         <p className="timestamp">
           { timestamp }
+          {
+            canChange ? (
+              <span onClick={() => deleteReview(reviewId)} className="delete">
+                <i className="fa fa-trash-o" aria-hidden="true" />
+              </span>
+            ) : null
+          }
         </p>
         <p className="name">
           { name }
@@ -33,7 +40,6 @@ const Review = ({title, content, reviewId, createdAt, rating, name, profilePictu
         <p>
           { content }
         </p>
-        {canChange ? <div onClick={() => deleteReview(reviewId)}>DELETE REVIEW!!!!!</div> : null}
       </div>
     </div>
   );

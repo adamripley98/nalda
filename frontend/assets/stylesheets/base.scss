@@ -57,6 +57,10 @@ h6,
   }
 }
 
+.border {
+  border: 1px solid $border;
+}
+
 // Modular class to make some text gray
 .gray {
   color: $gray !important;

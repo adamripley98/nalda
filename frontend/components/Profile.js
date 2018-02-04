@@ -103,7 +103,7 @@ class Profile extends Component {
     // If no articles were found
     return (
       <div className="col-12">
-        <div className="card pad-1 marg-bot-1">
+        <div className="card pad-1 marg-bot-1 border gray-text">
           This author hasn't posted any articles yet!
         </div>
       </div>
@@ -135,7 +135,7 @@ class Profile extends Component {
     // If no listings were found
     return (
       <div className="col-12">
-        <div className="card pad-1 marg-bot-1">
+        <div className="card pad-1 marg-bot-1 border gray-text">
           This author hasn't posted any listings yet!
         </div>
       </div>
@@ -167,7 +167,7 @@ class Profile extends Component {
     // If no videos were found
     return (
       <div className="col-12">
-        <div className="card pad-1 marg-bot-1">
+        <div className="card pad-1 marg-bot-1 border gray-text">
           This author hasn't posted any videos yet!
         </div>
       </div>
@@ -217,15 +217,27 @@ class Profile extends Component {
                 Content created
               </h5>
               <div className="row">
-                Articles
+                <div className="col-12">
+                  <h6>
+                    Articles
+                  </h6>
+                </div>
                 { this.renderArticles() }
               </div>
               <div className="row">
-                Listings
+                <div className="col-12">
+                  <h6>
+                    Listings
+                  </h6>
+                </div>
                 { this.renderListings() }
               </div>
               <div className="row">
-                Videos
+                <div className="col-12">
+                  <h6>
+                    Videos
+                  </h6>
+                </div>
                 { this.renderVideos() }
               </div>
             </div>
