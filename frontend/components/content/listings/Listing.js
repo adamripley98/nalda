@@ -117,6 +117,14 @@ class Listing extends React.Component {
           pending: false,
         });
       });
+
+    // Style parallax scrolling
+    $(document).ready(() => {
+      $(window).scroll(() => {
+        const pos = - $(window).scrollTop() / 2;
+        $('#parallax').css("transform", `translateY(${pos}px)`);
+      });
+    });
   }
 
   // Helper method to delete specific listing
@@ -574,10 +582,10 @@ class Listing extends React.Component {
             {/* Render the head */}
             <Head title={ this.state.title } />
 
-            <div
-              className="background-image preview background-fixed"
-              style={{ backgroundImage: `url(${this.state.image})` }}
-            />
+            <div className="parallax-wrapper">
+              <img src={ this.state.image } alt={ this.state.title } className="img-fluid" id="parallax" />
+            </div>
+
             { this.state.redirectToHome && <Redirect to="/"/> }
 
             <div className="container content">
