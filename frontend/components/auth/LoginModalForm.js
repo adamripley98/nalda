@@ -23,6 +23,7 @@ class LoginModalForm extends Component {
       password: '',
       error: '',
       pending: false,
+      success: '',
     };
 
     // Bindings so 'this' refers to component
@@ -87,7 +88,7 @@ class LoginModalForm extends Component {
               resp.data.user._id,
               resp.data.user.userType,
               resp.data.user.name,
-              resp.data.user.location.name,
+              resp.data.user.location ? resp.data.user.location.name : null,
               resp.data.user.profilePicture,
             );
           }
@@ -104,17 +105,17 @@ class LoginModalForm extends Component {
   /**
    * Handle when a user wants to reset password
    */
-   // TODO display "EMAIL SENT" banner
   handlePasswordReset() {
     axios.post('/api/forgot', {
       username: this.state.username,
     })
     .then((resp) => {
       if (resp.data.success) {
-        // TODO display successful flash notification
-        console.log(resp.data);
+        this.setState({
+          success: 'Please check your email for a link to reset your password.',
+          error: '',
+        });
       } else {
-        console.log(resp.data);
         this.setState({
           error: resp.data.error,
         });
@@ -152,7 +153,13 @@ class LoginModalForm extends Component {
       >
         <div className="modal-body left">
           <ErrorMessage error={ this.state.error } />
-
+          {
+            this.state.success ? (
+              <div className="alert alert-success marg-bot-1">
+                { this.state.success }
+              </div>
+            ) : null
+          }
           <input
             type="text"
             id="emailInput"

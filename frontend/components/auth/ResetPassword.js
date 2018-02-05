@@ -25,6 +25,8 @@ class ResetPassword extends Component {
       newPasswordConfirm: '',
       pending: false,
       redirect: false,
+      success: false,
+      error: '',
     };
 
     // Bind this to helper methods
@@ -36,21 +38,19 @@ class ResetPassword extends Component {
   componentDidMount() {
     // Find the token in the url
     const token = this.props.match.params.token;
-    console.log('what is token', token);
     // Call backend to make sure token is valid/not expired
     axios.get(`/api/reset/${token}`)
     .then((resp) => {
-      if (resp.data.success) {
-        console.log('success', resp.data);
-        // TODO something
-      } else {
-        console.log('fail', resp.data);
-        // TODO something, redirect login or display error
+      if (!resp.data.success) {
+        this.setState({
+          error: resp.data.error,
+        });
       }
     })
     .catch((err) => {
-      // TODO error handle
-      console.log('wat err', err);
+      this.setState({
+        error: err,
+      });
     });
   }
 
@@ -136,7 +136,13 @@ class ResetPassword extends Component {
 
             { /* Render an error if there is one */}
             <ErrorMessage error={ this.state.error } />
-
+            {
+              this.state.success ? (
+                <div className="alert alert-success marg-bot-1">
+                  { this.state.success }
+                </div>
+              ) : null
+            }
             <label>
               New password
             </label>

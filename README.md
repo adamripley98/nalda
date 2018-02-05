@@ -235,6 +235,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [ ] Failure redirects for resetting password
 - [X] New password must meet validity conditions
 - [ ] Extra security for auth routes: userId pulled from backend
+- [ ] Ensure duplicate emails cannot be registered
 
 
 ## Features for next update

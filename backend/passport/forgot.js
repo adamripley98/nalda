@@ -37,9 +37,10 @@ module.exports = () => {
                 error: 'No account with that email address exists.',
               });
             } else {
+              // Add password refresh data to user
               user.resetPasswordToken = token;
               user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
-
+              // Save changes in mongo
               user.save((errSave) => {
                 done(errSave, token, user);
               });
