@@ -13,6 +13,7 @@ import ErrorMessage from '../shared/ErrorMessage';
 /**
  * Render the login form for the modal
  */
+ // TODO Style reset password button better
 class LoginModalForm extends Component {
   // Constructor method
   constructor(props) {
@@ -103,7 +104,7 @@ class LoginModalForm extends Component {
   /**
    * Handle when a user wants to reset password
    */
-   // TODO implement
+   // TODO display "EMAIL SENT" banner
   handlePasswordReset() {
     axios.post('/api/forgot', {
       username: this.state.username,
@@ -121,7 +122,6 @@ class LoginModalForm extends Component {
     })
     .catch((err) => {
       if (err) {
-        console.log("ERRR", err.message);
         this.setState({
           error: err.message,
         });

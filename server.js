@@ -31,6 +31,7 @@ const changePassword = require('./backend/passport/changePassword');
 const facebook = require('./backend/passport/facebook');
 const google = require('./backend/passport/google');
 const forgot = require('./backend/passport/forgot');
+const reset = require('./backend/passport/reset');
 
 // Import other routes
 const articles = require('./backend/routes/articles')();
@@ -194,6 +195,7 @@ app.use('/api/', changePassword(passport));
 app.use('/api/', facebook(passport));
 app.use('/api/', google(passport));
 app.use('/api/', forgot(passport));
+app.use('/api/', reset(passport));
 app.use('/api/', routes);
 app.use('/api/articles/', articles);
 app.use('/api/listings/', listings);

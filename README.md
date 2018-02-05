@@ -232,6 +232,8 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [ ] UpdateReviews method is unnecessary - just use setState
 - [X] Delete review authentication check
 - [ ] Location for google and facebook oAuth, get rid of dummy location data
+- [ ] Failure redirects for resetting password
+- [ ] New password must meet validity conditions
 
 
 ## Features for next update
