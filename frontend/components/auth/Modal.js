@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 
 // Import actions
 import { login } from '../../actions/index.js';
@@ -86,19 +87,19 @@ class Modal extends Component {
               </button>
             </div>
 
-            { this.state.isLogin ? <LoginModalForm /> : <RegisterModalForm /> }
+            { this.state.isLogin ? <LoginModalForm/> : <RegisterModalForm /> }
 
             <div className="modal-footer">
               {
                 this.state.isLogin ? (
-                  <p className="marg-bot-0 center gray-text">
-                    Don't have an account? <a
-                      className="link-style"
-                      onClick={ () => this.setState({ isLogin: false }) }
-                    >
-                      Register here.
-                    </a>
-                  </p>
+                    <p className="marg-bot-0 center gray-text">
+                      Don't have an account? <a
+                        className="link-style"
+                        onClick={ () => this.setState({ isLogin: false }) }
+                      >
+                        Register here.
+                      </a>
+                    </p>
                 ) : (
                   <p className="marg-bot-0 center gray-text">
                     Already have an account? <a

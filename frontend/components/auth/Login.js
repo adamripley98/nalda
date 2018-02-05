@@ -24,12 +24,14 @@ class Login extends Component {
       password: '',
       error: '',
       pending: false,
+      success: '',
     };
 
     // Bindings so 'this' refers to component
     this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
     this.handleChangeEmail = this.handleChangeEmail.bind(this);
     this.handleChangePassword = this.handleChangePassword.bind(this);
+    this.handlePasswordReset = this.handlePasswordReset.bind(this);
   }
 
   /**
@@ -87,7 +89,7 @@ class Login extends Component {
               resp.data.user._id,
               resp.data.user.userType,
               resp.data.user.name,
-              resp.data.user.location.name,
+              resp.data.user.location ? resp.data.user.location.name : null,
               resp.data.user.profilePicture,
             );
           }
@@ -99,6 +101,34 @@ class Login extends Component {
           });
         });
     }
+  }
+
+  /**
+   * Handle when a user wants to reset password
+   */
+  handlePasswordReset() {
+    axios.post('/api/forgot', {
+      username: this.state.username,
+    })
+    .then((resp) => {
+      if (resp.data.success) {
+        this.setState({
+          success: 'Please check your email for a link to reset your password.',
+          error: '',
+        });
+      } else {
+        this.setState({
+          error: resp.data.error,
+        });
+      }
+    })
+    .catch((err) => {
+      if (err) {
+        this.setState({
+          error: err.message,
+        });
+      }
+    });
   }
 
     // Handle when a user types into the email
@@ -129,7 +159,13 @@ class Login extends Component {
             </h2>
 
             <ErrorMessage error={ this.state.error } />
-
+            {
+              this.state.success ? (
+                <div className="alert alert-success marg-bot-1">
+                  { this.state.success }
+                </div>
+              ) : null
+            }
             <input
               placeholder="Email"
               type="text"
@@ -183,6 +219,14 @@ class Login extends Component {
                 <i className="fa fa-google" aria-hidden="true" /> &nbsp; Google
               </a>
             </div>
+            <p className="marg-bot-0 center gray-text">
+              Forgot password? <a
+                className="link-style"
+                onClick={ () => this.handlePasswordReset() }
+              >
+                Reset here.
+              </a>
+            </p>
           </div>
         </Thin>
       </div>

@@ -24,6 +24,8 @@ const userSchema = new Schema({
   },
   facebookId: String,
   googleId: String,
+  resetPasswordToken: String,
+  resetPasswordExpires: Date,
 });
 
 // Creates an index allowing for search functionality
