@@ -54,6 +54,7 @@ module.exports = () => {
           error: invalidPassword(newPassword),
         });
       } else {
+        // TODO needs to be more secure
         // If valid password, find user in database
         User.findById(req.body.userId, (err, user) => {
           // Error finding user

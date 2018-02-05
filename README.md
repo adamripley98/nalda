@@ -233,7 +233,8 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [X] Delete review authentication check
 - [ ] Location for google and facebook oAuth, get rid of dummy location data
 - [ ] Failure redirects for resetting password
-- [ ] New password must meet validity conditions
+- [X] New password must meet validity conditions
+- [ ] Extra security for auth routes: userId pulled from backend
 
 
 ## Features for next update

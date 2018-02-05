@@ -92,8 +92,11 @@ class ResetPassword extends Component {
       userId: this.props.userId,
     };
 
+    // Isolate token
+    const token = this.props.match.params.token;
+
     // Send the request
-    axios.post('/api/reset/:token', body)
+    axios.post(`/api/reset/${token}`, body)
       .then(res => {
         // If successful
         if (res.data.success) {
