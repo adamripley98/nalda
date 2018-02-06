@@ -32,7 +32,9 @@ class Account extends Component {
       type: '',
       bio: '',
       profilePicture: '',
+      accountVerified: false,
       error: '',
+      success: '',
       pending: true,
       adminPopover: false,
       editName: false,
@@ -49,6 +51,7 @@ class Account extends Component {
     this.handleLocationClick = this.handleLocationClick.bind(this);
     this.handleChangeProfilePicture = this.handleChangeProfilePicture.bind(this);
     this.handleProfilePictureClick = this.handleProfilePictureClick.bind(this);
+    this.handleVerifyEmail = this.handleVerifyEmail.bind(this);
   }
 
   /**
@@ -69,6 +72,7 @@ class Account extends Component {
           type: resp.data.data.userType,
           bio: resp.data.data.bio,
           profilePicture: resp.data.data.profilePicture,
+          accountVerified: resp.data.data.accountVerified,
           error: "",
           pending: false
         });
@@ -116,6 +120,31 @@ class Account extends Component {
     autosize(document.querySelectorAll('textarea'));
   }
 
+
+  /**
+   * Handle a user wanting to verify their email
+   */
+  handleVerifyEmail() {
+    axios.get('/api/verify')
+    .then((resp) => {
+      if (resp.data.success) {
+        this.setState({
+          success: 'Please check your email for a verification link.',
+        });
+      } else {
+        // Display error
+        this.setState({
+          error: resp.data.error,
+        });
+      }
+    })
+    // Display error
+    .catch((err) => {
+      this.setState({
+        error: err,
+      });
+    });
+  }
   /**
    * Handle a change to the name state
    */
@@ -498,7 +527,14 @@ class Account extends Component {
                 Account information
               </h4>
               <ErrorMessage error={ this.state.error } />
-
+              { !this.state.accountVerified ? <div onClick={this.handleVerifyEmail}>PLEASE VERIFY YOUR ACCOUNT BY CLICKING HERE</div> : null}
+              {
+                this.state.success ? (
+                  <div className="alert alert-success marg-bot-1">
+                    { this.state.success }
+                  </div>
+                ) : null
+              }
               { this.state.pending ? <Loading /> : this.renderInfo() }
               {
                 !this.state.pending && (

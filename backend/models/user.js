@@ -26,6 +26,8 @@ const userSchema = new Schema({
   googleId: String,
   resetPasswordToken: String,
   resetPasswordExpires: Date,
+  accountVerified: Boolean,
+  verificationToken: String,
 });
 
 // Creates an index allowing for search functionality

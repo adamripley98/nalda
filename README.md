@@ -54,7 +54,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
 
 - [ ] SendGrid configuration
   - [ ] Contact page
-  - [ ] Password reset
+  - [X] Password reset
   - [ ] Device authorization (confirm your email)?
 - [X] Add author field to every form of content
   - [X] Videos
@@ -177,6 +177,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [X] Change location functionality
 - [X] Reviews by id instead of name
 - [X] Most recent in reverse order
+- [ ] Technical errors should not be displayed to frontend, should be vague.
 
 ## Cam
 - [X] Nav bar style when no one is logged in
@@ -188,6 +189,9 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [X] Sorting buttons at top of `Listings.js`, `Videos.js`, and `Articles.js` (actual sorting done)
 - [X] `Admin.js` restyle 3 buttons & display successful admin change on frontend
 - [X] Standardize size of all pictures on home page
+- [ ] Style Reset password better on `LoginModal` and `Login`
+- [ ] Display a banner on Account page asking people to verify their email
+- [ ] Make trash can to delete reviews bigger/located in more visible spot
 
 ## General cleanup
 
@@ -223,7 +227,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [X] Admin route goes to /articles/admin
 - [X] User page not always found
 - [X] Users profiles shouldn't be displayed, only admin/curators
-- [ ] Video image not showing up on thumbnail
+- [X] Video image not showing up on thumbnail
 
 ## Adam
 - [X] Video edit location clearing?
@@ -235,14 +239,24 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [ ] Failure redirects for resetting password
 - [X] New password must meet validity conditions
 - [ ] Extra security for auth routes: userId pulled from backend
-- [ ] Ensure duplicate emails cannot be registered
+- [ ] Ensure duplicate emails cannot be registered (through facebook and google oauth)
+  - [ ] If account already exists, should simply add googleId or facebookId to that user, not create a new account
+- [ ] Verify account via email
+  - [X] Send email welcoming user to nalda
+  - [X] Display banner on account page
+    - [ X Banner click should send another verify email
+  - [X] Local Login
+  - [ ] FACEBOOK
+  - [ ] Google
+- [ ] Get rid of any userId passing from frontend unless it is for comparing to backend userId
+- [ ] Styling on the emails sent by Nalda: Welcome, reset, and verify.
 
 
 ## Features for next update
 - [ ] Sendgrid configuration for sending emails
-  - [ ] Contact us page
+  - [X] Contact us page
   - [ ] Confirm email page
-  - [ ] Forgot password reset
+  - [X] Forgot password reset
 - [ ] Make it easier for an admin to enter hours (some sort of autofill)
 - [ ] Recommending content for users to look at
   * To begin they can be location based and random
