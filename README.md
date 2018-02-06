@@ -242,10 +242,10 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [ ] Ensure duplicate emails cannot be registered (through facebook and google oauth)
   - [ ] If account already exists, should simply add googleId or facebookId to that user, not create a new account
 - [ ] Verify account via email
-  - [ ] Send email welcoming user to nalda
-  - [ ] Display banner on account page
-    - [ ] Banner click should send another verify email
-  - [ ] Local Login
+  - [X] Send email welcoming user to nalda
+  - [X] Display banner on account page
+    - [ X Banner click should send another verify email
+  - [X] Local Login
   - [ ] FACEBOOK
   - [ ] Google
 - [ ] Get rid of any userId passing from frontend unless it is for comparing to backend userId
