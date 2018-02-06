@@ -35,7 +35,7 @@ module.exports = () => {
 
       // Create message
       const msg = {
-        to: 'adamripley@gmail.com',
+        to: process.env.SENDGRID_EMAIL,
         from: req.body.email,
         subject: 'Hi there!',
         text: req.body.message,

@@ -1,7 +1,11 @@
-const User = require('../models/user');
+// Import frameworks
 const bCrypt = require('bcrypt-nodejs');
 const express = require('express');
 const router = express.Router();
+const sgMail = require('@sendgrid/mail');
+
+// Import models
+const User = require('../models/user');
 
 /**
  * Backend file for registering new users
@@ -54,6 +58,7 @@ module.exports = () => {
           } else {
             // If no error and user doesn't already exist, create a user
             // Default sets userType to user, admin can change to admin or curator
+            // NOTE password is hashed securely, accountVerified is initially false
             const newUser = new User({
               name: req.body.name,
               username: req.body.username,
@@ -61,6 +66,7 @@ module.exports = () => {
               password: createHash(req.body.password),
               userType: 'user',
               profilePicture: 'https://s3.amazonaws.com/nalda/default-profile-picture.png',
+              accountVerified: false,
             });
 
             // Saving new user in Mongo
@@ -79,11 +85,34 @@ module.exports = () => {
                       error: 'Error logging in new user: ' + errLogin,
                     });
                   } else {
-                    // Finally, if registration is successful, send back user
-                    res.send({
-                      success: true,
-                      error: '',
-                      user: usr,
+                    // If registration is successful, send an email welcoming to Nalda.
+                    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+                    // Email addresses them by first name
+                    const displayName = usr.name.split(' ').length > 1 ? usr.name.split(' ')[0] : usr.name;
+                    // Create message
+                    // TODO create verification link
+                    const msg = {
+                      to: usr.username,
+                      from: process.env.SENDGRID_EMAIL,
+                      subject: 'Welcome to Nalda, ' + displayName + '! Verify your account.',
+                      text: 'Hi ' + displayName + ',\n Welcome to Nalda! Please verify your account at the following link.'
+                    };
+
+                    // Send message
+                    sgMail.send(msg, (errEmail) => {
+                      if (errEmail) {
+                        res.send({
+                          success: false,
+                          error: errEmail,
+                        });
+                      } else {
+                        // Send back user
+                        res.send({
+                          success: true,
+                          error: '',
+                          user: usr,
+                        });
+                      }
                     });
                   }
                 });
