@@ -22,6 +22,7 @@ class Contact extends Component {
       email: "",
       message: "",
       error: "",
+      success: '',
     };
 
     // Bind this to helper methods
@@ -83,9 +84,20 @@ class Contact extends Component {
         message: this.state.message,
       })
       .then((resp) => {
-        this.setState({
-          error: resp.data.error + ' For now contact us at contact@naldaeasytravel.com',
-        });
+        if (resp.data.success) {
+          // Display success and clear fields
+          this.setState({
+            success: 'Your message has been sent!',
+            error: '',
+            name: '',
+            email: '',
+            message: '',
+          });
+        } else {
+          this.setState({
+            error: resp.data.error,
+          });
+        }
       })
       .catch((err) => {
         this.setState({
@@ -108,6 +120,13 @@ class Contact extends Component {
                 Questions or comments about the app? Interested in joining the Nalda team? Reach out and we will get back to you shortly.
               </p>
               <ErrorMessage error={ this.state.error } />
+              {
+                this.state.success ? (
+                  <div className="alert alert-success marg-bot-1">
+                    { this.state.success }
+                  </div>
+                ) : null
+              }
               <div className="row">
                 <div className="col-12 col-sm-6">
                   <input

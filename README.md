@@ -54,7 +54,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
 
 - [ ] SendGrid configuration
   - [ ] Contact page
-  - [ ] Password reset
+  - [X] Password reset
   - [ ] Device authorization (confirm your email)?
 - [X] Add author field to every form of content
   - [X] Videos
@@ -177,6 +177,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [X] Change location functionality
 - [X] Reviews by id instead of name
 - [X] Most recent in reverse order
+- [ ] Technical errors should not be displayed to frontend, should be vague.
 
 ## Cam
 - [X] Nav bar style when no one is logged in
@@ -240,9 +241,9 @@ DELETE '/api/videos/:id'       // Delete a specific article
 
 ## Features for next update
 - [ ] Sendgrid configuration for sending emails
-  - [ ] Contact us page
+  - [X] Contact us page
   - [ ] Confirm email page
-  - [ ] Forgot password reset
+  - [X] Forgot password reset
 - [ ] Make it easier for an admin to enter hours (some sort of autofill)
 - [ ] Recommending content for users to look at
   * To begin they can be location based and random
