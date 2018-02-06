@@ -21,6 +21,7 @@ import requireLogin from '../components/auth/RequireLogin';
 import Account from '../components/auth/Account';
 import EditPassword from '../components/auth/EditPassword';
 import ResetPassword from '../components/auth/ResetPassword';
+import Verify from '../components/auth/Verify';
 
 // Content viewing components
 import Home from '../components/Home';
@@ -128,6 +129,7 @@ class AppContainer extends Component {
                 <Route exact path="/account" component={requireLogin(Account)} />
                 <Route exact path="/password" component={requireLogin(EditPassword)} />
                 <Route exact path="/reset/:token" component={ResetPassword} />
+                <Route exact path="/verify/:token" component={requireLogin(Verify)} />
 
                 { /* Routes for viewing profiles */ }
                 <Route exact path="/users/:id" component={Profile} />

@@ -27,6 +27,7 @@ const userSchema = new Schema({
   resetPasswordToken: String,
   resetPasswordExpires: Date,
   accountVerified: Boolean,
+  verificationToken: String,
 });
 
 // Creates an index allowing for search functionality
