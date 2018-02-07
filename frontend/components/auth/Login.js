@@ -153,80 +153,82 @@ class Login extends Component {
         {(this.props.userId) && <Redirect to="/"/>}
         <div className="space-2" />
         <Thin>
-          <form className="big" method="POST" onSubmit={ this.handleLoginSubmit }>
-            <h2 className="marg-bot-1 bold">
-              Login to continue
-            </h2>
+          <div>
+            <form className="big" method="POST" onSubmit={ this.handleLoginSubmit }>
+              <h2 className="marg-bot-1 bold">
+                Login to continue
+              </h2>
 
-            <ErrorMessage error={ this.state.error } />
-            {
-              this.state.success ? (
-                <div className="alert alert-success marg-bot-1">
-                  { this.state.success }
-                </div>
-              ) : null
-            }
-            <input
-              placeholder="Email"
-              type="text"
-              className="form-control marg-bot-1 border"
-              value={ this.state.username }
-              onChange={ this.handleChangeEmail }
-            />
-
-            <input
-              placeholder="Password"
-              type="password"
-              className="form-control marg-bot-1 border"
-              value={ this.state.password }
-              onChange={ this.handleChangePassword }
-            />
-            <input
-              type="submit"
-              className={
-                !this.state.pending && this.state.password && this.state.username ? (
-                  "btn btn-primary full-width border"
-                ) : (
-                  "btn btn-primary disabled full-width border"
-                )
+              <ErrorMessage error={ this.state.error } />
+              {
+                this.state.success ? (
+                  <div className="alert alert-success marg-bot-1">
+                    { this.state.success }
+                  </div>
+                ) : null
               }
-              value={ this.state.pending ? "Logging in..." : "Login" }
-            />
-          </form>
+              <input
+                placeholder="Email"
+                type="text"
+                className="form-control marg-bot-1 border"
+                value={ this.state.username }
+                onChange={ this.handleChangeEmail }
+              />
 
-          {/* Render other options */}
-          <div className="gray-text center text-segment">
-            <div className="line-through" />
-            <p>
-              Or continue with
-            </p>
-            <div className="line-through" />
-          </div>
-          <div className="row">
-            <div className="col-12 col-sm-6 marg-bot-1">
-              <a
-                className="btn full-width btn-sm facebook"
-                href="/api/auth/facebook"
-              >
-                <i className="fa fa-facebook" aria-hidden="true" /> &nbsp; Facebook
-              </a>
+              <input
+                placeholder="Password"
+                type="password"
+                className="form-control marg-bot-1 border"
+                value={ this.state.password }
+                onChange={ this.handleChangePassword }
+              />
+              <input
+                type="submit"
+                className={
+                  !this.state.pending && this.state.password && this.state.username ? (
+                    "btn btn-primary full-width border"
+                  ) : (
+                    "btn btn-primary disabled full-width border"
+                  )
+                }
+                value={ this.state.pending ? "Logging in..." : "Login" }
+              />
+            </form>
+
+            {/* Render other options */}
+            <div className="gray-text center text-segment">
+              <div className="line-through" />
+              <p>
+                Or continue with
+              </p>
+              <div className="line-through" />
             </div>
-            <div className="col-12 col-sm-6 marg-bot-1">
-              <a
-                className="btn full-width btn-sm google"
-                href="/api/auth/google"
-              >
-                <i className="fa fa-google" aria-hidden="true" /> &nbsp; Google
-              </a>
+            <div className="row">
+              <div className="col-12 col-sm-6 marg-bot-1">
+                <a
+                  className="btn full-width btn-sm facebook"
+                  href="/api/auth/facebook"
+                >
+                  <i className="fa fa-facebook" aria-hidden="true" /> &nbsp; Facebook
+                </a>
+              </div>
+              <div className="col-12 col-sm-6 marg-bot-1">
+                <a
+                  className="btn full-width btn-sm google"
+                  href="/api/auth/google"
+                >
+                  <i className="fa fa-google" aria-hidden="true" /> &nbsp; Google
+                </a>
+              </div>
+              <p className="marg-bot-0 center gray-text">
+                Forgot password? <a
+                  className="link-style"
+                  onClick={ () => this.handlePasswordReset() }
+                >
+                  Reset here.
+                </a>
+              </p>
             </div>
-            <p className="marg-bot-0 center gray-text">
-              Forgot password? <a
-                className="link-style"
-                onClick={ () => this.handlePasswordReset() }
-              >
-                Reset here.
-              </a>
-            </p>
           </div>
         </Thin>
       </div>

@@ -223,6 +223,16 @@ class RegisterModalForm extends Component {
         <div className="modal-body left">
           <ErrorMessage error={ this.state.error } />
 
+          <input
+            type="text"
+            id="emailInput"
+            className="form-control marg-bot-1"
+            value={ this.state.email }
+            onChange={ this.handleChangeEmail }
+            placeholder="Email"
+          />
+          <i className="fa fa-envelope fa-fw in-input" aria-hidden />
+
           <div className="row">
             <div className="col-12 col-sm-6">
               <input
@@ -243,16 +253,6 @@ class RegisterModalForm extends Component {
               />
             </div>
           </div>
-
-          <input
-            type="text"
-            id="emailInput"
-            className="form-control marg-bot-1"
-            value={ this.state.email }
-            onChange={ this.handleChangeEmail }
-            placeholder="Email"
-          />
-          <i className="fa fa-envelope fa-fw in-input" aria-hidden />
 
           <input
             type="text"

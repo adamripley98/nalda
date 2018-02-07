@@ -215,12 +215,12 @@ class LoginModalForm extends Component {
               </a>
             </div>
           </div>
-          <p className="marg-bot-0 center gray-text">
-            Forgot password? <a
+          <p className="marg-bot-0 center gray-text normal-bold">
+            <a
               className="link-style"
               onClick={ () => this.handlePasswordReset() }
             >
-              Reset here.
+              Forgot password?
             </a>
           </p>
         </div>
