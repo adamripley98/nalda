@@ -136,6 +136,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [X] Create a curator profile view (Should show name, location, bio, contact info, and all content created)
 - [ ] Update meta tags for all forms of content
 - [X] Arrows on sort buttons
+- [ ] Only display first name in nav bar
 
 ## Backend
 
@@ -244,7 +245,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [ ] Verify account via email
   - [X] Send email welcoming user to nalda
   - [X] Display banner on account page
-    - [ X Banner click should send another verify email
+    - [X] Banner click should send another verify email
   - [X] Local Login
   - [ ] FACEBOOK
   - [ ] Google

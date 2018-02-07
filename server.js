@@ -115,11 +115,11 @@ passport.use(
   (accessToken, refreshToken, profile, cb) => {
     // If profile is found, search mongo for him
     process.nextTick(() => {
-      User.find({facebookId: profile.id}, (err, user) => {
+      User.findOne({username: profile._json.email}, (err, user) => {
         if (err) {
           return cb(err, null);
           // If no user, create him in Mongo
-        } else if (!user.length) {
+        } else if (!user) {
           // Create a new user
           // TODO location
           const newUser = new User({
@@ -138,8 +138,16 @@ passport.use(
             return cb(null, newUser);
           });
         } else {
-          // User already exists
-          return cb(null, user);
+          // Add facebook id to profile
+          user.facebookId = profile.id;
+          // Save changes
+          user.save((errSave) => {
+            if (errSave) {
+              return cb(errSave, null);
+            }
+            // User already exists
+            return cb(null, user);
+          });
         }
       });
     });
@@ -153,11 +161,11 @@ passport.use(new GoogleStrategy({
   callbackURL: GOOGLE_APP_CALLBACK,
 }, (accessToken, refreshToken, profile, cb) => {
   process.nextTick(() => {
-    User.find({googleId: profile.id}, (err, user) => {
+    User.findOne({username: profile.emails[0].value}, (err, user) => {
       if (err) {
         return cb(err, null);
         // If no user, create him in Mongo
-      } else if (!user.length) {
+      } else if (!user) {
         // Create a new user
         // TODO location
         const newUser = new User({
@@ -176,8 +184,16 @@ passport.use(new GoogleStrategy({
           return cb(null, newUser);
         });
       } else {
-        // User already exists
-        return cb(null, user);
+        // Update existing user
+        user.googleId = profile.id;
+        // Save changes in Mongo
+        user.save((errSave) => {
+          if (errSave) {
+            return cb(errSave, null);
+          }
+          // User already exists
+          return cb(null, user);
+        });
       }
     });
   });
