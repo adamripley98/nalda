@@ -203,6 +203,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [X] Get rid of redux capabilities of all components that don't use redux
 - [ ] Go back and take care of all TODO's
 - [ ] Make sure all form submissions check for empty fields on frontend and/or backend
+- [ ] Backend error checking should be in separate file
 
 ## Other
 - [ ] Google Analytics
@@ -240,23 +241,24 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [ ] Failure redirects for resetting password
 - [X] New password must meet validity conditions
 - [ ] Extra security for auth routes: userId pulled from backend
-- [ ] Ensure duplicate emails cannot be registered (through facebook and google oauth)
-  - [ ] If account already exists, should simply add googleId or facebookId to that user, not create a new account
-- [ ] Verify account via email
+- [X] Ensure duplicate emails cannot be registered (through facebook and google oauth)
+  - [X] If account already exists, should simply add googleId or facebookId to that user, not create a new account
+- [X] Verify account via email
   - [X] Send email welcoming user to nalda
   - [X] Display banner on account page
     - [X] Banner click should send another verify email
   - [X] Local Login
-  - [ ] FACEBOOK
-  - [ ] Google
+  - [X] FACEBOOK
+  - [X] Google
 - [ ] Get rid of any userId passing from frontend unless it is for comparing to backend userId
 - [ ] Styling on the emails sent by Nalda: Welcome, reset, and verify.
+- [ ] All emails sent should be placed into `sendEmail.js`
 
 
 ## Features for next update
-- [ ] Sendgrid configuration for sending emails
+- [X] Sendgrid configuration for sending emails
   - [X] Contact us page
-  - [ ] Confirm email page
+  - [X] Confirm email page
   - [X] Forgot password reset
 - [ ] Make it easier for an admin to enter hours (some sort of autofill)
 - [ ] Recommending content for users to look at

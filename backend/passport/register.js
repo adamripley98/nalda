@@ -2,11 +2,12 @@
 const bCrypt = require('bcrypt-nodejs');
 const express = require('express');
 const router = express.Router();
-const sgMail = require('@sendgrid/mail');
-const crypto = require('crypto');
 
 // Import models
 const User = require('../models/user');
+
+// Import helper methods
+const {sendWelcomeEmail} = require('../helperMethods/sendEmail');
 
 /**
  * Backend file for registering new users
@@ -57,29 +58,25 @@ module.exports = () => {
   				    error: 'User with username ' + req.body.username + ' already exists',
   				  });
           } else {
-            // Generate a random token
-            crypto.randomBytes(20, (errCrypto, buf) => {
-              if (errCrypto) {
+            const newUser = new User({
+              name: req.body.name,
+              username: req.body.username,
+              location: req.body.location,
+              password: createHash(req.body.password),
+              userType: 'user',
+              profilePicture: 'https://s3.amazonaws.com/nalda/default-profile-picture.png',
+            });
+
+            sendWelcomeEmail(newUser, (resp) => {
+              if (!resp.success) {
                 res.send({
                   success: false,
-                  error: '',
+                  error: resp.error,
                 });
               } else {
-                const token = buf.toString('hex');
-                // If no error and user doesn't already exist, create a user
-                // Default sets userType to user, admin can change to admin or curator
-                // NOTE password is hashed securely, accountVerified is initially false, verificationToken is unique
-                const newUser = new User({
-                  name: req.body.name,
-                  username: req.body.username,
-                  location: req.body.location,
-                  password: createHash(req.body.password),
-                  userType: 'user',
-                  profilePicture: 'https://s3.amazonaws.com/nalda/default-profile-picture.png',
-                  accountVerified: false,
-                  verificationToken: token,
-                });
-
+                // Update user
+                newUser.accountVerified = false;
+                newUser.verificationToken = resp.token;
                 // Saving new user in Mongo
                 newUser.save((errUser, usr) => {
                   if (errUser) {
@@ -96,35 +93,11 @@ module.exports = () => {
                           error: 'Error logging in new user: ' + errLogin,
                         });
                       } else {
-                        // If registration is successful, send an email welcoming to Nalda.
-                        sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-                        // Email addresses them by first name
-                        const displayName = usr.name.split(' ').length > 1 ? usr.name.split(' ')[0] : usr.name;
-                        // Create message
-                        // TODO create verification link
-                        const msg = {
-                          to: usr.username,
-                          from: process.env.SENDGRID_EMAIL,
-                          subject: 'Welcome to Nalda, ' + displayName + '! Verify your account.',
-                          text: 'Hi ' + displayName + ',\n Welcome to Nalda! Please verify your account at the following link:\n\n' +
-                          'http://' + req.headers.host + '/verify/' + token + '\n\n'
-                        };
-
-                        // Send message
-                        sgMail.send(msg, (errEmail) => {
-                          if (errEmail) {
-                            res.send({
-                              success: false,
-                              error: errEmail,
-                            });
-                          } else {
-                            // Send back user
-                            res.send({
-                              success: true,
-                              error: '',
-                              user: usr,
-                            });
-                          }
+                        // Send back user
+                        res.send({
+                          success: true,
+                          error: '',
+                          user: usr,
                         });
                       }
                     });

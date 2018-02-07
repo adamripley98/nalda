@@ -23,6 +23,9 @@ const GOOGLE_APP_CALLBACK = process.env.GOOGLE_APP_CALLBACK;
 // Import Models
 const User = require('./backend/models/user');
 
+// Import helper methods
+const {sendWelcomeEmail} = require('./backend/helperMethods/sendEmail');
+
 // Import auth routes
 const login = require('./backend/passport/login');
 const register = require('./backend/passport/register');
@@ -129,13 +132,22 @@ passport.use(
             facebookId: profile.id,
             profilePicture: `https://graph.facebook.com/${profile.id}/picture?type=large`,
           });
-          // Save new user in mongo
-          newUser.save((errSave) => {
-            if (errSave) {
-              return cb(errSave, null);
+          // Send new user a welcome email
+          sendWelcomeEmail(newUser, (resp) => {
+            if (!resp.success) {
+              return cb(resp.error, null);
             }
-            // If successful return profile
-            return cb(null, newUser);
+            // Update new user
+            newUser.accountVerified = false;
+            newUser.verificationToken = resp.token;
+            // Save new user in mongo
+            newUser.save((errSave) => {
+              if (errSave) {
+                return cb(errSave, null);
+              }
+              // If successful return profile
+              return cb(null, newUser);
+            });
           });
         } else {
           // Add facebook id to profile
@@ -175,13 +187,22 @@ passport.use(new GoogleStrategy({
           googleId: profile.id,
           profilePicture: profile.photos[0].value,
         });
-        // Save new user in mongo
-        newUser.save((errSave) => {
-          if (errSave) {
-            return cb(errSave, null);
+        // Send new user a welcome email
+        sendWelcomeEmail(newUser, (resp) => {
+          if (!resp.success) {
+            return cb(resp.error, null);
           }
-          // If successful return profile
-          return cb(null, newUser);
+          // Update new user
+          newUser.accountVerified = false;
+          newUser.verificationToken = resp.token;
+          // Save new user in mongo
+          newUser.save((errSave) => {
+            if (errSave) {
+              return cb(errSave, null);
+            }
+            // If successful return profile
+            return cb(null, newUser);
+          });
         });
       } else {
         // Update existing user
