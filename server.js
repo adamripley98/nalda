@@ -23,6 +23,9 @@ const GOOGLE_APP_CALLBACK = process.env.GOOGLE_APP_CALLBACK;
 // Import Models
 const User = require('./backend/models/user');
 
+// Import helper methods
+const {sendWelcomeEmail} = require('./backend/helperMethods/sendEmail');
+
 // Import auth routes
 const login = require('./backend/passport/login');
 const register = require('./backend/passport/register');
@@ -115,11 +118,11 @@ passport.use(
   (accessToken, refreshToken, profile, cb) => {
     // If profile is found, search mongo for him
     process.nextTick(() => {
-      User.find({facebookId: profile.id}, (err, user) => {
+      User.findOne({username: profile._json.email}, (err, user) => {
         if (err) {
           return cb(err, null);
           // If no user, create him in Mongo
-        } else if (!user.length) {
+        } else if (!user) {
           // Create a new user
           // TODO location
           const newUser = new User({
@@ -129,17 +132,34 @@ passport.use(
             facebookId: profile.id,
             profilePicture: `https://graph.facebook.com/${profile.id}/picture?type=large`,
           });
-          // Save new user in mongo
-          newUser.save((errSave) => {
+          // Send new user a welcome email
+          sendWelcomeEmail(newUser, (resp) => {
+            if (!resp.success) {
+              return cb(resp.error, null);
+            }
+            // Update new user
+            newUser.accountVerified = false;
+            newUser.verificationToken = resp.token;
+            // Save new user in mongo
+            newUser.save((errSave) => {
+              if (errSave) {
+                return cb(errSave, null);
+              }
+              // If successful return profile
+              return cb(null, newUser);
+            });
+          });
+        } else {
+          // Add facebook id to profile
+          user.facebookId = profile.id;
+          // Save changes
+          user.save((errSave) => {
             if (errSave) {
               return cb(errSave, null);
             }
-            // If successful return profile
-            return cb(null, newUser);
+            // User already exists
+            return cb(null, user);
           });
-        } else {
-          // User already exists
-          return cb(null, user);
         }
       });
     });
@@ -153,11 +173,11 @@ passport.use(new GoogleStrategy({
   callbackURL: GOOGLE_APP_CALLBACK,
 }, (accessToken, refreshToken, profile, cb) => {
   process.nextTick(() => {
-    User.find({googleId: profile.id}, (err, user) => {
+    User.findOne({username: profile.emails[0].value}, (err, user) => {
       if (err) {
         return cb(err, null);
         // If no user, create him in Mongo
-      } else if (!user.length) {
+      } else if (!user) {
         // Create a new user
         // TODO location
         const newUser = new User({
@@ -167,17 +187,34 @@ passport.use(new GoogleStrategy({
           googleId: profile.id,
           profilePicture: profile.photos[0].value,
         });
-        // Save new user in mongo
-        newUser.save((errSave) => {
+        // Send new user a welcome email
+        sendWelcomeEmail(newUser, (resp) => {
+          if (!resp.success) {
+            return cb(resp.error, null);
+          }
+          // Update new user
+          newUser.accountVerified = false;
+          newUser.verificationToken = resp.token;
+          // Save new user in mongo
+          newUser.save((errSave) => {
+            if (errSave) {
+              return cb(errSave, null);
+            }
+            // If successful return profile
+            return cb(null, newUser);
+          });
+        });
+      } else {
+        // Update existing user
+        user.googleId = profile.id;
+        // Save changes in Mongo
+        user.save((errSave) => {
           if (errSave) {
             return cb(errSave, null);
           }
-          // If successful return profile
-          return cb(null, newUser);
+          // User already exists
+          return cb(null, user);
         });
-      } else {
-        // User already exists
-        return cb(null, user);
       }
     });
   });
