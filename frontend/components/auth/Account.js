@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import autosize from 'autosize';
+import Dropzone from 'react-dropzone';
 
 // Import actions
 import {changeFullName} from '../../actions/index.js';
@@ -17,6 +18,7 @@ import Button from '../shared/Button';
 import Loading from '../shared/Loading';
 
 // TODO error check on empty inputs
+// TODO style file upload
 /**
  * Component to render a user's account information
   */
@@ -31,7 +33,7 @@ class Account extends Component {
       email: '',
       type: '',
       bio: '',
-      profilePicture: '',
+      profilePicture: {},
       accountVerified: false,
       error: '',
       success: '',
@@ -40,6 +42,7 @@ class Account extends Component {
       editName: false,
       editBio: false,
       editLocation: false,
+      editProfilePicture: false,
     };
 
     // Bind this to helper methods
@@ -49,9 +52,9 @@ class Account extends Component {
     this.handleChangeBio = this.handleChangeBio.bind(this);
     this.handleBioClick = this.handleBioClick.bind(this);
     this.handleLocationClick = this.handleLocationClick.bind(this);
-    this.handleChangeProfilePicture = this.handleChangeProfilePicture.bind(this);
     this.handleProfilePictureClick = this.handleProfilePictureClick.bind(this);
     this.handleVerifyEmail = this.handleVerifyEmail.bind(this);
+    this.onDrop = this.onDrop.bind(this);
   }
 
   /**
@@ -190,16 +193,6 @@ class Account extends Component {
       editName: !this.state.editName,
     });
   }
-
-  /**
-   * Handle a change to the profile picture state
-   */
-  handleChangeProfilePicture(event) {
-    this.setState({
-      profilePicture: event.target.value,
-    });
-  }
-
   /**
    * Handle click to edit profile picture
    */
@@ -211,11 +204,12 @@ class Account extends Component {
       const profilePicture = this.state.profilePicture;
 
       // Error checking
-      if (!this.state.profilePicture) {
+      if (Object.keys(profilePicture).length === 0) {
         this.setState({
           error: 'Profile picture cannot be empty',
         });
       } else {
+        console.log('pp', profilePicture);
         axios.post('/api/users/profilePicture', {
           userId,
           profilePicture,
@@ -227,7 +221,8 @@ class Account extends Component {
             });
           } else {
             // Dispatch redux action to change profile picture
-            changeProfilePic(profilePicture);
+            // TODO pass profile picture from backend: AWS version
+            // changeProfilePic(profilePicture.);
           }
         })
         .catch((err) => {
@@ -242,6 +237,53 @@ class Account extends Component {
       editProfilePicture: !this.state.editProfilePicture,
     });
   }
+
+  onDrop(profilePicture) {
+    this.setState({
+      profilePicture: profilePicture[0],
+    });
+  }
+  // // Helper method to change profile picture
+  // onDrop(profilePicture) {
+  //   if (this.state.editProfilePicture) {
+  //     const changeProfilePic = this.props.changeProfilePic;
+  //     const userId = this.props.userId;
+  //     // Error checking
+  //     if (Object.keys(profilePicture).length === 0) {
+  //       this.setState({
+  //         error: 'Profile picture cannot be empty',
+  //       });
+  //     } else {
+  //       console.log('pp', profilePicture);
+  //       axios.post('/api/users/profilePicture', {
+  //         userId,
+  //         profilePicture,
+  //       })
+  //       .then((resp) => {
+  //         if (!resp.data.success) {
+  //           this.setState({
+  //             error: resp.data.error,
+  //           });
+  //         } else {
+  //           // Dispatch redux action to change profile picture
+  //           // TODO pass profile picture from backend: AWS version
+  //           // changeProfilePic(profilePicture.);
+  //           console.log('should dispatch redux');
+  //         }
+  //       })
+  //       .catch((err) => {
+  //         this.setState({
+  //           error: err,
+  //         });
+  //       });
+  //     }
+  //   }
+  //   // Update the state
+  //   this.setState({
+  //     editProfilePicture: !this.state.editProfilePicture,
+  //   });
+  // }
+
 
   /**
    * Handle a change to the bio state
@@ -391,6 +433,7 @@ class Account extends Component {
             <td>
                 <div
                   className="profile-picture background-image"
+                  // TODO change backgrounnd image, no longer url?
                   style={{
                     display: this.state.editProfilePicture && "none",
                     backgroundImage: `url(${ this.props.profilePicture })`
@@ -400,10 +443,15 @@ class Account extends Component {
                   className="form-control"
                   id="name"
                   ref={(input) => { this.profileInput = input; }}
-                  value={ this.state.profilePicture }
-                  onChange={ this.handleChangeProfilePicture }
+                  value={ this.state.profilePicture ? this.state.profilePicture.name : null }
                   style={{ display: !this.state.editProfilePicture && "none" }}
                 />
+                <Dropzone
+                  onDrop={this.onDrop}
+                  accept="image/jpeg, image/png"
+                  style={{ display: !this.state.editProfilePicture && "none" }}>
+                  <p>Try dropping some files here, or click to select files to upload.</p>
+                </Dropzone>
             </td>
             <td>
               <i
@@ -526,6 +574,7 @@ class Account extends Component {
               <h4 className="bold marg-top-2 marg-bot-1">
                 Account information
               </h4>
+              {console.log('errrrr', this.state.error)}
               <ErrorMessage error={ this.state.error } />
               { !this.state.accountVerified ? <div onClick={this.handleVerifyEmail}>PLEASE VERIFY YOUR ACCOUNT BY CLICKING HERE</div> : null}
               {
@@ -571,7 +620,6 @@ const mapStateToProps = state => {
 
 // Allows us to dispatch a changeName event by calling this.props.changeFullName
 // NOTE this is necessary because name is stored in redux state to render on nav bar
-// TODO Will need to dispatch a changeLocation event as well for same reason
 const mapDispatchToProps = (dispatch) => {
   return {
     changeName: (name) => dispatch(changeFullName(name)),

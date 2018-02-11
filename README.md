@@ -193,6 +193,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [ ] Style Reset password better on `LoginModal` and `Login`
 - [ ] Display a banner on Account page asking people to verify their email
 - [ ] Make trash can to delete reviews bigger/located in more visible spot
+- [ ] Style file upload in `Account.js`, 
 
 ## General cleanup
 
@@ -235,7 +236,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [X] Video edit location clearing?
 - [ ] Clear hashtag from url after google login
 - [ ] Fix issues with reviews and content displaying not chronologically
-- [ ] UpdateReviews method is unnecessary - just use setState
+- [X] UpdateReviews method is unnecessary - just use setState
 - [X] Delete review authentication check
 - [ ] Location for google and facebook oAuth, get rid of dummy location data
 - [ ] Failure redirects for resetting password
@@ -253,6 +254,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [ ] Get rid of any userId passing from frontend unless it is for comparing to backend userId
 - [ ] Styling on the emails sent by Nalda: Welcome, reset, and verify.
 - [ ] All emails sent should be placed into `sendEmail.js`
+- [ ] Email verify on account page should be below loading
 
 
 ## Features for next update

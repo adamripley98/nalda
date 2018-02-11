@@ -157,10 +157,12 @@ module.exports = () => {
    * @param profilePicture
    */
   router.post('/profilePicture', (req, res) => {
+    console.log('posted dude');
     // Check to make sure poster is logged in
     UserCheck(req, (authRes) => {
       // Isolate variables
       const profilePicture = req.body.profilePicture;
+      console.log(profilePicture);
       // Return any authentication errors
       if (!authRes.success) {
         res.send({
@@ -170,10 +172,12 @@ module.exports = () => {
       } else {
         const imgRegexp = /\.(jpeg|jpg|gif|png)$/;
         // TODO should only need to contain, not end in
-        if (req.body.profilePicture && !imgRegexp.test(req.body.profilePicture)) {
+         // && !imgRegexp.test(req.body.profilePicture)
+         // TODO error check based on type
+        if (Object.keys(profilePicture).length === 0) {
           res.send({
             success: false,
-            error: "Image url must end in \"jpeg\", \"png\", \"gif\", or \"jpg\".",
+            error: "Profile picture cannot be empty",
           });
         } else {
           // find and update given user
@@ -190,21 +194,59 @@ module.exports = () => {
                 error: 'User cannot be found.',
               });
             } else {
-              // Update the user
-              user.profilePicture = profilePicture;
-              // Save the changes
-              user.save((errSave) => {
-                if (err) {
-                  res.send({
-                    success: false,
-                    error: errSave.message,
-                  });
-                } else {
-                  res.send({
-                    success: true,
-                    error: '',
-                  });
-                }
+              // File for AWS configuration
+
+              // Import frameworks
+              const AWS = require('aws-sdk');
+              const uuid = require('uuid-v4');
+
+              // Isolate environmental variables
+              const AWS_BUCKET_NAME = process.env.AWS_BUCKET_NAME;
+              const AWS_USER_KEY = process.env.AWS_USER_KEY;
+              const AWS_USER_SECRET = process.env.AWS_USER_SECRET;
+              console.log('buck name', AWS_BUCKET_NAME);
+              // Set up bucket
+              const s3bucket = new AWS.S3({
+                accessKeyId: AWS_USER_KEY,
+                secretAccessKey: AWS_USER_SECRET,
+                Bucket: AWS_BUCKET_NAME,
+              });
+
+              // Create bucket
+              console.log('prof');
+              console.log(profilePicture);
+              s3bucket.createBucket(() => {
+                var params = {
+                  Bucket: AWS_BUCKET_NAME,
+                  Key: uuid(),
+                  Body: profilePicture.preview,
+                };
+                // Upload photo
+                s3bucket.upload(params, (errUpload, data) => {
+                  if (errUpload) {
+                    console.log('error in callback');
+                    console.log(errUpload);
+                  } else {
+                    console.log('success');
+                    console.log(data.Location);
+                    // Update the user
+                    user.profilePicture = data.Location;
+                    // Save the changes
+                    user.save((errSave) => {
+                      if (err) {
+                        res.send({
+                          success: false,
+                          error: errSave.message,
+                        });
+                      } else {
+                        res.send({
+                          success: true,
+                          error: '',
+                        });
+                      }
+                    });
+                  }
+                });
               });
             }
           });
