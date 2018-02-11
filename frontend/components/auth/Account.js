@@ -527,7 +527,13 @@ class Account extends Component {
                 Account information
               </h4>
               <ErrorMessage error={ this.state.error } />
-              { !this.state.accountVerified ? <div onClick={this.handleVerifyEmail}>PLEASE VERIFY YOUR ACCOUNT BY CLICKING HERE</div> : null}
+              {
+                !this.state.accountVerified ? (
+                  <div className="alert alert-warning marg-bot-1" onClick={this.handleVerifyEmail}>
+                    Please verify your account by clicking here
+                  </div>
+                ) : null
+              }
               {
                 this.state.success ? (
                   <div className="alert alert-success marg-bot-1">
