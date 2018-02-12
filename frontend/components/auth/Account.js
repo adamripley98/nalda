@@ -204,7 +204,7 @@ class Account extends Component {
       const profilePicture = this.state.profilePicture;
 
       // Error checking
-      if (Object.keys(profilePicture).length === 0) {
+      if (!profilePicture) {
         this.setState({
           error: 'Profile picture cannot be empty',
         });
@@ -220,6 +220,9 @@ class Account extends Component {
               error: resp.data.error,
             });
           } else {
+            this.setState({
+              testingPic: resp.data.data,
+            });
             // Dispatch redux action to change profile picture
             // TODO pass profile picture from backend: AWS version
             // changeProfilePic(profilePicture.);
@@ -239,9 +242,18 @@ class Account extends Component {
   }
 
   onDrop(profilePicture) {
-    this.setState({
-      profilePicture: profilePicture[0],
-    });
+    const profPic = profilePicture[0];
+    const reader = new FileReader();
+    reader.onload = () => {
+      const fileAsBinaryString = reader.result;
+      this.setState({
+        profilePicture: fileAsBinaryString,
+      });
+    };
+    reader.onabort = () => this.setState({error: "File read aborted."});
+    reader.onerror = () => this.setState({error: "File read error."});
+
+    reader.readAsDataURL(profPic);
   }
   // // Helper method to change profile picture
   // onDrop(profilePicture) {
@@ -443,12 +455,13 @@ class Account extends Component {
                   className="form-control"
                   id="name"
                   ref={(input) => { this.profileInput = input; }}
-                  value={ this.state.profilePicture ? this.state.profilePicture.name : null }
+                  // TODO remove dummy data
+                  value={ this.state.profilePicture ? "dummy data" : null }
                   style={{ display: !this.state.editProfilePicture && "none" }}
                 />
                 <Dropzone
                   onDrop={this.onDrop}
-                  accept="image/jpeg, image/png"
+                  accept="image/*"
                   style={{ display: !this.state.editProfilePicture && "none" }}>
                   <p>Try dropping some files here, or click to select files to upload.</p>
                 </Dropzone>
@@ -592,6 +605,11 @@ class Account extends Component {
                   </div>
                 )
               }
+              <img
+                src={this.state.testingPic}
+                // src="http://mountain.org/wp-content/uploads/Miraflores-Peru_TMI-1.jpg"
+                alt=""
+              />
             </div>
           </div>
         </div>

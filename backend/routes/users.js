@@ -162,7 +162,7 @@ module.exports = () => {
     UserCheck(req, (authRes) => {
       // Isolate variables
       const profilePicture = req.body.profilePicture;
-      console.log(profilePicture);
+      console.log('p', profilePicture);
       // Return any authentication errors
       if (!authRes.success) {
         res.send({
@@ -174,7 +174,7 @@ module.exports = () => {
         // TODO should only need to contain, not end in
          // && !imgRegexp.test(req.body.profilePicture)
          // TODO error check based on type
-        if (Object.keys(profilePicture).length === 0) {
+        if (!profilePicture) {
           res.send({
             success: false,
             error: "Profile picture cannot be empty",
@@ -213,13 +213,12 @@ module.exports = () => {
               });
 
               // Create bucket
-              console.log('prof');
-              console.log(profilePicture);
               s3bucket.createBucket(() => {
                 var params = {
                   Bucket: AWS_BUCKET_NAME,
                   Key: uuid(),
-                  Body: profilePicture.preview,
+                  Body: profilePicture,
+                  ACL: 'public-read',
                 };
                 // Upload photo
                 s3bucket.upload(params, (errUpload, data) => {
@@ -242,6 +241,7 @@ module.exports = () => {
                         res.send({
                           success: true,
                           error: '',
+                          data: data.Location,
                         });
                       }
                     });
