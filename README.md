@@ -221,6 +221,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [ ] Location for google and facebook oAuth, get rid of dummy location data
 - [ ] Failure redirects for resetting password
 - [ ] Have listing tag clicks lead to a page that displays all listings of that tag
+- [ ] Make sure file uploads are pictures and are appropriate sizes
 
 
 
@@ -264,6 +265,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [ ] Searching content by location
 - [ ] Ask users for current location
 - [ ] Google maps pulling hours for companies and such
+- [ ] Make it scroll to the top when you load a new page
 
 ## General cleanup
 

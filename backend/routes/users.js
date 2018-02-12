@@ -157,12 +157,10 @@ module.exports = () => {
    * @param profilePicture
    */
   router.post('/profilePicture', (req, res) => {
-    console.log('posted dude');
     // Check to make sure poster is logged in
     UserCheck(req, (authRes) => {
       // Isolate variables
       const profilePicture = req.body.profilePicture;
-      console.log('p', profilePicture);
       // Return any authentication errors
       if (!authRes.success) {
         res.send({
@@ -204,7 +202,7 @@ module.exports = () => {
               const AWS_BUCKET_NAME = process.env.AWS_BUCKET_NAME;
               const AWS_USER_KEY = process.env.AWS_USER_KEY;
               const AWS_USER_SECRET = process.env.AWS_USER_SECRET;
-              console.log('buck name', AWS_BUCKET_NAME);
+
               // Set up bucket
               const s3bucket = new AWS.S3({
                 accessKeyId: AWS_USER_KEY,
@@ -212,22 +210,27 @@ module.exports = () => {
                 Bucket: AWS_BUCKET_NAME,
               });
 
+              // Convert profile picture to a form that s3 can display
+              const profilePictureConverted = new Buffer(profilePicture.replace(/^data:image\/\w+;base64,/, ""), 'base64');
+
               // Create bucket
               s3bucket.createBucket(() => {
                 var params = {
                   Bucket: AWS_BUCKET_NAME,
-                  Key: uuid(),
-                  Body: profilePicture,
+                  Key: `profilepictures/${uuid()}`,
+                  ContentType: 'image/jpeg',
+                  Body: profilePictureConverted,
+                  ContentEncoding: 'base64',
                   ACL: 'public-read',
                 };
                 // Upload photo
                 s3bucket.upload(params, (errUpload, data) => {
                   if (errUpload) {
-                    console.log('error in callback');
-                    console.log(errUpload);
+                    res.send({
+                      success: false,
+                      error: 'Error uploading profile picture.',
+                    });
                   } else {
-                    console.log('success');
-                    console.log(data.Location);
                     // Update the user
                     user.profilePicture = data.Location;
                     // Save the changes
@@ -241,7 +244,7 @@ module.exports = () => {
                         res.send({
                           success: true,
                           error: '',
-                          data: data.Location,
+                          data: user.profilePicture,
                         });
                       }
                     });

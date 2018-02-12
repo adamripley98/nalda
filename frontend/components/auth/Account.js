@@ -209,7 +209,7 @@ class Account extends Component {
           error: 'Profile picture cannot be empty',
         });
       } else {
-        console.log('pp', profilePicture);
+        // Post to backend to change profile picture
         axios.post('/api/users/profilePicture', {
           userId,
           profilePicture,
@@ -220,12 +220,8 @@ class Account extends Component {
               error: resp.data.error,
             });
           } else {
-            this.setState({
-              testingPic: resp.data.data,
-            });
             // Dispatch redux action to change profile picture
-            // TODO pass profile picture from backend: AWS version
-            // changeProfilePic(profilePicture.);
+            changeProfilePic(profilePicture);
           }
         })
         .catch((err) => {
@@ -241,61 +237,22 @@ class Account extends Component {
     });
   }
 
+  // Helper method that is fired when a profile picture is added
   onDrop(profilePicture) {
+    // Read only the first file passed in
     const profPic = profilePicture[0];
     const reader = new FileReader();
-    reader.onload = () => {
-      const fileAsBinaryString = reader.result;
+    // Convert from blob to a proper file object that can be passed to server
+    reader.onload = (upload) => {
       this.setState({
-        profilePicture: fileAsBinaryString,
+        profilePicture: upload.target.result,
       });
     };
+    // File reader set up
     reader.onabort = () => this.setState({error: "File read aborted."});
     reader.onerror = () => this.setState({error: "File read error."});
-
     reader.readAsDataURL(profPic);
   }
-  // // Helper method to change profile picture
-  // onDrop(profilePicture) {
-  //   if (this.state.editProfilePicture) {
-  //     const changeProfilePic = this.props.changeProfilePic;
-  //     const userId = this.props.userId;
-  //     // Error checking
-  //     if (Object.keys(profilePicture).length === 0) {
-  //       this.setState({
-  //         error: 'Profile picture cannot be empty',
-  //       });
-  //     } else {
-  //       console.log('pp', profilePicture);
-  //       axios.post('/api/users/profilePicture', {
-  //         userId,
-  //         profilePicture,
-  //       })
-  //       .then((resp) => {
-  //         if (!resp.data.success) {
-  //           this.setState({
-  //             error: resp.data.error,
-  //           });
-  //         } else {
-  //           // Dispatch redux action to change profile picture
-  //           // TODO pass profile picture from backend: AWS version
-  //           // changeProfilePic(profilePicture.);
-  //           console.log('should dispatch redux');
-  //         }
-  //       })
-  //       .catch((err) => {
-  //         this.setState({
-  //           error: err,
-  //         });
-  //       });
-  //     }
-  //   }
-  //   // Update the state
-  //   this.setState({
-  //     editProfilePicture: !this.state.editProfilePicture,
-  //   });
-  // }
-
 
   /**
    * Handle a change to the bio state
@@ -445,7 +402,6 @@ class Account extends Component {
             <td>
                 <div
                   className="profile-picture background-image"
-                  // TODO change backgrounnd image, no longer url?
                   style={{
                     display: this.state.editProfilePicture && "none",
                     backgroundImage: `url(${ this.props.profilePicture })`
@@ -455,10 +411,10 @@ class Account extends Component {
                   className="form-control"
                   id="name"
                   ref={(input) => { this.profileInput = input; }}
-                  // TODO remove dummy data
-                  value={ this.state.profilePicture ? "dummy data" : null }
+                  value={ this.state.profilePicture ? this.state.profilePicture : null }
                   style={{ display: !this.state.editProfilePicture && "none" }}
                 />
+                {/* TODO Style this */}
                 <Dropzone
                   onDrop={this.onDrop}
                   accept="image/*"
@@ -587,7 +543,6 @@ class Account extends Component {
               <h4 className="bold marg-top-2 marg-bot-1">
                 Account information
               </h4>
-              {console.log('errrrr', this.state.error)}
               <ErrorMessage error={ this.state.error } />
               { !this.state.accountVerified ? <div onClick={this.handleVerifyEmail}>PLEASE VERIFY YOUR ACCOUNT BY CLICKING HERE</div> : null}
               {
@@ -605,11 +560,6 @@ class Account extends Component {
                   </div>
                 )
               }
-              <img
-                src={this.state.testingPic}
-                // src="http://mountain.org/wp-content/uploads/Miraflores-Peru_TMI-1.jpg"
-                alt=""
-              />
             </div>
           </div>
         </div>
@@ -653,6 +603,3 @@ Account = connect(
 )(Account);
 
 export default Account;
-
-// function myFunction(){
-// }
