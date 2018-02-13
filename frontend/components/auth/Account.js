@@ -30,6 +30,7 @@ class Account extends Component {
     super(props);
     this.state = {
       name: '',
+      prevName: '',
       email: '',
       type: '',
       bio: '',
@@ -168,6 +169,7 @@ class Account extends Component {
       if (!this.state.name) {
         this.setState({
           error: 'Name cannot be empty.',
+          name: this.state.prevName,
         });
       } else {
         // Save the updated name
@@ -182,6 +184,9 @@ class Account extends Component {
              error: resp.data.error,
            });
          } else {
+           this.setState({
+             error: '',
+           });
            // change redux state
            changeName(this.state.name);
          }
@@ -191,6 +196,7 @@ class Account extends Component {
     // Update the state
     this.setState({
       editName: !this.state.editName,
+      prevName: this.state.name,
     });
   }
   /**
@@ -238,20 +244,27 @@ class Account extends Component {
   }
 
   // Helper method that is fired when a profile picture is added
-  onDrop(profilePicture) {
-    // Read only the first file passed in
-    const profPic = profilePicture[0];
-    const reader = new FileReader();
-    // Convert from blob to a proper file object that can be passed to server
-    reader.onload = (upload) => {
+  onDrop(acceptedFiles, rejectedFiles) {
+    if (acceptedFiles.length) {
+      // Read only the first file passed in
+      const profilePicture = acceptedFiles[0];
+      const reader = new FileReader();
+      // Convert from blob to a proper file object that can be passed to server
+      reader.onload = (upload) => {
+        this.setState({
+          profilePicture: upload.target.result,
+          error: '',
+        });
+      };
+      // File reader set up
+      reader.onabort = () => this.setState({error: "File read aborted."});
+      reader.onerror = () => this.setState({error: "File read error."});
+      reader.readAsDataURL(profilePicture);
+    } else {
       this.setState({
-        profilePicture: upload.target.result,
+        error: rejectedFiles[0].name + ' is not an image.',
       });
-    };
-    // File reader set up
-    reader.onabort = () => this.setState({error: "File read aborted."});
-    reader.onerror = () => this.setState({error: "File read error."});
-    reader.readAsDataURL(profPic);
+    }
   }
 
   /**
@@ -340,7 +353,7 @@ class Account extends Component {
             });
           } else {
             this.setState({
-              error: "Invalid location",
+              error: "",
               pending: false,
             });
           }

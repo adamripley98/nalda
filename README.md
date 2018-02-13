@@ -43,6 +43,45 @@ DELETE '/api/videos/:id'       // Delete a specific article
 ```
 # Feature tracking
 
+## By 2/17
+- [ ] Image upload
+  - [X] Profile picture
+  - [ ] Listing multiple pictures
+  - [ ] Articles multiple pictures
+  - [ ] Styling for all these
+  - [X] Error handling
+- [ ] Ensure everything works on live site
+  - [ ] Google oAuth
+  - [ ] Facebook oAuth
+  - [ ] Sendgrid
+  - [ ] Image upload
+    - [ ] Especially on mobile
+- [ ] SSL fix
+- [ ] Gallery on listing
+  - [ ] Backend
+  - [ ] Frontend
+- [ ] Nalda's favorite section on listing (similar to description except opinion)
+- [ ] Flash notifications upon register, signup, submissions, etc.
+- [ ] Securing auth routes better
+- [ ] Admin panel
+  - [ ] Fix display bug
+  - [ ] Curator/Admin list
+  - [ ] See users (scroll menu)
+  - [ ] See all content
+- [ ] Rough beginning to homepage
+- [ ] Login/register color display on safari
+- [ ] Link 'forgot your password' to edit password form
+- [ ] Ensure all locations entered are valid addresses/cities
+# Cam
+- [ ] Style Reset password better on `LoginModal` and `Login`
+- [ ] Display a banner on Account page asking people to verify their email (instead of text)
+- [ ] Make trash can to delete reviews bigger
+- [ ] Style file upload in `Account.js`,
+- [ ] Style frontend for homepage
+- [ ] hamburger turns to X animation
+- [ ] Stop using production mlab for testing
+- [ ] Push changes live
+
 ## Admins
 
 - [X] Admin add page (similar look to contact page) where admins can enter email addresses and add both other admins and other content creators. Only admins can add people as content creators and only content creators can create posts.
@@ -223,18 +262,9 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [ ] Have listing tag clicks lead to a page that displays all listings of that tag
 - [ ] Make sure file uploads are pictures and are appropriate sizes
 
-
-
-## Cam
-- [ ] Style Reset password better on `LoginModal` and `Login`
-- [ ] Display a banner on Account page asking people to verify their email
-- [ ] Make trash can to delete reviews bigger
-- [ ] Style file upload in `Account.js`,
-
 # TODO from Feb 11 meeting
 - [ ] Weird bug with review delete
 - [ ] Weird bug where admin panel doesn't show up
-- [ ] Stop using production mlab for testing
 - [ ] Listing changes
   - [ ] Description text area
   - [ ] Editor's review section (listings)
@@ -266,6 +296,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [ ] Ask users for current location
 - [ ] Google maps pulling hours for companies and such
 - [ ] Make it scroll to the top when you load a new page
+- [ ] Media library of images from AWS already uploaded to make curators life easier
 
 ## General cleanup
 
@@ -280,6 +311,8 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [ ] Backend error checking should be in separate file
 - [ ] Get rid of unnecessary packages in `package.json`
 - [ ] All emails sent should be placed into `sendEmail.js`
+- [ ] Create a helper method file for image upload
+- [ ] Clear errors if resp.data.success
 
 ## Other
 - [ ] Google Analytics
