@@ -7,6 +7,8 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Author from '../../shared/Author';
+import Dropzone from 'react-dropzone';
+
 
 /**
  * Component to render the new article form
@@ -40,6 +42,7 @@ class ArticleForm extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.addNewComponent = this.addNewComponent.bind(this);
     this.inputValid = this.inputValid.bind(this);
+    this.onDrop = this.onDrop.bind(this);
   }
 
   /**
@@ -179,6 +182,21 @@ class ArticleForm extends React.Component {
     return true;
   }
 
+  // Helper method for image uploads
+  onDrop(acceptedFiles, rejectedFiles) {
+    if (acceptedFiles.length) {
+      const pic = acceptedFiles[0];
+      console.log('dank', pic.preview);
+      this.setState({
+        image: pic.preview,
+      });
+    } else {
+      this.setState({
+        error: rejectedFiles[0].name + ' is not an image.',
+      });
+    }
+  }
+
   /**
    * Helper method to handle when the form is submitted
    */
@@ -307,6 +325,10 @@ class ArticleForm extends React.Component {
                 )
               }
 
+              {
+                this.state.image ? console.log('image', this.state.image) : null
+              }
+
               <input
                 name="image"
                 type="text"
@@ -315,6 +337,14 @@ class ArticleForm extends React.Component {
                 value={ this.state.image }
                 onChange={ this.handleChangeImage }
               />
+
+              {/* TODO Style this */}
+              <Dropzone
+                onDrop={this.onDrop}
+                accept="image/*"
+                >
+                <p>Try dropping some files here, or click to select files to upload.</p>
+              </Dropzone>
 
               <input
                 name="title"

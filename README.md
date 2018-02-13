@@ -69,9 +69,11 @@ DELETE '/api/videos/:id'       // Delete a specific article
   - [ ] See users (scroll menu)
   - [ ] See all content
 - [ ] Rough beginning to homepage
-- [ ] Login/register color display on safari
-- [ ] Link 'forgot your password' to edit password form
-- [ ] Ensure all locations entered are valid addresses/cities
+- [ ] Random bug fixes
+  - [ ] Login/register color display on safari
+  - [ ] Link 'forgot your password' to edit password form
+  - [ ] Ensure all locations entered are valid addresses/cities
+  - [ ] Error check for empty inputs
 # Cam
 - [ ] Style Reset password better on `LoginModal` and `Login`
 - [ ] Display a banner on Account page asking people to verify their email (instead of text)
