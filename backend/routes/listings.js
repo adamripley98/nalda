@@ -363,6 +363,7 @@ module.exports = () => {
         // Isolate variables from the body
         const title = req.body.title;
         const description = req.body.description;
+        const naldaFavorite = req.body.naldaFavorite;
         const image = req.body.image;
         const hours = req.body.hours;
         const rating = req.body.rating;
@@ -380,6 +381,8 @@ module.exports = () => {
           error = "Title must be populated.";
         } else if (!description) {
           error = "Description must be populated.";
+        } else if (!naldaFavorite) {
+          error = "Nalda's Favorite must be populated.";
         } else if (!image) {
           error = "Image must be populated.";
         } else if (!rating) {
@@ -405,6 +408,7 @@ module.exports = () => {
           const newListing = new Listing({
             title,
             description,
+            naldaFavorite,
             image,
             hours,
             rating,

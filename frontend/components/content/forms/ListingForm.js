@@ -20,6 +20,7 @@ class ListingForm extends React.Component {
     this.state = {
       title: "",
       description: "",
+      naldaFavorite: "",
       location: "",
       image: "",
       rating: 0.0,
@@ -86,6 +87,7 @@ class ListingForm extends React.Component {
     // Bind this to helper methods
     this.handleChangeTitle = this.handleChangeTitle.bind(this);
     this.handleChangeDescription = this.handleChangeDescription.bind(this);
+    this.handleChangeNaldaFavorite = this.handleChangeNaldaFavorite.bind(this);
     this.handleChangeImage = this.handleChangeImage.bind(this);
     this.handleChangeHours = this.handleChangeHours.bind(this);
     this.handleChangeRating = this.handleChangeRating.bind(this);
@@ -128,6 +130,15 @@ class ListingForm extends React.Component {
   handleChangeDescription(event) {
     this.setState({
       description: event.target.value,
+    });
+  }
+
+  /**
+   * Helper method to handle a change to the Nalda's Favorite state
+   */
+  handleChangeNaldaFavorite(event) {
+    this.setState({
+      naldaFavorite: event.target.value,
     });
   }
 
@@ -245,6 +256,7 @@ class ListingForm extends React.Component {
               lng: longitude,
             },
             description: this.state.description,
+            naldaFavorite: this.state.naldaFavorite,
             hours: this.state.hours,
             rating: this.state.rating,
             price: this.state.price,
@@ -301,6 +313,12 @@ class ListingForm extends React.Component {
         pending: false,
       });
       return false;
+    } else if (!this.state.naldaFavorite) {
+      this.setState({
+        error: "Nalda's Favorite Section must be populated.",
+        pending: false,
+      });
+      return false;
     } else if (this.state.title.length < 4 || this.state.title.length > 100) {
       this.setState({
         error: "Title must be between 4 and 100 characters long.",
@@ -309,7 +327,13 @@ class ListingForm extends React.Component {
       return false;
     } else if (this.state.description.length < 4 || this.state.description.length > 2000) {
       this.setState({
-        error: "Subtitle must be between 4 and 2000 characters long.",
+        error: "Descriptions must be between 4 and 2000 characters long.",
+        pending: false,
+      });
+      return false;
+    } else if (this.state.naldaFavorite.length < 4 || this.state.naldaFavorite.length > 2000) {
+      this.setState({
+        error: "Nalda's Favorite Section must be between 4 and 2000 characters long.",
         pending: false,
       });
       return false;
@@ -382,6 +406,17 @@ class ListingForm extends React.Component {
                 rows="1"
                 value={ this.state.description }
                 onChange={ this.handleChangeDescription }
+              />
+              <label>
+                Nalda's Favorite
+              </label>
+              <textarea
+                name="body"
+                type="text"
+                className="form-control marg-bot-1"
+                rows="1"
+                value={ this.state.naldaFavorite }
+                onChange={ this.handleChangeNaldaFavorite }
               />
               <label>
                 Hours
@@ -724,6 +759,7 @@ class ListingForm extends React.Component {
                   !this.state.pending && (
                     this.state.title &&
                     this.state.description &&
+                    this.state.naldaFavorite &&
                     this.state.website &&
                     this.state.image &&
                     this.state.rating &&

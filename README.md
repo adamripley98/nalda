@@ -60,14 +60,14 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [ ] Gallery on listing
   - [ ] Backend
   - [ ] Frontend
-- [ ] Nalda's favorite section on listing (similar to description except opinion)
+- [X] Nalda's favorite section on listing (similar to description except opinion)
 - [ ] Flash notifications upon register, signup, submissions, etc.
 - [ ] Securing auth routes better
-- [ ] Admin panel
+- [X] Admin panel
   - [X] Fix display bug
   - [X] Curator/Admin list
   - [X] See users (scroll menu)
-  - [ ] See all content
+  - [X] See all content
 - [ ] Rough beginning to homepage
 - [ ] Random bug fixes
   - [ ] Login/register color display on safari
@@ -86,6 +86,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [ ] hamburger turns to X animation
 - [ ] Stop using production mlab for testing
 - [ ] Push changes live
+- [ ] Display Nalda's Favorite section
 
 ## Admins
 

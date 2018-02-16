@@ -32,6 +32,7 @@ class Listing extends React.Component {
       image: "",
       title: "",
       description: "",
+      naldaFavorite: "",
       website: "",
       price: "",
       categories: {},

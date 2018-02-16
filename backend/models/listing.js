@@ -10,6 +10,7 @@ const Schema = mongoose.Schema;
 const listingSchema = new Schema({
   title: String,
   description: String,
+  naldaFavorite: String,
   location: {
     name: String,
     lat: Number,
