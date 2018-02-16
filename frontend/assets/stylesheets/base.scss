@@ -547,6 +547,7 @@ a {
   width: 100%;
   display: flex;
   border-bottom: 1px solid $border;
+  transition: all 0.2s ease;
 
   .tab {
     flex: 1;
@@ -555,6 +556,7 @@ a {
     font-weight: bold;
     font-size: 1.2rem;
     text-align: center;
+    transition: all 0.2s ease;
 
     &:hover {
       color: $dark-gray;
@@ -946,5 +948,18 @@ a {
   .fa {
     margin-right: 0.4rem;
     color: $dark-gray !important;
+
+    &.fa-trash-o {
+      position: absolute;
+      right: 1rem;
+      color: $gray !important;
+      font-size: 1.2rem;
+
+      &:hover,
+      &:active,
+      &:focus {
+        color: $dark-gray !important;
+      }
+    }
   }
 }

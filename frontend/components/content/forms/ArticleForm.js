@@ -360,15 +360,6 @@ class ArticleForm extends React.Component {
                 )
               }
 
-              {/* <input
-                name="image"
-                type="text"
-                placeholder="Enter a URL to an image"
-                className="form-control marg-bot-1"
-                value={ this.state.image }
-                onChange={ this.handleChangeImage }
-              /> */}
-
               {/* TODO Style this */}
               <Dropzone
                 onDrop={(acceptedFiles, rejectedFiles) => this.onDrop(acceptedFiles, rejectedFiles, "main")}
@@ -430,37 +421,61 @@ class ArticleForm extends React.Component {
                           <Dropzone
                             onDrop={(acceptedFiles, rejectedFiles) => this.onDrop(acceptedFiles, rejectedFiles, index)}
                             accept="image/*"
+                            style={{ marginBottom: "1rem" }}
                           >
-                            <p>Try dropping some files here, or click to select files to upload.</p>
+                            <p className="dropzone">
+                              <i className="fa fa-file-o" aria-hidden="true" />
+                              Try dropping some files here, or click to select files to upload.
+
+                              {
+                                (index !== 0 || this.state.body.length > 1) && (
+                                  <i
+                                    className="fa fa-trash-o"
+                                    aria-hidden="true"
+                                    onClick={() => {
+                                      const bodyObj = this.state.body;
+                                      bodyObj.splice(index, 1);
+                                      this.setState({
+                                        body: bodyObj,
+                                      });
+                                    }}
+                                  />
+                                )
+                              }
+                            </p>
                           </Dropzone>
                         )
                       }
-                      <div className="component">
-                        <textarea
-                          placeholder={ placeholder }
-                          name="body"
-                          type="text"
-                          className={ "form-control marg-bot-1 " + className }
-                          rows="1"
-                          value={ this.state.body[index].body }
-                          onChange={ (e) => this.handleChangeBody(e, index) }
-                        />
-                        {
-                          (index !== 0 || this.state.body.length > 1) && (
-                            <i
-                              className="fa fa-trash-o"
-                              aria-hidden="true"
-                              onClick={() => {
-                                const bodyObj = this.state.body;
-                                bodyObj.splice(index, 1);
-                                this.setState({
-                                  body: bodyObj,
-                                });
-                              }}
+                      {
+                        component.componentType !== "image" && (
+                          <div className="component">
+                            <textarea
+                              placeholder={ placeholder }
+                              name="body"
+                              type="text"
+                              className={ "form-control marg-bot-1 " + className }
+                              rows="1"
+                              value={ this.state.body[index].body }
+                              onChange={ (e) => this.handleChangeBody(e, index) }
                             />
-                          )
-                        }
-                      </div>
+                            {
+                              (index !== 0 || this.state.body.length > 1) && (
+                                <i
+                                  className="fa fa-trash-o"
+                                  aria-hidden="true"
+                                  onClick={() => {
+                                    const bodyObj = this.state.body;
+                                    bodyObj.splice(index, 1);
+                                    this.setState({
+                                      body: bodyObj,
+                                    });
+                                  }}
+                                />
+                              )
+                            }
+                          </div>
+                        )
+                      }
                     </div>
                   );
                 })
