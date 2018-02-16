@@ -47,7 +47,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [ ] Image upload
   - [X] Profile picture
   - [ ] Listing multiple pictures
-  - [ ] Articles multiple pictures
+  - [X] Articles multiple pictures
   - [ ] Styling for all these
   - [X] Error handling
 - [ ] Ensure everything works on live site
@@ -64,9 +64,9 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [ ] Flash notifications upon register, signup, submissions, etc.
 - [ ] Securing auth routes better
 - [ ] Admin panel
-  - [ ] Fix display bug
-  - [ ] Curator/Admin list
-  - [ ] See users (scroll menu)
+  - [X] Fix display bug
+  - [X] Curator/Admin list
+  - [X] See users (scroll menu)
   - [ ] See all content
 - [ ] Rough beginning to homepage
 - [ ] Random bug fixes
@@ -76,6 +76,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
   - [ ] Error check for empty inputs
 - [ ] Weird bug where account page now logs you out if you try refreshing
 - [X] Bug where profile picture doesn't show up sometimes (storing in AWS as a single pixel?)
+- [ ] Edit content bug?
 # Cam
 - [ ] Style Reset password better on `LoginModal` and `Login`
 - [ ] Display a banner on Account page asking people to verify their email (instead of text)

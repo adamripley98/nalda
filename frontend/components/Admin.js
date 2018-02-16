@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 // Import components
 import Thin from './shared/Thin';
 import ErrorMessage from './shared/ErrorMessage';
+import Loading from './shared/Loading';
 
 /**
  * Component for Admin only, allows them to add and remove other admins and content curators
@@ -23,8 +24,10 @@ class Admin extends Component {
       email: "",
       error: "",
       success: "",
+      pending: true,
       curator: [],
       admin: [],
+      users: [],
     };
 
     // Bind this to helper methods
@@ -32,7 +35,13 @@ class Admin extends Component {
     this.onSubmitAdmin = this.onSubmitAdmin.bind(this);
     this.onSubmitCurator = this.onSubmitCurator.bind(this);
     this.onSubmitRemoveCurator = this.onSubmitRemoveCurator.bind(this);
-    this.displayCuratorsAndAdmins = this.displayCuratorsAndAdmins.bind(this);
+    this.displayCurators = this.displayCurators.bind(this);
+    this.displayAdmins = this.displayAdmins.bind(this);
+    this.displayUsers = this.displayUsers.bind(this);
+    this.displayUserData = this.displayUserData.bind(this);
+    this.displayArticles = this.displayArticles.bind(this);
+    this.displayListings = this.displayListings.bind(this);
+    this.displayVideos = this.displayVideos.bind(this);
   }
 
   componentDidMount() {
@@ -45,16 +54,24 @@ class Admin extends Component {
         this.setState({
           curators: resp.data.data.curators,
           admins: resp.data.data.admins,
+          users: resp.data.data.users,
+          userData: resp.data.data.userData,
+          articles: resp.data.data.articles,
+          listings: resp.data.data.listings,
+          videos: resp.data.data.videos,
+          pending: false,
         });
       } else {
         this.setState({
           error: resp.data.error,
+          pending: false,
         });
       }
     })
     .catch((err) => {
       this.setState({
         error: err,
+        pending: false,
       });
     });
   }
@@ -154,18 +171,10 @@ class Admin extends Component {
     });
   }
 
-  // Helper method to display all curators and admins
+  // Helper method to display all curators
   // TODO display nicer
-  displayCuratorsAndAdmins() {
-    if (this.state.admins  && this.state.admins.length && this.state.curators && this.state.curators.length) {
-      const admins = this.state.admins.map(admin => (
-        <div key={ uuid() }>
-          <Link key={ uuid() } to={`/users/${admin.userId}`}>
-            { admin.name }
-          </Link>
-        </div>
-      ));
-
+  displayCurators() {
+    if (this.state.curators && this.state.curators.length) {
       const curators = this.state.curators.map(curator => (
         <div key={ uuid() }>
           <Link key={ uuid() } to={`/users/${curator.userId}`}>
@@ -176,17 +185,154 @@ class Admin extends Component {
 
       return (
         <div>
-          <h3 className="bold">Admins</h3>
-
-          { admins }
-
           <h3 className="bold">Curators</h3>
 
           { curators }
         </div>
       );
     }
-    return null;
+    return (
+      <div>
+        <h3> There are no curators to display </h3>
+      </div>
+    );
+  }
+
+  // Helper method to display all admins
+  // TODO display nicer
+  displayAdmins() {
+    if (this.state.admins && this.state.admins.length) {
+      const admins = this.state.admins.map(admin => (
+        <div key={ uuid() }>
+          <Link key={ uuid() } to={`/users/${admin.userId}`}>
+            { admin.name }
+          </Link>
+        </div>
+      ));
+
+      return (
+        <div>
+          <h3 className="bold">Admins</h3>
+
+          { admins }
+
+        </div>
+      );
+    }
+    return (
+      <div>
+        <h3> There are no admins to display </h3>
+      </div>
+    );
+  }
+
+  // Helper method to display all users
+  // TODO display nicer
+  displayUsers() {
+    if (this.state.users && this.state.users.length) {
+      const users = this.state.users.map(user => (
+        <div key={ uuid() }>
+            { user.name }
+        </div>
+      ));
+
+      return (
+        <div>
+          <h3 className="bold">Users</h3>
+          { users }
+        </div>
+      );
+    }
+    return (
+      <div>
+        <h3> There are no users to display </h3>
+      </div>
+    );
+  }
+
+  // TODO style better
+  displayUserData() {
+    return (
+      <div>
+        <h3> Total Users: {this.state.userData.totalUsers} </h3>
+        <h3> Registers this week: {this.state.userData.weeklyRegisters} </h3>
+      </div>
+    );
+  }
+
+  // Helper method to display list of articles
+  displayArticles() {
+    if (this.state.articles && this.state.articles.length) {
+      const articles = this.state.articles.map(article => (
+        <div key={ uuid() }>
+          <Link key={ uuid() } to={`/articles/${article._id}`}>
+            { article.title }
+          </Link>
+        </div>
+      ));
+
+      return (
+        <div>
+          <h3 className="bold">Articles</h3>
+          { articles }
+        </div>
+      );
+    }
+    return (
+      <div>
+        There are no articles yet.
+      </div>
+    );
+  }
+
+  // Helper method to display list of listings
+  displayListings() {
+    if (this.state.listings && this.state.listings.length) {
+      const listings = this.state.listings.map(listing => (
+        <div key={ uuid() }>
+          <Link key={ uuid() } to={`/listings/${listing._id}`}>
+            { listing.title }
+          </Link>
+        </div>
+      ));
+
+      return (
+        <div>
+          <h3 className="bold">Listings</h3>
+          { listings }
+        </div>
+      );
+    }
+    return (
+      <div>
+        There are no listings yet.
+      </div>
+    );
+  }
+
+  // Helper method to display list of videos
+  displayVideos() {
+    if (this.state.videos && this.state.videos.length) {
+      const videos = this.state.videos.map(video => (
+        <div key={ uuid() }>
+          <Link key={ uuid() } to={`/videos/${video._id}`}>
+            { video.title }
+          </Link>
+        </div>
+      ));
+
+      return (
+        <div>
+          <h3 className="bold">Videos</h3>
+          { videos }
+        </div>
+      );
+    }
+    return (
+      <div>
+        There are no videos yet.
+      </div>
+    );
   }
 
   // Render the component
@@ -262,7 +408,17 @@ class Admin extends Component {
               </div>
             </div>
           </form>
-          { this.displayCuratorsAndAdmins() }
+          { this.state.pending ? <Loading /> : (
+            <div>
+              {this.displayAdmins()}
+              {this.displayCurators()}
+              {this.displayUsers()}
+              {this.displayUserData()}
+              {this.displayArticles()}
+              {this.displayListings()}
+              {this.displayVideos()}
+            </div>
+          )}
         </div>
       </Thin>
     );
