@@ -7,6 +7,9 @@
 // Import frameworks
 const express = require('express');
 const router = express.Router();
+const AWS = require('aws-sdk');
+const uuid = require('uuid-v4');
+const async = require('async');
 
 // Import database models
 const Article = require('../models/article');
@@ -15,6 +18,18 @@ const User = require('../models/user');
 // Import helper methods
 const {CuratorOrAdminCheck} = require('../helperMethods/authChecking');
 const {AuthorOrAdminCheck} = require('../helperMethods/authChecking');
+
+// Isolate environmental variables
+const AWS_BUCKET_NAME = process.env.AWS_BUCKET_NAME;
+const AWS_USER_KEY = process.env.AWS_USER_KEY;
+const AWS_USER_SECRET = process.env.AWS_USER_SECRET;
+
+// Set up bucket
+const s3bucket = new AWS.S3({
+  accessKeyId: AWS_USER_KEY,
+  secretAccessKey: AWS_USER_SECRET,
+  Bucket: AWS_BUCKET_NAME,
+});
 
 // Export the following methods for routing
 module.exports = () => {
@@ -129,24 +144,8 @@ module.exports = () => {
                 error: 'Author not found.'
               });
             } else {
-              // Import frameworks
-              const AWS = require('aws-sdk');
-              const uuid = require('uuid-v4');
-
-              // Isolate environmental variables
-              const AWS_BUCKET_NAME = process.env.AWS_BUCKET_NAME;
-              const AWS_USER_KEY = process.env.AWS_USER_KEY;
-              const AWS_USER_SECRET = process.env.AWS_USER_SECRET;
-
-              // Set up bucket
-              const s3bucket = new AWS.S3({
-                accessKeyId: AWS_USER_KEY,
-                secretAccessKey: AWS_USER_SECRET,
-                Bucket: AWS_BUCKET_NAME,
-              });
-
-              // Convert profile picture to a form that s3 can display
-              const articlePictureConverted = new Buffer(image.replace(/^data:image\/\w+;base64,/, ""), 'base64');
+              // Convert article picture to a form that s3 can display
+              const imageConverted = new Buffer(image.replace(/^data:image\/\w+;base64,/, ""), 'base64');
 
               // Create bucket
               s3bucket.createBucket(() => {
@@ -154,7 +153,7 @@ module.exports = () => {
                   Bucket: AWS_BUCKET_NAME,
                   Key: `articlepictures/${uuid()}`,
                   ContentType: 'image/jpeg',
-                  Body: articlePictureConverted,
+                  Body: imageConverted,
                   ContentEncoding: 'base64',
                   ACL: 'public-read',
                 };
@@ -166,31 +165,72 @@ module.exports = () => {
                       error: 'Error uploading profile picture.',
                     });
                   } else {
-                    // Creates a new article with given params
-                    const newArticle = new Article({
-                      title,
-                      subtitle,
-                      image: data.Location,
-                      body,
-                      location,
-                      author: userId,
-                      createdAt: Date.now(),
-                      updatedAt: Date.now(),
-                    });
+                    const newBody = [];
+                    async.eachSeries(body, (comp, cb) => {
+                      if (comp.componentType === 'image') {
+                        const articlePictureConverted = new Buffer(comp.body.replace(/^data:image\/\w+;base64,/, ""), 'base64');
 
-                    // Save the new article in Mongo
-                    newArticle.save((errArticle, article) => {
-                      if (errArticle) {
-                        // If there was an error saving the article
-                        res.send({
-                          success: false,
-                          error: errArticle.message,
+                        s3bucket.createBucket(() => {
+                          var parameters = {
+                            Bucket: AWS_BUCKET_NAME,
+                            Key: `articlepictures/${uuid()}`,
+                            ContentType: 'image/jpeg',
+                            Body: articlePictureConverted,
+                            ContentEncoding: 'base64',
+                            ACL: 'public-read',
+                          };
+                          // Upload photo
+                          s3bucket.upload(parameters, (errorUpload, img) => {
+                            if (errorUpload) {
+                              res.send({
+                                success: false,
+                                error: 'Error uploading profile picture.',
+                              });
+                            } else {
+                              newBody.push({componentType: comp.componentType, body: img.Location});
+                              cb();
+                            }
+                          });
                         });
                       } else {
-                        // Successfully send back data
+                        // If component is not an image, simply add it to body
+                        newBody.push({componentType: comp.componentType, body: comp.body});
+                        cb();
+                      }
+                    }, (asyncErr) => {
+                      if (asyncErr) {
                         res.send({
-                          success: true,
-                          data: article,
+                          success: false,
+                          error: asyncErr,
+                        });
+                      } else {
+                        // Creates a new article with given params
+                        const newArticle = new Article({
+                          title,
+                          subtitle,
+                          image: data.Location,
+                          body: newBody,
+                          location,
+                          author: userId,
+                          createdAt: Date.now(),
+                          updatedAt: Date.now(),
+                        });
+
+                        // Save the new article in Mongo
+                        newArticle.save((errArticle, article) => {
+                          if (errArticle) {
+                            // If there was an error saving the article
+                            res.send({
+                              success: false,
+                              error: errArticle.message,
+                            });
+                          } else {
+                            // Successfully send back data
+                            res.send({
+                              success: true,
+                              data: article,
+                            });
+                          }
                         });
                       }
                     });

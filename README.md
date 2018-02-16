@@ -317,6 +317,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [ ] All emails sent should be placed into `sendEmail.js`
 - [ ] Create a helper method file for image upload
 - [ ] Clear errors if resp.data.success
+- [ ] Change edit routes from post to put
 
 ## Other
 - [ ] Google Analytics

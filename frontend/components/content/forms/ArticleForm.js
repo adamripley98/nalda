@@ -193,7 +193,6 @@ class ArticleForm extends React.Component {
         const reader = new FileReader();
         // Convert from blob to a proper file object that can be passed to server
         reader.onload = (upload) => {
-          console.log('what is upload dude', upload);
           this.setState({
             image: upload.target.result,
             imagePreview: pic.preview,
@@ -208,7 +207,6 @@ class ArticleForm extends React.Component {
         const reader = new FileReader();
         // Convert from blob to a proper file object that can be passed to server
         reader.onload = (upload) => {
-          console.log('what is upload dude', upload);
           // Manipulate the correct component object
           const bodyObj = this.state.body;
           bodyObj[index].preview = pic.preview;
@@ -255,27 +253,6 @@ class ArticleForm extends React.Component {
           // Isolate the coordinates of the location
           const latitude = results[0].geometry.location.lat();
           const longitude = results[0].geometry.location.lng();
-
-          // const body = [];
-          // this.state.body.forEach((obj) => {
-          //   if (obj.componentType === 'image') {
-          //     const reader = new FileReader();
-          //     // Convert from blob to a proper file object that can be passed to server
-          //     reader.onload = (upload) => {
-          //       console.log('what is upload dude', upload);
-          //       body.push({componentType: obj.componentType, body: upload.target.result});
-          //     };
-          //     // File reader set up
-          //     reader.onabort = () => this.setState({error: "File read aborted."});
-          //     reader.onerror = () => this.setState({error: "File read error."});
-          //     console.log('what is obj body', obj.body);
-          //     reader.readAsDataURL(obj.body);
-          //   } else {
-          //     body.push({componentType: obj.componentType, body: body});
-          //   }
-          // });
-          //
-          // console.log('what is body', body);
 
           // Post to backend
           axios.post('/api/articles/new', {

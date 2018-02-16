@@ -7,6 +7,8 @@
 // Import frameworks
 const express = require('express');
 const router = express.Router();
+const AWS = require('aws-sdk');
+const uuid = require('uuid-v4');
 
 // Import database models
 const Article = require('../models/article');
@@ -16,6 +18,18 @@ const User = require('../models/user');
 
 // Import helper methods
 const {UserCheck} = require('../helperMethods/authChecking');
+
+// Isolate environmental variables
+const AWS_BUCKET_NAME = process.env.AWS_BUCKET_NAME;
+const AWS_USER_KEY = process.env.AWS_USER_KEY;
+const AWS_USER_SECRET = process.env.AWS_USER_SECRET;
+
+// Set up bucket
+const s3bucket = new AWS.S3({
+  accessKeyId: AWS_USER_KEY,
+  secretAccessKey: AWS_USER_SECRET,
+  Bucket: AWS_BUCKET_NAME,
+});
 
 // Export the following methods for routing
 module.exports = () => {
@@ -169,9 +183,6 @@ module.exports = () => {
           error: authRes.error,
         });
       } else {
-        const imgRegexp = /\.(jpeg|jpg|gif|png)$/;
-        // TODO should only need to contain, not end in
-         // && !imgRegexp.test(req.body.profilePicture)
          // TODO error check based on type
         if (!profilePicture) {
           res.send({
@@ -193,22 +204,6 @@ module.exports = () => {
                 error: 'User cannot be found.',
               });
             } else {
-              // Import frameworks
-              const AWS = require('aws-sdk');
-              const uuid = require('uuid-v4');
-
-              // Isolate environmental variables
-              const AWS_BUCKET_NAME = process.env.AWS_BUCKET_NAME;
-              const AWS_USER_KEY = process.env.AWS_USER_KEY;
-              const AWS_USER_SECRET = process.env.AWS_USER_SECRET;
-
-              // Set up bucket
-              const s3bucket = new AWS.S3({
-                accessKeyId: AWS_USER_KEY,
-                secretAccessKey: AWS_USER_SECRET,
-                Bucket: AWS_BUCKET_NAME,
-              });
-
               // Convert profile picture to a form that s3 can display
               const profilePictureConverted = new Buffer(profilePicture.replace(/^data:image\/\w+;base64,/, ""), 'base64');
 
