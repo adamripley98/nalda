@@ -182,6 +182,7 @@ AppContainer.propTypes = {
   userId: PropTypes.string,
   onLogout: PropTypes.func,
   onLogin: PropTypes.func,
+  match: PropTypes.object,
 };
 
 // Necessary so we can access this.props.userId

@@ -346,13 +346,12 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [X] Users profiles shouldn't be displayed, only admin/curators
 - [X] Video image not showing up on thumbnail
 - [X] Video edit location clearing bug
-- [ ] SSL is not fully secure?
+- [x] SSL is not fully secure?
 - [ ] Admin panel not displaying?
 
 ## Adam
 
 ## Potential features for future
-- [ ] Users can leave comments on videos and articles
 - [ ] Multiple curators on the same content
 - [ ] Recommending content for users to look at
   * To begin they can be location based and random, eventually custom based on user
