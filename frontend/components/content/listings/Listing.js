@@ -614,7 +614,7 @@ class Listing extends React.Component {
                   <p className="description">
                     { this.state.description }
                   </p>
-                  <Carousel />
+                  <Carousel images={["http://press.visitphilly.com/uploads/photos/3688_l.jpg", "http://press.visitphilly.com/uploads/photos/3688_l.jpg", "http://press.visitphilly.com/uploads/photos/3688_l.jpg"]}/>
                   {
                     this.state.hours && (
                       <div className="hidden-lg-up">
