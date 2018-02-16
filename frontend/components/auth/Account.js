@@ -39,6 +39,7 @@ class Account extends Component {
       accountVerified: false,
       error: '',
       success: '',
+      info: '',
       pending: true,
       adminPopover: false,
       editName: false,
@@ -134,7 +135,7 @@ class Account extends Component {
     .then((resp) => {
       if (resp.data.success) {
         this.setState({
-          success: 'Please check your email for a verification link.',
+          info: 'Please check your email for a verification link.',
         });
       } else {
         // Display error
@@ -568,7 +569,9 @@ class Account extends Component {
               {
                 !this.state.accountVerified ? (
                   <div className="alert alert-warning marg-bot-1" onClick={this.handleVerifyEmail}>
-                    Please verify your account by clicking here
+                    {
+                      this.state.info ? this.state.info : "Please verify your account by clicking here"
+                    }
                   </div>
                 ) : null
               }

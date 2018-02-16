@@ -76,15 +76,16 @@ DELETE '/api/videos/:id'       // Delete a specific article
   - [ ] Error check for empty inputs
 - [ ] Weird bug where account page now logs you out if you try refreshing
 - [X] Bug where profile picture doesn't show up sometimes (storing in AWS as a single pixel?)
+
 # Cam
-- [ ] Style Reset password better on `LoginModal` and `Login`
-- [ ] Display a banner on Account page asking people to verify their email (instead of text)
+- [x] Style Reset password better on `LoginModal` and `Login`
+- [x] Display a banner on Account page asking people to verify their email (instead of text)
 - [ ] Make trash can to delete reviews bigger
 - [ ] Style file upload in `Account.js`,
 - [ ] Style frontend for homepage
 - [ ] hamburger turns to X animation
-- [ ] Stop using production mlab for testing
-- [ ] Push changes live
+- [x] Stop using production mlab for testing
+- [x] Push changes live
 
 ## Admins
 
