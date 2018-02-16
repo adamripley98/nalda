@@ -137,6 +137,11 @@ h6,
   font-weight: bold !important;
   border: 0px solid transparent;
 
+  // Make buttons white as necessary
+  &.white {
+    background: white !important;
+  }
+
   // Helper class to make the button take up the full width of its container
   &.full-width {
     width: 100%;

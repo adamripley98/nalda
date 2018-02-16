@@ -121,7 +121,7 @@ class Listing extends React.Component {
     // Style parallax scrolling
     $(document).ready(() => {
       $(window).scroll(() => {
-        const pos = - $(window).scrollTop() / 2;
+        const pos = - $(window).scrollTop() / 4;
         $('#parallax').css("transform", `translateY(${pos}px)`);
       });
     });
@@ -242,7 +242,7 @@ class Listing extends React.Component {
 
     // If there are no categories
     return (
-      <div className="card border pad-1 marg-bot-1">
+      <div className="card border pad-1 marg-bot-1 gray-text">
         No amenities have been marked for this listing.
       </div>
     );
