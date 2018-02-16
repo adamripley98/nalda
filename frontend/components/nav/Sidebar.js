@@ -172,7 +172,7 @@ class Sidebar extends Component {
                     Contact
                   </Link>
                   <button
-                    className="btn link line-above"
+                    className="btn link line-above white"
                     type="button"
                     data-toggle="modal"
                     data-target="#loginModal"
@@ -184,7 +184,7 @@ class Sidebar extends Component {
                     Login
                   </button>
                   <button
-                    className="btn link"
+                    className="btn link white"
                     type="button"
                     data-toggle="modal"
                     data-target="#loginModal"
