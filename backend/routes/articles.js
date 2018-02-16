@@ -7,6 +7,9 @@
 // Import frameworks
 const express = require('express');
 const router = express.Router();
+const AWS = require('aws-sdk');
+const uuid = require('uuid-v4');
+const async = require('async');
 
 // Import database models
 const Article = require('../models/article');
@@ -15,6 +18,18 @@ const User = require('../models/user');
 // Import helper methods
 const {CuratorOrAdminCheck} = require('../helperMethods/authChecking');
 const {AuthorOrAdminCheck} = require('../helperMethods/authChecking');
+
+// Isolate environmental variables
+const AWS_BUCKET_NAME = process.env.AWS_BUCKET_NAME;
+const AWS_USER_KEY = process.env.AWS_USER_KEY;
+const AWS_USER_SECRET = process.env.AWS_USER_SECRET;
+
+// Set up bucket
+const s3bucket = new AWS.S3({
+  accessKeyId: AWS_USER_KEY,
+  secretAccessKey: AWS_USER_SECRET,
+  Bucket: AWS_BUCKET_NAME,
+});
 
 // Export the following methods for routing
 module.exports = () => {
@@ -75,7 +90,6 @@ module.exports = () => {
 
         // Keep track of any errors
         let error = "";
-        const urlRegexp = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
 
         // Perform error checking on variables
         if (!title) {
@@ -86,8 +100,6 @@ module.exports = () => {
           error = "Image must be populated.";
         } else if (!body || !body.length) {
           error = "Body must be populated.";
-        } else if (!urlRegexp.test(image)) {
-          error = "Image must be a valid URL to an image.";
         } else if (typeof body !== "object" || !Array.isArray(body)) {
           error = "Body must be an array";
         } else if (Object.keys(location).length === 0) {
@@ -108,14 +120,7 @@ module.exports = () => {
             ) {
               error = "Component type must be valid.";
             } else if (component.componentType === "image") {
-              // Ensure that the URL to the image is proper
-              // This means that it is both a URL and an image file
-              const imgRegexp = /\.(jpeg|jpg|gif|png)$/;
-              if (!imgRegexp.test(component.body)) {
-                error = "Image url must end in \"jpeg\", \"png\", \"gif\", or \"jpg\".";
-              } else if (!urlRegexp.test(component.body)) {
-                error = "Image url must be a valid URL.";
-              }
+              // TODO Error check to ensure pictures are valid form
             }
           }
         }
@@ -139,33 +144,98 @@ module.exports = () => {
                 error: 'Author not found.'
               });
             } else {
-              // Creates a new article with given params
-              const newArticle = new Article({
-                title,
-                subtitle,
-                image,
-                body,
-                location,
-                author: userId,
-                createdAt: Date.now(),
-                updatedAt: Date.now(),
-              });
+              // Convert article picture to a form that s3 can display
+              const imageConverted = new Buffer(image.replace(/^data:image\/\w+;base64,/, ""), 'base64');
 
-              // Save the new article in Mongo
-              newArticle.save((errArticle, article) => {
-                if (errArticle) {
-                  // If there was an error saving the article
-                  res.send({
-                    success: false,
-                    error: errArticle.message,
-                  });
-                } else {
-                  // Successfully send back data
-                  res.send({
-                    success: true,
-                    data: article,
-                  });
-                }
+              // Create bucket
+              s3bucket.createBucket(() => {
+                var params = {
+                  Bucket: AWS_BUCKET_NAME,
+                  Key: `articlepictures/${uuid()}`,
+                  ContentType: 'image/jpeg',
+                  Body: imageConverted,
+                  ContentEncoding: 'base64',
+                  ACL: 'public-read',
+                };
+                // Upload photo
+                s3bucket.upload(params, (errUpload, data) => {
+                  if (errUpload) {
+                    res.send({
+                      success: false,
+                      error: 'Error uploading profile picture.',
+                    });
+                  } else {
+                    const newBody = [];
+                    async.eachSeries(body, (comp, cb) => {
+                      if (comp.componentType === 'image') {
+                        const articlePictureConverted = new Buffer(comp.body.replace(/^data:image\/\w+;base64,/, ""), 'base64');
+
+                        s3bucket.createBucket(() => {
+                          var parameters = {
+                            Bucket: AWS_BUCKET_NAME,
+                            Key: `articlepictures/${uuid()}`,
+                            ContentType: 'image/jpeg',
+                            Body: articlePictureConverted,
+                            ContentEncoding: 'base64',
+                            ACL: 'public-read',
+                          };
+                          // Upload photo
+                          s3bucket.upload(parameters, (errorUpload, img) => {
+                            if (errorUpload) {
+                              res.send({
+                                success: false,
+                                error: 'Error uploading profile picture.',
+                              });
+                            } else {
+                              newBody.push({componentType: comp.componentType, body: img.Location});
+                              cb();
+                            }
+                          });
+                        });
+                      } else {
+                        // If component is not an image, simply add it to body
+                        newBody.push({componentType: comp.componentType, body: comp.body});
+                        cb();
+                      }
+                    }, (asyncErr) => {
+                      if (asyncErr) {
+                        res.send({
+                          success: false,
+                          error: asyncErr,
+                        });
+                      } else {
+                        // Creates a new article with given params
+                        const newArticle = new Article({
+                          title,
+                          subtitle,
+                          image: data.Location,
+                          body: newBody,
+                          location,
+                          author: userId,
+                          createdAt: Date.now(),
+                          updatedAt: Date.now(),
+                        });
+
+                        // Save the new article in Mongo
+                        newArticle.save((errArticle, article) => {
+                          if (errArticle) {
+                            // If there was an error saving the article
+                            res.send({
+                              success: false,
+                              error: errArticle.message,
+                            });
+                          } else {
+                            // Successfully send back data
+                            res.send({
+                              success: true,
+                              data: article,
+                            });
+                          }
+                        });
+                      }
+                    });
+                  }
+                });
               });
             }
           });

@@ -43,6 +43,49 @@ DELETE '/api/videos/:id'       // Delete a specific article
 ```
 # Feature tracking
 
+## By 2/17
+- [ ] Image upload
+  - [X] Profile picture
+  - [ ] Listing multiple pictures
+  - [ ] Articles multiple pictures
+  - [ ] Styling for all these
+  - [X] Error handling
+- [ ] Ensure everything works on live site
+  - [ ] Google oAuth
+  - [ ] Facebook oAuth
+  - [ ] Sendgrid
+  - [ ] Image upload
+    - [ ] Especially on mobile
+- [X] SSL fix
+- [ ] Gallery on listing
+  - [ ] Backend
+  - [ ] Frontend
+- [ ] Nalda's favorite section on listing (similar to description except opinion)
+- [ ] Flash notifications upon register, signup, submissions, etc.
+- [ ] Securing auth routes better
+- [ ] Admin panel
+  - [ ] Fix display bug
+  - [ ] Curator/Admin list
+  - [ ] See users (scroll menu)
+  - [ ] See all content
+- [ ] Rough beginning to homepage
+- [ ] Random bug fixes
+  - [ ] Login/register color display on safari
+  - [ ] Link 'forgot your password' to edit password form
+  - [ ] Ensure all locations entered are valid addresses/cities
+  - [ ] Error check for empty inputs
+- [ ] Weird bug where account page now logs you out if you try refreshing
+- [X] Bug where profile picture doesn't show up sometimes (storing in AWS as a single pixel?)
+# Cam
+- [ ] Style Reset password better on `LoginModal` and `Login`
+- [ ] Display a banner on Account page asking people to verify their email (instead of text)
+- [ ] Make trash can to delete reviews bigger
+- [ ] Style file upload in `Account.js`,
+- [ ] Style frontend for homepage
+- [ ] hamburger turns to X animation
+- [ ] Stop using production mlab for testing
+- [ ] Push changes live
+
 ## Admins
 
 - [X] Admin add page (similar look to contact page) where admins can enter email addresses and add both other admins and other content creators. Only admins can add people as content creators and only content creators can create posts.
@@ -52,10 +95,10 @@ DELETE '/api/videos/:id'       // Delete a specific article
 
 ## Users
 
-- [ ] SendGrid configuration
-  - [ ] Contact page
+- [X] SendGrid configuration
+  - [X] Contact page
   - [X] Password reset
-  - [ ] Device authorization (confirm your email)?
+  - [X] Device authorization (confirm your email)
 - [X] Add author field to every form of content
   - [X] Videos
   - [X] Listings
@@ -77,14 +120,14 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [X] Figure out why listings page is not displaying
 - [X] `Listing` back to all listings button
 - [X] Edit Listings view
-- [ ] Free / other price option
 - [X] Delete Listings view
 - [x] Listings location should also show as an address
 - [X] Store author
 - [X] Add to curator's list of content
 - [X] Style edit/delete buttons better
-- [ ] Sort by date
 - [X] Default sort in `Listings` needs to be reversed
+- [ ] Free / other price option
+- [ ] Sort by date
 
 ## Videos
 
@@ -94,14 +137,13 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [X] Delete Videos view
 - [X] Store author
 - [X] Add to curator's list of content
-- [ ] Sort by date
 - [X] Default sort in `Videos` needs to be reversed
 - [ ] Preview needs time stamp
 - [ ] Individual video frontend updates
   - [ ] Show Location
   - [x] Show date created
   - [x] Show author data
-
+- [ ] Sort by date
 
 ## Articles
 - [X] Edit Articles view
@@ -129,14 +171,30 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [X] Home page needs to have other ways of sorting: most popular, by category, by author?, etc
 - [X] Side Nav Bar should close once an option is clicked
 - [X] Nav bar should only show name and location when a user is logged in
-- [ ] Icons for all amenities
-- [ ] Update preview styling
+- [X] Update preview styling
 - [X] Get rid of article reducer
 - [X] Style nav bar so it looks okay when no user is logged in (no user or location)
 - [X] Create a curator profile view (Should show name, location, bio, contact info, and all content created)
-- [ ] Update meta tags for all forms of content
+- [X] Update meta tags for all forms of content
 - [X] Arrows on sort buttons
+- [X] Nav bar style when no one is logged in
+- [X] Style curator profile view (`Profile.js`). Add profile picture spot! (also add profile pic spot to `Account.js`)
+- [x] Back to home button on individual listing page
+- [X] Style search button in Nav bar (make it only visible when someone has typed something)
+- [X] Display search results on the frontend (backend is done)
+- [x] Load component on `Account.js` and `Profile.js` and others.
+- [X] Sorting buttons at top of `Listings.js`, `Videos.js`, and `Articles.js`
+- [X] `Admin.js` restyle 3 buttons & display successful admin change on frontend
+- [X] Standardize size of all pictures on home page
+- [X] Have listing location be a map picture
 - [ ] Only display first name in nav bar
+- [ ] Icons for all amenities
+- [ ] Make it easier for an admin to enter hours (some sort of autofill)
+- [ ] Get rid of any userId passing from frontend unless it is for comparing to backend userId
+- [ ] Clear hashtag from url after google login
+- [ ] Email verify on account page should be below loading
+- [ ] Styling on the emails sent by Nalda: Welcome, reset, and verify.
+
 
 ## Backend
 
@@ -145,14 +203,8 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [X] React/Redux setup
 - [X] Setting up component structures
 - [X] Password security
-- [ ] HTTPS
-- [ ] Searching functionality
-  - [X] Articles
-  - [X] Videos
-  - [X] Listings
-  - [X] Curators
-  - [ ] Location
-- [ ] Domain registration/setup
+- [X] HTTPS
+- [X] Domain registration/setup
 - [X] Better user auth checks on the backend
 - [X] Better parameter error checking on the backend
 - [X] Link user data to posted article
@@ -169,7 +221,6 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [X] Replace dummy data in `Account.js`
 - [X] Add bio and content to `user` schema
 - [X] Update listing review schema to have author's id
-- [ ] Sort listings by amenities
 - [X] Admin remove curators functionality
 - [X] Security on backend
   - [X] Require admin to make changes (`curator/new`, `admin/new`, `curator/remove`)
@@ -178,42 +229,105 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [X] Change location functionality
 - [X] Reviews by id instead of name
 - [X] Most recent in reverse order
+- [X] UpdateReviews method is unnecessary - just use setState
+- [X] Delete review authentication check
+- [X] New password must meet validity conditions
+- [X] Ensure duplicate emails cannot be registered (through facebook and google oauth)
+  - [X] If account already exists, should simply add googleId or facebookId to that user, not create a new account
+- [X] Verify account via email
+  - [X] Send email welcoming user to nalda
+  - [X] Display banner on account page
+    - [X] Banner click should send another verify email
+  - [X] Local Login
+  - [X] FACEBOOK
+  - [X] Google
+- [X] Sendgrid configuration for sending emails
+  - [X] Contact us page
+  - [X] Confirm email page
+  - [X] Forgot password reset
+- [X] Split up `routes.js` into many smaller files
+- [ ] Sort reviews functionality (time, rating)
+- [X] Add author to listings and videos? At least on backend
+- [X] Delete reviews functionality
+- [X] Login/Register OAuth with google and facebook
 - [ ] Technical errors should not be displayed to frontend, should be vague.
+- [ ] Searching functionality
+  - [X] Articles
+  - [X] Videos
+  - [X] Listings
+  - [X] Curators
+  - [ ] Location
+- [ ] Filter listings by amenities
+- [ ] Give user model a "private" field (object containing info like password, email, etc) & have API not return it.
+- [ ] Extra security for auth routes: userId pulled from backend
+- [ ] Fix issues with reviews and content displaying not chronologically
+- [ ] Location for google and facebook oAuth, get rid of dummy location data
+- [ ] Failure redirects for resetting password
+- [ ] Have listing tag clicks lead to a page that displays all listings of that tag
+- [ ] Make sure file uploads are pictures and are appropriate sizes
 
-## Cam
-- [X] Nav bar style when no one is logged in
-- [X] Style curator profile view (`Profile.js`). Add profile picture spot! (also add profile pic spot to `Account.js`)
-- [x] Back to home button on individual listing page
-- [X] Style search button in Nav bar (make it only visible when someone has typed something)
-- [X] Display search results on the frontend (backend is done)
-- [x] Load component on `Account.js` and `Profile.js` and others.
-- [X] Sorting buttons at top of `Listings.js`, `Videos.js`, and `Articles.js` (actual sorting done)
-- [X] `Admin.js` restyle 3 buttons & display successful admin change on frontend
-- [X] Standardize size of all pictures on home page
-- [ ] Style Reset password better on `LoginModal` and `Login`
-- [ ] Display a banner on Account page asking people to verify their email
-- [ ] Make trash can to delete reviews bigger/located in more visible spot
+# TODO from Feb 11 meeting
+- [ ] Weird bug with review delete
+- [ ] Weird bug where admin panel doesn't show up
+- [ ] Listing changes
+  - [ ] Description text area
+  - [ ] Editor's review section (listings)
+  - [ ] Mobile At a glance
+  - [ ] Also make it default close
+  - [ ] Change icons for that
+  - [ ] Hero image
+  - [ ] Add more images
+  - [ ] Max images (6)
+  - [ ] Two column listings
+- [ ] Article changes
+  - [ ] Links to other things
+  - [ ] Link to listings that are relevant
+- [ ] Video changes
+  - [ ] Component for product thumbnails "featured in this video" (links to other things)
+  - [ ] Play button on top of video
+- [ ] Home page
+  - [ ] Banner on top, primarily articles and videos.
+    - [ ] Upload specific hero images for home page banner
+  - [ ] Underneath banner, different listing options
+  - [ ] Featured, Recommended for you, etc.
+  - [ ] Browse by category
+  - [ ] Make articles, listings, videos more cohesive, not separate section
+  - [ ] Infinite scroll
+  - [ ] Video play options
+- [ ] Featured checkbox on content creation forms
+- [ ] Default to University of Pennsylvania, eventually will have other campuses
+- [ ] Searching content by location
+- [ ] Ask users for current location
+- [ ] Google maps pulling hours for companies and such
+- [ ] Make it scroll to the top when you load a new page
+- [ ] Media library of images from AWS already uploaded to make curators life easier
 
 ## General cleanup
 
 - [X] Make a check in the `AppContainer` component to ensure that `passport` and `redux` are in sync (`redux persist`) makes it such that this can outlast the backend session
 - [X] Style about page
 - [X] General clean up, get rid of console.logs and deal with errors better
-- [ ] Change title tag, description, other meta tags depending on the page
 - [X] Get rid of redux capabilities of all components that don't use redux
+- [ ] Change title tag, description, other meta tags depending on the page
 - [ ] Go back and take care of all TODO's
+- [ ] Stop unnecessarily passing userId to backend
 - [ ] Make sure all form submissions check for empty fields on frontend and/or backend
 - [ ] Backend error checking should be in separate file
+- [ ] Get rid of unnecessary packages in `package.json`
+- [ ] All emails sent should be placed into `sendEmail.js`
+- [ ] Create a helper method file for image upload
+- [ ] Clear errors if resp.data.success
+- [ ] Change edit routes from post to put
 
 ## Other
 - [ ] Google Analytics
 
 ## Search
+- [X] Frontend issue where it displays two articles on one line
+- [X] Clicking a link closes suggestion and clears search bar
 - [ ] Search by Location
 - [ ] Issue where "ada" doesn't populate "adam ripley" but "adam" does (I think best way to deal with this is search button)
 - [ ] Don't let it search through reviews
-- [X] Frontend issue where it displays two articles on one line
-- [X] Clicking a link closes suggestion and clears search bar
 - [ ] Fix refresh hack
 
 ## Bugs
@@ -230,49 +344,17 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [X] User page not always found
 - [X] Users profiles shouldn't be displayed, only admin/curators
 - [X] Video image not showing up on thumbnail
+- [X] Video edit location clearing bug
+- [ ] SSL is not fully secure?
+- [ ] Admin panel not displaying?
 
 ## Adam
-- [X] Video edit location clearing?
-- [ ] Clear hashtag from url after google login
-- [ ] Fix issues with reviews and content displaying not chronologically
-- [ ] UpdateReviews method is unnecessary - just use setState
-- [X] Delete review authentication check
-- [ ] Location for google and facebook oAuth, get rid of dummy location data
-- [ ] Failure redirects for resetting password
-- [X] New password must meet validity conditions
-- [ ] Extra security for auth routes: userId pulled from backend
-- [X] Ensure duplicate emails cannot be registered (through facebook and google oauth)
-  - [X] If account already exists, should simply add googleId or facebookId to that user, not create a new account
-- [X] Verify account via email
-  - [X] Send email welcoming user to nalda
-  - [X] Display banner on account page
-    - [X] Banner click should send another verify email
-  - [X] Local Login
-  - [X] FACEBOOK
-  - [X] Google
-- [ ] Get rid of any userId passing from frontend unless it is for comparing to backend userId
-- [ ] Styling on the emails sent by Nalda: Welcome, reset, and verify.
-- [ ] All emails sent should be placed into `sendEmail.js`
 
-
-## Features for next update
-- [X] Sendgrid configuration for sending emails
-  - [X] Contact us page
-  - [X] Confirm email page
-  - [X] Forgot password reset
-- [ ] Make it easier for an admin to enter hours (some sort of autofill)
-- [ ] Recommending content for users to look at
-  * To begin they can be location based and random
-- [X] Split up `routes.js` into many smaller files
-- [ ] Sort reviews functionality (time, rating)
-- [ ] Give user model a "private" field (object containing info like password, email, etc) & have API not return it.
-- [X] Have listing location be a map picture
-- [X] Add author to listings and videos? At least on backend
-- [ ] Improve search performance
-- [X] Delete reviews functionality
-- [ ] Searching should not search through reviews
+## Potential features for future
 - [ ] Users can leave comments on videos and articles
 - [ ] Multiple curators on the same content
-- [X] Login/Register OAuth with google and facebook
+- [ ] Recommending content for users to look at
+  * To begin they can be location based and random, eventually custom based on user
+
 
 ## Questions

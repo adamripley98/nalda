@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import autosize from 'autosize';
+import Dropzone from 'react-dropzone';
 
 // Import actions
 import {changeFullName} from '../../actions/index.js';
@@ -17,6 +18,7 @@ import Button from '../shared/Button';
 import Loading from '../shared/Loading';
 
 // TODO error check on empty inputs
+// TODO style file upload
 /**
  * Component to render a user's account information
   */
@@ -28,10 +30,12 @@ class Account extends Component {
     super(props);
     this.state = {
       name: '',
+      prevName: '',
       email: '',
       type: '',
       bio: '',
-      profilePicture: '',
+      profilePicture: {},
+      profilePictureChanged: false,
       accountVerified: false,
       error: '',
       success: '',
@@ -40,6 +44,7 @@ class Account extends Component {
       editName: false,
       editBio: false,
       editLocation: false,
+      editProfilePicture: false,
     };
 
     // Bind this to helper methods
@@ -49,9 +54,9 @@ class Account extends Component {
     this.handleChangeBio = this.handleChangeBio.bind(this);
     this.handleBioClick = this.handleBioClick.bind(this);
     this.handleLocationClick = this.handleLocationClick.bind(this);
-    this.handleChangeProfilePicture = this.handleChangeProfilePicture.bind(this);
     this.handleProfilePictureClick = this.handleProfilePictureClick.bind(this);
     this.handleVerifyEmail = this.handleVerifyEmail.bind(this);
+    this.onDrop = this.onDrop.bind(this);
   }
 
   /**
@@ -70,7 +75,7 @@ class Account extends Component {
           name: resp.data.data.name,
           email: resp.data.data.username,
           type: resp.data.data.userType,
-          bio: resp.data.data.bio,
+          bio: resp.data.data.bio || '',
           profilePicture: resp.data.data.profilePicture,
           accountVerified: resp.data.data.accountVerified,
           error: "",
@@ -165,6 +170,7 @@ class Account extends Component {
       if (!this.state.name) {
         this.setState({
           error: 'Name cannot be empty.',
+          name: this.state.prevName,
         });
       } else {
         // Save the updated name
@@ -179,6 +185,9 @@ class Account extends Component {
              error: resp.data.error,
            });
          } else {
+           this.setState({
+             error: '',
+           });
            // change redux state
            changeName(this.state.name);
          }
@@ -188,18 +197,9 @@ class Account extends Component {
     // Update the state
     this.setState({
       editName: !this.state.editName,
+      prevName: this.state.name,
     });
   }
-
-  /**
-   * Handle a change to the profile picture state
-   */
-  handleChangeProfilePicture(event) {
-    this.setState({
-      profilePicture: event.target.value,
-    });
-  }
-
   /**
    * Handle click to edit profile picture
    */
@@ -209,13 +209,15 @@ class Account extends Component {
       const changeProfilePic = this.props.changeProfilePic;
       const userId = this.props.userId;
       const profilePicture = this.state.profilePicture;
+      const profilePictureChanged = this.state.profilePictureChanged;
 
       // Error checking
-      if (!this.state.profilePicture) {
+      if (!profilePicture) {
         this.setState({
           error: 'Profile picture cannot be empty',
         });
-      } else {
+      } else if (profilePictureChanged) {
+        // Post to backend to change profile picture
         axios.post('/api/users/profilePicture', {
           userId,
           profilePicture,
@@ -227,6 +229,10 @@ class Account extends Component {
             });
           } else {
             // Dispatch redux action to change profile picture
+            this.setState({
+              error: '',
+              profilePictureChanged: false,
+            });
             changeProfilePic(profilePicture);
           }
         })
@@ -243,6 +249,32 @@ class Account extends Component {
     });
   }
 
+  // Helper method that is fired when a profile picture is added
+  onDrop(acceptedFiles, rejectedFiles) {
+    if (acceptedFiles.length) {
+      // Read only the first file passed in
+      const profilePicture = acceptedFiles[0];
+      const reader = new FileReader();
+      // Convert from blob to a proper file object that can be passed to server
+      reader.onload = (upload) => {
+        this.setState({
+          profilePicture: upload.target.result,
+          error: '',
+          profilePictureChanged: true,
+        });
+      };
+      // File reader set up
+      reader.onabort = () => this.setState({error: "File read aborted."});
+      reader.onerror = () => this.setState({error: "File read error."});
+      console.log('what is prof pic', profilePicture);
+      reader.readAsDataURL(profilePicture);
+    } else {
+      this.setState({
+        error: rejectedFiles[0].name + ' is not an image.',
+      });
+    }
+  }
+
   /**
    * Handle a change to the bio state
    */
@@ -257,6 +289,7 @@ class Account extends Component {
    */
   handleBioClick() {
     if (this.state.editBio) {
+      console.log('posting', this.state.bio);
       // Save the updated bio
       axios.post('/api/users/bio', {
         userId: this.props.userId,
@@ -329,7 +362,7 @@ class Account extends Component {
             });
           } else {
             this.setState({
-              error: "Invalid location",
+              error: "",
               pending: false,
             });
           }
@@ -400,10 +433,17 @@ class Account extends Component {
                   className="form-control"
                   id="name"
                   ref={(input) => { this.profileInput = input; }}
-                  value={ this.state.profilePicture }
-                  onChange={ this.handleChangeProfilePicture }
+                  value={ this.state.profilePicture ? this.state.profilePicture : null }
+                  onChange={()=>{}}
                   style={{ display: !this.state.editProfilePicture && "none" }}
                 />
+                {/* TODO Style this */}
+                <Dropzone
+                  onDrop={this.onDrop}
+                  accept="image/*"
+                  style={{ display: !this.state.editProfilePicture && "none" }}>
+                  <p>Try dropping some files here, or click to select files to upload.</p>
+                </Dropzone>
             </td>
             <td>
               <i
@@ -514,12 +554,10 @@ class Account extends Component {
    * Render the component
    */
   render() {
+    console.log('props', this.props);
     // If user is logged in or if user successfully logs in, redirects to home
     return (
       <div>
-        { /* Redirect the user to home if they are not logged in */ }
-        { !this.props.userId && <Redirect to="/login" /> }
-
         <div className="container">
           <div className="row">
             <div className="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
@@ -567,7 +605,7 @@ Account.propTypes = {
 };
 
 // Allows us to access redux state as this.props.userId inside component
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     userId: state.authState.userId,
     profilePicture: state.authState.profilePicture,
@@ -577,7 +615,6 @@ const mapStateToProps = state => {
 
 // Allows us to dispatch a changeName event by calling this.props.changeFullName
 // NOTE this is necessary because name is stored in redux state to render on nav bar
-// TODO Will need to dispatch a changeLocation event as well for same reason
 const mapDispatchToProps = (dispatch) => {
   return {
     changeName: (name) => dispatch(changeFullName(name)),
@@ -593,6 +630,3 @@ Account = connect(
 )(Account);
 
 export default Account;
-
-// function myFunction(){
-// }
