@@ -7,6 +7,8 @@
 // Import frameworks
 const express = require('express');
 const router = express.Router();
+const AWS = require('aws-sdk');
+const uuid = require('uuid-v4');
 
 // Import database models
 const Article = require('../models/article');
@@ -16,6 +18,18 @@ const User = require('../models/user');
 
 // Import helper methods
 const {UserCheck} = require('../helperMethods/authChecking');
+
+// Isolate environmental variables
+const AWS_BUCKET_NAME = process.env.AWS_BUCKET_NAME;
+const AWS_USER_KEY = process.env.AWS_USER_KEY;
+const AWS_USER_SECRET = process.env.AWS_USER_SECRET;
+
+// Set up bucket
+const s3bucket = new AWS.S3({
+  accessKeyId: AWS_USER_KEY,
+  secretAccessKey: AWS_USER_SECRET,
+  Bucket: AWS_BUCKET_NAME,
+});
 
 // Export the following methods for routing
 module.exports = () => {
@@ -94,6 +108,7 @@ module.exports = () => {
   router.post('/bio', (req, res) => {
     // Isolate variables from the request
     const bio = req.body.bio;
+    console.log('server bio', bio);
 
     // Check to make sure poster is logged in
     UserCheck(req, (authRes) => {
@@ -168,12 +183,11 @@ module.exports = () => {
           error: authRes.error,
         });
       } else {
-        const imgRegexp = /\.(jpeg|jpg|gif|png)$/;
-        // TODO should only need to contain, not end in
-        if (req.body.profilePicture && !imgRegexp.test(req.body.profilePicture)) {
+         // TODO error check based on type
+        if (!profilePicture) {
           res.send({
             success: false,
-            error: "Image url must end in \"jpeg\", \"png\", \"gif\", or \"jpg\".",
+            error: "Profile picture cannot be empty",
           });
         } else {
           // find and update given user
@@ -190,21 +204,46 @@ module.exports = () => {
                 error: 'User cannot be found.',
               });
             } else {
-              // Update the user
-              user.profilePicture = profilePicture;
-              // Save the changes
-              user.save((errSave) => {
-                if (err) {
-                  res.send({
-                    success: false,
-                    error: errSave.message,
-                  });
-                } else {
-                  res.send({
-                    success: true,
-                    error: '',
-                  });
-                }
+              // Convert profile picture to a form that s3 can display
+              const profilePictureConverted = new Buffer(profilePicture.replace(/^data:image\/\w+;base64,/, ""), 'base64');
+
+              // Create bucket
+              s3bucket.createBucket(() => {
+                var params = {
+                  Bucket: AWS_BUCKET_NAME,
+                  Key: `profilepictures/${uuid()}`,
+                  ContentType: 'image/jpeg',
+                  Body: profilePictureConverted,
+                  ContentEncoding: 'base64',
+                  ACL: 'public-read',
+                };
+                // Upload photo
+                s3bucket.upload(params, (errUpload, data) => {
+                  if (errUpload) {
+                    res.send({
+                      success: false,
+                      error: 'Error uploading profile picture.',
+                    });
+                  } else {
+                    // Update the user
+                    user.profilePicture = data.Location;
+                    // Save the changes
+                    user.save((errSave) => {
+                      if (err) {
+                        res.send({
+                          success: false,
+                          error: errSave.message,
+                        });
+                      } else {
+                        res.send({
+                          success: true,
+                          error: '',
+                          data: user.profilePicture,
+                        });
+                      }
+                    });
+                  }
+                });
               });
             }
           });
