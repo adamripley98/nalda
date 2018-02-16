@@ -196,6 +196,7 @@ class ArticleForm extends React.Component {
           this.setState({
             image: upload.target.result,
             imagePreview: pic.preview,
+            imageName: pic.name,
             error: '',
           });
         };
@@ -372,8 +373,18 @@ class ArticleForm extends React.Component {
               <Dropzone
                 onDrop={(acceptedFiles, rejectedFiles) => this.onDrop(acceptedFiles, rejectedFiles, "main")}
                 accept="image/*"
+                style={{ marginBottom: "1rem" }}
                 >
-                <p>Try dropping some files here, or click to select files to upload.</p>
+                <p className="dropzone">
+                  <i className="fa fa-file-o" aria-hidden="true" />
+                  {
+                    this.state.imageName ? (
+                      this.state.imageName
+                    ) : (
+                      "Try dropping some files here, or click to select files to upload."
+                    )
+                  }
+                </p>
               </Dropzone>
 
               <input

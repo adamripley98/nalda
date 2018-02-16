@@ -931,3 +931,20 @@ a {
 .normal-bold {
   font-size: 1rem !important;
 }
+
+
+// Styling dropzones
+.dropzone {
+  margin-bottom: 0rem;
+  padding: 0.75rem;
+  border: 1px solid $border;
+  border-radius: 0.4rem;
+  cursor: hand;
+  cursor: pointer;
+  color: $dark-gray;
+
+  .fa {
+    margin-right: 0.4rem;
+    color: $dark-gray !important;
+  }
+}

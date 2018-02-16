@@ -80,10 +80,10 @@ DELETE '/api/videos/:id'       // Delete a specific article
 # Cam
 - [x] Style Reset password better on `LoginModal` and `Login`
 - [x] Display a banner on Account page asking people to verify their email (instead of text)
-- [ ] Make trash can to delete reviews bigger
-- [ ] Style file upload in `Account.js`,
+- [x] Make trash can to delete reviews bigger
+- [x] Style file upload in `Account.js`,
 - [ ] Style frontend for homepage
-- [ ] hamburger turns to X animation
+- [x] hamburger turns to X animation
 - [x] Stop using production mlab for testing
 - [x] Push changes live
 
