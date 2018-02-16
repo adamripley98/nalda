@@ -94,6 +94,7 @@ module.exports = () => {
   router.post('/bio', (req, res) => {
     // Isolate variables from the request
     const bio = req.body.bio;
+    console.log('server bio', bio);
 
     // Check to make sure poster is logged in
     UserCheck(req, (authRes) => {
@@ -192,8 +193,6 @@ module.exports = () => {
                 error: 'User cannot be found.',
               });
             } else {
-              // File for AWS configuration
-
               // Import frameworks
               const AWS = require('aws-sdk');
               const uuid = require('uuid-v4');

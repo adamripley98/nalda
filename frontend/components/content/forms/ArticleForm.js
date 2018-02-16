@@ -22,7 +22,8 @@ class ArticleForm extends React.Component {
     this.state = {
       title: "",
       subtitle: "",
-      image: "",
+      image: {},
+      imagePreview: "",
       body: [
         {
           componentType: "text",
@@ -135,6 +136,7 @@ class ArticleForm extends React.Component {
   /**
    * Helper method to make sure all input is valid
    */
+   // TODO check image is present
   inputValid() {
     // Begin error checking
     if (!this.state.title) {
@@ -183,14 +185,47 @@ class ArticleForm extends React.Component {
   }
 
   // Helper method for image uploads
-  onDrop(acceptedFiles, rejectedFiles) {
+  onDrop(acceptedFiles, rejectedFiles, index) {
     if (acceptedFiles.length) {
       const pic = acceptedFiles[0];
-      console.log('dank', pic.preview);
-      this.setState({
-        image: pic.preview,
-      });
+      // If first image
+      if (index === "main") {
+        const reader = new FileReader();
+        // Convert from blob to a proper file object that can be passed to server
+        reader.onload = (upload) => {
+          console.log('what is upload dude', upload);
+          this.setState({
+            image: upload.target.result,
+            imagePreview: pic.preview,
+            error: '',
+          });
+        };
+        // File reader set up
+        reader.onabort = () => this.setState({error: "File read aborted."});
+        reader.onerror = () => this.setState({error: "File read error."});
+        reader.readAsDataURL(pic);
+      } else {
+        const reader = new FileReader();
+        // Convert from blob to a proper file object that can be passed to server
+        reader.onload = (upload) => {
+          console.log('what is upload dude', upload);
+          // Manipulate the correct component object
+          const bodyObj = this.state.body;
+          bodyObj[index].preview = pic.preview;
+          bodyObj[index].body = upload.target.result;
+          // Update the state
+          this.setState({
+            body: bodyObj,
+            error: '',
+          });
+        };
+        // File reader set up
+        reader.onabort = () => this.setState({error: "File read aborted."});
+        reader.onerror = () => this.setState({error: "File read error."});
+        reader.readAsDataURL(pic);
+      }
     } else {
+      // Display error with wrong file type
       this.setState({
         error: rejectedFiles[0].name + ' is not an image.',
       });
@@ -221,6 +256,27 @@ class ArticleForm extends React.Component {
           const latitude = results[0].geometry.location.lat();
           const longitude = results[0].geometry.location.lng();
 
+          // const body = [];
+          // this.state.body.forEach((obj) => {
+          //   if (obj.componentType === 'image') {
+          //     const reader = new FileReader();
+          //     // Convert from blob to a proper file object that can be passed to server
+          //     reader.onload = (upload) => {
+          //       console.log('what is upload dude', upload);
+          //       body.push({componentType: obj.componentType, body: upload.target.result});
+          //     };
+          //     // File reader set up
+          //     reader.onabort = () => this.setState({error: "File read aborted."});
+          //     reader.onerror = () => this.setState({error: "File read error."});
+          //     console.log('what is obj body', obj.body);
+          //     reader.readAsDataURL(obj.body);
+          //   } else {
+          //     body.push({componentType: obj.componentType, body: body});
+          //   }
+          // });
+          //
+          // console.log('what is body', body);
+
           // Post to backend
           axios.post('/api/articles/new', {
             title: this.state.title,
@@ -238,6 +294,7 @@ class ArticleForm extends React.Component {
               if (res.data.success) {
                 // If creating the article was successful
                 this.setState({
+                  error: '',
                   articleId: res.data.data._id,
                   redirectToHome: true,
                 });
@@ -320,27 +377,23 @@ class ArticleForm extends React.Component {
               />
 
               {
-                this.state.image && (
-                  <img src={ this.state.image } alt={ this.state.title } className="img-fluid" />
+                this.state.imagePreview && (
+                  <img src={ this.state.imagePreview } alt={ this.state.title } className="img-fluid" />
                 )
               }
 
-              {
-                this.state.image ? console.log('image', this.state.image) : null
-              }
-
-              <input
+              {/* <input
                 name="image"
                 type="text"
                 placeholder="Enter a URL to an image"
                 className="form-control marg-bot-1"
                 value={ this.state.image }
                 onChange={ this.handleChangeImage }
-              />
+              /> */}
 
               {/* TODO Style this */}
               <Dropzone
-                onDrop={this.onDrop}
+                onDrop={(acceptedFiles, rejectedFiles) => this.onDrop(acceptedFiles, rejectedFiles, "main")}
                 accept="image/*"
                 >
                 <p>Try dropping some files here, or click to select files to upload.</p>
@@ -376,12 +429,22 @@ class ArticleForm extends React.Component {
                   return (
                     <div key={ index }>
                       {
-                        (component.componentType === "image" && this.state.body[index].body) && (
+                        (component.componentType === "image" && this.state.body[index].preview) && (
                           <img
-                            src={ this.state.body[index].body }
+                            src={ this.state.body[index].preview }
                             alt={ this.state.title }
                             className="img-fluid"
                           />
+                        )
+                      }
+                      {
+                        component.componentType === "image" && (
+                          <Dropzone
+                            onDrop={(acceptedFiles, rejectedFiles) => this.onDrop(acceptedFiles, rejectedFiles, index)}
+                            accept="image/*"
+                          >
+                            <p>Try dropping some files here, or click to select files to upload.</p>
+                          </Dropzone>
                         )
                       }
                       <div className="component">

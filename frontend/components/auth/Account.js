@@ -35,6 +35,7 @@ class Account extends Component {
       type: '',
       bio: '',
       profilePicture: {},
+      profilePictureChanged: false,
       accountVerified: false,
       error: '',
       success: '',
@@ -74,7 +75,7 @@ class Account extends Component {
           name: resp.data.data.name,
           email: resp.data.data.username,
           type: resp.data.data.userType,
-          bio: resp.data.data.bio,
+          bio: resp.data.data.bio || '',
           profilePicture: resp.data.data.profilePicture,
           accountVerified: resp.data.data.accountVerified,
           error: "",
@@ -208,13 +209,14 @@ class Account extends Component {
       const changeProfilePic = this.props.changeProfilePic;
       const userId = this.props.userId;
       const profilePicture = this.state.profilePicture;
+      const profilePictureChanged = this.state.profilePictureChanged;
 
       // Error checking
       if (!profilePicture) {
         this.setState({
           error: 'Profile picture cannot be empty',
         });
-      } else {
+      } else if (profilePictureChanged) {
         // Post to backend to change profile picture
         axios.post('/api/users/profilePicture', {
           userId,
@@ -227,6 +229,10 @@ class Account extends Component {
             });
           } else {
             // Dispatch redux action to change profile picture
+            this.setState({
+              error: '',
+              profilePictureChanged: false,
+            });
             changeProfilePic(profilePicture);
           }
         })
@@ -254,11 +260,13 @@ class Account extends Component {
         this.setState({
           profilePicture: upload.target.result,
           error: '',
+          profilePictureChanged: true,
         });
       };
       // File reader set up
       reader.onabort = () => this.setState({error: "File read aborted."});
       reader.onerror = () => this.setState({error: "File read error."});
+      console.log('what is prof pic', profilePicture);
       reader.readAsDataURL(profilePicture);
     } else {
       this.setState({
@@ -281,6 +289,7 @@ class Account extends Component {
    */
   handleBioClick() {
     if (this.state.editBio) {
+      console.log('posting', this.state.bio);
       // Save the updated bio
       axios.post('/api/users/bio', {
         userId: this.props.userId,
@@ -425,6 +434,7 @@ class Account extends Component {
                   id="name"
                   ref={(input) => { this.profileInput = input; }}
                   value={ this.state.profilePicture ? this.state.profilePicture : null }
+                  onChange={()=>{}}
                   style={{ display: !this.state.editProfilePicture && "none" }}
                 />
                 {/* TODO Style this */}
@@ -544,12 +554,10 @@ class Account extends Component {
    * Render the component
    */
   render() {
+    console.log('props', this.props);
     // If user is logged in or if user successfully logs in, redirects to home
     return (
       <div>
-        { /* Redirect the user to home if they are not logged in */ }
-        { !this.props.userId && <Redirect to="/login" /> }
-
         <div className="container">
           <div className="row">
             <div className="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
@@ -591,7 +599,7 @@ Account.propTypes = {
 };
 
 // Allows us to access redux state as this.props.userId inside component
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
     userId: state.authState.userId,
     profilePicture: state.authState.profilePicture,
