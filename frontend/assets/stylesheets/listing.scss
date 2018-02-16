@@ -107,6 +107,12 @@
   }
 }
 
+@media screen and (min-width: 993px) and (min-device-width: 993px) {
+  .listing .listing-preview {
+    top: 0 !important;
+  }
+}
+
 /**
  * Listing preview is fixed-position at the bottom on smaller screens
  */
@@ -304,5 +310,58 @@
       color: $dark-gray;
       text-decoration: none;
     }
+  }
+}
+
+/**
+ * Styling carousel of listing pictures
+ */
+#carousel {
+  .carousel-item {
+    width: 100%;
+    text-align: center;
+    margin: 0 auto;
+
+    img {
+      margin: auto;
+      border-radius: 0.4rem;
+    }
+  }
+
+  .carousel-indicators {
+    li {
+      max-width: none;
+      width: 0.8rem;
+      height: 0.8rem;
+      border-radius: 50%;
+      border: 2px solid white;
+      background: transparent;
+      flex: none;
+      margin: 0 0.4rem;
+      opacity: 0.75;
+      transition: all 0.2s ease;
+
+      &.active {
+        background: white;
+      }
+
+      &:hover,
+      &:focus,
+      &:active {
+        opacity: 1;
+      }
+    }
+  }
+
+  .carousel-control-prev-icon::before,
+  .carousel-control-next-icon::before {
+    content: "";
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    transform: translate(-1.3rem, -0.4rem);
+    background: rgba(0, 0, 0, 0.15);
+    position: absolute;
+    z-index: -1;
   }
 }

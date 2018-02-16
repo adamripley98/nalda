@@ -13,6 +13,7 @@ import Loading from '../../shared/Loading';
 import Button from '../../shared/Button';
 import NotFoundSection from '../../NotFoundSection';
 import Stars from './Stars';
+import Carousel from './Carousel';
 import ErrorMessage from '../../shared/ErrorMessage';
 import Author from '../../shared/Author';
 import Head from '../../shared/Head';
@@ -613,6 +614,7 @@ class Listing extends React.Component {
                   <p className="description">
                     { this.state.description }
                   </p>
+                  <Carousel />
                   {
                     this.state.hours && (
                       <div className="hidden-lg-up">
