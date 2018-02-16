@@ -49,9 +49,13 @@ class Verify extends Component {
           <h2 className="bold marg-bot-1 dark-gray-text">
             Verification
           </h2>
-          <p className="marg-bot-1">
-            {this.state.verified ? "Your account has been verified!" : null}
-          </p>
+          {
+            this.state.verified ? (
+              <div className="alert alert-success marg-bot-1">
+                Your account has been verified!
+              </div>
+            ) : null
+          }
           <Link to="/" className="btn btn-primary full-width">
             Back to home
           </Link>

@@ -256,11 +256,26 @@
       background: $gray;
       height: 3px;
       display: block;
+      transition: all 0.2s ease;
     }
 
     // Apply a margin top to all bars except the first one
     .bar + .bar {
       margin-top: 0.5rem;
+    }
+
+    &.active {
+      #first {
+        transform: translateY(11px) translateX(0.2rem) rotate(-45deg);
+      }
+
+      #second {
+        transform: translateX(10rem);
+      }
+
+      #third {
+        transform: translateY(-11px) translateX(0.2rem) rotate(45deg);
+      }
     }
   }
 }

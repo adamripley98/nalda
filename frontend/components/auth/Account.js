@@ -39,6 +39,7 @@ class Account extends Component {
       accountVerified: false,
       error: '',
       success: '',
+      info: '',
       pending: true,
       adminPopover: false,
       editName: false,
@@ -134,7 +135,7 @@ class Account extends Component {
     .then((resp) => {
       if (resp.data.success) {
         this.setState({
-          success: 'Please check your email for a verification link.',
+          info: 'Please check your email for a verification link.',
         });
       } else {
         // Display error
@@ -254,12 +255,14 @@ class Account extends Component {
     if (acceptedFiles.length) {
       // Read only the first file passed in
       const profilePicture = acceptedFiles[0];
+
       const reader = new FileReader();
       // Convert from blob to a proper file object that can be passed to server
       reader.onload = (upload) => {
         this.setState({
           profilePicture: upload.target.result,
           error: '',
+          profilePictureName: profilePicture.name,
           profilePictureChanged: true,
         });
       };
@@ -429,20 +432,21 @@ class Account extends Component {
                     backgroundImage: `url(${ this.props.profilePicture })`
                   }}
                 />
-                <input
-                  className="form-control"
-                  id="name"
-                  ref={(input) => { this.profileInput = input; }}
-                  value={ this.state.profilePicture ? this.state.profilePicture : null }
-                  onChange={()=>{}}
-                  style={{ display: !this.state.editProfilePicture && "none" }}
-                />
-                {/* TODO Style this */}
+                
                 <Dropzone
                   onDrop={this.onDrop}
                   accept="image/*"
                   style={{ display: !this.state.editProfilePicture && "none" }}>
-                  <p>Try dropping some files here, or click to select files to upload.</p>
+                  <p className="dropzone">
+                    <i className="fa fa-file-o" aria-hidden="true" />
+                    {
+                      this.state.profilePictureName ? (
+                        this.state.profilePictureName
+                      ) : (
+                        "Try dropping some files here, or click to select files to upload."
+                      )
+                    }
+                  </p>
                 </Dropzone>
             </td>
             <td>
@@ -566,9 +570,11 @@ class Account extends Component {
               </h4>
               <ErrorMessage error={ this.state.error } />
               {
-                !this.state.accountVerified ? (
+                (!this.state.pending && !this.state.accountVerified) ? (
                   <div className="alert alert-warning marg-bot-1" onClick={this.handleVerifyEmail}>
-                    Please verify your account by clicking here
+                    {
+                      this.state.info ? this.state.info : "Please verify your account by clicking here"
+                    }
                   </div>
                 ) : null
               }
