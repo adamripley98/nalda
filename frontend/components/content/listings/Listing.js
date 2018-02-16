@@ -668,16 +668,16 @@ class Listing extends React.Component {
                     )
                   }
                   style={{
-                    bottom: this.state.infoTrigger ? (- document.getElementById('listing-preview').offsetHeight + 64) : 0
+                    top: this.state.infoTrigger ? (window.innerHeight - document.getElementById('listing-preview').offsetHeight) : (window.innerHeight - 64)
                   }}
                 >
                   <div className="card">
                     <i
                       className={
                         this.state.infoTrigger ? (
-                          "fa fa-chevron-down hidden-lg-up fa-lg info-trigger active"
-                        ) : (
                           "fa fa-chevron-down hidden-lg-up fa-lg info-trigger"
+                        ) : (
+                          "fa fa-chevron-down hidden-lg-up fa-lg info-trigger active"
                         )
                       }
                       aria-hidden="true"

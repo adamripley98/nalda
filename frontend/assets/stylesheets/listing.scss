@@ -113,10 +113,8 @@
 @media screen and (max-width: 992px) {
   .listing {
     .listing-preview {
-      top: inherit;
       position: fixed;
       width: 100%;
-      bottom: 0;
       left: 0;
       z-index: 12;
       padding: 0;
@@ -135,10 +133,8 @@
 @media screen and (max-device-width: 992px) {
   .listing {
     .listing-preview {
-      top: inherit;
       position: fixed;
       width: 100%;
-      bottom: 0;
       left: 0;
       z-index: 12;
       padding: 0;
