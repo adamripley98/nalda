@@ -77,6 +77,8 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [ ] Weird bug where account page now logs you out if you try refreshing
 - [X] Bug where profile picture doesn't show up sometimes (storing in AWS as a single pixel?)
 - [ ] Edit content bug?
+- [ ] Make admin backend route async?
+- [ ] Store images in subfolders for each listing or article
 # Cam
 - [ ] Style Reset password better on `LoginModal` and `Login`
 - [ ] Display a banner on Account page asking people to verify their email (instead of text)

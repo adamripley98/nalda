@@ -3,6 +3,8 @@ import React from 'react';
 import autosize from 'autosize';
 import { Link, Redirect } from 'react-router-dom';
 import axios from 'axios';
+import Dropzone from 'react-dropzone';
+
 
 // Import components
 import ErrorMessage from '../../shared/ErrorMessage';
@@ -23,6 +25,7 @@ class ListingForm extends React.Component {
       naldaFavorite: "",
       location: "",
       image: "",
+      images: [],
       rating: 0.0,
       price: "$",
       hours: {
@@ -221,6 +224,46 @@ class ListingForm extends React.Component {
     });
   }
 
+  // Helper method for image uploads
+  onDrop(acceptedFiles, rejectedFiles) {
+    // Ensure at leat one valid image was uploaded
+    if (acceptedFiles.length) {
+      // Ensure no more than 6 were uploaded
+      if (acceptedFiles.length + this.state.images.length > 6) {
+        this.setState({
+          error: 'You may only upload 6 images.',
+        });
+        // Shorten acceptedFiles to 6
+        acceptedFiles.splice(6 - this.state.images.length);
+      }
+      // Make a copy of the images in state
+      const images = this.state.images.slice();
+      // Loop through and convert images
+      acceptedFiles.forEach((pic) => {
+        const reader = new FileReader();
+        // Convert from blob to a proper file object that can be passed to server
+        reader.onload = (upload) => {
+          images.push(upload.target.result);
+        };
+        // File reader set up
+        reader.onabort = () => this.setState({error: "File read aborted."});
+        reader.onerror = () => this.setState({error: "File read error."});
+        reader.readAsDataURL(pic);
+      });
+      console.log('im', this.state.images);
+      // Set images to state
+      this.setState({
+        images,
+      });
+    }
+    if (rejectedFiles.length) {
+      // Display error with wrong file type
+      this.setState({
+        error: rejectedFiles[0].name + ' is not an image.',
+      });
+    }
+  }
+
   /**
    * Helper method to handle when the form is submitted
    */
@@ -250,6 +293,7 @@ class ListingForm extends React.Component {
           axios.post('/api/listings/new', {
             title: this.state.title,
             image: this.state.image,
+            images: this.state.images,
             location: {
               name: location,
               lat: latitude,
@@ -337,6 +381,10 @@ class ListingForm extends React.Component {
         pending: false,
       });
       return false;
+    } else if (!this.state.images.length) {
+      this.setState({
+        error: "At least 1 image must be provided.",
+      });
     } else if (!document.getElementById("location").value) {
       this.setState({
         error: "Location must be populated.",
@@ -387,6 +435,12 @@ class ListingForm extends React.Component {
                 value={ this.state.image }
                 onChange={ this.handleChangeImage }
               />
+              <Dropzone
+                onDrop={(acceptedFiles, rejectedFiles) => this.onDrop(acceptedFiles, rejectedFiles)}
+                accept="image/*"
+                >
+                <p>Try dropping some images here, or click to select images to upload.</p>
+              </Dropzone>
               <label>
                 Location
               </label>

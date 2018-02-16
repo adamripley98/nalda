@@ -8,6 +8,8 @@
 const express = require('express');
 const router = express.Router();
 const async = require('async');
+const AWS = require('aws-sdk');
+const uuid = require('uuid-v4');
 
 // Import database models
 const Listing = require('../models/listing');
@@ -16,6 +18,18 @@ const User = require('../models/user');
 // Import helper methods
 const {CuratorOrAdminCheck} = require('../helperMethods/authChecking');
 const {AuthorOrAdminCheck} = require('../helperMethods/authChecking');
+
+// Isolate environmental variables
+const AWS_BUCKET_NAME = process.env.AWS_BUCKET_NAME;
+const AWS_USER_KEY = process.env.AWS_USER_KEY;
+const AWS_USER_SECRET = process.env.AWS_USER_SECRET;
+
+// Set up bucket
+const s3bucket = new AWS.S3({
+  accessKeyId: AWS_USER_KEY,
+  secretAccessKey: AWS_USER_SECRET,
+  Bucket: AWS_BUCKET_NAME,
+});
 
 
 // Export the following methods for routing
@@ -365,6 +379,7 @@ module.exports = () => {
         const description = req.body.description;
         const naldaFavorite = req.body.naldaFavorite;
         const image = req.body.image;
+        const images = req.body.images;
         const hours = req.body.hours;
         const rating = req.body.rating;
         const price = req.body.price;
@@ -385,6 +400,10 @@ module.exports = () => {
           error = "Nalda's Favorite must be populated.";
         } else if (!image) {
           error = "Image must be populated.";
+        } else if (!images.length) {
+          error = "Images must be populated.";
+        } else if (!images.length) {
+          error = "Maximum of 6 images.";
         } else if (!rating) {
           error = "Rating must be populated.";
         } else if (!price) {
@@ -404,38 +423,100 @@ module.exports = () => {
             error,
           });
         } else {
-          // Creates a new listing with given params
-          const newListing = new Listing({
-            title,
-            description,
-            naldaFavorite,
-            image,
-            hours,
-            rating,
-            price,
-            website,
-            categories,
-            location,
-            author: userId,
-            createdAt: Date.now(),
-            updatedAt: Date.now(),
-          });
+          console.log('what is images', images);
 
-          // Save the new article in mongo
-          newListing.save((er, listing) => {
-            if (er) {
-              // Pass on any error to the user
-              res.send({
-                success: false,
-                error: er.message,
-              });
-            } else {
-              // Send the data along if it was successfully stored
-              res.send({
-                success: true,
-                data: listing,
-              });
-            }
+          // Convert article picture to a form that s3 can display
+          const imageConverted = new Buffer(image.replace(/^data:image\/\w+;base64,/, ""), 'base64');
+
+          // Create bucket
+          s3bucket.createBucket(() => {
+            var params = {
+              Bucket: AWS_BUCKET_NAME,
+              Key: `listingpictures/${uuid()}`,
+              ContentType: 'image/jpeg',
+              Body: imageConverted,
+              ContentEncoding: 'base64',
+              ACL: 'public-read',
+            };
+            // Upload photo
+            s3bucket.upload(params, (errUpload, data) => {
+              if (errUpload) {
+                res.send({
+                  success: false,
+                  error: 'Error uploading profile picture.',
+                });
+              } else {
+                const newImages = [];
+                async.eachSeries(images, (img, cb) => {
+                  const listingPictureConverted = new Buffer(img.replace(/^data:image\/\w+;base64,/, ""), 'base64');
+
+                  s3bucket.createBucket(() => {
+                    var parameters = {
+                      Bucket: AWS_BUCKET_NAME,
+                      Key: `articlepictures/${uuid()}`,
+                      ContentType: 'image/jpeg',
+                      Body: listingPictureConverted,
+                      ContentEncoding: 'base64',
+                      ACL: 'public-read',
+                    };
+                    // Upload photo
+                    s3bucket.upload(parameters, (errorUpload, pic) => {
+                      if (errorUpload) {
+                        res.send({
+                          success: false,
+                          error: 'Error uploading profile picture.',
+                        });
+                      } else {
+                        newImages.push(pic.Location);
+                        cb();
+                      }
+                    });
+                  });
+                }, (asyncErr) => {
+                  if (asyncErr) {
+                    res.send({
+                      success: false,
+                      error: asyncErr,
+                    });
+                  } else {
+                    // Creates a new listing with given params
+                    const newListing = new Listing({
+                      title,
+                      description,
+                      naldaFavorite,
+                      image,
+                      images: newImages,
+                      hours,
+                      rating,
+                      price,
+                      website,
+                      categories,
+                      location,
+                      author: userId,
+                      createdAt: Date.now(),
+                      updatedAt: Date.now(),
+                    });
+
+                    // Save the new article in mongo
+                    newListing.save((er, listing) => {
+                      if (er) {
+                        // Pass on any error to the user
+                        res.send({
+                          success: false,
+                          error: er.message,
+                        });
+                      } else {
+                        // Send the data along if it was successfully stored
+                        res.send({
+                          success: true,
+                          data: listing,
+                        });
+                      }
+                    });
+                  }
+                });
+              }
+            });
           });
         }
       }
