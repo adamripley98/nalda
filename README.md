@@ -90,14 +90,14 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [x] Make trash can to delete reviews bigger
 - [x] Style file upload in `Account.js`,
 - [ ] Style frontend for homepage
-- [ ] Display Nalda's Favorite section
+- [x] Display Nalda's Favorite section
 - [x] Style admin panel
 - [x] hamburger turns to X animation
 - [x] Stop using production mlab for testing
 - [x] Push changes live
 - [X] Uncaught Error: Carousel is sliding
 - [ ] Style emails better
-- [ ] Fix carousel image size
+- [x] Fix carousel image size
 
 ## Admins
 

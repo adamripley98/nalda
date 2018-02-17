@@ -115,11 +115,19 @@ class Listing extends React.Component {
         }
       })
       .catch(err => {
-        // If there was an error making the request
-        this.setState({
-          error: err,
-          pending: false,
-        });
+        if (err.response.status === 404) {
+          // If the listing was not found
+          this.setState({
+            notFound: true,
+            pending: false,
+          });
+        } else {
+          // If there was an error making the request
+          this.setState({
+            error: err,
+            pending: false,
+          });
+        }
       });
 
     // Style parallax scrolling
@@ -356,6 +364,7 @@ class Listing extends React.Component {
     if (this.state.reviews && this.state.reviews.length) {
       // Reverse reviews so they appear newest to oldest
       const reviews = this.state.reviews.slice(0).reverse();
+
       // Map each review to be its own component
       return reviews.map(review => (
         <Review
@@ -566,7 +575,7 @@ class Listing extends React.Component {
       this.state.pending ? (
         <Loading />
       ) : (
-        this.state.error ? (
+        this.state.notFound ? (
           <NotFoundSection
             title="Listing not found"
             content="Uh-oh! Looks like the listing you were looking for was either removed or does not exist."
@@ -602,6 +611,7 @@ class Listing extends React.Component {
                       _id={ this.state.author._id }
                       profilePicture={ this.state.author.profilePicture }
                     />
+                    <ErrorMessage message={this.state.error} />
                   </div>
                   <div className="categories">
                     { this.renderCategories() }
