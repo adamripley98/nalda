@@ -97,14 +97,14 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [x] Make trash can to delete reviews bigger
 - [x] Style file upload in `Account.js`,
 - [ ] Style frontend for homepage
-- [ ] Display Nalda's Favorite section
+- [X] Display Nalda's Favorite section
 - [X] Style admin panel
 - [x] hamburger turns to X animation
 - [x] Stop using production mlab for testing
 - [x] Push changes live
 - [X] Uncaught Error: Carousel is sliding
 - [ ] Style emails better
-- [ ] Fix carousel image size
+- [X] Fix carousel image size
 - [ ] Style listing edit page: image upload spots, delete button for images, etc.
 - [ ] Style article edit page
 ## Admins
@@ -296,7 +296,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
   - [ ] Mobile At a glance
   - [X] Also make it default close
   - [ ] Change icons for that
-  - [ ] Hero image
+  - [X] Hero image
   - [X] Add more images
   - [X] Max images (6)
   - [ ] Two column listings
@@ -323,7 +323,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [ ] Make it scroll to the top when you load a new page
 - [ ] Media library of images from AWS already uploaded to make curators life easier
 
-## General cleanup
+## Code refactoring
 
 - [X] Make a check in the `AppContainer` component to ensure that `passport` and `redux` are in sync (`redux persist`) makes it such that this can outlast the backend session
 - [X] Style about page
@@ -341,6 +341,9 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [ ] Change edit routes from post to put
 - [ ] Make edit routes far more efficient
 - [ ] Change delete reviews from post to delete
+- [ ] Delete a user, delete all content of that user
+- [ ] When article or listing is deleted, content is deleted from AWS
+- [ ] When content is edited, old images are deleted from AWS
 
 ## Other
 - [ ] Google Analytics
@@ -370,8 +373,8 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [X] Video edit location clearing bug
 - [X] SSL is not fully secure?
 - [X] Admin panel not displaying?
-- [ ] Delete reviews not working?
-- [ ] Edit articles doesn't link
+- [X] Delete reviews not working?
+- [X] Edit articles doesn't link
 
 ## Adam
 
@@ -379,8 +382,5 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [ ] Multiple curators on the same content
 - [ ] Recommending content for users to look at
   * To begin they can be location based and random, eventually custom based on user
-- [ ] Delete a user, delete all content of that user
-- [ ] When article or listing is deleted, content is deleted from AWS
-- [ ] When content is edited, old images are deleted from AWS
 
 ## Questions
