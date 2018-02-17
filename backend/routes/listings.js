@@ -399,7 +399,7 @@ module.exports = () => {
         } else if (!naldaFavorite) {
           error = "Nalda's Favorite must be populated.";
         } else if (!image) {
-          error = "Image must be populated.";
+          error = "Hero image must be populated.";
         } else if (!images.length) {
           error = "Images must be populated.";
         } else if (!images.length) {
@@ -424,13 +424,14 @@ module.exports = () => {
           });
         } else {
           const newImages = [];
+          const folderId = uuid();
           async.eachSeries(images, (img, cb) => {
             const listingPictureConverted = new Buffer(img.replace(/^data:image\/\w+;base64,/, ""), 'base64');
 
             s3bucket.createBucket(() => {
               var parameters = {
                 Bucket: AWS_BUCKET_NAME,
-                Key: `listingpictures/${uuid()}`,
+                Key: `listingpictures/${folderId}/${uuid()}`,
                 ContentType: 'image/jpeg',
                 Body: listingPictureConverted,
                 ContentEncoding: 'base64',

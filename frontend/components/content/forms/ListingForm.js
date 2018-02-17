@@ -225,35 +225,51 @@ class ListingForm extends React.Component {
   }
 
   // Helper method for image uploads
-  onDrop(acceptedFiles, rejectedFiles) {
+  onDrop(acceptedFiles, rejectedFiles, hero) {
     // Ensure at leat one valid image was uploaded
     if (acceptedFiles.length) {
-      // Ensure no more than 6 were uploaded
-      if (acceptedFiles.length + this.state.images.length > 6) {
-        this.setState({
-          error: 'You may only upload 6 images.',
-        });
-        // Shorten acceptedFiles to 6
-        acceptedFiles.splice(6 - this.state.images.length);
-      }
-      // Make a copy of the images in state
-      const images = this.state.images.slice();
-      // Loop through and convert images
-      acceptedFiles.forEach((pic) => {
+      if (hero === "hero") {
+        const image = acceptedFiles[0];
         const reader = new FileReader();
         // Convert from blob to a proper file object that can be passed to server
         reader.onload = (upload) => {
-          images.push(upload.target.result);
+          // Set images to state
+          this.setState({
+            image: upload.target.result,
+          });
         };
         // File reader set up
         reader.onabort = () => this.setState({error: "File read aborted."});
         reader.onerror = () => this.setState({error: "File read error."});
-        reader.readAsDataURL(pic);
-      });
-      // Set images to state
-      this.setState({
-        images,
-      });
+        reader.readAsDataURL(image);
+      } else {
+        // Ensure no more than 6 were uploaded
+        if (acceptedFiles.length + this.state.images.length > 6) {
+          this.setState({
+            error: 'You may only upload 6 images.',
+          });
+          // Shorten acceptedFiles to 6
+          acceptedFiles.splice(6 - this.state.images.length);
+        }
+        // Make a copy of the images in state
+        const images = this.state.images.slice();
+        // Loop through and convert images
+        acceptedFiles.forEach((pic) => {
+          const reader = new FileReader();
+          // Convert from blob to a proper file object that can be passed to server
+          reader.onload = (upload) => {
+            images.push(upload.target.result);
+          };
+          // File reader set up
+          reader.onabort = () => this.setState({error: "File read aborted."});
+          reader.onerror = () => this.setState({error: "File read error."});
+          reader.readAsDataURL(pic);
+        });
+        // Set images to state
+        this.setState({
+          images,
+        });
+      }
     }
     if (rejectedFiles.length) {
       // Display error with wrong file type
@@ -342,6 +358,7 @@ class ListingForm extends React.Component {
    * Helper method to check if all input is valid, returns true or false
    * Frontend validations
    */
+   // TODO check for hero image
   inputValid() {
     // Begin error checking
     if (!this.state.title) {
@@ -425,8 +442,14 @@ class ListingForm extends React.Component {
                 onChange={ this.handleChangeTitle }
               />
               <label>
-                Image (url to an image)
+                Hero Image (url to an image)
               </label>
+              <Dropzone
+                onDrop={(acceptedFiles, rejectedFiles) => this.onDrop(acceptedFiles, rejectedFiles, "hero")}
+                accept="image/*"
+                >
+                <p>Drop a hero image ehre, or click to select an image to upload.</p>
+              </Dropzone>
               <input
                 name="image"
                 type="url"

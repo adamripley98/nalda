@@ -78,9 +78,9 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [X] Bug where profile picture doesn't show up sometimes (storing in AWS as a single pixel?)
 - [X] Edit content bug?
 - [X] Make admin backend route async?
-- [ ] Store images in subfolders for each listing or article
+- [X] Store images in subfolders for each listing or article
 - [X] Only first name in nav bar
-- [ ] Location with facebook/google
+- [X] Location with facebook/google
 - [ ] Edit articles/listings with file uploads
 - [X] Verify email token undefined
 
@@ -95,8 +95,9 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [x] hamburger turns to X animation
 - [x] Stop using production mlab for testing
 - [x] Push changes live
-- [ ] Uncaught Error: Carousel is sliding
+- [X] Uncaught Error: Carousel is sliding
 - [ ] Style emails better
+- [ ] Fix carousel image size
 ## Admins
 
 - [X] Admin add page (similar look to contact page) where admins can enter email addresses and add both other admins and other content creators. Only admins can add people as content creators and only content creators can create posts.
@@ -198,12 +199,12 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [X] `Admin.js` restyle 3 buttons & display successful admin change on frontend
 - [X] Standardize size of all pictures on home page
 - [X] Have listing location be a map picture
-- [ ] Only display first name in nav bar
+- [X] Only display first name in nav bar
 - [ ] Icons for all amenities
 - [ ] Make it easier for an admin to enter hours (some sort of autofill)
 - [ ] Get rid of any userId passing from frontend unless it is for comparing to backend userId
 - [ ] Clear hashtag from url after google login
-- [ ] Email verify on account page should be below loading
+- [X] Email verify on account page should be below loading
 - [ ] Styling on the emails sent by Nalda: Welcome, reset, and verify.
 
 
@@ -284,11 +285,11 @@ DELETE '/api/videos/:id'       // Delete a specific article
   - [ ] Description text area
   - [ ] Editor's review section (listings)
   - [ ] Mobile At a glance
-  - [ ] Also make it default close
+  - [X] Also make it default close
   - [ ] Change icons for that
   - [ ] Hero image
-  - [ ] Add more images
-  - [ ] Max images (6)
+  - [X] Add more images
+  - [X] Max images (6)
   - [ ] Two column listings
 - [ ] Article changes
   - [ ] Links to other things
@@ -367,5 +368,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [ ] Multiple curators on the same content
 - [ ] Recommending content for users to look at
   * To begin they can be location based and random, eventually custom based on user
+- [ ] Delete a user, delete all content of that user
+- [ ] When article or listing is deleted, content is deleted from AWS
 
 ## Questions

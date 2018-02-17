@@ -6,6 +6,9 @@
 const sgMail = require('@sendgrid/mail');
 const crypto = require('crypto');
 
+// Import env variables
+const HOST_URL = process.env.HOST_URL;
+
 // Helper method to send user a welcome email
 const sendWelcomeEmail = (user, cb) => {
   // Generate a random token
@@ -35,7 +38,7 @@ const sendWelcomeEmail = (user, cb) => {
       from: process.env.SENDGRID_EMAIL,
       subject: 'Welcome to Nalda, ' + displayName + '! Verify your account.',
       text: 'Hi ' + displayName + ',\n Welcome to Nalda! Please verify your account at the following link:\n\n' +
-      'http://' + 'localhost:3000' + '/verify/' + token + '\n\n',
+      'http://' + HOST_URL + '/verify/' + token + '\n\n',
       html: html,
     };
 
