@@ -58,6 +58,7 @@ import Profile from '../components/Profile';
  * Backend routes are prefixed with 'api/' and reside in '../backend/routes.js'
  *
  */
+
 class AppContainer extends Component {
   // Constructor method
   constructor(props) {
@@ -98,8 +99,7 @@ class AppContainer extends Component {
         // If user is logged in through facebook on backend, update on Frontend
         if (resp.data.oAuthLogin) {
           // Send redux event
-          // TODO Remove dummy location
-          onLogin(user.userId, user.userType, user.name, "Philadelphia, PA", user.profilePicture);
+          onLogin(user.userId, user.userType, user.name, user.location || null, user.profilePicture);
         }
       }
     })

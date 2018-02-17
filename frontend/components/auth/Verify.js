@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 
 // Import components
 import Thin from '../shared/Thin';
+import Loading from '../shared/Loading';
 
 /**
  * Component rendered to tell user that they've been verified
@@ -54,7 +55,7 @@ class Verify extends Component {
               <div className="alert alert-success marg-bot-1">
                 Your account has been verified!
               </div>
-            ) : null
+            ) : <Loading />
           }
           <Link to="/" className="btn btn-primary full-width">
             Back to home

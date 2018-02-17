@@ -62,7 +62,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
   - [ ] Frontend
 - [X] Nalda's favorite section on listing (similar to description except opinion)
 - [ ] Flash notifications upon register, signup, submissions, etc.
-- [ ] Securing auth routes better
+- [X] Securing auth routes better
 - [X] Admin panel
   - [X] Fix display bug
   - [X] Curator/Admin list
@@ -70,17 +70,19 @@ DELETE '/api/videos/:id'       // Delete a specific article
   - [X] See all content
 - [ ] Rough beginning to homepage
 - [ ] Random bug fixes
-  - [ ] Login/register color display on safari
-  - [ ] Link 'forgot your password' to edit password form
+  - [X] Login/register color display on safari
+  - [X] Link 'forgot your password' to edit password form
   - [ ] Ensure all locations entered are valid addresses/cities
   - [ ] Error check for empty inputs
-- [ ] Weird bug where account page now logs you out if you try refreshing
+  - [ ] Weird bug where account page now logs you out if you try refreshing
 - [X] Bug where profile picture doesn't show up sometimes (storing in AWS as a single pixel?)
-- [ ] Edit content bug?
-- [ ] Make admin backend route async?
+- [X] Edit content bug?
+- [X] Make admin backend route async?
 - [ ] Store images in subfolders for each listing or article
-- [ ] Only first name in nav bar
+- [X] Only first name in nav bar
 - [ ] Location with facebook/google
+- [ ] Edit articles/listings with file uploads
+- [X] Verify email token undefined
 
 # Cam
 - [x] Style Reset password better on `LoginModal` and `Login`
@@ -93,7 +95,8 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [x] hamburger turns to X animation
 - [x] Stop using production mlab for testing
 - [x] Push changes live
-
+- [ ] Uncaught Error: Carousel is sliding
+- [ ] Style emails better
 ## Admins
 
 - [X] Admin add page (similar look to contact page) where admins can enter email addresses and add both other admins and other content creators. Only admins can add people as content creators and only content creators can create posts.
@@ -355,6 +358,8 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [X] Video edit location clearing bug
 - [X] SSL is not fully secure?
 - [X] Admin panel not displaying?
+- [ ] Delete reviews not working?
+- [ ] Edit articles doesn't link
 
 ## Adam
 

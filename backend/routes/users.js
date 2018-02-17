@@ -108,7 +108,6 @@ module.exports = () => {
   router.post('/bio', (req, res) => {
     // Isolate variables from the request
     const bio = req.body.bio;
-    console.log('server bio', bio);
 
     // Check to make sure poster is logged in
     UserCheck(req, (authRes) => {
@@ -293,6 +292,34 @@ module.exports = () => {
                   error: '',
                 });
               }
+            });
+          }
+        });
+      }
+    });
+  });
+
+  /**
+   * Return a given user's username
+   */
+  router.get('/username', (req, res) => {
+    UserCheck(req, (authRes) => {
+      if (!authRes.success) {
+        res.send({
+          success: false,
+          error: authRes,
+        });
+      } else {
+        User.findById(req.session.passport.user, (err, user) => {
+          if (err) {
+            res.send({
+              success: false,
+              error: 'Error finding user.',
+            });
+          } else {
+            res.send({
+              success: true,
+              data: user.username,
             });
           }
         });
