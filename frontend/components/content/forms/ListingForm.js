@@ -442,21 +442,24 @@ class ListingForm extends React.Component {
                 onChange={ this.handleChangeTitle }
               />
               <label>
-                Hero Image (url to an image)
+                Hero Image
               </label>
               <Dropzone
                 onDrop={(acceptedFiles, rejectedFiles) => this.onDrop(acceptedFiles, rejectedFiles, "hero")}
                 accept="image/*"
                 >
-                <p>Drop a hero image ehre, or click to select an image to upload.</p>
+                <p>Drop a hero image here, or click to select an image to upload.</p>
               </Dropzone>
-              <input
+              {/* <input
                 name="image"
                 type="url"
                 className="form-control marg-bot-1"
                 value={ this.state.image }
                 onChange={ this.handleChangeImage }
-              />
+              /> */}
+              <label>
+                Carousel Images
+              </label>
               <Dropzone
                 onDrop={(acceptedFiles, rejectedFiles) => this.onDrop(acceptedFiles, rejectedFiles)}
                 accept="image/*"

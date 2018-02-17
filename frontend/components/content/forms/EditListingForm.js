@@ -4,6 +4,9 @@ import autosize from 'autosize';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 import PropTypes from 'prop-types';
+import Dropzone from 'react-dropzone';
+import uuid from 'uuid-v4';
+import async from 'async';
 
 // Import components
 import ErrorMessage from '../../shared/ErrorMessage';
@@ -22,6 +25,7 @@ class EditListingForm extends React.Component {
       description: "",
       location: "",
       image: "",
+      images: [],
       rating: '',
       price: "$",
       hours: {
@@ -87,6 +91,7 @@ class EditListingForm extends React.Component {
     // Bind this to helper methods
     this.handleChangeTitle = this.handleChangeTitle.bind(this);
     this.handleChangeDescription = this.handleChangeDescription.bind(this);
+    this.handleChangeNaldaFavorite = this.handleChangeNaldaFavorite.bind(this);
     this.handleChangeImage = this.handleChangeImage.bind(this);
     this.handleChangeHours = this.handleChangeHours.bind(this);
     this.handleChangeRating = this.handleChangeRating.bind(this);
@@ -94,6 +99,9 @@ class EditListingForm extends React.Component {
     this.handleChangeWebsite = this.handleChangeWebsite.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleClickCategory = this.handleClickCategory.bind(this);
+    this.onDrop = this.onDrop.bind(this);
+    this.displayImages = this.displayImages.bind(this);
+    this.removeImage = this.removeImage.bind(this);
   }
 
   /**
@@ -178,6 +186,15 @@ class EditListingForm extends React.Component {
   }
 
   /**
+   * Helper method to handle a change to the nalda's favorite state
+   */
+  handleChangeNaldaFavorite(event) {
+    this.setState({
+      naldaFavorite: event.target.value,
+    });
+  }
+
+  /**
    * Helper method to handle a change to the image state
    */
   handleChangeImage(event) {
@@ -255,6 +272,112 @@ class EditListingForm extends React.Component {
     });
   }
 
+  // Helper method for image uploads
+  onDrop(acceptedFiles, rejectedFiles, hero) {
+    // Ensure at leat one valid image was uploaded
+    if (acceptedFiles.length) {
+      if (hero === "hero") {
+        const image = acceptedFiles[0];
+        const reader = new FileReader();
+        // Convert from blob to a proper file object that can be passed to server
+        reader.onload = (upload) => {
+          // Set images to state
+          this.setState({
+            image: upload.target.result,
+          });
+        };
+        // File reader set up
+        reader.onabort = () => this.setState({error: "File read aborted."});
+        reader.onerror = () => this.setState({error: "File read error."});
+        reader.readAsDataURL(image);
+      } else {
+        // Ensure no more than 6 were uploaded
+        if (acceptedFiles.length + this.state.images.length > 6) {
+          this.setState({
+            error: 'You may only upload 6 images.',
+          });
+          // Shorten acceptedFiles to 6
+          acceptedFiles.splice(6 - this.state.images.length);
+        }
+        // Make a copy of the images in state
+        const images = this.state.images.slice();
+        // Loop through and convert images
+        async.eachSeries(acceptedFiles, (pic, cb) => {
+          const reader = new FileReader();
+          // Convert from blob to a proper file object that can be passed to server
+          reader.onload = (upload) => {
+            images.push(upload.target.result);
+            cb();
+          };
+          // File reader set up
+          reader.onabort = () => {
+            this.setState({error: "File read aborted."});
+            cb();
+          };
+
+          reader.onerror = () => {
+            this.setState({error: "File read error."});
+            cb();
+          };
+
+          reader.readAsDataURL(pic);
+        }, asyncErr => {
+          if (asyncErr) {
+            this.setState({
+              error: "Async error with image upload.",
+            });
+            return;
+          }
+          // Set images to state
+          this.setState({
+            images,
+          });
+        });
+      }
+    }
+    if (rejectedFiles.length) {
+      // Display error with wrong file type
+      this.setState({
+        error: rejectedFiles[0].name + ' is not an image.',
+      });
+    }
+  }
+
+  // Helper method to remove an image
+  removeImage(index) {
+    const images = this.state.images.slice();
+    images.splice(index, 1);
+    this.setState({
+      images,
+    });
+  }
+
+  // Helper method to display images
+  displayImages() {
+    const images = this.state.images.map((image, i) => {
+      return (
+        <li key={uuid()}>
+          <img
+            src={image}
+            style={{
+              height: "2rem"
+            }}
+            alt={"carousel image " + i}
+          />
+          <div onClick={() => this.removeImage(this.state.images.indexOf(image))}>
+            DELETE
+          </div>
+        </li>
+      );
+    });
+    return (
+      <ul>
+        {images}
+        <li>Count: {this.state.images.length}</li>
+      </ul>
+    );
+  }
+
   /**
    * Helper method to handle when the form is submitted
    */
@@ -281,12 +404,14 @@ class EditListingForm extends React.Component {
           axios.post(`/api/listings/${this.state._id}/edit`, {
             title: this.state.title,
             image: this.state.image,
+            images: this.state.images,
             location: {
               name: location,
               lat: latitude,
               lng: longitude,
             },
             description: this.state.description,
+            naldaFavorite: this.state.naldaFavorite,
             hours: this.state.hours,
             rating: this.state.rating,
             price: this.state.price,
@@ -342,6 +467,12 @@ class EditListingForm extends React.Component {
         pendingSubmit: false,
       });
       return false;
+    } else if (!this.state.naldaFavorite) {
+      this.setState({
+        error: "Nalda's Favorite must be populated.",
+        pendingSubmit: false,
+      });
+      return false;
     } else if (this.state.title.length < 4 || this.state.title.length > 100) {
       this.setState({
         error: "Title must be between 4 and 100 characters long.",
@@ -350,7 +481,13 @@ class EditListingForm extends React.Component {
       return false;
     } else if (this.state.description.length < 4 || this.state.description.length > 2000) {
       this.setState({
-        error: "Subtitle must be between 4 and 2000 characters long.",
+        error: "Description must be between 4 and 2000 characters long.",
+        pendingSubmit: false,
+      });
+      return false;
+    } else if (this.state.naldaFavorite.length < 4 || this.state.naldaFavorite.length > 2000) {
+      this.setState({
+        error: "Nalda's Favorite must be between 4 and 2000 characters long.",
         pendingSubmit: false,
       });
       return false;
@@ -398,7 +535,7 @@ class EditListingForm extends React.Component {
                     value={ this.state.title }
                     onChange={ this.handleChangeTitle }
                   />
-                  <label>
+                  {/* <label>
                     Image (url to an image)
                   </label>
                   <input
@@ -407,7 +544,26 @@ class EditListingForm extends React.Component {
                     className="form-control marg-bot-1"
                     value={ this.state.image }
                     onChange={ this.handleChangeImage }
-                  />
+                  /> */}
+                  <label>
+                    Hero Image (url to an image)
+                  </label>
+                  <Dropzone
+                    onDrop={(acceptedFiles, rejectedFiles) => this.onDrop(acceptedFiles, rejectedFiles, "hero")}
+                    accept="image/*"
+                    >
+                    <p>Drop a hero image here, or click to select an image to upload.</p>
+                  </Dropzone>
+                  <label>
+                    Carousel Images
+                  </label>
+                  {this.displayImages()}
+                  <Dropzone
+                    onDrop={(acceptedFiles, rejectedFiles) => this.onDrop(acceptedFiles, rejectedFiles)}
+                    accept="image/*"
+                    >
+                    <p>Try dropping some images here, or click to select images to upload.</p>
+                  </Dropzone>
                   <label>
                     Location
                   </label>
@@ -427,6 +583,17 @@ class EditListingForm extends React.Component {
                     rows="1"
                     value={ this.state.description }
                     onChange={ this.handleChangeDescription }
+                  />
+                  <label>
+                    Nalda's Favorite
+                  </label>
+                  <textarea
+                    name="body"
+                    type="text"
+                    className="form-control marg-bot-1"
+                    rows="1"
+                    value={ this.state.naldaFavorite }
+                    onChange={ this.handleChangeNaldaFavorite }
                   />
                   <label>
                     Hours

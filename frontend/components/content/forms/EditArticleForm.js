@@ -5,6 +5,8 @@ import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import Dropzone from 'react-dropzone';
+
 
 // Import components
 import Loading from '../../shared/Loading';
@@ -23,6 +25,7 @@ class EditArticleForm extends React.Component {
       title: "",
       subtitle: "",
       image: "",
+      imageName: '',
       body: [
         {
           componentType: "text",
@@ -43,6 +46,7 @@ class EditArticleForm extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.addNewComponent = this.addNewComponent.bind(this);
     this.inputValid = this.inputValid.bind(this);
+    this.onDrop = this.onDrop.bind(this);
   }
 
   // Handle resizing textarea
@@ -142,6 +146,52 @@ class EditArticleForm extends React.Component {
     this.setState({
       body: bodyObj,
     });
+  }
+
+  // Helper method for image uploads
+  onDrop(acceptedFiles, rejectedFiles, index) {
+    if (acceptedFiles.length) {
+      const pic = acceptedFiles[0];
+      // If first image
+      if (index === "main") {
+        const reader = new FileReader();
+        // Convert from blob to a proper file object that can be passed to server
+        reader.onload = (upload) => {
+          this.setState({
+            image: upload.target.result,
+            imageName: pic.name,
+            error: '',
+          });
+        };
+        // File reader set up
+        reader.onabort = () => this.setState({error: "File read aborted."});
+        reader.onerror = () => this.setState({error: "File read error."});
+        reader.readAsDataURL(pic);
+      } else {
+        const reader = new FileReader();
+        // Convert from blob to a proper file object that can be passed to server
+        reader.onload = (upload) => {
+          // Manipulate the correct component object
+          const bodyObj = this.state.body;
+          bodyObj[index].preview = pic.preview;
+          bodyObj[index].body = upload.target.result;
+          // Update the state
+          this.setState({
+            body: bodyObj,
+            error: '',
+          });
+        };
+        // File reader set up
+        reader.onabort = () => this.setState({error: "File read aborted."});
+        reader.onerror = () => this.setState({error: "File read error."});
+        reader.readAsDataURL(pic);
+      }
+    } else {
+      // Display error with wrong file type
+      this.setState({
+        error: rejectedFiles[0].name + ' is not an image.',
+      });
+    }
   }
 
   /**
@@ -337,6 +387,23 @@ class EditArticleForm extends React.Component {
                       onChange={ this.handleChangeImage }
                     />
 
+                    <Dropzone
+                      onDrop={(acceptedFiles, rejectedFiles) => this.onDrop(acceptedFiles, rejectedFiles, "main")}
+                      accept="image/*"
+                      style={{ marginBottom: "1rem" }}
+                      >
+                      <p className="dropzone">
+                        <i className="fa fa-file-o" aria-hidden="true" />
+                        {
+                          this.state.imageName ? (
+                            this.state.imageName
+                          ) : (
+                            "Try dropping an image here, or click to select image to upload."
+                          )
+                        }
+                      </p>
+                    </Dropzone>
+
                     <label>
                       Body
                     </label>
@@ -367,6 +434,79 @@ class EditArticleForm extends React.Component {
                               onChange={ (e) => this.handleChangeBody(e, index) }
                             />
                             {
+                              component.componentType === "image" && (
+                                <Dropzone
+                                  onDrop={(acceptedFiles, rejectedFiles) => this.onDrop(acceptedFiles, rejectedFiles, index)}
+                                  accept="image/*"
+                                  style={{ marginBottom: "1rem" }}
+                                >
+                                  <p className="dropzone">
+                                    <i className="fa fa-file-o" aria-hidden="true" />
+                                    {
+                                      this.state.body[index].name ? (
+                                        this.state.body[index].name
+                                      ) : (
+                                        "Try dropping an image here, or click to select image to upload."
+                                      )
+                                    }
+
+                                    {
+                                      (index !== 0 || this.state.body.length > 1) && (
+                                        <i
+                                          className="fa fa-trash-o"
+                                          aria-hidden="true"
+                                          onClick={() => {
+                                            const bodyObj = this.state.body;
+                                            bodyObj.splice(index, 1);
+                                            this.setState({
+                                              body: bodyObj,
+                                            });
+                                          }}
+                                        />
+                                      )
+                                    }
+                                  </p>
+                                </Dropzone>
+                              )
+                            }
+                            {/* {
+                              (index !== 0 || this.state.body.length > 1) && (
+                                <i
+                                  className="fa fa-trash-o"
+                                  aria-hidden="true"
+                                  onClick={() => {
+                                    const bodyObj = this.state.body;
+                                    bodyObj.splice(index, 1);
+                                    this.setState({
+                                      body: bodyObj,
+                                    });
+                                  }}
+                                />
+                              )
+                            } */}
+                          </div>
+                        );
+                      })
+                    }
+
+                    {/* {
+                      component.componentType === "image" && (
+                        <Dropzone
+                          onDrop={(acceptedFiles, rejectedFiles) => this.onDrop(acceptedFiles, rejectedFiles, index)}
+                          accept="image/*"
+                          style={{ marginBottom: "1rem" }}
+                        >
+                          <p className="dropzone">
+                            <i className="fa fa-file-o" aria-hidden="true" />
+                            {
+                              this.state.body[index].name ? (
+                                this.state.body[index].name
+                              ) : (
+                                "Try dropping an image here, or click to select image to upload."
+                              )
+                            }
+
+                            {
                               (index !== 0 || this.state.body.length > 1) && (
                                 <i
                                   className="fa fa-trash-o"
@@ -381,10 +521,10 @@ class EditArticleForm extends React.Component {
                                 />
                               )
                             }
-                          </div>
-                        );
-                      })
-                    }
+                          </p>
+                        </Dropzone>
+                      )
+                    } */}
 
                     <label>
                       Add a new section

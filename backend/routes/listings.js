@@ -205,6 +205,7 @@ module.exports = () => {
    * @param website
    * @param categories
    */
+   // TODO find better solution than reusing entire code block lol
   router.post('/:id/edit', (req, res) => {
     // Find the id from the url
     const listingId = req.params.id;
@@ -221,9 +222,11 @@ module.exports = () => {
         // Isolate variables
         const title = req.body.title;
         const image = req.body.image;
+        const images = req.body.images;
         const location = req.body.location;
         const rating = req.body.rating;
         const description = req.body.description;
+        const naldaFavorite = req.body.naldaFavorite;
         const categories = req.body.categories;
         const price = req.body.price;
         const website = req.body.website;
@@ -232,19 +235,21 @@ module.exports = () => {
 
         // Keep track of any errors
         let error = "";
-        const urlRegexp = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
+        // const urlRegexp = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
 
         // Perform error checking on variables
         if (!title) {
           error = "Title must be populated.";
         } else if (!description) {
           error = "Description must be populated.";
+        } else if (!naldaFavorite) {
+          error = "Nalda's Favorite must be populated.";
         } else if (!image) {
           error = "Image must be populated.";
         } else if (!rating) {
           error = "Rating must be populated.";
-        } else if (!urlRegexp.test(image)) {
-          error = "Image must be a valid URL to an image.";
+        } else if (!images.length) {
+          error = "Images must be populated.";
         } else if (!price) {
           error = "Price must be populated.";
         } else if (!website) {
@@ -262,58 +267,227 @@ module.exports = () => {
             error,
           });
         } else {
-          // Find the author
-          User.findById(userId, (err, author) => {
-            if (err) {
-              res.send({
-                success: false,
-                error: 'Error finding author ' + err.message
-              });
-            } else if (!author) {
-              res.send({
-                success: false,
-                error: 'Author not found.'
-              });
-            } else {
-              // Find listing in Mongo
-              Listing.findById(listingId, (listingErr, listing) => {
-                if (listingErr) {
+          const newImages = [];
+          const folderId = uuid();
+          // If main image was a newly uploaded image
+          if (image.indexOf('naldacampus.s3.amazonaws') === -1) {
+            // Convert article picture to a form that s3 can display
+            const imageConverted = new Buffer(image.replace(/^data:image\/\w+;base64,/, ""), 'base64');
+
+            // Create bucket
+            s3bucket.createBucket(() => {
+              var params = {
+                Bucket: AWS_BUCKET_NAME,
+                Key: `listingpictures/${folderId}/${uuid()}`,
+                ContentType: 'image/jpeg',
+                Body: imageConverted,
+                ContentEncoding: 'base64',
+                ACL: 'public-read',
+              };
+              // Upload photo
+              s3bucket.upload(params, (errUpload, data) => {
+                if (errUpload) {
                   res.send({
                     success: false,
-                    error: listingErr.message,
+                    error: 'Error uploading profile picture.',
                   });
                 } else {
-                  // Make changes to given listing
-                  listing.title = title;
-                  listing.description = description;
-                  listing.image = image;
-                  listing.rating = rating;
-                  listing.price = price;
-                  listing.location = location;
-                  listing.categories = categories;
-                  listing.hours = hours;
-                  listing.website = website;
-                  listing.updatedAt = new Date().getTime();
+                  async.eachSeries(images, (img, cb) => {
+                    // New image is actually new
+                    if (img.indexOf('naldacampus.s3.amazonaws') === -1) {
+                      const listingPictureConverted = new Buffer(img.replace(/^data:image\/\w+;base64,/, ""), 'base64');
 
-                  // Save changes in mongo
-                  listing.save((errSave) => {
-                    if (errSave) {
-                      res.send({
-                        success: false,
-                        error: errSave.message,
+                      s3bucket.createBucket(() => {
+                        var parameters = {
+                          Bucket: AWS_BUCKET_NAME,
+                          Key: `listingpictures/${folderId}/${uuid()}`,
+                          ContentType: 'image/jpeg',
+                          Body: listingPictureConverted,
+                          ContentEncoding: 'base64',
+                          ACL: 'public-read',
+                        };
+                        // Upload photo
+                        s3bucket.upload(parameters, (errorUpload, pic) => {
+                          if (errorUpload) {
+                            res.send({
+                              success: false,
+                              error: 'Error uploading profile picture.',
+                            });
+                          } else {
+                            newImages.push(pic.Location);
+                            cb();
+                          }
+                        });
                       });
                     } else {
+                      // new image is old
+                      newImages.push(img);
+                      cb();
+                    }
+                  }, (asyncErr) => {
+                    if (asyncErr) {
                       res.send({
-                        success: true,
-                        error: '',
-                        data: listing,
+                        success: false,
+                        error: asyncErr,
+                      });
+                    } else {
+                      // Find the author
+                      User.findById(userId, (err, author) => {
+                        if (err) {
+                          res.send({
+                            success: false,
+                            error: 'Error finding author ' + err.message
+                          });
+                        } else if (!author) {
+                          res.send({
+                            success: false,
+                            error: 'Author not found.'
+                          });
+                        } else {
+                          // Find listing in Mongo
+                          Listing.findById(listingId, (listingErr, listing) => {
+                            if (listingErr) {
+                              res.send({
+                                success: false,
+                                error: listingErr.message,
+                              });
+                            } else {
+                              // Make changes to given listing
+                              listing.title = title;
+                              listing.description = description;
+                              listing.naldaFavorite = naldaFavorite;
+                              listing.image = data.Location;
+                              listing.images = newImages;
+                              listing.rating = rating;
+                              listing.price = price;
+                              listing.location = location;
+                              listing.categories = categories;
+                              listing.hours = hours;
+                              listing.website = website;
+                              listing.updatedAt = new Date().getTime();
+
+                              // Save changes in mongo
+                              listing.save((errSave) => {
+                                if (errSave) {
+                                  res.send({
+                                    success: false,
+                                    error: errSave.message,
+                                  });
+                                } else {
+                                  res.send({
+                                    success: true,
+                                    error: '',
+                                    data: listing,
+                                  });
+                                }
+                              });
+                            }
+                          });
+                        }
                       });
                     }
                   });
                 }
               });
-            }
-          });
+            });
+          } else {
+            async.eachSeries(images, (img, cb) => {
+              // If img is a new image
+              if (img.indexOf('naldacampus.s3.amazonaws') === -1) {
+                // Convert to storable form
+                const listingPictureConverted = new Buffer(img.replace(/^data:image\/\w+;base64,/, ""), 'base64');
+
+                s3bucket.createBucket(() => {
+                  var parameters = {
+                    Bucket: AWS_BUCKET_NAME,
+                    Key: `listingpictures/${folderId}/${uuid()}`,
+                    ContentType: 'image/jpeg',
+                    Body: listingPictureConverted,
+                    ContentEncoding: 'base64',
+                    ACL: 'public-read',
+                  };
+                  // Upload photo
+                  s3bucket.upload(parameters, (errorUpload, pic) => {
+                    if (errorUpload) {
+                      res.send({
+                        success: false,
+                        error: 'Error uploading profile picture.',
+                      });
+                    } else {
+                      newImages.push(pic.Location);
+                      cb();
+                    }
+                  });
+                });
+              } else {
+                // Simply add old image to new images array
+                newImages.push(img);
+                cb();
+              }
+            }, (asyncErr) => {
+              if (asyncErr) {
+                res.send({
+                  success: false,
+                  error: asyncErr,
+                });
+              } else {
+                // Find the author
+                User.findById(userId, (err, author) => {
+                  if (err) {
+                    res.send({
+                      success: false,
+                      error: 'Error finding author ' + err.message
+                    });
+                  } else if (!author) {
+                    res.send({
+                      success: false,
+                      error: 'Author not found.'
+                    });
+                  } else {
+                    // Find listing in Mongo
+                    Listing.findById(listingId, (listingErr, listing) => {
+                      if (listingErr) {
+                        res.send({
+                          success: false,
+                          error: listingErr.message,
+                        });
+                      } else {
+                        // Make changes to given listing
+                        listing.title = title;
+                        listing.description = description;
+                        listing.naldaFavorite = naldaFavorite;
+                        listing.image = image;
+                        listing.images = newImages;
+                        listing.rating = rating;
+                        listing.price = price;
+                        listing.location = location;
+                        listing.categories = categories;
+                        listing.hours = hours;
+                        listing.website = website;
+                        listing.updatedAt = new Date().getTime();
+
+                        // Save changes in mongo
+                        listing.save((errSave) => {
+                          if (errSave) {
+                            res.send({
+                              success: false,
+                              error: errSave.message,
+                            });
+                          } else {
+                            res.send({
+                              success: true,
+                              error: '',
+                              data: listing,
+                            });
+                          }
+                        });
+                      }
+                    });
+                  }
+                });
+              }
+            });
+          }
         }
       }
     });
@@ -322,6 +496,7 @@ module.exports = () => {
 /**
  * Route to handle deleting a specific listing
  */
+ // TODO delete assets from AWS as well
   router.delete('/:id', (req, res) => {
     // Find the id from the listing url
     const listingId = req.params.id;
@@ -425,73 +600,96 @@ module.exports = () => {
         } else {
           const newImages = [];
           const folderId = uuid();
-          async.eachSeries(images, (img, cb) => {
-            const listingPictureConverted = new Buffer(img.replace(/^data:image\/\w+;base64,/, ""), 'base64');
+          // Convert article picture to a form that s3 can display
+          const imageConverted = new Buffer(image.replace(/^data:image\/\w+;base64,/, ""), 'base64');
+          // Create bucket
+          s3bucket.createBucket(() => {
+            var params = {
+              Bucket: AWS_BUCKET_NAME,
+              Key: `listingpictures/${folderId}/${uuid()}`,
+              ContentType: 'image/jpeg',
+              Body: imageConverted,
+              ContentEncoding: 'base64',
+              ACL: 'public-read',
+            };
+            // Upload photo
+            s3bucket.upload(params, (errUpload, data) => {
+              if (errUpload) {
+                res.send({
+                  success: false,
+                  error: 'Error uploading profile picture.',
+                });
+              } else {
+                async.eachSeries(images, (img, cb) => {
+                  const listingPictureConverted = new Buffer(img.replace(/^data:image\/\w+;base64,/, ""), 'base64');
 
-            s3bucket.createBucket(() => {
-              var parameters = {
-                Bucket: AWS_BUCKET_NAME,
-                Key: `listingpictures/${folderId}/${uuid()}`,
-                ContentType: 'image/jpeg',
-                Body: listingPictureConverted,
-                ContentEncoding: 'base64',
-                ACL: 'public-read',
-              };
-              // Upload photo
-              s3bucket.upload(parameters, (errorUpload, pic) => {
-                if (errorUpload) {
-                  res.send({
-                    success: false,
-                    error: 'Error uploading profile picture.',
+                  s3bucket.createBucket(() => {
+                    var parameters = {
+                      Bucket: AWS_BUCKET_NAME,
+                      Key: `listingpictures/${folderId}/${uuid()}`,
+                      ContentType: 'image/jpeg',
+                      Body: listingPictureConverted,
+                      ContentEncoding: 'base64',
+                      ACL: 'public-read',
+                    };
+                    // Upload photo
+                    s3bucket.upload(parameters, (errorUpload, pic) => {
+                      if (errorUpload) {
+                        res.send({
+                          success: false,
+                          error: 'Error uploading profile picture.',
+                        });
+                      } else {
+                        newImages.push(pic.Location);
+                        cb();
+                      }
+                    });
                   });
-                } else {
-                  newImages.push(pic.Location);
-                  cb();
-                }
-              });
+                }, (asyncErr) => {
+                  if (asyncErr) {
+                    res.send({
+                      success: false,
+                      error: asyncErr,
+                    });
+                  } else {
+                    // Creates a new listing with given params
+                    const newListing = new Listing({
+                      title,
+                      description,
+                      naldaFavorite,
+                      image: data.Location,
+                      images: newImages,
+                      hours,
+                      rating,
+                      price,
+                      website,
+                      categories,
+                      location,
+                      author: userId,
+                      createdAt: Date.now(),
+                      updatedAt: Date.now(),
+                    });
+
+                    // Save the new article in mongo
+                    newListing.save((er, listing) => {
+                      if (er) {
+                        // Pass on any error to the user
+                        res.send({
+                          success: false,
+                          error: er.message,
+                        });
+                      } else {
+                        // Send the data along if it was successfully stored
+                        res.send({
+                          success: true,
+                          data: listing,
+                        });
+                      }
+                    });
+                  }
+                });
+              }
             });
-          }, (asyncErr) => {
-            if (asyncErr) {
-              res.send({
-                success: false,
-                error: asyncErr,
-              });
-            } else {
-              // Creates a new listing with given params
-              const newListing = new Listing({
-                title,
-                description,
-                naldaFavorite,
-                image,
-                images: newImages,
-                hours,
-                rating,
-                price,
-                website,
-                categories,
-                location,
-                author: userId,
-                createdAt: Date.now(),
-                updatedAt: Date.now(),
-              });
-
-              // Save the new article in mongo
-              newListing.save((er, listing) => {
-                if (er) {
-                  // Pass on any error to the user
-                  res.send({
-                    success: false,
-                    error: er.message,
-                  });
-                } else {
-                  // Send the data along if it was successfully stored
-                  res.send({
-                    success: true,
-                    data: listing,
-                  });
-                }
-              });
-            }
           });
         }
       }
