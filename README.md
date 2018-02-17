@@ -98,6 +98,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [X] Uncaught Error: Carousel is sliding
 - [ ] Style emails better
 - [ ] Fix carousel image size
+
 ## Admins
 
 - [X] Admin add page (similar look to contact page) where admins can enter email addresses and add both other admins and other content creators. Only admins can add people as content creators and only content creators can create posts.
