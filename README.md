@@ -46,7 +46,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
 ## By 2/17
 - [ ] Image upload
   - [X] Profile picture
-  - [ ] Listing multiple pictures
+  - [X] Listing multiple pictures
   - [X] Articles multiple pictures
   - [ ] Styling for all these
   - [X] Error handling
@@ -58,7 +58,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
     - [ ] Especially on mobile
 - [X] SSL fix
 - [ ] Gallery on listing
-  - [ ] Backend
+  - [X] Backend
   - [ ] Frontend
 - [X] Nalda's favorite section on listing (similar to description except opinion)
 - [ ] Flash notifications upon register, signup, submissions, etc.
@@ -79,6 +79,8 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [ ] Edit content bug?
 - [ ] Make admin backend route async?
 - [ ] Store images in subfolders for each listing or article
+- [ ] Only first name in nav bar
+- [ ] Location with facebook/google
 # Cam
 - [ ] Style Reset password better on `LoginModal` and `Login`
 - [ ] Display a banner on Account page asking people to verify their email (instead of text)
@@ -89,6 +91,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [ ] Stop using production mlab for testing
 - [ ] Push changes live
 - [ ] Display Nalda's Favorite section
+- [ ] Style admin panel
 
 ## Admins
 
@@ -350,7 +353,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [X] Video image not showing up on thumbnail
 - [X] Video edit location clearing bug
 - [ ] SSL is not fully secure?
-- [ ] Admin panel not displaying?
+- [X] Admin panel not displaying?
 
 ## Adam
 

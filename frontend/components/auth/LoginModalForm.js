@@ -13,7 +13,6 @@ import ErrorMessage from '../shared/ErrorMessage';
 /**
  * Render the login form for the modal
  */
- // TODO Style reset password button better
 class LoginModalForm extends Component {
   // Constructor method
   constructor(props) {
