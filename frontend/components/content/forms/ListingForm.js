@@ -250,7 +250,6 @@ class ListingForm extends React.Component {
         reader.onerror = () => this.setState({error: "File read error."});
         reader.readAsDataURL(pic);
       });
-      console.log('im', this.state.images);
       // Set images to state
       this.setState({
         images,
