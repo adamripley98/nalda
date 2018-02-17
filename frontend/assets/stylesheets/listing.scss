@@ -394,3 +394,30 @@
     }
   }
 }
+
+// Style list of carousel previews
+ul.carousel-preview {
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0;
+
+  li {
+    display: inline-block;
+    margin-right: 1rem;
+
+    img {
+      height: 3rem;
+      border-radius: 0.2rem;
+    }
+
+    .fa {
+      color: $gray;
+
+      &:hover,
+      &:focus,
+      &:active {
+        color: $dark-gray;
+      }
+    }
+  }
+}

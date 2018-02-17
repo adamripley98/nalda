@@ -299,8 +299,10 @@ class EditListingForm extends React.Component {
           // Shorten acceptedFiles to 6
           acceptedFiles.splice(6 - this.state.images.length);
         }
+
         // Make a copy of the images in state
         const images = this.state.images.slice();
+
         // Loop through and convert images
         async.eachSeries(acceptedFiles, (pic, cb) => {
           const reader = new FileReader();
@@ -359,23 +361,26 @@ class EditListingForm extends React.Component {
         <li key={uuid()}>
           <img
             src={image}
-            style={{
-              height: "2rem"
-            }}
             alt={"carousel image " + i}
           />
           <div onClick={() => this.removeImage(this.state.images.indexOf(image))}>
-            DELETE
+            <i className="fa fa-close" aria-hidden="true" />
           </div>
         </li>
       );
     });
-    return (
-      <ul>
-        {images}
-        <li>Count: {this.state.images.length}</li>
-      </ul>
-    );
+
+    // If there are images to display
+    if (images && images.length) {
+      return (
+        <ul className="carousel-preview">
+          {images}
+        </ul>
+      );
+    }
+
+    // Else
+    return null;
   }
 
   /**
@@ -551,8 +556,11 @@ class EditListingForm extends React.Component {
                   <Dropzone
                     onDrop={(acceptedFiles, rejectedFiles) => this.onDrop(acceptedFiles, rejectedFiles, "hero")}
                     accept="image/*"
+                    style={{ marginBottom: "1rem" }}
                     >
-                    <p>Drop a hero image here, or click to select an image to upload.</p>
+                    <p className="dropzone">
+                      Drop a hero image here, or click to select an image to upload.
+                    </p>
                   </Dropzone>
                   <label>
                     Carousel Images
@@ -561,8 +569,11 @@ class EditListingForm extends React.Component {
                   <Dropzone
                     onDrop={(acceptedFiles, rejectedFiles) => this.onDrop(acceptedFiles, rejectedFiles)}
                     accept="image/*"
+                    style={{ marginBottom: "1rem" }}
                     >
-                    <p>Try dropping some images here, or click to select images to upload.</p>
+                    <p className="dropzone">
+                      Try dropping some images here, or click to select images to upload.
+                    </p>
                   </Dropzone>
                   <label>
                     Location

@@ -25,7 +25,8 @@ class EditArticleForm extends React.Component {
       title: "",
       subtitle: "",
       image: "",
-      imageName: '',
+      imageName: "",
+      imagePreview: "",
       body: [
         {
           componentType: "text",
@@ -159,6 +160,7 @@ class EditArticleForm extends React.Component {
         reader.onload = (upload) => {
           this.setState({
             image: upload.target.result,
+            imagePreview: pic.preview,
             imageName: pic.name,
             error: '',
           });
@@ -344,48 +346,38 @@ class EditArticleForm extends React.Component {
                   <Loading />
                 ) : (
                   <div>
-                    <label>
-                      Title
-                    </label>
-                    <input
+                    <textarea
+                      rows="1"
                       name="title"
                       type="text"
-                      className="form-control marg-bot-1"
+                      id="title"
+                      placeholder="Title"
+                      className="form-control marg-bot-05 special"
                       value={ this.state.title }
                       onChange={ this.handleChangeTitle }
                     />
 
-                    <label>
-                      Subtitle
-                    </label>
-                    <input
+                    <textarea
+                      rows="1"
                       name="subtitle"
                       type="text"
-                      className="form-control marg-bot-1"
+                      id="subtitle"
+                      placeholder="Subtitle"
+                      className="form-control marg-bot-1 special"
                       value={ this.state.subtitle }
                       onChange={ this.handleChangeSubtitle }
                     />
 
-                    <label>
-                      Location
-                    </label>
-                    <input
-                      name="title"
-                      type="text"
-                      id="location"
-                      className="form-control marg-bot-1"
-                    />
-
-                    <label>
-                      Image (url to an image)
-                    </label>
-                    <input
-                      name="image"
-                      type="text"
-                      className="form-control marg-bot-1"
-                      value={ this.state.image }
-                      onChange={ this.handleChangeImage }
-                    />
+                    {
+                      this.state.imagePreview && (
+                        <img src={ this.state.imagePreview } alt={ this.state.title } className="img-fluid" />
+                      )
+                    }
+                    {
+                      (this.state.image && this.state.image.indexOf("naldacampus") !== -1) && (
+                        <img src={ this.state.image } alt={ this.state.title } className="img-fluid" />
+                      )
+                    }
 
                     <Dropzone
                       onDrop={(acceptedFiles, rejectedFiles) => this.onDrop(acceptedFiles, rejectedFiles, "main")}
@@ -405,34 +397,56 @@ class EditArticleForm extends React.Component {
                     </Dropzone>
 
                     <label>
-                      Body
+                      Location
                     </label>
+
+                    <input
+                      name="title"
+                      type="text"
+                      id="location"
+                      className="form-control marg-bot-2"
+                    />
+
                     {
                       this.state.body.map((component, index) => {
                         // Determine the placeholder for the component
-                        let placeholder;
+                        let placeholder = "";
+                        let className = "";
                         if (component.componentType === "text") {
                           placeholder = "Enter text...";
+                          className = "special";
                         } else if (component.componentType === "image") {
                           placeholder = "Enter URL to an image...";
+                          className = "image";
                         } else if (component.componentType === "quote") {
                           placeholder = "Enter quote...";
+                          className = "special quote";
                         } else if (component.componentType === "header") {
                           placeholder = "Type some header text...";
+                          className = "special header";
                         }
 
                         // Return the textarea associated with the component
                         return (
-                          <div className="component" key={ index }>
-                            <textarea
-                              placeholder={ placeholder }
-                              name="body"
-                              type="text"
-                              className="form-control marg-bot-1"
-                              rows="1"
-                              value={ this.state.body[index].body }
-                              onChange={ (e) => this.handleChangeBody(e, index) }
-                            />
+                          <div key={ index }>
+                            {
+                              (component.componentType === "image" && this.state.body[index].preview) && (
+                                <img
+                                  src={ this.state.body[index].preview }
+                                  alt={ this.state.title }
+                                  className="img-fluid"
+                                />
+                              )
+                            }
+                            {
+                              (component.componentType === "image" && this.state.body[index].body && this.state.body[index].body.indexOf("naldacampus" !== -1)) && (
+                                <img
+                                  src={ this.state.body[index].body }
+                                  alt={ this.state.title }
+                                  className="img-fluid"
+                                />
+                              )
+                            }
                             {
                               component.componentType === "image" && (
                                 <Dropzone
@@ -469,66 +483,43 @@ class EditArticleForm extends React.Component {
                                 </Dropzone>
                               )
                             }
-                            {/* {
-                              (index !== 0 || this.state.body.length > 1) && (
-                                <i
-                                  className="fa fa-trash-o"
-                                  aria-hidden="true"
-                                  onClick={() => {
-                                    const bodyObj = this.state.body;
-                                    bodyObj.splice(index, 1);
-                                    this.setState({
-                                      body: bodyObj,
-                                    });
-                                  }}
-                                />
+                            {
+                              component.componentType !== "image" && (
+                                <div className="component">
+                                  <textarea
+                                    placeholder={ placeholder }
+                                    name="body"
+                                    type="text"
+                                    className={ "form-control marg-bot-1 " + className }
+                                    rows="1"
+                                    value={ this.state.body[index].body }
+                                    onChange={ (e) => this.handleChangeBody(e, index) }
+                                  />
+                                  {
+                                    (index !== 0 || this.state.body.length > 1) && (
+                                      <i
+                                        className="fa fa-trash-o"
+                                        aria-hidden="true"
+                                        onClick={() => {
+                                          const bodyObj = this.state.body;
+                                          bodyObj.splice(index, 1);
+                                          this.setState({
+                                            body: bodyObj,
+                                          });
+                                        }}
+                                      />
+                                    )
+                                  }
+                                </div>
                               )
-                            } */}
+                            }
                           </div>
                         );
                       })
                     }
 
-                    {/* {
-                      component.componentType === "image" && (
-                        <Dropzone
-                          onDrop={(acceptedFiles, rejectedFiles) => this.onDrop(acceptedFiles, rejectedFiles, index)}
-                          accept="image/*"
-                          style={{ marginBottom: "1rem" }}
-                        >
-                          <p className="dropzone">
-                            <i className="fa fa-file-o" aria-hidden="true" />
-                            {
-                              this.state.body[index].name ? (
-                                this.state.body[index].name
-                              ) : (
-                                "Try dropping an image here, or click to select image to upload."
-                              )
-                            }
+                    <div className="line" />
 
-                            {
-                              (index !== 0 || this.state.body.length > 1) && (
-                                <i
-                                  className="fa fa-trash-o"
-                                  aria-hidden="true"
-                                  onClick={() => {
-                                    const bodyObj = this.state.body;
-                                    bodyObj.splice(index, 1);
-                                    this.setState({
-                                      body: bodyObj,
-                                    });
-                                  }}
-                                />
-                              )
-                            }
-                          </p>
-                        </Dropzone>
-                      )
-                    } */}
-
-                    <label>
-                      Add a new section
-                    </label>
                     <div className="icons marg-bot-1">
                       <i
                         className="fa fa-align-justify"
