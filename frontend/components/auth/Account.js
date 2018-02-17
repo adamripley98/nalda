@@ -269,7 +269,6 @@ class Account extends Component {
       // File reader set up
       reader.onabort = () => this.setState({error: "File read aborted."});
       reader.onerror = () => this.setState({error: "File read error."});
-      console.log('what is prof pic', profilePicture);
       reader.readAsDataURL(profilePicture);
     } else {
       this.setState({
@@ -292,7 +291,6 @@ class Account extends Component {
    */
   handleBioClick() {
     if (this.state.editBio) {
-      console.log('posting', this.state.bio);
       // Save the updated bio
       axios.post('/api/users/bio', {
         userId: this.props.userId,
@@ -432,7 +430,7 @@ class Account extends Component {
                     backgroundImage: `url(${ this.props.profilePicture })`
                   }}
                 />
-                
+
                 <Dropzone
                   onDrop={this.onDrop}
                   accept="image/*"
@@ -558,7 +556,6 @@ class Account extends Component {
    * Render the component
    */
   render() {
-    console.log('props', this.props);
     // If user is logged in or if user successfully logs in, redirects to home
     return (
       <div>
@@ -620,7 +617,7 @@ const mapStateToProps = (state) => {
 };
 
 // Allows us to dispatch a changeName event by calling this.props.changeFullName
-// NOTE this is necessary because name is stored in redux state to render on nav bar
+// NOTE this is necessary for redux state to render on nav bar
 const mapDispatchToProps = (dispatch) => {
   return {
     changeName: (name) => dispatch(changeFullName(name)),

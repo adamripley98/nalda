@@ -11,7 +11,6 @@ import Thin from '../shared/Thin';
 
 /**
  * Component for a user to edit their password
- * TODO forgot password reset
  */
 class EditPassword extends Component {
   /**
@@ -20,11 +19,13 @@ class EditPassword extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      username: '',
       oldPassword: '',
       newPassword: '',
       newPasswordConfirm: '',
       pending: false,
       redirect: false,
+      info: '',
     };
 
     // Bind this to helper methods
@@ -32,6 +33,22 @@ class EditPassword extends Component {
     this.handleChangeNewPassword = this.handleChangeNewPassword.bind(this);
     this.handleChangeNewPasswordConfirm = this.handleChangeNewPasswordConfirm.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleForgot = this.handleForgot.bind(this);
+  }
+
+  componentDidMount() {
+    axios.get('/api/users/username')
+    .then((resp) => {
+      if (!resp.data.success) {
+        this.setState({
+          error: resp.data.error,
+        });
+      } else {
+        this.setState({
+          username: resp.data.data,
+        });
+      }
+    });
   }
 
   /**
@@ -49,6 +66,34 @@ class EditPassword extends Component {
   handleChangeNewPassword(event) {
     this.setState({
       newPassword: event.target.value,
+    });
+  }
+
+  /**
+   * Handle when someone forgot their password
+   */
+  handleForgot() {
+    axios.post('/api/forgot', {
+      username: this.state.username,
+    })
+    .then((resp) => {
+      if (resp.data.success) {
+        this.setState({
+          info: 'Please check your email for a link to reset your password.',
+          error: '',
+        });
+      } else {
+        this.setState({
+          error: resp.data.error,
+        });
+      }
+    })
+    .catch((err) => {
+      if (err) {
+        this.setState({
+          error: err.message,
+        });
+      }
     });
   }
 
@@ -124,6 +169,14 @@ class EditPassword extends Component {
             { /* Render an error if there is one */}
             <ErrorMessage error={ this.state.error } />
 
+            {
+              this.state.info ?
+              <div className="alert alert-warning marg-bot-1" onClick={this.handleVerifyEmail}>
+                {this.state.info}
+              </div>
+              : null
+            }
+
             <label>
               Old password
             </label>
@@ -168,9 +221,12 @@ class EditPassword extends Component {
               }
             />
             <div className="marg-top-1">
-              <Link to="/todo">
-                Forgot your password?
-              </Link>
+              <a
+                className="link-style"
+                onClick={ () => this.handleForgot() }
+              >
+                Forgot password?
+              </a>
             </div>
           </form>
         </Thin>

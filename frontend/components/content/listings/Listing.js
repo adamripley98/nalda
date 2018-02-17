@@ -31,8 +31,10 @@ class Listing extends React.Component {
     this.state = {
       _id: '',
       image: "",
+      images: [],
       title: "",
       description: "",
+      naldaFavorite: "",
       website: "",
       price: "",
       categories: {},
@@ -612,9 +614,9 @@ class Listing extends React.Component {
                     { this.renderCategories() }
                   </div>
                   <p className="description">
-                    { this.state.description }
+                    { this.state.naldaFavorite }
                   </p>
-                  <Carousel images={["http://press.visitphilly.com/uploads/photos/3688_l.jpg", "http://press.visitphilly.com/uploads/photos/3688_l.jpg", "http://press.visitphilly.com/uploads/photos/3688_l.jpg"]}/>
+                  <Carousel images={this.state.images}/>
                   {
                     this.state.hours && (
                       <div className="hidden-lg-up">

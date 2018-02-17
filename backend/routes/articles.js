@@ -146,12 +146,12 @@ module.exports = () => {
             } else {
               // Convert article picture to a form that s3 can display
               const imageConverted = new Buffer(image.replace(/^data:image\/\w+;base64,/, ""), 'base64');
-
+              const folderId = uuid();
               // Create bucket
               s3bucket.createBucket(() => {
                 var params = {
                   Bucket: AWS_BUCKET_NAME,
-                  Key: `articlepictures/${uuid()}`,
+                  Key: `articlepictures/${folderId}/${uuid()}`,
                   ContentType: 'image/jpeg',
                   Body: imageConverted,
                   ContentEncoding: 'base64',
@@ -173,7 +173,7 @@ module.exports = () => {
                         s3bucket.createBucket(() => {
                           var parameters = {
                             Bucket: AWS_BUCKET_NAME,
-                            Key: `articlepictures/${uuid()}`,
+                            Key: `articlepictures/${folderId}/${uuid()}`,
                             ContentType: 'image/jpeg',
                             Body: articlePictureConverted,
                             ContentEncoding: 'base64',

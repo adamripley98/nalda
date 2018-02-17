@@ -39,6 +39,7 @@ class Home extends React.Component {
         ? history.replaceState(null, null, window.location.href.split('#')[0])
         : window.location.hash = '';
     }
+
     // Pull all articles, listings, and videos from the database
     axios.get('/api/home')
       .then((resp) => {

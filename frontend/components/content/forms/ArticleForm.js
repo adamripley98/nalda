@@ -360,7 +360,6 @@ class ArticleForm extends React.Component {
                 )
               }
 
-              {/* TODO Style this */}
               <Dropzone
                 onDrop={(acceptedFiles, rejectedFiles) => this.onDrop(acceptedFiles, rejectedFiles, "main")}
                 accept="image/*"
@@ -372,7 +371,7 @@ class ArticleForm extends React.Component {
                     this.state.imageName ? (
                       this.state.imageName
                     ) : (
-                      "Try dropping some files here, or click to select files to upload."
+                      "Try dropping an image here, or click to select image to upload."
                     )
                   }
                 </p>
@@ -425,7 +424,13 @@ class ArticleForm extends React.Component {
                           >
                             <p className="dropzone">
                               <i className="fa fa-file-o" aria-hidden="true" />
-                              Try dropping some files here, or click to select files to upload.
+                              {
+                                this.state.body[index].name ? (
+                                  this.state.body[index].name
+                                ) : (
+                                  "Try dropping an image here, or click to select image to upload."
+                                )
+                              }
 
                               {
                                 (index !== 0 || this.state.body.length > 1) && (

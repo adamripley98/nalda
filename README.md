@@ -46,7 +46,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
 ## By 2/17
 - [ ] Image upload
   - [X] Profile picture
-  - [ ] Listing multiple pictures
+  - [X] Listing multiple pictures
   - [X] Articles multiple pictures
   - [ ] Styling for all these
   - [X] Error handling
@@ -58,25 +58,31 @@ DELETE '/api/videos/:id'       // Delete a specific article
     - [ ] Especially on mobile
 - [X] SSL fix
 - [ ] Gallery on listing
-  - [ ] Backend
+  - [X] Backend
   - [ ] Frontend
-- [ ] Nalda's favorite section on listing (similar to description except opinion)
+- [X] Nalda's favorite section on listing (similar to description except opinion)
 - [ ] Flash notifications upon register, signup, submissions, etc.
-- [ ] Securing auth routes better
-- [ ] Admin panel
+- [X] Securing auth routes better
+- [X] Admin panel
   - [X] Fix display bug
   - [X] Curator/Admin list
   - [X] See users (scroll menu)
-  - [ ] See all content
+  - [X] See all content
 - [ ] Rough beginning to homepage
 - [ ] Random bug fixes
-  - [ ] Login/register color display on safari
-  - [ ] Link 'forgot your password' to edit password form
+  - [X] Login/register color display on safari
+  - [X] Link 'forgot your password' to edit password form
   - [ ] Ensure all locations entered are valid addresses/cities
   - [ ] Error check for empty inputs
-- [ ] Weird bug where account page now logs you out if you try refreshing
+  - [ ] Weird bug where account page now logs you out if you try refreshing
 - [X] Bug where profile picture doesn't show up sometimes (storing in AWS as a single pixel?)
-- [ ] Edit content bug?
+- [X] Edit content bug?
+- [X] Make admin backend route async?
+- [X] Store images in subfolders for each listing or article
+- [X] Only first name in nav bar
+- [X] Location with facebook/google
+- [ ] Edit articles/listings with file uploads
+- [X] Verify email token undefined
 
 # Cam
 - [x] Style Reset password better on `LoginModal` and `Login`
@@ -84,10 +90,14 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [x] Make trash can to delete reviews bigger
 - [x] Style file upload in `Account.js`,
 - [ ] Style frontend for homepage
+- [ ] Display Nalda's Favorite section
+- [ ] Style admin panel
 - [x] hamburger turns to X animation
 - [x] Stop using production mlab for testing
 - [x] Push changes live
-
+- [X] Uncaught Error: Carousel is sliding
+- [ ] Style emails better
+- [ ] Fix carousel image size
 ## Admins
 
 - [X] Admin add page (similar look to contact page) where admins can enter email addresses and add both other admins and other content creators. Only admins can add people as content creators and only content creators can create posts.
@@ -189,12 +199,12 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [X] `Admin.js` restyle 3 buttons & display successful admin change on frontend
 - [X] Standardize size of all pictures on home page
 - [X] Have listing location be a map picture
-- [ ] Only display first name in nav bar
+- [X] Only display first name in nav bar
 - [ ] Icons for all amenities
 - [ ] Make it easier for an admin to enter hours (some sort of autofill)
 - [ ] Get rid of any userId passing from frontend unless it is for comparing to backend userId
 - [ ] Clear hashtag from url after google login
-- [ ] Email verify on account page should be below loading
+- [X] Email verify on account page should be below loading
 - [ ] Styling on the emails sent by Nalda: Welcome, reset, and verify.
 
 
@@ -275,11 +285,11 @@ DELETE '/api/videos/:id'       // Delete a specific article
   - [ ] Description text area
   - [ ] Editor's review section (listings)
   - [ ] Mobile At a glance
-  - [ ] Also make it default close
+  - [X] Also make it default close
   - [ ] Change icons for that
   - [ ] Hero image
-  - [ ] Add more images
-  - [ ] Max images (6)
+  - [X] Add more images
+  - [X] Max images (6)
   - [ ] Two column listings
 - [ ] Article changes
   - [ ] Links to other things
@@ -347,8 +357,10 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [X] Users profiles shouldn't be displayed, only admin/curators
 - [X] Video image not showing up on thumbnail
 - [X] Video edit location clearing bug
-- [x] SSL is not fully secure?
-- [ ] Admin panel not displaying?
+- [X] SSL is not fully secure?
+- [X] Admin panel not displaying?
+- [ ] Delete reviews not working?
+- [ ] Edit articles doesn't link
 
 ## Adam
 
@@ -356,6 +368,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [ ] Multiple curators on the same content
 - [ ] Recommending content for users to look at
   * To begin they can be location based and random, eventually custom based on user
-
+- [ ] Delete a user, delete all content of that user
+- [ ] When article or listing is deleted, content is deleted from AWS
 
 ## Questions

@@ -12,12 +12,10 @@ export default function(ComponentToRender) {
       // Renders component if user is logged in, returns to /login if not.
       if (this.props.userId) {
         // Component is returned with all properties it originally had
-        console.log('userId in');
         return (
             <ComponentToRender {...this.props} />
         );
       }
-      console.log('no user in');
       return (
             <Redirect to="/login"/>
       );

@@ -77,13 +77,13 @@ class Nav extends Component {
                     this.props.location && this.props.location.indexOf(",") > 0 ? (
                       this.props.location.substring(0, this.props.location.lastIndexOf(","))
                     ) : (
-                      this.props.location || "Philadelphia, PA"
+                      this.props.location || ""
                     )
                   }
                 </div>
                 <div className="name">
                   <p>
-                    Hi, <Link to="/account">{this.props.name}</Link>
+                    Hi, <Link to="/account">{this.props.name.split(' ').length ? this.props.name.split(' ')[0] : this.props.name }</Link>
                   </p>
                 </div>
               </div>

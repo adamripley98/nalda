@@ -5,7 +5,10 @@ const router = express.Router();
 
 // Import model
 const User = require('../models/user');
-// TODO Security
+
+// Import helper methods
+const {UserCheck} = require('../helperMethods/authChecking');
+
 /**
  * Update a user's password
  * @param String oldPassword
@@ -15,82 +18,91 @@ const User = require('../models/user');
  */
 module.exports = () => {
   router.post('/users/password', (req, res) => {
-    // Isolate variables from the request
-    const oldPassword = req.body.oldPassword;
-    const newPassword = req.body.newPassword;
-    const newPasswordConfirm = req.body.newPasswordConfirm;
-
-    // Error checking
-    if (!oldPassword) {
-      res.send({
-        success: false,
-        error: "Old password must be populated.",
-      });
-    } else if (!newPassword) {
-      res.send({
-        success: false,
-        error: "New password must be populated.",
-      });
-    } else if (!newPasswordConfirm) {
-      res.send({
-        success: false,
-        error: "New password confirmation must be populated.",
-      });
-    } else if (oldPassword === newPassword) {
-      res.send({
-        success: false,
-        error: "New password must be unique from old password.",
-      });
-    } else if (newPassword !== newPasswordConfirm) {
-      res.send({
-        success: false,
-        error: "New password and confirmation password must match.",
-      });
-    } else {
-      // Now check if new password meets validity conditions
-      if (invalidPassword(newPassword)) {
+    UserCheck(req, (authRes) => {
+      if (!authRes.success) {
         res.send({
           success: false,
-          error: invalidPassword(newPassword),
+          error: authRes.error,
         });
       } else {
-        // TODO needs to be more secure
-        // If valid password, find user in database
-        User.findById(req.body.userId, (err, user) => {
-          // Error finding user
-          if (err) {
+        // Isolate variables from the request
+        const oldPassword = req.body.oldPassword;
+        const newPassword = req.body.newPassword;
+        const newPasswordConfirm = req.body.newPasswordConfirm;
+        const userId = req.session.passport.user;
+
+        // Error checking
+        if (!oldPassword) {
+          res.send({
+            success: false,
+            error: "Old password must be populated.",
+          });
+        } else if (!newPassword) {
+          res.send({
+            success: false,
+            error: "New password must be populated.",
+          });
+        } else if (!newPasswordConfirm) {
+          res.send({
+            success: false,
+            error: "New password confirmation must be populated.",
+          });
+        } else if (oldPassword === newPassword) {
+          res.send({
+            success: false,
+            error: "New password must be unique from old password.",
+          });
+        } else if (newPassword !== newPasswordConfirm) {
+          res.send({
+            success: false,
+            error: "New password and confirmation password must match.",
+          });
+        } else {
+          // Now check if new password meets validity conditions
+          if (invalidPassword(newPassword)) {
             res.send({
               success: false,
-              error: err,
-            });
-          // Make sure old password matches
-          } else if (!isCorrect(user, oldPassword)) {
-            res.send({
-              success: false,
-              error: 'Old password did not match.',
+              error: invalidPassword(newPassword),
             });
           } else {
-            // Update password
-            user.password = createHash(newPassword);
-            user.save((errUser) => {
-              // Error saving changes
-              if (errUser) {
+            // If valid password, find user in database
+            User.findById(userId, (err, user) => {
+              // Error finding user
+              if (err) {
                 res.send({
-                  succcess: false,
-                  error: errUser,
+                  success: false,
+                  error: err,
+                });
+              // Make sure old password matches
+              } else if (!isCorrect(user, oldPassword)) {
+                res.send({
+                  success: false,
+                  error: 'Old password did not match.',
                 });
               } else {
-                // Successful password change
-                res.send({
-                  success: true,
-                  error: '',
+                // Update password
+                user.password = createHash(newPassword);
+                user.save((errUser) => {
+                  // Error saving changes
+                  if (errUser) {
+                    res.send({
+                      succcess: false,
+                      error: errUser,
+                    });
+                  } else {
+                    // Successful password change
+                    res.send({
+                      success: true,
+                      error: '',
+                    });
+                  }
                 });
               }
             });
           }
-        });
+        }
       }
-    }
+    });
   });
 
   return router;

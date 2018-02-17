@@ -9,7 +9,6 @@ const User = require('../models/user');
 /**
  * Reset a user's password
  */
- // TODO security
 module.exports = () => {
   router.get('/reset/:token', (req, res) => {
     // Isolate parameters
@@ -38,7 +37,6 @@ module.exports = () => {
   });
 
   // Route to handle resetting a password
-  // TODO security
   router.post('/reset/:token', (req, res) => {
     // Isolate variables
     const newPassword = req.body.newPassword;

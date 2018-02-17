@@ -41,7 +41,7 @@ class Listings extends React.Component {
   componentDidMount() {
     // Update the title
     document.title = "Nalda | Listings";
-    
+
     // Pull data
     axios.get('/api/listings')
       .then((resp) => {
