@@ -4,6 +4,7 @@ import autosize from 'autosize';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 import PropTypes from 'prop-types';
+import Dropzone from 'react-dropzone';
 
 // Import components
 import ErrorMessage from '../../shared/ErrorMessage';
@@ -22,6 +23,7 @@ class EditListingForm extends React.Component {
       description: "",
       location: "",
       image: "",
+      images: [],
       rating: '',
       price: "$",
       hours: {
@@ -94,6 +96,9 @@ class EditListingForm extends React.Component {
     this.handleChangeWebsite = this.handleChangeWebsite.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleClickCategory = this.handleClickCategory.bind(this);
+    this.onDrop = this.onDrop.bind(this);
+    this.displayImages = this.displayImages.bind(this);
+    this.removeImage = this.removeImage.bind(this);
   }
 
   /**
@@ -255,6 +260,92 @@ class EditListingForm extends React.Component {
     });
   }
 
+  // Helper method for image uploads
+  onDrop(acceptedFiles, rejectedFiles, hero) {
+    // Ensure at leat one valid image was uploaded
+    if (acceptedFiles.length) {
+      if (hero === "hero") {
+        const image = acceptedFiles[0];
+        const reader = new FileReader();
+        // Convert from blob to a proper file object that can be passed to server
+        reader.onload = (upload) => {
+          // Set images to state
+          this.setState({
+            image: upload.target.result,
+          });
+        };
+        // File reader set up
+        reader.onabort = () => this.setState({error: "File read aborted."});
+        reader.onerror = () => this.setState({error: "File read error."});
+        reader.readAsDataURL(image);
+      } else {
+        // Ensure no more than 6 were uploaded
+        if (acceptedFiles.length + this.state.images.length > 6) {
+          this.setState({
+            error: 'You may only upload 6 images.',
+          });
+          // Shorten acceptedFiles to 6
+          acceptedFiles.splice(6 - this.state.images.length);
+        }
+        // Make a copy of the images in state
+        const images = this.state.images.slice();
+        // Loop through and convert images
+        acceptedFiles.forEach((pic) => {
+          const reader = new FileReader();
+          // Convert from blob to a proper file object that can be passed to server
+          reader.onload = (upload) => {
+            images.push(upload.target.result);
+          };
+          // File reader set up
+          reader.onabort = () => this.setState({error: "File read aborted."});
+          reader.onerror = () => this.setState({error: "File read error."});
+          reader.readAsDataURL(pic);
+        });
+        // Set images to state
+        this.setState({
+          images,
+        });
+      }
+    }
+    if (rejectedFiles.length) {
+      // Display error with wrong file type
+      this.setState({
+        error: rejectedFiles[0].name + ' is not an image.',
+      });
+    }
+  }
+
+  // Helper method to remove an image
+  removeImage(index) {
+    const images = this.state.images.slice();
+    images.splice(index, 1);
+    this.setState({
+      images,
+    });
+  }
+
+  // Helper method to display images
+  displayImages() {
+    const images = this.state.images.map((image) => {
+      return (
+        <ul>
+          <img src={image} style={{
+            height: 30
+          }}
+          alt={image}/>
+          <div onClick={() => this.removeImage(this.state.images.indexOf(image))}>
+            DELETE
+          </div>
+        </ul>
+      );
+    });
+    return (
+      <ul>
+        {images}
+      </ul>
+    );
+  }
+
   /**
    * Helper method to handle when the form is submitted
    */
@@ -281,6 +372,7 @@ class EditListingForm extends React.Component {
           axios.post(`/api/listings/${this.state._id}/edit`, {
             title: this.state.title,
             image: this.state.image,
+            images: this.state.images,
             location: {
               name: location,
               lat: latitude,
@@ -398,7 +490,7 @@ class EditListingForm extends React.Component {
                     value={ this.state.title }
                     onChange={ this.handleChangeTitle }
                   />
-                  <label>
+                  {/* <label>
                     Image (url to an image)
                   </label>
                   <input
@@ -407,7 +499,26 @@ class EditListingForm extends React.Component {
                     className="form-control marg-bot-1"
                     value={ this.state.image }
                     onChange={ this.handleChangeImage }
-                  />
+                  /> */}
+                  <label>
+                    Hero Image (url to an image)
+                  </label>
+                  <Dropzone
+                    onDrop={(acceptedFiles, rejectedFiles) => this.onDrop(acceptedFiles, rejectedFiles, "hero")}
+                    accept="image/*"
+                    >
+                    <p>Drop a hero image here, or click to select an image to upload.</p>
+                  </Dropzone>
+                  <label>
+                    Carousel Images
+                  </label>
+                  {this.displayImages()}
+                  <Dropzone
+                    onDrop={(acceptedFiles, rejectedFiles) => this.onDrop(acceptedFiles, rejectedFiles)}
+                    accept="image/*"
+                    >
+                    <p>Try dropping some images here, or click to select images to upload.</p>
+                  </Dropzone>
                   <label>
                     Location
                   </label>

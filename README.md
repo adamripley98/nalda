@@ -98,6 +98,8 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [X] Uncaught Error: Carousel is sliding
 - [ ] Style emails better
 - [ ] Fix carousel image size
+- [ ] Style listing edit page: image upload spots, delete button for images, etc.
+- [ ] Style article edit page
 ## Admins
 
 - [X] Admin add page (similar look to contact page) where admins can enter email addresses and add both other admins and other content creators. Only admins can add people as content creators and only content creators can create posts.
@@ -370,5 +372,6 @@ DELETE '/api/videos/:id'       // Delete a specific article
   * To begin they can be location based and random, eventually custom based on user
 - [ ] Delete a user, delete all content of that user
 - [ ] When article or listing is deleted, content is deleted from AWS
+- [ ] When content is edited, old images are deleted from AWS
 
 ## Questions
