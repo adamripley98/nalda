@@ -209,13 +209,8 @@ class Admin extends Component {
       );
     }
     return (
-      <div>
-        <h4 className="bold">
-          Curators
-        </h4>
-        <div className="card border gray-text pad-1 marg-bot-1">
-          There are no curators to display.
-        </div>
+      <div className="card border gray-text pad-1 marg-bot-1">
+        There are no curators to display.
       </div>
     );
   }
@@ -330,20 +325,43 @@ class Admin extends Component {
   // Helper method to display list of articles
   displayArticles() {
     if (this.state.articles && this.state.articles.length) {
-      const articles = this.state.articles.map(article => (
-        <div key={ uuid() }>
-          <Link key={ uuid() } to={`/articles/${article._id}`}>
-            { article.title }
-          </Link>
-        </div>
+      const articles = this.state.articles.map((article, i) => (
+        <tr key={ uuid() }>
+          <th scope="row">
+            {i + 1}
+          </th>
+          <td>
+            <Link key={ uuid() } to={`/articles/${article._id}`}>
+              { article.title }
+            </Link>
+          </td>
+          <td>
+            {
+              (article.subtitle.length > 50) ? (
+                article.subtitle.substring(0, 50) + "..."
+              ) : (
+                article.subtitle
+              )
+            }
+          </td>
+        </tr>
       ));
 
       return (
-        <div>
+        <div className="marg-top-1 marg-bot-1">
           <h4 className="bold">
             Articles
           </h4>
-          { articles }
+          <table className="table">
+            <thead>
+              <th scope="col">#</th>
+              <th scope="col">Title</th>
+              <th scope="col">Subtitle</th>
+            </thead>
+            <tbody>
+              { articles }
+            </tbody>
+          </table>
         </div>
       );
     }
@@ -357,23 +375,48 @@ class Admin extends Component {
   // Helper method to display list of listings
   displayListings() {
     if (this.state.listings && this.state.listings.length) {
-      const listings = this.state.listings.map(listing => (
-        <div key={ uuid() }>
-          <Link key={ uuid() } to={`/listings/${listing._id}`}>
-            { listing.title }
-          </Link>
-        </div>
+      const listings = this.state.listings.map((listing, i) => (
+        <tr key={ uuid() }>
+          <th scope="row">
+            {i + 1}
+          </th>
+          <td>
+            <Link key={ uuid() } to={`/listings/${listing._id}`}>
+              { listing.title }
+            </Link>
+          </td>
+          <td>
+            {
+              (listing.description.length > 50) ? (
+                listing.description.substring(0, 50) + "..."
+              ) : (
+                listing.description
+              )
+            }
+          </td>
+        </tr>
       ));
 
       return (
-        <div>
-          <h3 className="bold">Listings</h3>
-          { listings }
+        <div className="marg-top-1 marg-bot-1">
+          <h4 className="bold">
+            Listings
+          </h4>
+          <table className="table">
+            <thead>
+              <th scope="col">#</th>
+              <th scope="col">Name</th>
+              <th scope="col">Description</th>
+            </thead>
+            <tbody>
+              { listings }
+            </tbody>
+          </table>
         </div>
       );
     }
     return (
-      <div>
+      <div className="card pad-1 marg-bot-1 border gray-text">
         There are no listings yet.
       </div>
     );
@@ -382,23 +425,48 @@ class Admin extends Component {
   // Helper method to display list of videos
   displayVideos() {
     if (this.state.videos && this.state.videos.length) {
-      const videos = this.state.videos.map(video => (
-        <div key={ uuid() }>
-          <Link key={ uuid() } to={`/videos/${video._id}`}>
-            { video.title }
-          </Link>
-        </div>
+      const videos = this.state.videos.map((video, i) => (
+        <tr key={ uuid() }>
+          <th scope="row">
+            {i + 1}
+          </th>
+          <td>
+            <Link key={ uuid() } to={`/videos/${video._id}`}>
+              { video.title }
+            </Link>
+          </td>
+          <td>
+            {
+              (video.description.length > 50) ? (
+                video.description.substring(0, 50) + "..."
+              ) : (
+                video.description
+              )
+            }
+          </td>
+        </tr>
       ));
 
       return (
-        <div>
-          <h3 className="bold">Videos</h3>
-          { videos }
+        <div className="marg-top-1 marg-bot-1">
+          <h4 className="bold">
+            Videos
+          </h4>
+          <table className="table">
+            <thead>
+              <th scope="col">#</th>
+              <th scope="col">Title</th>
+              <th scope="col">Description</th>
+            </thead>
+            <tbody>
+              { videos }
+            </tbody>
+          </table>
         </div>
       );
     }
     return (
-      <div>
+      <div className="card pad-1 marg-bot-1 border gray-text">
         There are no videos yet.
       </div>
     );
@@ -495,6 +563,7 @@ class Admin extends Component {
             {this.displayVideos()}
           </div>
         )}
+        <div className="space-2" />
       </div>
     );
   }
