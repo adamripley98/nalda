@@ -17,6 +17,7 @@ import Carousel from './Carousel';
 import ErrorMessage from '../../shared/ErrorMessage';
 import Author from '../../shared/Author';
 import Head from '../../shared/Head';
+import Blurb from '../../shared/Blurb';
 
 /**
  * Component to render a listing
@@ -244,11 +245,7 @@ class Listing extends React.Component {
     }
 
     // If there are no categories
-    return (
-      <div className="card border pad-1 marg-bot-1 gray-text">
-        No amenities have been marked for this listing.
-      </div>
-    );
+    return (null);
   }
 
   /**
@@ -280,9 +277,7 @@ class Listing extends React.Component {
 
     // If there are no amentities
     return (
-      <div className="card border pad-1 marg-bot-1">
-        No amenities have been marked for this listing.
-      </div>
+      <Blurb message="No amenities have been marked for this listing." />
     );
   }
 
@@ -380,9 +375,7 @@ class Listing extends React.Component {
 
     // If there are no reviews
     return (
-      <div className="card marg-bot-1 pad-1">
-        No one has reviewed this listing yet! You could be the first.
-      </div>
+      <Blurb message="No one has reviewed this listing yet! You could be the first." />
     );
   }
 

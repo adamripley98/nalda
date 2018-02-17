@@ -7,6 +7,7 @@ import Loading from '../../shared/Loading';
 import ErrorMessage from '../../shared/ErrorMessage';
 import Button from '../../shared/Button';
 import Preview from '../Preview';
+import Blurb from '../../shared/Blurb';
 
 /**
  * Component for the listings of the application
@@ -189,9 +190,7 @@ class Listings extends React.Component {
     // If no listings were found
     return (
       <div className="col-12">
-        <div className="card pad-1 marg-bot-1 border">
-          No listings were found. Check back soon for more content!
-        </div>
+        <Blurb message="No listings were found. Check back soon for more content!" />
       </div>
     );
   }

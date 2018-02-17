@@ -7,6 +7,7 @@ import axios from 'axios';
 
 // Import components
 import ErrorMessage from '../../shared/ErrorMessage';
+import Blurb from '../../shared/Blurb';
 
 /**
  * Component to render the form to review applications
@@ -142,11 +143,7 @@ class ReviewForm extends React.Component {
     // to log in (or create an account).
     if (!this.props.userId) {
       return (
-        <div className="card marg-bot-1 pad-1 border">
-          <p className="gray">
-            You must be logged in to leave a review.
-          </p>
-        </div>
+        <Blurb message="You must be logged in to leave a review." />
       );
     }
 
