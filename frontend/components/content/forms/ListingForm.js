@@ -4,7 +4,8 @@ import autosize from 'autosize';
 import { Link, Redirect } from 'react-router-dom';
 import axios from 'axios';
 import Dropzone from 'react-dropzone';
-
+import uuid from 'uuid-v4';
+import async from 'async';
 
 // Import components
 import ErrorMessage from '../../shared/ErrorMessage';
@@ -26,6 +27,7 @@ class ListingForm extends React.Component {
       location: "",
       image: "",
       images: [],
+      imagePreview: "",
       rating: 0.0,
       price: "$",
       hours: {
@@ -98,6 +100,8 @@ class ListingForm extends React.Component {
     this.handleChangeWebsite = this.handleChangeWebsite.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleClickCategory = this.handleClickCategory.bind(this);
+    this.displayImages = this.displayImages.bind(this);
+    this.removeImage = this.removeImage.bind(this);
   }
 
   /**
@@ -224,6 +228,44 @@ class ListingForm extends React.Component {
     });
   }
 
+  // Helper method to remove an image
+  removeImage(index) {
+    const images = this.state.images.slice();
+    images.splice(index, 1);
+    this.setState({
+      images,
+    });
+  }
+
+  // Helper method to display images
+  displayImages() {
+    const images = this.state.images.map((image, i) => {
+      return (
+        <li key={uuid()}>
+          <img
+            src={image}
+            alt={"carousel image " + i}
+          />
+          <div onClick={() => this.removeImage(this.state.images.indexOf(image))}>
+            <i className="fa fa-close" aria-hidden="true" />
+          </div>
+        </li>
+      );
+    });
+
+    // If there are images to show
+    if (images && images.length) {
+      return (
+        <ul className="carousel-preview">
+          {images}
+        </ul>
+      );
+    }
+
+    // Else
+    return null;
+  }
+
   // Helper method for image uploads
   onDrop(acceptedFiles, rejectedFiles, hero) {
     // Ensure at leat one valid image was uploaded
@@ -236,6 +278,9 @@ class ListingForm extends React.Component {
           // Set images to state
           this.setState({
             image: upload.target.result,
+            imagePreview: image.preview,
+            imageName: image.name,
+            error: '',
           });
         };
         // File reader set up
@@ -251,23 +296,41 @@ class ListingForm extends React.Component {
           // Shorten acceptedFiles to 6
           acceptedFiles.splice(6 - this.state.images.length);
         }
+
         // Make a copy of the images in state
         const images = this.state.images.slice();
+
         // Loop through and convert images
-        acceptedFiles.forEach((pic) => {
+        async.eachSeries(acceptedFiles, (pic, cb) => {
           const reader = new FileReader();
           // Convert from blob to a proper file object that can be passed to server
           reader.onload = (upload) => {
             images.push(upload.target.result);
+            cb();
           };
           // File reader set up
-          reader.onabort = () => this.setState({error: "File read aborted."});
-          reader.onerror = () => this.setState({error: "File read error."});
+          reader.onabort = () => {
+            this.setState({error: "File read aborted."});
+            cb();
+          };
+
+          reader.onerror = () => {
+            this.setState({error: "File read error."});
+            cb();
+          };
+
           reader.readAsDataURL(pic);
-        });
-        // Set images to state
-        this.setState({
-          images,
+        }, asyncErr => {
+          if (asyncErr) {
+            this.setState({
+              error: "Async error with image upload.",
+            });
+            return;
+          }
+          // Set images to state
+          this.setState({
+            images,
+          });
         });
       }
     }
@@ -444,27 +507,43 @@ class ListingForm extends React.Component {
               <label>
                 Hero Image
               </label>
+
+              {
+                this.state.imagePreview && (
+                  <img src={ this.state.imagePreview } alt={ this.state.title } className="img-fluid img" />
+                )
+              }
+
               <Dropzone
                 onDrop={(acceptedFiles, rejectedFiles) => this.onDrop(acceptedFiles, rejectedFiles, "hero")}
                 accept="image/*"
+                style={{ marginBottom: "1rem" }}
                 >
-                <p>Drop a hero image here, or click to select an image to upload.</p>
+                <p className="dropzone">
+                  <i className="fa fa-file-o" aria-hidden="true" />
+                  {
+                    this.state.imageName ? (
+                      this.state.imageName
+                    ) : (
+                      "Try dropping an image here, or click to select image to upload."
+                    )
+                  }
+                </p>
               </Dropzone>
-              {/* <input
-                name="image"
-                type="url"
-                className="form-control marg-bot-1"
-                value={ this.state.image }
-                onChange={ this.handleChangeImage }
-              /> */}
+
               <label>
                 Carousel Images
               </label>
+              {this.displayImages()}
               <Dropzone
                 onDrop={(acceptedFiles, rejectedFiles) => this.onDrop(acceptedFiles, rejectedFiles)}
                 accept="image/*"
+                style={{ marginBottom: "1rem" }}
                 >
-                <p>Try dropping some images here, or click to select images to upload.</p>
+                <p className="dropzone">
+                  <i className="fa fa-file-o" aria-hidden="true" />
+                  Try dropping an image here, or click to select image to upload.
+                </p>
               </Dropzone>
               <label>
                 Location

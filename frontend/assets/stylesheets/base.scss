@@ -23,6 +23,12 @@
   z-index: 10000 !important;
 }
 
+// General styling for images
+img.img {
+  margin-bottom: 1rem;
+  border-radius: 0.4rem;
+}
+
 // Setting the fonts for the application
 body,
 .form-control {
