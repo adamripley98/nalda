@@ -303,16 +303,22 @@
  */
 #carousel {
   border-radius: 0.4rem;
+  height: 50vh !important;
 
   .carousel-item {
     width: 100%;
     text-align: center;
     margin: 0 auto;
     border-radius: 0.4rem;
+    height: 50vh !important;
+    overflow: hidden;
 
     img {
       margin: auto;
       border-radius: 0.4rem;
+      height: 50vh !important;
+      width: auto;
+      max-width: none;
     }
   }
 

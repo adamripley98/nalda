@@ -613,7 +613,11 @@ class Listing extends React.Component {
                   <div className="categories">
                     { this.renderCategories() }
                   </div>
-                  <p className="description">
+                  <p className="naldaFavorite">
+                    <strong>
+                      Nalda's take:
+                    </strong>
+                    <br />
                     { this.state.naldaFavorite }
                   </p>
                   <Carousel images={this.state.images}/>
