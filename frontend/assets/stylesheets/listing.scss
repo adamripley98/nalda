@@ -56,21 +56,6 @@
       font-weight: bold;
     }
 
-    .categories {
-      margin-bottom: 0.1rem;
-
-      .category {
-        background: $light-gray;
-        font-size: 0.8rem;
-        display: inline-block;
-        width: auto;
-        padding: 0.2rem 0.4rem;
-        border-radius: 0.2rem;
-        margin-right: 0.4rem;
-        margin-bottom: 0.4rem;
-      }
-    }
-
     .amenity {
       margin-bottom: 0.5rem;
     }
@@ -367,5 +352,32 @@
     background: rgba(0, 0, 0, 0.15);
     position: absolute;
     z-index: -1;
+  }
+}
+
+/**
+ * Styling category tags
+ */
+.categories,
+.tags {
+  margin-bottom: 0.1rem;
+
+  .category,
+  .tag {
+    background: $light-gray;
+    font-size: 0.8rem;
+    display: inline-block;
+    width: auto;
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.2rem;
+    margin-right: 0.4rem;
+    margin-bottom: 0.4rem;
+  }
+
+  &.big {
+    .category,
+    .tag {
+      font-size: 1rem;
+    }
   }
 }

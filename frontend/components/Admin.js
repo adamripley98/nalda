@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom';
 
 
 // Import components
-import Thin from './shared/Thin';
 import ErrorMessage from './shared/ErrorMessage';
 import Loading from './shared/Loading';
 
@@ -175,87 +174,150 @@ class Admin extends Component {
   // TODO display nicer
   displayCurators() {
     if (this.state.curators && this.state.curators.length) {
-      const curators = this.state.curators.map(curator => (
-        <div key={ uuid() }>
-          <Link key={ uuid() } to={`/users/${curator.userId}`}>
-            { curator.name }
-          </Link><br/>
-        </div>
+      const curators = this.state.curators.map((curator, i) => (
+        <tr key={ uuid() }>
+          <th scope="row">
+            {i + 1}
+          </th>
+          <td>
+            <Link key={ uuid() } to={`/users/${curator.userId}`}>
+              { curator.name }
+            </Link>
+          </td>
+          <td>
+            { curator.username }
+          </td>
+        </tr>
       ));
 
       return (
-        <div>
-          <h3 className="bold">Curators</h3>
-
-          { curators }
+        <div className="marg-top-1 marg-bot-1">
+          <h4 className="bold">
+            Curators
+          </h4>
+          <table className="table">
+            <thead>
+              <th scope="col">#</th>
+              <th scope="col">Name</th>
+              <th scope="col">Email</th>
+            </thead>
+            <tbody>
+              { curators }
+            </tbody>
+          </table>
         </div>
       );
     }
     return (
-      <div>
-        <h3> There are no curators to display </h3>
+      <div className="card border gray-text pad-1 marg-bot-1">
+        There are no curators to display.
       </div>
     );
   }
 
   // Helper method to display all admins
-  // TODO display nicer
   displayAdmins() {
     if (this.state.admins && this.state.admins.length) {
-      const admins = this.state.admins.map(admin => (
-        <div key={ uuid() }>
-          <Link key={ uuid() } to={`/users/${admin.userId}`}>
-            { admin.name }
-          </Link>
-        </div>
+      const admins = this.state.admins.map((admin, i) => (
+        <tr key={ uuid() }>
+          <th scope="row">
+            {i + 1}
+          </th>
+          <td>
+            <Link key={ uuid() } to={`/users/${admin.userId}`}>
+              { admin.name }
+            </Link>
+          </td>
+          <td>
+            { admin.username }
+          </td>
+        </tr>
       ));
 
       return (
-        <div>
-          <h3 className="bold">Admins</h3>
-
-          { admins }
-
+        <div className="marg-top-1 marg-bot-1">
+          <h4 className="bold">
+            Admins
+          </h4>
+          <table className="table">
+            <thead>
+              <th scope="col">#</th>
+              <th scope="col">Name</th>
+              <th scope="col">Email</th>
+            </thead>
+            <tbody>
+              { admins }
+            </tbody>
+          </table>
         </div>
       );
     }
     return (
       <div>
-        <h3> There are no admins to display </h3>
+        <h4 className="bold">
+          Admins
+        </h4>
+        <div className="card border gray-text pad-1 marg-bot-1">
+          There are no admins to show.
+        </div>
       </div>
     );
   }
 
   // Helper method to display all users
-  // TODO display nicer
   displayUsers() {
     if (this.state.users && this.state.users.length) {
-      const users = this.state.users.map(user => (
-        <div key={ uuid() }>
-            { user.name }
-        </div>
+      const users = this.state.users.map((user, i) => (
+        <tr key={ uuid() }>
+          <th scope="row">
+            {i + 1}
+          </th>
+          <td>
+            <Link key={ uuid() } to={`/users/${user.userId}`}>
+              { user.name }
+            </Link>
+          </td>
+          <td>
+            { user.username }
+          </td>
+        </tr>
       ));
 
       return (
-        <div>
-          <h3 className="bold">Users</h3>
-          { users }
+        <div className="marg-top-1 marg-bot-1">
+          <h4 className="bold">
+            Users
+          </h4>
+          <table className="table">
+            <thead>
+              <th scope="col">#</th>
+              <th scope="col">Name</th>
+              <th scope="col">Email</th>
+            </thead>
+            <tbody>
+              { users }
+            </tbody>
+          </table>
         </div>
       );
     }
     return (
-      <div>
-        <h3> There are no users to display </h3>
+      <div className="marg-bot-1 card pad-1 border gray-text">
+        There are no users to display.
       </div>
     );
   }
 
-  // TODO style better
   displayUserData() {
     return (
-      <div>
-        <h3> Total Users: {this.state.userData.totalUsers} </h3>
-        <h3> Registers this week: {this.state.userData.weeklyRegisters} </h3>
+      <div className="tags big">
+        <div className="space-1" />
+        <span className="tag">
+          <strong>Total users:</strong> {this.state.userData.totalUsers}
+        </span>
+        <span className="tag">
+          <strong>New users this week:</strong> {this.state.userData.weeklyRegisters}
+        </span>
       </div>
     );
   }
@@ -263,23 +325,48 @@ class Admin extends Component {
   // Helper method to display list of articles
   displayArticles() {
     if (this.state.articles && this.state.articles.length) {
-      const articles = this.state.articles.map(article => (
-        <div key={ uuid() }>
-          <Link key={ uuid() } to={`/articles/${article._id}`}>
-            { article.title }
-          </Link>
-        </div>
+      const articles = this.state.articles.map((article, i) => (
+        <tr key={ uuid() }>
+          <th scope="row">
+            {i + 1}
+          </th>
+          <td>
+            <Link key={ uuid() } to={`/articles/${article._id}`}>
+              { article.title }
+            </Link>
+          </td>
+          <td>
+            {
+              (article.subtitle.length > 50) ? (
+                article.subtitle.substring(0, 50) + "..."
+              ) : (
+                article.subtitle
+              )
+            }
+          </td>
+        </tr>
       ));
 
       return (
-        <div>
-          <h3 className="bold">Articles</h3>
-          { articles }
+        <div className="marg-top-1 marg-bot-1">
+          <h4 className="bold">
+            Articles
+          </h4>
+          <table className="table">
+            <thead>
+              <th scope="col">#</th>
+              <th scope="col">Title</th>
+              <th scope="col">Subtitle</th>
+            </thead>
+            <tbody>
+              { articles }
+            </tbody>
+          </table>
         </div>
       );
     }
     return (
-      <div>
+      <div className="card pad-1 marg-bot-1 border gray-text">
         There are no articles yet.
       </div>
     );
@@ -288,23 +375,48 @@ class Admin extends Component {
   // Helper method to display list of listings
   displayListings() {
     if (this.state.listings && this.state.listings.length) {
-      const listings = this.state.listings.map(listing => (
-        <div key={ uuid() }>
-          <Link key={ uuid() } to={`/listings/${listing._id}`}>
-            { listing.title }
-          </Link>
-        </div>
+      const listings = this.state.listings.map((listing, i) => (
+        <tr key={ uuid() }>
+          <th scope="row">
+            {i + 1}
+          </th>
+          <td>
+            <Link key={ uuid() } to={`/listings/${listing._id}`}>
+              { listing.title }
+            </Link>
+          </td>
+          <td>
+            {
+              (listing.description.length > 50) ? (
+                listing.description.substring(0, 50) + "..."
+              ) : (
+                listing.description
+              )
+            }
+          </td>
+        </tr>
       ));
 
       return (
-        <div>
-          <h3 className="bold">Listings</h3>
-          { listings }
+        <div className="marg-top-1 marg-bot-1">
+          <h4 className="bold">
+            Listings
+          </h4>
+          <table className="table">
+            <thead>
+              <th scope="col">#</th>
+              <th scope="col">Name</th>
+              <th scope="col">Description</th>
+            </thead>
+            <tbody>
+              { listings }
+            </tbody>
+          </table>
         </div>
       );
     }
     return (
-      <div>
+      <div className="card pad-1 marg-bot-1 border gray-text">
         There are no listings yet.
       </div>
     );
@@ -313,23 +425,48 @@ class Admin extends Component {
   // Helper method to display list of videos
   displayVideos() {
     if (this.state.videos && this.state.videos.length) {
-      const videos = this.state.videos.map(video => (
-        <div key={ uuid() }>
-          <Link key={ uuid() } to={`/videos/${video._id}`}>
-            { video.title }
-          </Link>
-        </div>
+      const videos = this.state.videos.map((video, i) => (
+        <tr key={ uuid() }>
+          <th scope="row">
+            {i + 1}
+          </th>
+          <td>
+            <Link key={ uuid() } to={`/videos/${video._id}`}>
+              { video.title }
+            </Link>
+          </td>
+          <td>
+            {
+              (video.description.length > 50) ? (
+                video.description.substring(0, 50) + "..."
+              ) : (
+                video.description
+              )
+            }
+          </td>
+        </tr>
       ));
 
       return (
-        <div>
-          <h3 className="bold">Videos</h3>
-          { videos }
+        <div className="marg-top-1 marg-bot-1">
+          <h4 className="bold">
+            Videos
+          </h4>
+          <table className="table">
+            <thead>
+              <th scope="col">#</th>
+              <th scope="col">Title</th>
+              <th scope="col">Description</th>
+            </thead>
+            <tbody>
+              { videos }
+            </tbody>
+          </table>
         </div>
       );
     }
     return (
-      <div>
+      <div className="card pad-1 marg-bot-1 border gray-text">
         There are no videos yet.
       </div>
     );
@@ -338,89 +475,96 @@ class Admin extends Component {
   // Render the component
   render() {
     return (
-      <Thin>
-        <div>
-          <form className="thin-form">
-            <h2 className="bold marg-bot-1">Admin panel</h2>
-            <p className="marg-bot-1">
-              Enter a user's email address in order to add them as an admin or as a content curator or to remove them as a content creator.
-            </p>
-            <ErrorMessage error={ this.state.error } />
-            {
-              this.state.success ? (
-                <div className="alert alert-success marg-bot-1">
-                  { this.state.success }
+      <div className="container">
+        <div className="space-1" />
+        <div className="row">
+          <div className="col-12 col-md-10 col-lg-8 col-xl-6">
+            <form>
+              <h4 className="bold marg-bot-1">
+                Admin panel
+              </h4>
+              <p className="marg-bot-1">
+                Enter a user's email address in order to add them as an admin or as a content curator or to remove them as a content creator.
+              </p>
+              <ErrorMessage error={ this.state.error } />
+              {
+                this.state.success ? (
+                  <div className="alert alert-success marg-bot-1">
+                    { this.state.success }
+                  </div>
+                ) : null
+              }
+
+              <textarea
+                type="text"
+                placeholder="Email"
+                className="form-control marg-bot-1 border"
+                value={ this.state.email }
+                onChange={ this.handleChangeEmail }
+                rows="1"
+              />
+
+              <div className="row">
+                <div className="col-6">
+                  <button
+                    onClick={(e) => this.onSubmitAdmin(e)}
+                    className={
+                      this.state.email ? (
+                        "btn btn-primary full-width cursor"
+                      ) : (
+                        "btn btn-primary full-width disabled"
+                      )
+                    }
+                  >
+                    Add as admin
+                  </button>
                 </div>
-              ) : null
-            }
-            <label>
-              Email address
-            </label>
-            <textarea
-              type="text"
-              className="form-control marg-bot-1"
-              value={ this.state.email }
-              onChange={ this.handleChangeEmail }
-              rows="1"
-            />
-            <div className="row">
-              <div className="col-6">
-                <button
-                  onClick={(e) => this.onSubmitAdmin(e)}
-                  className={
-                    this.state.email ? (
-                      "btn btn-primary full-width cursor"
-                    ) : (
-                      "btn btn-primary full-width disabled"
-                    )
-                  }
-                >
-                  Add as admin
-                </button>
+                <div className="col-6">
+                  <button
+                    onClick={(e) => this.onSubmitCurator(e)}
+                    className={
+                      this.state.email ? (
+                        "btn btn-primary full-width cursor"
+                      ) : (
+                        "btn btn-primary full-width disabled"
+                      )
+                    }
+                  >
+                    Add as curator
+                  </button>
+                </div>
+                <div className="col-12 marg-top-1">
+                  <button
+                    onClick={(e) => this.onSubmitRemoveCurator(e)}
+                    className={
+                      this.state.email ? (
+                        "btn btn-primary full-width cursor"
+                      ) : (
+                        "btn btn-primary full-width disabled"
+                      )
+                    }
+                  >
+                    Remove curator
+                  </button>
+                </div>
               </div>
-              <div className="col-6">
-                <button
-                  onClick={(e) => this.onSubmitCurator(e)}
-                  className={
-                    this.state.email ? (
-                      "btn btn-primary full-width cursor"
-                    ) : (
-                      "btn btn-primary full-width disabled"
-                    )
-                  }
-                >
-                  Add as curator
-                </button>
-              </div>
-              <div className="col-12 marg-top-1">
-                <button
-                  onClick={(e) => this.onSubmitRemoveCurator(e)}
-                  className={
-                    this.state.email ? (
-                      "btn btn-primary full-width cursor"
-                    ) : (
-                      "btn btn-primary full-width disabled"
-                    )
-                  }
-                >
-                  Remove curator
-                </button>
-              </div>
-            </div>
-          </form>
-          { this.state.pending ? <Loading /> : (
-            <div>
-              {this.displayAdmins()}
-              {this.displayCurators()}
-              {this.displayUsers()}
-              {this.displayUserData()}
-              {this.displayArticles()}
-              {this.displayListings()}
-              {this.displayVideos()}
-            </div>
-          )}
+            </form>
+            <div className="space-1" />
+          </div>
         </div>
-      </Thin>
+        { this.state.pending ? <Loading /> : (
+          <div>
+            {this.displayUserData()}
+            {this.displayAdmins()}
+            {this.displayCurators()}
+            {this.displayUsers()}
+            {this.displayArticles()}
+            {this.displayListings()}
+            {this.displayVideos()}
+          </div>
+        )}
+        <div className="space-2" />
+      </div>
     );
   }
 }
