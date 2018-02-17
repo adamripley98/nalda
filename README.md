@@ -46,7 +46,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
 ## By 2/17
 - [ ] Image upload
   - [X] Profile picture
-  - [ ] Listing multiple pictures
+  - [X] Listing multiple pictures
   - [X] Articles multiple pictures
   - [ ] Styling for all these
   - [X] Error handling
@@ -58,16 +58,16 @@ DELETE '/api/videos/:id'       // Delete a specific article
     - [ ] Especially on mobile
 - [X] SSL fix
 - [ ] Gallery on listing
-  - [ ] Backend
+  - [X] Backend
   - [ ] Frontend
-- [ ] Nalda's favorite section on listing (similar to description except opinion)
+- [X] Nalda's favorite section on listing (similar to description except opinion)
 - [ ] Flash notifications upon register, signup, submissions, etc.
 - [ ] Securing auth routes better
-- [ ] Admin panel
+- [X] Admin panel
   - [X] Fix display bug
   - [X] Curator/Admin list
   - [X] See users (scroll menu)
-  - [ ] See all content
+  - [X] See all content
 - [ ] Rough beginning to homepage
 - [ ] Random bug fixes
   - [ ] Login/register color display on safari
@@ -77,6 +77,10 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [ ] Weird bug where account page now logs you out if you try refreshing
 - [X] Bug where profile picture doesn't show up sometimes (storing in AWS as a single pixel?)
 - [ ] Edit content bug?
+- [ ] Make admin backend route async?
+- [ ] Store images in subfolders for each listing or article
+- [ ] Only first name in nav bar
+- [ ] Location with facebook/google
 
 # Cam
 - [x] Style Reset password better on `LoginModal` and `Login`
@@ -84,6 +88,8 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [x] Make trash can to delete reviews bigger
 - [x] Style file upload in `Account.js`,
 - [ ] Style frontend for homepage
+- [ ] Display Nalda's Favorite section
+- [ ] Style admin panel
 - [x] hamburger turns to X animation
 - [x] Stop using production mlab for testing
 - [x] Push changes live
@@ -347,8 +353,8 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [X] Users profiles shouldn't be displayed, only admin/curators
 - [X] Video image not showing up on thumbnail
 - [X] Video edit location clearing bug
-- [x] SSL is not fully secure?
-- [ ] Admin panel not displaying?
+- [X] SSL is not fully secure?
+- [X] Admin panel not displaying?
 
 ## Adam
 
@@ -356,6 +362,5 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [ ] Multiple curators on the same content
 - [ ] Recommending content for users to look at
   * To begin they can be location based and random, eventually custom based on user
-
 
 ## Questions

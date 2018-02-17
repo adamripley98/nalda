@@ -11,7 +11,6 @@ import Thin from '../shared/Thin';
 
 /**
  * Component for a user to edit their password
- * TODO forgot password reset
  */
 class EditPassword extends Component {
   /**
