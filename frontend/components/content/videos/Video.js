@@ -8,8 +8,8 @@ import PropTypes from 'prop-types';
 import Button from '../../shared/Button';
 import ErrorMessage from '../../shared/ErrorMessage';
 import Loading from '../../shared/Loading';
-import Timestamp from '../../shared/Timestamp';
 import Author from '../../shared/Author';
+import NotFoundSection from '../../NotFoundSection';
 
 /**
  * Component to render a videos
@@ -67,13 +67,20 @@ class Video extends React.Component {
         }
       })
       .catch(err => {
-        // If there was an error making the request
-        this.setState({
-          error: err,
-          pending: false,
-          deleteError: "",
-          deletePending: false,
-        });
+        if (err.response.status === 404) {
+          this.setState({
+            pending: false,
+            notFound: true,
+          });
+        } else {
+          // If there was an error making the request
+          this.setState({
+            error: err,
+            pending: false,
+            deleteError: "",
+            deletePending: false,
+          });
+        }
       });
   }
 
@@ -192,6 +199,18 @@ class Video extends React.Component {
 
   // Render the component
   render() {
+    // If the video is not found
+    if (!this.state.pending && this.state.notFound) {
+      return (
+        <NotFoundSection
+          title="Video not found"
+          content="Uh-oh! Looks like this video you are looking for was either moved or does not exist."
+          url="/videos"
+          urlText="Back to all videos"
+        />
+      );
+    }
+
     // Return the component
     return (
       <div className="video">

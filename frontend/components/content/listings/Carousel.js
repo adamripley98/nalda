@@ -14,7 +14,7 @@ const Carousel = ({ images }) => {
   const indicators = [];
   for (let i = 0; i < images.length; i++) {
     indicators.push(
-      <li data-target="#carousel" data-slide-to={i} className={i === 0 ? "active" : ""} />
+      <li key={i} data-target="#carousel" data-slide-to={i} className={i === 0 ? "active" : ""} />
     );
   }
 
@@ -22,7 +22,7 @@ const Carousel = ({ images }) => {
   const slides = [];
   images.forEach((image, index) => {
     slides.push(
-      <div className={index === 0 ? "carousel-item active" : "carousel-item"}>
+      <div key={index} className={index === 0 ? "carousel-item active" : "carousel-item"}>
         <img className="d-block img-fluid" src={image} alt={index + " slide"} />
       </div>
     );

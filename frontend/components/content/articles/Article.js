@@ -72,11 +72,18 @@ class Article extends React.Component {
         }
       })
       .catch(err => {
-        // If there was an error making the request
-        this.setState({
-          error: err,
-          pending: false,
-        });
+        if (err.response.status === 404) {
+          this.setState({
+            pending: false,
+            notFound: true,
+          });
+        } else {
+          // If there was an error making the request
+          this.setState({
+            error: err,
+            pending: false,
+          });
+        }
       });
   }
 
@@ -186,7 +193,7 @@ class Article extends React.Component {
   // Render the component
   render() {
     // If the article is not found
-    if (!this.state.pending && !this.state.title) {
+    if (!this.state.pending && this.state.notFound) {
       return (
         <NotFoundSection
           title="Article not found"

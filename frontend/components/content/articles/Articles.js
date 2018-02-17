@@ -7,6 +7,7 @@ import Loading from '../../shared/Loading';
 import ErrorMessage from '../../shared/ErrorMessage';
 import Button from '../../shared/Button';
 import Preview from '../Preview';
+import Blurb from '../../shared/Blurb';
 
 /**
  * Component for displaying all articles of the application
@@ -146,9 +147,7 @@ class Articles extends React.Component {
     // If no articles were found
     return (
       <div className="col-12">
-        <div className="card pad-1 marg-bot-1 border">
-          No articles were found. Check back soon for more content!
-        </div>
+        <Blurb message="No articles were found. Check back soon for more content!" />
       </div>
     );
   }

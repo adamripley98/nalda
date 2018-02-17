@@ -5,10 +5,10 @@ import axios from 'axios';
 import uuid from 'uuid-v4';
 import { Link } from 'react-router-dom';
 
-
 // Import components
 import ErrorMessage from './shared/ErrorMessage';
 import Loading from './shared/Loading';
+import Blurb from './shared/Blurb';
 
 /**
  * Component for Admin only, allows them to add and remove other admins and content curators
@@ -209,9 +209,7 @@ class Admin extends Component {
       );
     }
     return (
-      <div className="card border gray-text pad-1 marg-bot-1">
-        There are no curators to display.
-      </div>
+      <Blurb message="There are no curators to display." />
     );
   }
 
@@ -253,14 +251,7 @@ class Admin extends Component {
       );
     }
     return (
-      <div>
-        <h4 className="bold">
-          Admins
-        </h4>
-        <div className="card border gray-text pad-1 marg-bot-1">
-          There are no admins to show.
-        </div>
-      </div>
+      <Blurb message="There are no admins to show." />
     );
   }
 
@@ -302,9 +293,7 @@ class Admin extends Component {
       );
     }
     return (
-      <div className="marg-bot-1 card pad-1 border gray-text">
-        There are no users to display.
-      </div>
+      <Blurb message="There are no users to display." />
     );
   }
 
@@ -366,9 +355,7 @@ class Admin extends Component {
       );
     }
     return (
-      <div className="card pad-1 marg-bot-1 border gray-text">
-        There are no articles yet.
-      </div>
+      <Blurb message="There are no articles to display." />
     );
   }
 
@@ -416,9 +403,7 @@ class Admin extends Component {
       );
     }
     return (
-      <div className="card pad-1 marg-bot-1 border gray-text">
-        There are no listings yet.
-      </div>
+      <Blurb message="There are no listings to display." />
     );
   }
 
@@ -466,9 +451,7 @@ class Admin extends Component {
       );
     }
     return (
-      <div className="card pad-1 marg-bot-1 border gray-text">
-        There are no videos yet.
-      </div>
+      <Blurb message="There are no videos to display" />
     );
   }
 

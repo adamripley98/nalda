@@ -74,15 +74,15 @@ module.exports = () => {
     // Pull specific listing from mongo
     Listing.findById(id, (err, listing) => {
       if (err) {
-        res.send({
+        res.status(404).send({
           success: false,
-          error: err.message,
+          error: "Listing not found.",
         });
       } else if (!listing) {
         // If the listing doesn't exist
-        res.send({
+        res.status(404).send({
           success: false,
-          error: "Article not found",
+          error: "Listing not found.",
         });
       // if no errors, returns article along with the date it was created
       } else {
@@ -92,12 +92,12 @@ module.exports = () => {
             // Error finding author
             res.send({
               success: false,
-              error: er.message,
+              error: "Failed to find author.",
             });
           } else if (!author) {
             res.send({
               success: false,
-              error: 'Cannot find author.',
+              error: 'Failed to find author.',
             });
           } else {
             // Default: users can't change listing

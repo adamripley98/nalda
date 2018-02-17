@@ -23,6 +23,13 @@
     font-size: 0.8rem;
   }
 
+  .naldaFavorite {
+    margin: 1rem 0rem 2rem 0rem;
+    padding: 1rem;
+    background: $light-gray;
+    border-radius: 0.4rem;
+  }
+
   .preview {
     height: 40vh;
     width: 100%;
@@ -303,16 +310,22 @@
  */
 #carousel {
   border-radius: 0.4rem;
+  height: 50vh !important;
 
   .carousel-item {
     width: 100%;
     text-align: center;
     margin: 0 auto;
     border-radius: 0.4rem;
+    height: 50vh !important;
+    overflow: hidden;
 
     img {
       margin: auto;
       border-radius: 0.4rem;
+      height: 50vh !important;
+      width: auto;
+      max-width: none;
     }
   }
 
