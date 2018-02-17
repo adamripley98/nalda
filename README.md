@@ -48,6 +48,8 @@ DELETE '/api/videos/:id'       // Delete a specific article
   - [X] Profile picture
   - [X] Listing multiple pictures
   - [X] Articles multiple pictures
+  - [X] Edit articles
+  - [X] Edit listings
   - [ ] Styling for all these
   - [X] Error handling
 - [ ] Ensure everything works on live site
@@ -57,9 +59,9 @@ DELETE '/api/videos/:id'       // Delete a specific article
   - [ ] Image upload
     - [ ] Especially on mobile
 - [X] SSL fix
-- [ ] Gallery on listing
+- [X] Gallery on listing
   - [X] Backend
-  - [ ] Frontend
+  - [X] Frontend
 - [X] Nalda's favorite section on listing (similar to description except opinion)
 - [ ] Flash notifications upon register, signup, submissions, etc.
 - [X] Securing auth routes better
@@ -81,8 +83,13 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [X] Store images in subfolders for each listing or article
 - [X] Only first name in nav bar
 - [X] Location with facebook/google
-- [ ] Edit articles/listings with file uploads
+- [X] Edit articles/listings with file uploads
 - [X] Verify email token undefined
+- [X] Test
+  - [X] editing article main,
+  - [X] listing main,
+  - [X] article other,
+  - [X] listing carousel
 
 # Cam
 - [x] Style Reset password better on `LoginModal` and `Login`

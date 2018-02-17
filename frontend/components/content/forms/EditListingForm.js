@@ -307,7 +307,6 @@ class EditListingForm extends React.Component {
           // Convert from blob to a proper file object that can be passed to server
           reader.onload = (upload) => {
             images.push(upload.target.result);
-            console.log('pushed');
             cb();
           };
           // File reader set up

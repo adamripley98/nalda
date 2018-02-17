@@ -434,6 +434,79 @@ class EditArticleForm extends React.Component {
                               onChange={ (e) => this.handleChangeBody(e, index) }
                             />
                             {
+                              component.componentType === "image" && (
+                                <Dropzone
+                                  onDrop={(acceptedFiles, rejectedFiles) => this.onDrop(acceptedFiles, rejectedFiles, index)}
+                                  accept="image/*"
+                                  style={{ marginBottom: "1rem" }}
+                                >
+                                  <p className="dropzone">
+                                    <i className="fa fa-file-o" aria-hidden="true" />
+                                    {
+                                      this.state.body[index].name ? (
+                                        this.state.body[index].name
+                                      ) : (
+                                        "Try dropping an image here, or click to select image to upload."
+                                      )
+                                    }
+
+                                    {
+                                      (index !== 0 || this.state.body.length > 1) && (
+                                        <i
+                                          className="fa fa-trash-o"
+                                          aria-hidden="true"
+                                          onClick={() => {
+                                            const bodyObj = this.state.body;
+                                            bodyObj.splice(index, 1);
+                                            this.setState({
+                                              body: bodyObj,
+                                            });
+                                          }}
+                                        />
+                                      )
+                                    }
+                                  </p>
+                                </Dropzone>
+                              )
+                            }
+                            {/* {
+                              (index !== 0 || this.state.body.length > 1) && (
+                                <i
+                                  className="fa fa-trash-o"
+                                  aria-hidden="true"
+                                  onClick={() => {
+                                    const bodyObj = this.state.body;
+                                    bodyObj.splice(index, 1);
+                                    this.setState({
+                                      body: bodyObj,
+                                    });
+                                  }}
+                                />
+                              )
+                            } */}
+                          </div>
+                        );
+                      })
+                    }
+
+                    {/* {
+                      component.componentType === "image" && (
+                        <Dropzone
+                          onDrop={(acceptedFiles, rejectedFiles) => this.onDrop(acceptedFiles, rejectedFiles, index)}
+                          accept="image/*"
+                          style={{ marginBottom: "1rem" }}
+                        >
+                          <p className="dropzone">
+                            <i className="fa fa-file-o" aria-hidden="true" />
+                            {
+                              this.state.body[index].name ? (
+                                this.state.body[index].name
+                              ) : (
+                                "Try dropping an image here, or click to select image to upload."
+                              )
+                            }
+
+                            {
                               (index !== 0 || this.state.body.length > 1) && (
                                 <i
                                   className="fa fa-trash-o"
@@ -448,10 +521,10 @@ class EditArticleForm extends React.Component {
                                 />
                               )
                             }
-                          </div>
-                        );
-                      })
-                    }
+                          </p>
+                        </Dropzone>
+                      )
+                    } */}
 
                     <label>
                       Add a new section
