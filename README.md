@@ -91,7 +91,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [x] Style file upload in `Account.js`,
 - [ ] Style frontend for homepage
 - [ ] Display Nalda's Favorite section
-- [ ] Style admin panel
+- [X] Style admin panel
 - [x] hamburger turns to X animation
 - [x] Stop using production mlab for testing
 - [x] Push changes live

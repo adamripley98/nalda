@@ -5,6 +5,8 @@ import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
+import uuid from 'uuid-v4';
+import async from 'async';
 
 // Import components
 import ErrorMessage from '../../shared/ErrorMessage';
@@ -89,6 +91,7 @@ class EditListingForm extends React.Component {
     // Bind this to helper methods
     this.handleChangeTitle = this.handleChangeTitle.bind(this);
     this.handleChangeDescription = this.handleChangeDescription.bind(this);
+    this.handleChangeNaldaFavorite = this.handleChangeNaldaFavorite.bind(this);
     this.handleChangeImage = this.handleChangeImage.bind(this);
     this.handleChangeHours = this.handleChangeHours.bind(this);
     this.handleChangeRating = this.handleChangeRating.bind(this);
@@ -179,6 +182,15 @@ class EditListingForm extends React.Component {
   handleChangeDescription(event) {
     this.setState({
       description: event.target.value,
+    });
+  }
+
+  /**
+   * Helper method to handle a change to the nalda's favorite state
+   */
+  handleChangeNaldaFavorite(event) {
+    this.setState({
+      naldaFavorite: event.target.value,
     });
   }
 
@@ -290,20 +302,37 @@ class EditListingForm extends React.Component {
         // Make a copy of the images in state
         const images = this.state.images.slice();
         // Loop through and convert images
-        acceptedFiles.forEach((pic) => {
+        async.eachSeries(acceptedFiles, (pic, cb) => {
           const reader = new FileReader();
           // Convert from blob to a proper file object that can be passed to server
           reader.onload = (upload) => {
             images.push(upload.target.result);
+            console.log('pushed');
+            cb();
           };
           // File reader set up
-          reader.onabort = () => this.setState({error: "File read aborted."});
-          reader.onerror = () => this.setState({error: "File read error."});
+          reader.onabort = () => {
+            this.setState({error: "File read aborted."});
+            cb();
+          };
+
+          reader.onerror = () => {
+            this.setState({error: "File read error."});
+            cb();
+          };
+
           reader.readAsDataURL(pic);
-        });
-        // Set images to state
-        this.setState({
-          images,
+        }, asyncErr => {
+          if (asyncErr) {
+            this.setState({
+              error: "Async error with image upload.",
+            });
+            return;
+          }
+          // Set images to state
+          this.setState({
+            images,
+          });
         });
       }
     }
@@ -326,22 +355,26 @@ class EditListingForm extends React.Component {
 
   // Helper method to display images
   displayImages() {
-    const images = this.state.images.map((image) => {
+    const images = this.state.images.map((image, i) => {
       return (
-        <ul>
-          <img src={image} style={{
-            height: 30
-          }}
-          alt={image}/>
+        <li key={uuid()}>
+          <img
+            src={image}
+            style={{
+              height: "2rem"
+            }}
+            alt={"carousel image " + i}
+          />
           <div onClick={() => this.removeImage(this.state.images.indexOf(image))}>
             DELETE
           </div>
-        </ul>
+        </li>
       );
     });
     return (
       <ul>
         {images}
+        <li>Count: {this.state.images.length}</li>
       </ul>
     );
   }
@@ -379,6 +412,7 @@ class EditListingForm extends React.Component {
               lng: longitude,
             },
             description: this.state.description,
+            naldaFavorite: this.state.naldaFavorite,
             hours: this.state.hours,
             rating: this.state.rating,
             price: this.state.price,
@@ -434,6 +468,12 @@ class EditListingForm extends React.Component {
         pendingSubmit: false,
       });
       return false;
+    } else if (!this.state.naldaFavorite) {
+      this.setState({
+        error: "Nalda's Favorite must be populated.",
+        pendingSubmit: false,
+      });
+      return false;
     } else if (this.state.title.length < 4 || this.state.title.length > 100) {
       this.setState({
         error: "Title must be between 4 and 100 characters long.",
@@ -442,7 +482,13 @@ class EditListingForm extends React.Component {
       return false;
     } else if (this.state.description.length < 4 || this.state.description.length > 2000) {
       this.setState({
-        error: "Subtitle must be between 4 and 2000 characters long.",
+        error: "Description must be between 4 and 2000 characters long.",
+        pendingSubmit: false,
+      });
+      return false;
+    } else if (this.state.naldaFavorite.length < 4 || this.state.naldaFavorite.length > 2000) {
+      this.setState({
+        error: "Nalda's Favorite must be between 4 and 2000 characters long.",
         pendingSubmit: false,
       });
       return false;
@@ -538,6 +584,17 @@ class EditListingForm extends React.Component {
                     rows="1"
                     value={ this.state.description }
                     onChange={ this.handleChangeDescription }
+                  />
+                  <label>
+                    Nalda's Favorite
+                  </label>
+                  <textarea
+                    name="body"
+                    type="text"
+                    className="form-control marg-bot-1"
+                    rows="1"
+                    value={ this.state.naldaFavorite }
+                    onChange={ this.handleChangeNaldaFavorite }
                   />
                   <label>
                     Hours
