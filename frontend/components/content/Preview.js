@@ -28,7 +28,17 @@ const Preview = ({ _id, title, subtitle, image, isArticle, isListing, isVideo, i
           <div
             className="background-image"
             style={{ backgroundImage: `url(${image})`}}
-          />
+          >
+            { isVideo && (
+              <div className="image-wrapper">
+                <img
+                  alt="Play video"
+                  src="https://s3.amazonaws.com/nalda/play.svg"
+                  className="img-fluid"
+                />
+              </div>
+            )}
+          </div>
           <h2 className="title">
             { title }
           </h2>

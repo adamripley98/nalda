@@ -8,7 +8,6 @@ import PropTypes from 'prop-types';
 import Button from '../../shared/Button';
 import ErrorMessage from '../../shared/ErrorMessage';
 import Loading from '../../shared/Loading';
-import Timestamp from '../../shared/Timestamp';
 import Author from '../../shared/Author';
 import NotFoundSection from '../../NotFoundSection';
 
