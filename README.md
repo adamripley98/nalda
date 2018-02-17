@@ -99,6 +99,10 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [ ] Style frontend for homepage
 - [X] Display Nalda's Favorite section
 - [X] Style admin panel
+=======
+- [x] Display Nalda's Favorite section
+- [x] Style admin panel
+>>>>>>> cleanup
 - [x] hamburger turns to X animation
 - [x] Stop using production mlab for testing
 - [x] Push changes live
@@ -107,6 +111,10 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [X] Fix carousel image size
 - [ ] Style listing edit page: image upload spots, delete button for images, etc.
 - [ ] Style article edit page
+=======
+- [x] Fix carousel image size
+
+>>>>>>> cleanup
 ## Admins
 
 - [X] Admin add page (similar look to contact page) where admins can enter email addresses and add both other admins and other content creators. Only admins can add people as content creators and only content creators can create posts.

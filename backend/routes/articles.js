@@ -565,13 +565,13 @@ module.exports = () => {
     // Pull specific article from mongo
     Article.findById(id, (err, article) => {
       if (err) {
-        res.send({
+        res.status(404).send({
           success: false,
           error: err.message,
         });
       // If the article doesn't exist
       } else if (!article) {
-        res.send({
+        res.status(404).send({
           success: false,
           error: "Article not found.",
         });

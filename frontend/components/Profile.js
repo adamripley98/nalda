@@ -9,6 +9,7 @@ import Button from './shared/Button';
 import Loading from './shared/Loading';
 import Preview from './content/Preview';
 import NotFoundSection from './NotFoundSection';
+import Blurb from './shared/Blurb';
 
 /**
  * Component to render a curators profile
@@ -103,9 +104,7 @@ class Profile extends Component {
     // If no articles were found
     return (
       <div className="col-12">
-        <div className="card pad-1 marg-bot-1 border gray-text">
-          This author hasn't posted any articles yet!
-        </div>
+        <Blurb message="This author hasn't posted any articles yet!" />
       </div>
     );
   }
@@ -135,9 +134,7 @@ class Profile extends Component {
     // If no listings were found
     return (
       <div className="col-12">
-        <div className="card pad-1 marg-bot-1 border gray-text">
-          This author hasn't posted any listings yet!
-        </div>
+        <Blurb message="This author hasn't posted any listings yet!" />
       </div>
     );
   }
@@ -167,9 +164,7 @@ class Profile extends Component {
     // If no videos were found
     return (
       <div className="col-12">
-        <div className="card pad-1 marg-bot-1 border gray-text">
-          This author hasn't posted any videos yet!
-        </div>
+        <Blurb message="This author hasn't posted any videos yet!" />\
       </div>
     );
   }

@@ -7,6 +7,7 @@ import Loading from '../../shared/Loading';
 import ErrorMessage from '../../shared/ErrorMessage';
 import Button from '../../shared/Button';
 import Preview from '../Preview';
+import Blurb from '../../shared/Blurb';
 
 /**
  * Component for the homepage of the application
@@ -39,7 +40,7 @@ class Videos extends React.Component {
   componentDidMount() {
     // Update the title
     document.title = "Nalda | Videos";
-    
+
     // Pull the data
     axios.get('/api/videos')
       .then((resp) => {
@@ -129,9 +130,7 @@ class Videos extends React.Component {
     // If there were no videos found
     return (
       <div className="col-12">
-        <div className="card pad-1 marg-bot-1 border">
-          No videos were found. Check back soon for more content!
-        </div>
+        <Blurb message="No videos were found. Check back soon for more content!" />
       </div>
     );
   }

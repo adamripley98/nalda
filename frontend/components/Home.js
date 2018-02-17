@@ -7,6 +7,7 @@ import Loading from './shared/Loading';
 import ErrorMessage from './shared/ErrorMessage';
 import Button from './shared/Button';
 import Preview from './content/Preview';
+import Blurb from './shared/Blurb';
 
 /**
  * Component for the homepage of the application
@@ -95,9 +96,7 @@ class Home extends React.Component {
     // If there are no articles
     return (
       <div className="col-6 col-lg-3">
-        <div className="card marg-bot-1 pad-1 border gray-text">
-          Looks like there are no articles yet. Check back soon, we're working hard to create some great content!
-        </div>
+        <Blurb message="Looks like there are no articles yet. Check back soon, we're working hard to create some great content!" />
       </div>
     );
   }
@@ -123,9 +122,7 @@ class Home extends React.Component {
     // If there are no listings
     return (
       <div className="col-6 col-lg-3">
-        <div className="card marg-bot-1 pad-1 border gray-text">
-          Looks like there are no listings yet. Check back soon, we're working hard to create some great content!
-        </div>
+        <Blurb message="Looks like there are no listings yet. Check back soon, we're working hard to create some great content!" />
       </div>
     );
   }
@@ -154,9 +151,7 @@ class Home extends React.Component {
     // If there are no listings
     return (
       <div className="col-6 col-lg-3">
-        <div className="card marg-bot-1 pad-1 border gray-text">
-          Looks like there are no videos yet. Check back soon, we're working hard to create some great content!
-        </div>
+        <Blurb message="Looks like there are no videos yet. Check back soon, we're working hard to create some great content!" />
       </div>
     );
   }
