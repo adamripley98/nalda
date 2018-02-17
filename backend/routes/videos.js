@@ -59,13 +59,13 @@ module.exports = () => {
     // Pull specific video from mongo
     Video.findById(id, (err, video) => {
       if (err) {
-        res.send({
+        res.status(404).send({
           success: false,
           error: err.message,
         });
       // If the video doesn't exist
       } else if (!video) {
-        res.send({
+        res.status(404).send({
           success: false,
           error: "Video not found",
         });
