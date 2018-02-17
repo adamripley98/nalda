@@ -81,17 +81,18 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [ ] Store images in subfolders for each listing or article
 - [ ] Only first name in nav bar
 - [ ] Location with facebook/google
+
 # Cam
-- [ ] Style Reset password better on `LoginModal` and `Login`
-- [ ] Display a banner on Account page asking people to verify their email (instead of text)
-- [ ] Make trash can to delete reviews bigger
-- [ ] Style file upload in `Account.js`,
+- [x] Style Reset password better on `LoginModal` and `Login`
+- [x] Display a banner on Account page asking people to verify their email (instead of text)
+- [x] Make trash can to delete reviews bigger
+- [x] Style file upload in `Account.js`,
 - [ ] Style frontend for homepage
-- [ ] hamburger turns to X animation
-- [ ] Stop using production mlab for testing
-- [ ] Push changes live
 - [ ] Display Nalda's Favorite section
 - [ ] Style admin panel
+- [x] hamburger turns to X animation
+- [x] Stop using production mlab for testing
+- [x] Push changes live
 
 ## Admins
 
@@ -352,16 +353,14 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [X] Users profiles shouldn't be displayed, only admin/curators
 - [X] Video image not showing up on thumbnail
 - [X] Video edit location clearing bug
-- [ ] SSL is not fully secure?
+- [X] SSL is not fully secure?
 - [X] Admin panel not displaying?
 
 ## Adam
 
 ## Potential features for future
-- [ ] Users can leave comments on videos and articles
 - [ ] Multiple curators on the same content
 - [ ] Recommending content for users to look at
   * To begin they can be location based and random, eventually custom based on user
-
 
 ## Questions

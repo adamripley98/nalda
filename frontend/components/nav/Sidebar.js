@@ -88,10 +88,10 @@ class Sidebar extends Component {
 
         {/* Render the clickable menu bars */}
         <div className="menu">
-          <div className="bars" onClick={ this.toggleMenu }>
-            <div className="bar" />
-            <div className="bar" />
-            <div className="bar" />
+          <div className={ this.state.active ? "bars active" : "bars" } onClick={ this.toggleMenu }>
+            <div className="bar" id="first" />
+            <div className="bar" id="second" />
+            <div className="bar" id="third" />
           </div>
         </div>
 

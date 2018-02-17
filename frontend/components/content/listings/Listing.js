@@ -13,6 +13,7 @@ import Loading from '../../shared/Loading';
 import Button from '../../shared/Button';
 import NotFoundSection from '../../NotFoundSection';
 import Stars from './Stars';
+import Carousel from './Carousel';
 import ErrorMessage from '../../shared/ErrorMessage';
 import Author from '../../shared/Author';
 import Head from '../../shared/Head';
@@ -614,6 +615,7 @@ class Listing extends React.Component {
                   <p className="description">
                     { this.state.description }
                   </p>
+                  <Carousel images={["http://press.visitphilly.com/uploads/photos/3688_l.jpg", "http://press.visitphilly.com/uploads/photos/3688_l.jpg", "http://press.visitphilly.com/uploads/photos/3688_l.jpg"]}/>
                   {
                     this.state.hours && (
                       <div className="hidden-lg-up">
@@ -669,16 +671,16 @@ class Listing extends React.Component {
                     )
                   }
                   style={{
-                    bottom: this.state.infoTrigger ? (- document.getElementById('listing-preview').offsetHeight + 64) : 0
+                    top: this.state.infoTrigger ? (window.innerHeight - document.getElementById('listing-preview').offsetHeight) : (window.innerHeight - 64)
                   }}
                 >
                   <div className="card">
                     <i
                       className={
                         this.state.infoTrigger ? (
-                          "fa fa-chevron-down hidden-lg-up fa-lg info-trigger active"
-                        ) : (
                           "fa fa-chevron-down hidden-lg-up fa-lg info-trigger"
+                        ) : (
+                          "fa fa-chevron-down hidden-lg-up fa-lg info-trigger active"
                         )
                       }
                       aria-hidden="true"
