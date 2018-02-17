@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Author from '../../shared/Author';
 import Dropzone from 'react-dropzone';
-
+import ErrorMessage from '../../shared/ErrorMessage';
 
 /**
  * Component to render the new article form
@@ -318,20 +318,8 @@ class ArticleForm extends React.Component {
             />
 
             <form onSubmit={ this.handleSubmit } id="article-form">
-              {
-                this.state.error ? (
-                  <div className="alert alert-danger">
-                    <p className="bold marg-bot-05">
-                      An error occured:
-                    </p>
-                    <p className="marg-bot-0">
-                      { this.state.error }
-                    </p>
-                  </div>
-                ) : (
-                  ""
-                )
-              }
+              <ErrorMessage message={this.state.error} />
+
               <textarea
                 rows="1"
                 name="title"
