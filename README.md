@@ -90,6 +90,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
   - [X] listing main,
   - [X] article other,
   - [X] listing carousel
+- [ ] Edit profile more intuitive with save button
 
 # Cam
 - [x] Style Reset password better on `LoginModal` and `Login`
@@ -109,15 +110,14 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [X] Fix carousel image size
 - [ ] Style listing edit page: image upload spots, delete button for images, etc.
 - [ ] Style article edit page
-## Admins
 
+## Admins
 - [X] Admin add page (similar look to contact page) where admins can enter email addresses and add both other admins and other content creators. Only admins can add people as content creators and only content creators can create posts.
 - [X] Allow admins to update a user's privileges (ex. from user to curator)
 - [X] Protect `admin`, `curator`, and `user` routes.
 - [X] Allow `users` to leave reviews: comments and ratings.
 
 ## Users
-
 - [X] SendGrid configuration
   - [X] Contact page
   - [X] Password reset
@@ -134,7 +134,6 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [ ] Reviews should be stored in user model too.
 
 ## Listings
-
 - [X] Store an array of times or two fields for each day
 - [X] Store reviews on listings
 - [X] Form for adding reviews
@@ -153,7 +152,6 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [ ] Sort by date
 
 ## Videos
-
 - [X] Improve styling
 - [X] Video backend
 - [X] Edit Videos view
@@ -220,7 +218,6 @@ DELETE '/api/videos/:id'       // Delete a specific article
 
 
 ## Backend
-
 - [X] Boilerplate setup
 - [X] MongoDB setup
 - [X] React/Redux setup
