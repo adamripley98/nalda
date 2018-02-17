@@ -24,10 +24,10 @@ module.exports = () => {
    * @param reviewId
    * @param listingId
    **/
-  router.delete('/', (req, res) => {
+  router.post('/delete', (req, res) => {
     // Isolate variables
-    const reviewId = req.query.reviewId;
-    const listingId = req.query.listingId;
+    const reviewId = req.body.reviewId;
+    const listingId = req.body.listingId;
     // Check to make sure poster is able to delete reviews
     ReviewCheck(req, reviewId, listingId, (authRes) => {
       // Authentication error

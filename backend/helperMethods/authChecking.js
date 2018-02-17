@@ -172,21 +172,21 @@ const ReviewCheck = (req, reviewId, listingId, cb) => {
             }
           }
         }
-        if (successful) {
-          cb({
-            success: true,
-            error: '',
-            listing,
-          });
-          return;
-        }
-        // Does not have privileges
+      }
+      if (successful) {
         cb({
-          success: false,
-          error: 'You do not have delete privileges.',
+          success: true,
+          error: '',
+          listing,
         });
         return;
       }
+      // Does not have privileges
+      cb({
+        success: false,
+        error: 'You do not have delete privileges.',
+      });
+      return;
     });
   });
 };

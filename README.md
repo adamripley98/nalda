@@ -339,6 +339,8 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [ ] Create a helper method file for image upload
 - [ ] Clear errors if resp.data.success
 - [ ] Change edit routes from post to put
+- [ ] Make edit routes far more efficient
+- [ ] Change delete reviews from post to delete
 
 ## Other
 - [ ] Google Analytics

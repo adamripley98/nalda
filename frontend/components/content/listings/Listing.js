@@ -62,7 +62,7 @@ class Listing extends React.Component {
     // Bind this to helper methods
     this.renderAmenities = this.renderAmenities.bind(this);
     this.renderReviewsSection = this.renderReviewsSection.bind(this);
-    this.renderReview = this.renderReviews.bind(this);
+    this.renderReviews = this.renderReviews.bind(this);
     this.handleClickInfoTrigger = this.handleClickInfoTrigger.bind(this);
     this.updateReviews = this.updateReviews.bind(this);
     this.deleteListing = this.deleteListing.bind(this);
@@ -295,10 +295,10 @@ class Listing extends React.Component {
 
   // Helper method to delete reviews
   deleteReview(reviewId) {
-    axios.delete('/api/reviews', {params: {
+    axios.post('/api/reviews/delete', {
       reviewId,
       listingId: this.state.listingId,
-    }})
+    })
     .then((resp) => {
       if (resp.data.success) {
         this.updateReviews();
