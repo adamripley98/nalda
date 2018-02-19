@@ -618,7 +618,7 @@ class Listing extends React.Component {
                   </div>
                   <p className="naldaFavorite">
                     <strong>
-                      Nalda's take:
+                      Nalda's favorite:
                     </strong>
                     <br />
                     { this.state.naldaFavorite }
