@@ -44,19 +44,19 @@ DELETE '/api/videos/:id'       // Delete a specific article
 # Feature tracking
 
 ## By 2/17
-- [ ] Image upload
+- [X] Image upload
   - [X] Profile picture
   - [X] Listing multiple pictures
   - [X] Articles multiple pictures
   - [X] Edit articles
   - [X] Edit listings
-  - [ ] Styling for all these
+  - [X] Styling for all these
   - [X] Error handling
 - [ ] Ensure everything works on live site
-  - [ ] Google oAuth
-  - [ ] Facebook oAuth
-  - [ ] Sendgrid
-  - [ ] Image upload
+  - [X] Google oAuth
+  - [X] Facebook oAuth
+  - [X] Sendgrid
+  - [X] Image upload
     - [ ] Especially on mobile
 - [X] SSL fix
 - [X] Gallery on listing
@@ -92,10 +92,10 @@ DELETE '/api/videos/:id'       // Delete a specific article
   - [X] listing carousel
 - [ ] Edit profile more intuitive with save button
 - [ ] Admin panel work
-  - [ ] No link to user pages
+  - [X] No link to user pages
   - [ ] Ability to delete users from admin panel
   - [ ] Categories should be scroll (or only show 10 of each) or search
-  - [ ] Email should link to a sendto=email
+  - [X] Email should link to a sendto=email
   - [ ] Add as admin/curator should be next to users name (along with delete)
   - [ ] Add area to pick homepage featured images
   - [ ] After upgrading from curator to admin, should refresh and show state instantaneously

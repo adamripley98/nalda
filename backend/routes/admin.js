@@ -76,7 +76,7 @@ module.exports = () => {
                         }
                       }
                     });
-                    // TODO Async
+
                     res.send({
                       success: true,
                       error: '',
@@ -103,7 +103,6 @@ module.exports = () => {
   /**
    * Route to handle adding new admins
    * Admins are allowed to add more admins/curators and create content
-   * @param userToAdd
    */
   router.post('/admin/new', (req, res) => {
     // Check to make sure poster is an admin
@@ -145,9 +144,18 @@ module.exports = () => {
                   error: errSave.message,
                 });
               } else {
+                // Create new admin to pass back
+                const newAdmin = {
+                  name: user.name,
+                  username: user.username,
+                  userId: user._id,
+                };
                 // If no error saving new user, returns successfully
                 res.send({
                   success: true,
+                  data: {
+                    newAdmin,
+                  },
                   error: '',
                 });
               }

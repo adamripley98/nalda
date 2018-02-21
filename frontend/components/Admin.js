@@ -99,9 +99,23 @@ class Admin extends Component {
           success: "",
         });
       } else {
+        // Make copies of existing user types
+        const newAdmins = this.state.admins.slice();
+        // Add new admin
+        newAdmins.push(resp.data.data.newAdmin);
+        const newUsers = this.state.users.filter((user) => {
+          return user.userId !== resp.data.data.newAdmin.userId;
+        });
+        const newCurators = this.state.curators.filter((user) => {
+          return user.userId !== resp.data.data.newAdmin.userId;
+        });
         this.setState({
           error: "",
-          success: "Successfully added new admin."
+          success: "Successfully added new admin.",
+          admins: newAdmins,
+          users: newUsers,
+          curators: newCurators,
+          email: '',
         });
       }
     }).catch(err => {
@@ -171,7 +185,6 @@ class Admin extends Component {
   }
 
   // Helper method to display all curators
-  // TODO display nicer
   displayCurators() {
     if (this.state.curators && this.state.curators.length) {
       const curators = this.state.curators.map((curator, i) => (
@@ -185,7 +198,7 @@ class Admin extends Component {
             </Link>
           </td>
           <td>
-            { curator.username }
+            <a href={`mailto:${curator.username}`}>{ curator.username }</a>
           </td>
         </tr>
       ));
@@ -227,7 +240,7 @@ class Admin extends Component {
             </Link>
           </td>
           <td>
-            { admin.username }
+            <a href={`mailto:${admin.username}`}>{admin.username }</a>
           </td>
         </tr>
       ));
@@ -264,12 +277,10 @@ class Admin extends Component {
             {i + 1}
           </th>
           <td>
-            <Link key={ uuid() } to={`/users/${user.userId}`}>
               { user.name }
-            </Link>
           </td>
           <td>
-            { user.username }
+            <a href={`mailto:${user.username}`}>{ user.username }</a>
           </td>
         </tr>
       ));
