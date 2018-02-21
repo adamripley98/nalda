@@ -38,7 +38,7 @@ const sendWelcomeEmail = (user, cb) => {
       from: process.env.SENDGRID_EMAIL,
       subject: 'Welcome to Nalda, ' + displayName + '! Verify your account.',
       text: 'Hi ' + displayName + ',\n Welcome to Nalda! Please verify your account at the following link:\n\n' +
-      'http://' + HOST_URL + '/verify/' + token + '\n\n',
+      HOST_URL + '/verify/' + token + '\n\n',
       html: html,
     };
 
