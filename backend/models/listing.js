@@ -47,12 +47,7 @@ const listingSchema = new Schema({
     showoffToYourFriends: Boolean,
     forTheGram: Boolean,
   },
-  amenities: {
-    wifi: Boolean,
-    vegetarian: Boolean,
-    handicap: Boolean,
-    cashOnly: Boolean,
-  },
+  amenities: [],
   reviews: [
     {
       rating: Number,

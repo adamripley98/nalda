@@ -51,6 +51,17 @@ module.exports = () => {
           const sgMail = require('@sendgrid/mail');
           sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
+          // Set up the html
+          const html = (
+            `<div style=\"background:#efefef;background-color:#efefef;width:100%;padding:0px,16px,32px,16px;\"` +
+            `bgcolor:\"#efefef\"><div style=\"background:#ffffff;background-color:#ffffff;width:100%;padding:16px;` +
+            `color:#606060;font-family:Verdana, serif;\" bgcolor=\"#ffffff\">` +
+            'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
+              'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+              'http://' + req.headers.host + '/reset/' + token + '\n\n' +
+              'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+          );
+
           // Create message
           const msg = {
             to: user.username,
@@ -59,7 +70,8 @@ module.exports = () => {
             text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
               'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
               'http://' + req.headers.host + '/reset/' + token + '\n\n' +
-              'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+              'If you did not request this, please ignore this email and your password will remain unchanged.\n',
+            html,
           };
 
           // Send message

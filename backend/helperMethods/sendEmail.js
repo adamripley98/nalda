@@ -28,11 +28,13 @@ const sendWelcomeEmail = (user, cb) => {
 
     // Set up the html
     const html = (
-      `<div style=\"background:#efefef;background-color:#efefef;width:100%;padding:0px,16px,32px,16px;\" bgcolor:\"#efefef\"><div style=\"background:#ffffff;background-color:#ffffff;width:100%;padding:16px;color:#606060;font-family:Verdana, serif;\" bgcolor=\"#ffffff\">Hi ${displayName},<br/><br/>Welcome to Nalda! Please verify your account at the following link:<br/><br/>http://localhost:3000/verify/${token}<br/></div></div>`
+      `<div style=\"background:#efefef;background-color:#efefef;width:100%;padding:0px,16px,32px,16px;\"` +
+      `bgcolor:\"#efefef\"><div style=\"background:#ffffff;background-color:#ffffff;width:100%;padding:16px;` +
+      `color:#606060;font-family:Verdana, serif;\" bgcolor=\"#ffffff\">Hi ${displayName},<br/><br/>Welcome to Nalda!` +
+      ` Please verify your account at the following link:<br/><br/><a href="${HOST_URL}/verify/${token}">${HOST_URL}/verify/${token}</a><br/></div></div>`
     );
 
     // Create message
-    // TODO get rid of hardcoded host name
     const msg = {
       to: user.username,
       from: process.env.SENDGRID_EMAIL,

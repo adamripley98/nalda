@@ -39,6 +39,7 @@ class Listing extends React.Component {
       website: "",
       price: "",
       categories: {},
+      amenities: [],
       location: {
         name: "",
         lat: null,
@@ -261,25 +262,16 @@ class Listing extends React.Component {
    */
   renderAmenities() {
     // If amenities are in the state (this should always be the case)
-    if (this.state.amenities && Object.keys(this.state.amenities).length) {
-      // Get all keys from the amenities object
-      const keys = Object.keys(this.state.amenities);
-
-      // Map from amenities to properly formatted text
-      const map = {
-        wifi: "WiFi",
-        vegetarian: "Vegetarian",
-        handicap: "Handicap accessible",
-      };
+    if (this.state.amenities && this.state.amenities.length) {
+      // Isolate amenities
+      const amenities = this.state.amenities;
 
       // Return an amenity div tag for each amenity which is true in the state
       // That is, if the curator marked that the listing has said amenity
-      return keys.map(amenity => (
-        this.state.amenities[amenity] ? (
+      return amenities.map(amenity => (
           <div className="amenity" key={ amenity }>
-            { map[amenity] ? map[amenity] : amenity }
+            { amenity }
           </div>
-        ) : null
       ));
     }
 

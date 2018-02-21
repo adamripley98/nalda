@@ -86,6 +86,7 @@ class ListingForm extends React.Component {
         showoffToYourFriends: false,
         forTheGram: false,
       },
+      amenities: [],
       pending: false,
     };
 
@@ -100,6 +101,7 @@ class ListingForm extends React.Component {
     this.handleChangeWebsite = this.handleChangeWebsite.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleClickCategory = this.handleClickCategory.bind(this);
+    this.handleChangeAmenity = this.handleChangeAmenity.bind(this);
     this.displayImages = this.displayImages.bind(this);
     this.removeImage = this.removeImage.bind(this);
   }
@@ -208,6 +210,13 @@ class ListingForm extends React.Component {
     this.setState({
       website: event.target.value,
     });
+  }
+
+  /**
+   * Helper method to handle a change tto the amenities
+   */
+  handleChangeAmenity(event) {
+    console.log('change amenity');
   }
 
   /**
@@ -384,6 +393,7 @@ class ListingForm extends React.Component {
             price: this.state.price,
             website: this.state.website,
             categories: this.state.categories,
+            amenities: this.state.amenities,
           })
             .then((resp) => {
               // Display any errors
@@ -463,6 +473,10 @@ class ListingForm extends React.Component {
     } else if (!this.state.images.length) {
       this.setState({
         error: "At least 1 image must be provided.",
+      });
+    } else if (this.state.amenities.length > 10) {
+      this.setState({
+        error: "You may only add 10 amenities",
       });
     } else if (!document.getElementById("location").value) {
       this.setState({

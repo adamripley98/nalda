@@ -91,6 +91,15 @@ DELETE '/api/videos/:id'       // Delete a specific article
   - [X] article other,
   - [X] listing carousel
 - [ ] Edit profile more intuitive with save button
+- [ ] Admin panel work
+  - [ ] No link to user pages
+  - [ ] Ability to delete users from admin panel
+  - [ ] Categories should be scroll (or only show 10 of each) or search
+  - [ ] Email should link to a sendto=email
+  - [ ] Add as admin/curator should be next to users name (along with delete)
+  - [ ] Add area to pick homepage featured images
+  - [ ] After upgrading from curator to admin, should refresh and show state instantaneously
+- [ ] Delete account functionality
 
 # Cam
 - [x] Style Reset password better on `LoginModal` and `Login`
