@@ -38,13 +38,24 @@ module.exports = () => {
             // Email addresses them by first name
             const displayName = user.name.split(' ').length > 1 ? user.name.split(' ')[0] : user.name;
             // Create message
-            // TODO contain verification link from User model
+
+            // Set up the html
+            const html = (
+              `<div style=\"background:#efefef;background-color:#efefef;width:100%;padding:0px,16px,32px,16px;\"` +
+              `bgcolor:\"#efefef\"><div style=\"background:#ffffff;background-color:#ffffff;width:100%;padding:16px;` +
+              `color:#606060;font-family:Verdana, serif;\" bgcolor=\"#ffffff\">` +
+              'Hi ' + displayName + ',\n Welcome to Nalda! Please verify your account at the following link:\n\n' +
+              'http://' + req.headers.host + '/verify/' + user.verificationToken + '\n\n'
+            );
+
+            // Compose message
             const msg = {
               to: user.username,
               from: process.env.SENDGRID_EMAIL,
               subject: 'Verify your account, ' + displayName,
               text: 'Hi ' + displayName + ',\n Welcome to Nalda! Please verify your account at the following link:\n\n' +
-              'http://' + req.headers.host + '/verify/' + user.verificationToken + '\n\n'
+              'http://' + req.headers.host + '/verify/' + user.verificationToken + '\n\n',
+              html,
             };
 
             // Send message
