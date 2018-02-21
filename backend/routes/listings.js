@@ -226,6 +226,7 @@ module.exports = () => {
         const location = req.body.location;
         const rating = req.body.rating;
         const description = req.body.description;
+        const amenities = req.body.amenities;
         const naldaFavorite = req.body.naldaFavorite;
         const categories = req.body.categories;
         const price = req.body.price;
@@ -256,6 +257,8 @@ module.exports = () => {
           error = "Website must be populated.";
         } else if (!hours) {
           error = "Hours must be populated.";
+        } else if (amenities.length > 10) {
+          error = "Only 10 amenities allowed.";
         } else if (Object.keys(location).length === 0) {
           error = "Location must be populated.";
         }
@@ -362,6 +365,7 @@ module.exports = () => {
                               listing.price = price;
                               listing.location = location;
                               listing.categories = categories;
+                              listing.amenities = amenities;
                               listing.hours = hours;
                               listing.website = website;
                               listing.updatedAt = new Date().getTime();
@@ -462,6 +466,7 @@ module.exports = () => {
                         listing.price = price;
                         listing.location = location;
                         listing.categories = categories;
+                        listing.amenities = amenities;
                         listing.hours = hours;
                         listing.website = website;
                         listing.updatedAt = new Date().getTime();
@@ -560,6 +565,7 @@ module.exports = () => {
         const price = req.body.price;
         const website = req.body.website;
         const categories = req.body.categories;
+        const amenities = req.body.amenities;
         const location = req.body.location;
         const userId  = req.session.passport.user;
 
@@ -585,6 +591,8 @@ module.exports = () => {
           error = "Price must be populated.";
         } else if (!website) {
           error = "Website must be populated.";
+        } else if (amenities.length > 10) {
+          error = "Only 10 amenities allowed";
         } else if (!location.name) {
           error = "Location must be populated.";
         } else if (!location.lat || !location.lng) {
@@ -664,6 +672,7 @@ module.exports = () => {
                       price,
                       website,
                       categories,
+                      amenities,
                       location,
                       author: userId,
                       createdAt: Date.now(),
