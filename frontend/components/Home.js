@@ -34,6 +34,7 @@ class Home extends React.Component {
    * Pulls articles, listings, and videos simulatneously
    */
   componentDidMount() {
+    window.scrollTo(0, 0);
     // Janky way of dealing with Facebook Oauth url issue
     if (window.location.hash === '#_=_') {
       history.replaceState

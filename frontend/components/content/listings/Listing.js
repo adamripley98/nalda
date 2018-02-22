@@ -75,6 +75,7 @@ class Listing extends React.Component {
 
   // Pull the listing data from the database
   componentDidMount() {
+    window.scrollTo(0, 0);
     // Find the id in the url
     const id = this.props.match.params.id;
 

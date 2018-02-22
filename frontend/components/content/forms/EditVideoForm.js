@@ -44,6 +44,7 @@ class EditVideoForm extends React.Component {
    * Pull data from the backend and populate the form fields
    */
   componentDidMount() {
+    window.scrollTo(0, 0);
     // Update the title
     document.title = "Nalda | Edit Video";
 

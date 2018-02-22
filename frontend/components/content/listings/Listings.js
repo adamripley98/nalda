@@ -40,6 +40,7 @@ class Listings extends React.Component {
    * Load listings from Mongo once the component mounts
    */
   componentDidMount() {
+    window.scrollTo(0, 0);
     // Update the title
     document.title = "Nalda | Listings";
 

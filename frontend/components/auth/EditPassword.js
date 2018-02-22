@@ -37,6 +37,7 @@ class EditPassword extends Component {
   }
 
   componentDidMount() {
+    window.scrollTo(0, 0);
     axios.get('/api/users/username')
     .then((resp) => {
       if (!resp.data.success) {

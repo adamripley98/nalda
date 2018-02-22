@@ -64,6 +64,7 @@ class Account extends Component {
    * Pull the user's information from the database then render it
    */
   componentDidMount() {
+    window.scrollTo(0, 0);
     axios.get('/api/account', {
       params: {
         userId: this.props.userId,

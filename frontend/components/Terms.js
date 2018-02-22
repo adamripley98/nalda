@@ -7,6 +7,7 @@ import React from 'react';
 const Terms = () => {
   // Set the title
   document.title = "Nalda | Terms of Use";
+  window.scrollTo(0, 0);
 
   // Return the terms
   return (

@@ -110,6 +110,7 @@ class ListingForm extends React.Component {
    * When the component mounts
    */
   componentDidMount() {
+    window.scrollTo(0, 0);
     // Update the title
     document.title = "Nalda | New Listing";
 

@@ -34,6 +34,7 @@ class Articles extends React.Component {
 
   // Load articles from Mongo once thre component mounts
   componentDidMount() {
+    window.scrollTo(0, 0);
     // Update the title
     document.title = "Nalda | Articles";
 
