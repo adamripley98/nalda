@@ -7,6 +7,7 @@ import React from 'react';
 const Privacy = () => {
   // Update the title
   document.title = "Nalda | Privacy Policy";
+  window.scrollTo(0, 0);
 
   // Return the privacy policy
   return (

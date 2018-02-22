@@ -36,6 +36,7 @@ class ResetPassword extends Component {
   }
 
   componentDidMount() {
+    window.scrollTo(0, 0);
     // Find the token in the url
     const token = this.props.match.params.token;
     // Call backend to make sure token is valid/not expired

@@ -6,6 +6,7 @@ import React from 'react';
  */
 const Credits = () => {
   // Update the title
+  window.scrollTo(0, 0);
   document.title = "Nalda | Credits";
 
   // Return the credits

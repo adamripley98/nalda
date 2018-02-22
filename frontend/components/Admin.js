@@ -44,6 +44,7 @@ class Admin extends Component {
   }
 
   componentDidMount() {
+    window.scrollTo(0, 0);
     // Resize textarea to fit input
     autosize(document.querySelectorAll('textarea'));
     // Pull data to display on admin panel
@@ -142,9 +143,23 @@ class Admin extends Component {
           success: "",
         });
       } else {
+        // Make copies of existing user types
+        const newCurators = this.state.curators.slice();
+        // Add new admin
+        newCurators.push(resp.data.data.newCurator);
+        const newUsers = this.state.users.filter((user) => {
+          return user.userId !== resp.data.data.newCurator.userId;
+        });
+        const newAdmins = this.state.curators.filter((user) => {
+          return user.userId !== resp.data.data.newCurator.userId;
+        });
         this.setState({
           error: "",
           success: "Successfully added curator.",
+          admins: newAdmins,
+          users: newUsers,
+          curators: newCurators,
+          email: '',
         });
       }
     }).catch((err) => {
@@ -171,9 +186,20 @@ class Admin extends Component {
           success: "",
         });
       } else {
+        const newUsers = this.state.users.slice();
+
+        // Add new user (revoke from curator)
+        newUsers.push(resp.data.data.removedCurator);
+        // Remove curator
+        const newCurators = this.state.curators.filter((user) => {
+          return user.userId !== resp.data.data.removedCurator.userId;
+        });
         this.setState({
           error: "",
-          success: "Successfully removed curator",
+          success: "Successfully removed curator.",
+          curators: newCurators,
+          users: newUsers,
+          email: '',
         });
       }
     }).catch((err) => {

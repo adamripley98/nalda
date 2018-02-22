@@ -215,10 +215,19 @@ module.exports = () => {
                   error: errSave.message,
                 });
               } else {
+                // Create new admin to pass back
+                const newCurator = {
+                  name: user.name,
+                  username: user.username,
+                  userId: user._id,
+                };
                 // If no error saving new user, returns successfully
                 res.send({
                   success: true,
                   error: '',
+                  data: {
+                    newCurator,
+                  }
                 });
               }
             });
@@ -268,10 +277,18 @@ module.exports = () => {
                     error: errSave.message,
                   });
                 } else {
+                  const removedCurator = {
+                    name: user.name,
+                    username: user.username,
+                    userId: user._id,
+                  };
                   // If no error saving new user, returns successfully
                   res.send({
                     success: true,
                     error: '',
+                    data: {
+                      removedCurator,
+                    },
                   });
                 }
               });

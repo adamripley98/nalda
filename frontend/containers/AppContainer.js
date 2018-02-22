@@ -75,6 +75,7 @@ class AppContainer extends Component {
     * If the user attempted to login with facebook/google, will dispatch login action
    */
   componentDidMount() {
+    window.scrollTo(0, 0);
     // Isolate variables
     const onLogout = this.props.onLogout;
     const onLogin = this.props.onLogin;

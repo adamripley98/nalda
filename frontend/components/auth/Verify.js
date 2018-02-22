@@ -21,6 +21,7 @@ class Verify extends Component {
   }
 
   componentDidMount() {
+    window.scrollTo(0, 0);
     // Isolate token from URL
     const token = this.props.match.params.token;
 

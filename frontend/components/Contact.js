@@ -34,6 +34,7 @@ class Contact extends Component {
 
   // Resize textarea to fit input
   componentDidMount() {
+    window.scrollTo(0, 0);
     // Update the title
     document.title = "Nalda | Contact";
 

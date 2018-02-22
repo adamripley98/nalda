@@ -50,6 +50,7 @@ class ArticleForm extends React.Component {
    * Handle resizing textarea
    */
   componentDidMount() {
+    window.scrollTo(0, 0);
     // Upate the title
     document.title = "Nalda | New Article";
 

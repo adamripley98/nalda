@@ -43,6 +43,7 @@ class Profile extends Component {
    * Pull the user's information from the database then render it
    */
   componentDidMount() {
+    window.scrollTo(0, 0);
     // Find the id in the url
     const id = this.props.match.params.id;
     // Call to backend to get profile information

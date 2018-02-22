@@ -38,6 +38,7 @@ class VideoForm extends React.Component {
    * Handle resizing textarea
    */
   componentDidMount() {
+    window.scrollTo(0, 0);
     // Update the title
     document.title = "Nalda | New Video";
 
