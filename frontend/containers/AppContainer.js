@@ -79,6 +79,7 @@ class AppContainer extends Component {
     const onLogout = this.props.onLogout;
     const onLogin = this.props.onLogin;
     const userId = this.props.userId;
+
     // Call to backend (routes.js)
     axios.get('/api/sync', {
       params: {
@@ -95,7 +96,9 @@ class AppContainer extends Component {
           redirectToLogin: true,
         });
       } else {
+        // Get the user from the response
         const user = resp.data.user;
+
         // If user is logged in through facebook on backend, update on Frontend
         if (resp.data.oAuthLogin) {
           // Send redux event
