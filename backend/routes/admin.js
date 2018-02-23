@@ -43,16 +43,13 @@ module.exports = () => {
           Listing.find({}, (errListings, listings) => {
             Video.find({}, (errVideos, videos) => {
               Homepage.find({}, (errHomepage, homepageContent) => {
-                console.log('tryna find');
                 // Send back any errors
                 if (errArticles || errListings || errVideos || errHomepage) {
-                  console.log('errrr');
                   res.send({
                     success: false,
                     error: 'Error finding content.',
                   });
                 } else {
-                  console.log('going in');
                   // Find all curators and admins
                   User.find({}, (err, profiles) => {
                     if (err) {
@@ -81,8 +78,6 @@ module.exports = () => {
                           }
                         }
                       });
-                      console.log('tryna send back');
-                      console.log(homepageContent[0]);
                       // Send back information
                       res.send({
                         success: true,
@@ -91,8 +86,7 @@ module.exports = () => {
                           curators,
                           admins,
                           users,
-                          // TODO send back actual homepage content
-                          homepageContent: homepageContent[0] || {banner: ["dummyid", "dummyid2", "dummyid3"]},
+                          homepageContent: homepageContent[0],
                           userData,
                           articles,
                           listings,
@@ -115,7 +109,6 @@ module.exports = () => {
    * Admins are allowed to add more admins/curators and create content
    */
   router.post('/admin/new', (req, res) => {
-    console.log('enters admin new');
     // Check to make sure poster is an admin
     AdminCheck(req, (authRes) => {
       // Return any authentication errors

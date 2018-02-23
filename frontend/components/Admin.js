@@ -24,6 +24,7 @@ class Admin extends Component {
       error: "",
       success: "",
       contentToAdd: "",
+      imageToAdd: '',
       pending: true,
       curator: [],
       admin: [],
@@ -34,6 +35,7 @@ class Admin extends Component {
     // Bind this to helper methods
     this.handleChangeEmail = this.handleChangeEmail.bind(this);
     this.handleChangeContentToAdd = this.handleChangeContentToAdd.bind(this);
+    this.handleChangeImageToAdd = this.handleChangeImageToAdd.bind(this);
     this.onSubmitAdmin = this.onSubmitAdmin.bind(this);
     this.onSubmitCurator = this.onSubmitCurator.bind(this);
     this.onSubmitRemoveCurator = this.onSubmitRemoveCurator.bind(this);
@@ -64,7 +66,7 @@ class Admin extends Component {
           articles: resp.data.data.articles,
           listings: resp.data.data.listings,
           videos: resp.data.data.videos,
-          banner: resp.data.data.homepageContent.banner,
+          banner: resp.data.data.homepageContent ? resp.data.data.homepageContent.banner : null,
           pending: false,
         });
       } else {
@@ -96,31 +98,45 @@ class Admin extends Component {
     });
   }
 
+  // Handle when admin types into image to add field
+  handleChangeImageToAdd(event) {
+    this.setState({
+      imageToAdd: event.target.value,
+    });
+  }
+
   // Helper method to change which images are on the banner
   onSubmitChangeBanner(event) {
     event.preventDefault();
     // Post to backend to add content to banner
-    // TODO error check for too many images
-    console.log('enters submit change banner');
-    console.log(this.state.contentToAdd);
     // TODO contentimage as well
     axios.post('/api/home/banner/add', {
       contentToAdd: this.state.contentToAdd,
+      imageToAdd: this.state.imageToAdd,
     })
     .then((resp) => {
       if (resp.data.error) {
         this.setState({
           error: resp.data.error,
+          contentToAdd: '',
+          imageToAdd: '',
         });
       } else {
-        // TODO Update state with new banner images
-        console.log('success');
+        this.setState({
+          error: '',
+          success: 'Banner content updated.',
+          banner: resp.data.data,
+          contentToAdd: '',
+          imageToAdd: '',
+        });
       }
     })
     .catch((err) => {
       this.setState({
         error: err,
         success: '',
+        contentToAdd: '',
+        imageToAdd: '',
       });
     });
   }
@@ -405,11 +421,7 @@ class Admin extends Component {
           </td>
           <td>
             {
-              (article.subtitle.length > 50) ? (
-                article.subtitle.substring(0, 50) + "..."
-              ) : (
-                article.subtitle
-              )
+              article._id
             }
           </td>
         </tr>
@@ -424,7 +436,7 @@ class Admin extends Component {
             <thead>
               <th scope="col">#</th>
               <th scope="col">Title</th>
-              <th scope="col">Subtitle</th>
+              <th scope="col">Article ID</th>
             </thead>
             <tbody>
               { articles }
@@ -453,11 +465,7 @@ class Admin extends Component {
           </td>
           <td>
             {
-              (listing.description.length > 50) ? (
-                listing.description.substring(0, 50) + "..."
-              ) : (
-                listing.description
-              )
+              listing._id
             }
           </td>
         </tr>
@@ -472,7 +480,7 @@ class Admin extends Component {
             <thead>
               <th scope="col">#</th>
               <th scope="col">Name</th>
-              <th scope="col">Description</th>
+              <th scope="col">Listing ID</th>
             </thead>
             <tbody>
               { listings }
@@ -501,11 +509,7 @@ class Admin extends Component {
           </td>
           <td>
             {
-              (video.description.length > 50) ? (
-                video.description.substring(0, 50) + "..."
-              ) : (
-                video.description
-              )
+              video._id
             }
           </td>
         </tr>
@@ -520,7 +524,7 @@ class Admin extends Component {
             <thead>
               <th scope="col">#</th>
               <th scope="col">Title</th>
-              <th scope="col">Description</th>
+              <th scope="col">Video ID</th>
             </thead>
             <tbody>
               { videos }
@@ -547,6 +551,14 @@ class Admin extends Component {
           onChange={ this.handleChangeContentToAdd}
           rows="1"
         />
+        <textarea
+          type="text"
+          placeholder="Image (link to url)"
+          className="form-control marg-bot-1 border"
+          value={ this.state.imageToAdd }
+          onChange={ this.handleChangeImageToAdd}
+          rows="1"
+        />
         <button
           onClick={(e) => this.onSubmitChangeBanner(e)}
           className={
@@ -559,6 +571,21 @@ class Admin extends Component {
         >
           Add content to homepage banner
         </button>
+        {/* {
+          this.state.banner.length ? (
+            const displayedBanner = this.state.banner.map((item) => {
+              return (
+                <img src={`url(${item.contentImage})`}
+              )
+            });
+            return (
+              <h3>Banner images</h3>
+              {displayedBanner}
+            )
+          ) : (
+            return <div>No banner images have been uploaded yet.</div>
+          )
+        } */}
       </div>
     );
   }

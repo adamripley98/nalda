@@ -108,7 +108,6 @@ module.exports = () => {
   });
 
   router.post('/banner/add', (req, res) => {
-    console.log('enters');
     AdminCheck(req, (authRes) => {
       if (!authRes.success) {
         res.send({
@@ -117,11 +116,10 @@ module.exports = () => {
         });
       } else {
         const contentToAdd = req.body.contentToAdd;
-        const contentImage = req.body.contentImage;
-        // TODO add banner
-        // TODO error check to make sure content exists
-        Listing.findById(contentToAdd, (listing, errListing) => {
-          Article.findById(contentToAdd, (article, errArticle) => {
+        const contentImage = req.body.imageToAdd;
+        // Attempt to find content in listing or article
+        Listing.findById(contentToAdd, (errListing, listing) => {
+          Article.findById(contentToAdd, (errArticle, article) => {
             // Pass back errors
             if (errListing || errArticle) {
               res.send({
@@ -130,7 +128,6 @@ module.exports = () => {
               });
               // Make sure id is of right format
             } else if (!contentToAdd.match(/^[0-9a-fA-F]{24}$/)) {
-              console.log('wrong format');
               res.send({
                 success: false,
                 error: 'No content with that id exists.'
@@ -139,7 +136,7 @@ module.exports = () => {
             } else if (!article && !listing) {
               res.send({
                 success: false,
-                error: 'No content with that ID exists.',
+                error: 'No article or listing with that ID exists.',
               });
             } else {
               // Find homepage
@@ -149,35 +146,72 @@ module.exports = () => {
                     success: false,
                     error: errHomepage,
                   });
-                } else {
-                  const homepage = home[0];
-                  const banner = homepage.banner.slice();
-                  // Create object to pass back, of type article or listing
-                  const newBannerContent = {
-                    type: article ? "article" : "listing",
-                    contentId: contentToAdd,
-                    contentImage,
-                  };
-                  // TODO error check size???
-                  // Add to banner
-                  banner.push(newBannerContent);
-                  homepage.banner = banner;
-                  // Save new banner to mongo
-                  homepage.save((errSave) => {
-                    if (errSave) {
+                // NOTE this is only to declare a homepage in the database for the first time
+                } else if (!home.length) {
+                  // Create new homepage
+                  const newHomepage = new Homepage({
+                    banner: [],
+                    naldaVideos: [],
+                    categories: [],
+                    recommended: [],
+                    fromTheEditors: [],
+                  });
+                  // save new homepage in mongo
+                  newHomepage.save((err) => {
+                    if (err) {
                       res.send({
                         success: false,
-                        error: errSave,
+                        error: err,
                       });
                     } else {
-                      // Send back success
                       res.send({
-                        success: true,
-                        error: '',
-                        newBannerContent,
+                        success: false,
+                        error: 'You just created the first instance of a homepage, try adding a banner again.',
                       });
                     }
                   });
+                } else {
+                  const homepage = home[0];
+                  const banner = homepage.banner.slice();
+                  // Error check for duplicate content in banner
+                  let duplicate = false;
+                  banner.forEach((item) => {
+                    if (item.contentId === contentToAdd) {
+                      duplicate = true;
+                    }
+                  });
+                  if (duplicate) {
+                    res.send({
+                      success: false,
+                      error: 'This content is already in the banner.',
+                    });
+                  } else {
+                    // Create object to pass back, of type article or listing
+                    const newBannerContent = {
+                      contentType: article ? "article" : "listing",
+                      contentId: contentToAdd,
+                      contentImage,
+                    };
+                    // Add to banner
+                    banner.push(newBannerContent);
+                    homepage.banner = banner;
+                    // Save new banner to mongo
+                    homepage.save((errSave) => {
+                      if (errSave) {
+                        res.send({
+                          success: false,
+                          error: errSave,
+                        });
+                      } else {
+                        // Send back success
+                        res.send({
+                          success: true,
+                          error: '',
+                          data: homepage.banner,
+                        });
+                      }
+                    });
+                  }
                 }
               });
             }
