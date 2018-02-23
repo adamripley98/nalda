@@ -117,37 +117,68 @@ module.exports = () => {
         });
       } else {
         const contentToAdd = req.body.contentToAdd;
+        const contentImage = req.body.contentImage;
         // TODO add banner
         // TODO error check to make sure content exists
         Listing.findById(contentToAdd, (listing, errListing) => {
           Article.findById(contentToAdd, (article, errArticle) => {
+            // Pass back errors
             if (errListing || errArticle) {
               res.send({
                 success: false,
                 error: 'Error finding content.',
               });
+              // Make sure id is of right format
+            } else if (!contentToAdd.match(/^[0-9a-fA-F]{24}$/)) {
+              console.log('wrong format');
+              res.send({
+                success: false,
+                error: 'No content with that id exists.'
+              });
+              // Make sure content with given id exists
             } else if (!article && !listing) {
               res.send({
                 success: false,
                 error: 'No content with that ID exists.',
               });
-            } else if (listing) {
-              // TODO do something with listing
-              console.log('listing', listing);
-              res.send({
-                success: false,
-                error: 'not implemented (listing)',
-              });
-            } else if (article) {
-              // TODO do something with article
-              res.send({
-                success: false,
-                error: 'not implemented (article)',
-              });
             } else {
-              res.send({
-                success: false,
-                error: 'Error finding banner content.'
+              // Find homepage
+              Homepage.find({}, (errHomepage, home) => {
+                if (errHomepage) {
+                  res.send({
+                    success: false,
+                    error: errHomepage,
+                  });
+                } else {
+                  const homepage = home[0];
+                  const banner = homepage.banner.slice();
+                  // Create object to pass back, of type article or listing
+                  const newBannerContent = {
+                    type: article ? "article" : "listing",
+                    contentId: contentToAdd,
+                    contentImage,
+                  };
+                  // TODO error check size???
+                  // Add to banner
+                  banner.push(newBannerContent);
+                  homepage.banner = banner;
+                  // Save new banner to mongo
+                  homepage.save((errSave) => {
+                    if (errSave) {
+                      res.send({
+                        success: false,
+                        error: errSave,
+                      });
+                    } else {
+                      // Send back success
+                      res.send({
+                        success: true,
+                        error: '',
+                        newBannerContent,
+                      });
+                    }
+                  });
+                }
               });
             }
           });

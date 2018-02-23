@@ -103,6 +103,7 @@ class Admin extends Component {
     // TODO error check for too many images
     console.log('enters submit change banner');
     console.log(this.state.contentToAdd);
+    // TODO contentimage as well
     axios.post('/api/home/banner/add', {
       contentToAdd: this.state.contentToAdd,
     })

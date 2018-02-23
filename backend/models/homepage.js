@@ -4,7 +4,13 @@ const Schema = mongoose.Schema;
 
 // Schema contains pertinent information about the homepage
 const homePageSchema = new Schema({
-  banner: [],
+  banner: [
+    {
+      contentType: String,
+      contentId: String,
+      contentImage: String,
+    }
+  ],
   naldaVideos: [],
   categories: [],
   recommended: [],
