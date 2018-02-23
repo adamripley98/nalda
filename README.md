@@ -199,6 +199,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [ ] Delete a user, delete all content of that user
 - [ ] When article or listing is deleted, content is deleted from AWS
 - [ ] When content is edited, old images are deleted from AWS
+- [ ] Pass all errors back as `res.status(404).send`
 
 ## Other
 - [ ] Google Analytics

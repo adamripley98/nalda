@@ -45,6 +45,7 @@ const users = require('./backend/routes/users')();
 const admin = require('./backend/routes/admin')();
 const contact = require('./backend/routes/contact')();
 const reviews = require('./backend/routes/reviews')();
+const home = require('./backend/routes/home')();
 
 // Connecting to mongo
 const connect = process.env.MONGODB_URI;
@@ -225,7 +226,7 @@ const isValidPassword = (user, password) => {
   return bCrypt.compareSync(password, user.password);
 };
 
-// Routing backend middleware
+// Routing backend middleware for auth routes
 app.use('/api/', login(passport));
 app.use('/api/', register(passport));
 app.use('/api/', logout(passport));
@@ -235,6 +236,8 @@ app.use('/api/', google(passport));
 app.use('/api/', forgot(passport));
 app.use('/api/', reset(passport));
 app.use('/api/', verify(passport));
+
+// Routing backend middleware for other routes
 app.use('/api/', routes);
 app.use('/api/articles/', articles);
 app.use('/api/listings/', listings);
@@ -243,6 +246,7 @@ app.use('/api/users/', users);
 app.use('/api/', admin);
 app.use('/api/contact/', contact);
 app.use('/api/reviews/', reviews);
+app.use('/api/home/', home);
 
 app.get('*', (request, response) => {
   response.sendFile(__dirname + '/public/index.html'); // For React/Redux

@@ -23,17 +23,21 @@ class Admin extends Component {
       email: "",
       error: "",
       success: "",
+      contentToAdd: "",
       pending: true,
       curator: [],
       admin: [],
       users: [],
+      banner: [],
     };
 
     // Bind this to helper methods
     this.handleChangeEmail = this.handleChangeEmail.bind(this);
+    this.handleChangeContentToAdd = this.handleChangeContentToAdd.bind(this);
     this.onSubmitAdmin = this.onSubmitAdmin.bind(this);
     this.onSubmitCurator = this.onSubmitCurator.bind(this);
     this.onSubmitRemoveCurator = this.onSubmitRemoveCurator.bind(this);
+    this.onSubmitChangeBanner = this.onSubmitChangeBanner.bind(this);
     this.displayCurators = this.displayCurators.bind(this);
     this.displayAdmins = this.displayAdmins.bind(this);
     this.displayUsers = this.displayUsers.bind(this);
@@ -41,6 +45,7 @@ class Admin extends Component {
     this.displayArticles = this.displayArticles.bind(this);
     this.displayListings = this.displayListings.bind(this);
     this.displayVideos = this.displayVideos.bind(this);
+    this.displayBanner = this.displayBanner.bind(this);
   }
 
   componentDidMount() {
@@ -59,6 +64,7 @@ class Admin extends Component {
           articles: resp.data.data.articles,
           listings: resp.data.data.listings,
           videos: resp.data.data.videos,
+          banner: resp.data.data.homepageContent.banner,
           pending: false,
         });
       } else {
@@ -80,6 +86,41 @@ class Admin extends Component {
   handleChangeEmail(event) {
     this.setState({
       email: event.target.value,
+    });
+  }
+
+  // Handle when admin types into content to add field
+  handleChangeContentToAdd(event) {
+    this.setState({
+      contentToAdd: event.target.value,
+    });
+  }
+
+  // Helper method to change which images are on the banner
+  onSubmitChangeBanner(event) {
+    event.preventDefault();
+    // Post to backend to add content to banner
+    // TODO error check for too many images
+    console.log('enters submit change banner');
+    console.log(this.state.contentToAdd);
+    axios.post('/api/home/banner/add', {
+      contentToAdd: this.state.contentToAdd,
+    })
+    .then((resp) => {
+      if (resp.data.error) {
+        this.setState({
+          error: resp.data.error,
+        });
+      } else {
+        // TODO Update state with new banner images
+        console.log('success');
+      }
+    })
+    .catch((err) => {
+      this.setState({
+        error: err,
+        success: '',
+      });
     });
   }
 
@@ -492,6 +533,35 @@ class Admin extends Component {
     );
   }
 
+  // Helper method to display banner options
+  // TODO implement
+  displayBanner() {
+    return (
+      <div className="col-6">
+        <textarea
+          type="text"
+          placeholder="Content Id"
+          className="form-control marg-bot-1 border"
+          value={ this.state.contentToAdd }
+          onChange={ this.handleChangeContentToAdd}
+          rows="1"
+        />
+        <button
+          onClick={(e) => this.onSubmitChangeBanner(e)}
+          className={
+            this.state.contentToAdd ? (
+              "btn btn-primary full-width cursor"
+            ) : (
+              "btn btn-primary full-width disabled"
+            )
+          }
+        >
+          Add content to homepage banner
+        </button>
+      </div>
+    );
+  }
+
   // Render the component
   render() {
     return (
@@ -581,6 +651,7 @@ class Admin extends Component {
             {this.displayArticles()}
             {this.displayListings()}
             {this.displayVideos()}
+            {this.displayBanner()}
           </div>
         )}
         <div className="space-2" />
