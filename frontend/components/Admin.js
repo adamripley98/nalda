@@ -39,6 +39,7 @@ class Admin extends Component {
     this.onSubmitAdmin = this.onSubmitAdmin.bind(this);
     this.onSubmitCurator = this.onSubmitCurator.bind(this);
     this.onSubmitRemoveCurator = this.onSubmitRemoveCurator.bind(this);
+    this.onSubmitRemoveBannerContent = this.onSubmitRemoveBannerContent.bind(this);
     this.onSubmitChangeBanner = this.onSubmitChangeBanner.bind(this);
     this.displayCurators = this.displayCurators.bind(this);
     this.displayAdmins = this.displayAdmins.bind(this);
@@ -137,6 +138,31 @@ class Admin extends Component {
         success: '',
         contentToAdd: '',
         imageToAdd: '',
+      });
+    });
+  }
+
+  // Helper method to remove a banner item
+  onSubmitRemoveBannerContent(contentId) {
+    axios.post(`/api/home/banner/remove/${contentId}`)
+    .then((resp) => {
+      if (!resp.data.success) {
+        this.setState({
+          error: resp.data.error,
+        });
+      } else {
+        // TODO Update state with new banner (this one removed)
+        console.log('successful!');
+        console.log(resp.data.data);
+        this.setState({
+          error: '',
+          banner: resp.data.data,
+        });
+      }
+    })
+    .catch((err) => {
+      this.setState({
+        error: err,
       });
     });
   }
@@ -539,8 +565,48 @@ class Admin extends Component {
   }
 
   // Helper method to display banner options
-  // TODO implement
   displayBanner() {
+    if (this.state.banner && this.state.banner.length) {
+      const banner = this.state.banner.map((item) => (
+        <div>
+          <img alt="idk" src={`${item.contentImage}`}/>
+          <div onClick={() => this.onSubmitRemoveBannerContent(item.contentId)}>DELETE </div>
+        </div>
+      ));
+      return (
+        <div className="col-6">
+          <textarea
+            type="text"
+            placeholder="Content Id"
+            className="form-control marg-bot-1 border"
+            value={ this.state.contentToAdd }
+            onChange={ this.handleChangeContentToAdd}
+            rows="1"
+          />
+          <textarea
+            type="text"
+            placeholder="Image (link to url)"
+            className="form-control marg-bot-1 border"
+            value={ this.state.imageToAdd }
+            onChange={ this.handleChangeImageToAdd}
+            rows="1"
+          />
+          <button
+            onClick={(e) => this.onSubmitChangeBanner(e)}
+            className={
+              this.state.contentToAdd ? (
+                "btn btn-primary full-width cursor"
+              ) : (
+                "btn btn-primary full-width disabled"
+              )
+            }
+          >
+            Add content to homepage banner
+          </button>
+          { banner }
+        </div>
+      );
+    }
     return (
       <div className="col-6">
         <textarea
@@ -571,21 +637,6 @@ class Admin extends Component {
         >
           Add content to homepage banner
         </button>
-        {/* {
-          this.state.banner.length ? (
-            const displayedBanner = this.state.banner.map((item) => {
-              return (
-                <img src={`url(${item.contentImage})`}
-              )
-            });
-            return (
-              <h3>Banner images</h3>
-              {displayedBanner}
-            )
-          ) : (
-            return <div>No banner images have been uploaded yet.</div>
-          )
-        } */}
       </div>
     );
   }

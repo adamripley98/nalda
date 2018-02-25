@@ -220,5 +220,56 @@ module.exports = () => {
       }
     });
   });
+
+  // Route to handle deleting an item from the banner
+  router.post('/banner/remove/:contentId', (req, res) => {
+    // Find the id from the url
+    const contentId = req.params.contentId;
+    console.log('cont id', contentId);
+    AdminCheck(req, (authRes) => {
+      if (!authRes.success) {
+        res.send({
+          success: false,
+          error: authRes.error,
+        });
+      } else {
+        Homepage.find({}, (err, home) => {
+          if (err) {
+            res.send({
+              success: false,
+              error: 'Error retrieving homepage data.',
+            });
+          } else {
+            const homepage = home[0];
+            const banner = homepage.banner.slice();
+            // Loop through to delete specific item
+            banner.forEach((item) => {
+              if (item.contentId === contentId) {
+                banner.splice(banner.indexOf(item), 1);
+                return;
+              }
+            });
+            homepage.banner = banner;
+            homepage.save((errHome) => {
+              if (errHome) {
+                res.send({
+                  success: false,
+                  error: errHome,
+                });
+              } else {
+                console.log('sucezzzz');
+                res.send({
+                  success: false,
+                  error: '',
+                  data: homepage.banner,
+                });
+              }
+            });
+          }
+        });
+      }
+    });
+  });
+
   return router;
 };
