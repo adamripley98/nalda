@@ -92,6 +92,7 @@ class AppContainer extends Component {
       if (!resp.data.success) {
         // Dispatch the logout action
         onLogout();
+
         // Set the state to redirect to login
         this.setState({
           redirectToLogin: true,
