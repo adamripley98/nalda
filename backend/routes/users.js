@@ -175,6 +175,7 @@ module.exports = () => {
     UserCheck(req, (authRes) => {
       // Isolate variables
       const profilePicture = req.body.profilePicture;
+
       // Return any authentication errors
       if (!authRes.success) {
         res.send({
@@ -186,7 +187,7 @@ module.exports = () => {
         if (!profilePicture) {
           res.send({
             success: false,
-            error: "Profile picture cannot be empty",
+            error: "Profile picture cannot be empty.",
           });
         } else {
           // find and update given user

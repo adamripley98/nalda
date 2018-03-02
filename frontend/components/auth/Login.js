@@ -6,10 +6,12 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 // Import actions
-import {login} from '../../actions/index.js';
+import {login} from '../../actions/index';
+import {notifyMessage} from '../../actions/notification';
 
 // Import components
 import Thin from '../shared/Thin';
+import Tags from '../shared/Tags';
 import ErrorMessage from '../shared/ErrorMessage';
 
 /**
@@ -39,8 +41,6 @@ class Login extends Component {
    */
   componentDidMount() {
     window.scrollTo(0, 0);
-    // Update the title
-    document.title = "Nalda | Login";
   }
 
   // When login button clicked, will attempt to login on backend (login.js)
@@ -56,8 +56,7 @@ class Login extends Component {
 
     // Prevent the default form action
     event.preventDefault();
-    // Find the needed variables
-    const onLogin = this.props.onLogin;
+
     // Frontend validations
     if (!this.state.username) {
       this.setState({
@@ -85,8 +84,11 @@ class Login extends Component {
               pending: false,
             });
           } else {
+            // Notify success
+            this.props.notifyMessage("Successfully logged in.");
+
             // Dispatch login event for redux state
-            onLogin(
+            this.props.onLogin(
               resp.data.user._id,
               resp.data.user.userType,
               resp.data.user.name,
@@ -151,6 +153,7 @@ class Login extends Component {
     // If user is logged in or if user successfully logs in, redirects to home
     return (
       <div>
+        <Tags title="Login" description="Login to Nalda" keywords="Nalda,Login,login,penn" />
         {(this.props.userId) && <Redirect to="/"/>}
         <div className="space-2" />
         <Thin>
@@ -240,6 +243,7 @@ class Login extends Component {
 Login.propTypes = {
   userId: PropTypes.string,
   onLogin: PropTypes.func,
+  notifyMessage: PropTypes.func,
 };
 
 // Allows us to access redux state as this.props.userId inside component
@@ -252,7 +256,8 @@ const mapStateToProps = state => {
 // Allows us to dispatch a login event by calling this.props.onLogin
 const mapDispatchToProps = dispatch => {
   return {
-    onLogin: (userId, userType, name, location, profilePicture) => dispatch(login(userId, userType, name, location, profilePicture))
+    onLogin: (userId, userType, name, location, profilePicture) => dispatch(login(userId, userType, name, location, profilePicture)),
+    notifyMessage: (message) => dispatch(notifyMessage(message)),
   };
 };
 

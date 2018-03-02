@@ -16,12 +16,21 @@ import Stars from './Stars';
 import Carousel from './Carousel';
 import ErrorMessage from '../../shared/ErrorMessage';
 import Author from '../../shared/Author';
-import Head from '../../shared/Head';
 import Blurb from '../../shared/Blurb';
+import Tags from '../../shared/Tags';
+
+// Import SVGs
+import CashOnly from '../../../assets/images/cash-only.svg';
+import Formal from '../../../assets/images/formal.svg';
+import OutdoorSeating from '../../../assets/images/outdoor-seating.svg';
+import Parking from '../../../assets/images/parking.svg';
+import Reservation from '../../../assets/images/reservation.svg';
+import Waiter from '../../../assets/images/waiter.svg';
+import Wifi from '../../../assets/images/wifi.svg';
+import Wink from '../../../assets/images/wink.svg';
 
 /**
  * Component to render a listing
- * TODO Edit functionality
  */
 class Listing extends React.Component {
   // Constructor method
@@ -39,7 +48,7 @@ class Listing extends React.Component {
       website: "",
       price: "",
       categories: {},
-      amenities: [],
+      amenities: {},
       location: {
         name: "",
         lat: null,
@@ -263,16 +272,42 @@ class Listing extends React.Component {
    */
   renderAmenities() {
     // If amenities are in the state (this should always be the case)
-    if (this.state.amenities && this.state.amenities.length) {
-      // Isolate amenities
-      const amenities = this.state.amenities;
+    if (this.state.amenities) {
+      const keys = Object.keys(this.state.amenities);
+
+      // Mapping from keys to strings
+      const keyMap = {
+        outdoorSeating: "Outdoor seating",
+        wifi: "Wifi",
+        formal: "Formal",
+        cashOnly: "Cash only",
+        parking: "Parking",
+        reservation: "Reservation",
+        wink: "Wink",
+        waiter: "Waiter",
+      };
+
+      // Map from keys to svgs
+      const svgMap = {
+        outdoorSeating: <OutdoorSeating />,
+        wifi: <Wifi />,
+        formal: <Formal />,
+        cashOnly: <CashOnly />,
+        parking: <Parking />,
+        reservation: <Reservation />,
+        wink: <Wink />,
+        waiter: <Waiter />,
+      };
 
       // Return an amenity div tag for each amenity which is true in the state
       // That is, if the curator marked that the listing has said amenity
-      return amenities.map(amenity => (
-          <div className="amenity" key={ amenity }>
-            { amenity }
+      return keys.map(key => (
+        this.state.amenities[key] ? (
+          <div className="amenity" key={ key }>
+            { svgMap[key] }
+            { keyMap[key] }
           </div>
+        ) : null
       ));
     }
 
@@ -578,7 +613,7 @@ class Listing extends React.Component {
         ) : (
           <div className="listing">
             {/* Render the head */}
-            <Head title={ this.state.title } />
+            <Tags title={this.state.title} description={this.state.naldaFavorite}/>
 
             <div className="parallax-wrapper">
               <img src={ this.state.image } alt={ this.state.title } className="img-fluid" id="parallax" />

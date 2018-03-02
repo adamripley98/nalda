@@ -7,15 +7,17 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Dropzone from 'react-dropzone';
 
-
 // Import components
 import Loading from '../../shared/Loading';
 import ErrorMessage from '../../shared/ErrorMessage';
 import Medium from '../../shared/Medium';
+import Tags from '../../shared/Tags';
+
+// Import actions
+import {notifyMessage} from '../../../actions/notification';
 
 /**
  * Component to render the edit article form
- * TODO make sure that this works with location
  */
 class EditArticleForm extends React.Component {
   // Constructor method
@@ -53,8 +55,6 @@ class EditArticleForm extends React.Component {
   // Handle resizing textarea
   componentDidMount() {
     window.scrollTo(0, 0);
-    // Update the title
-    document.title = "Nalda | Edit Article";
 
     // Isolate the id
     const id = this.props.match.params.id;
@@ -303,6 +303,9 @@ class EditArticleForm extends React.Component {
           })
             .then((res) => {
               if (res.data.success) {
+                // Notify success
+                this.props.notifyMessage("Successfully updated article.");
+
                 // If creating the article was successful
                 this.setState({
                   articleId: res.data.data._id,
@@ -333,6 +336,7 @@ class EditArticleForm extends React.Component {
   render() {
     return (
       <div>
+        <Tags title="Edit Article" />
         { this.state.redirectToHome && <Redirect to={`/articles/${this.state.articleId}`}/> }
         <Medium>
           <div className="card thin-form no-pad">
@@ -574,6 +578,7 @@ class EditArticleForm extends React.Component {
 EditArticleForm.propTypes = {
   userId: PropTypes.string,
   match: PropTypes.object,
+  notifyMessage: PropTypes.func,
 };
 
 // Necessary so we can access this.props.userId
@@ -583,7 +588,15 @@ const mapStateToProps = (state) => {
   };
 };
 
+// Necessary to notify
+const mapDispatchToProps = dispatch => {
+  return {
+    notifyMessage: (message) => dispatch(notifyMessage(message)),
+  };
+};
+
 // Redux config
 export default connect(
   mapStateToProps,
+  mapDispatchToProps,
 )(EditArticleForm);

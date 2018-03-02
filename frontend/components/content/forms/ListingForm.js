@@ -6,13 +6,29 @@ import axios from 'axios';
 import Dropzone from 'react-dropzone';
 import uuid from 'uuid-v4';
 import async from 'async';
+import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
 
 // Import components
 import ErrorMessage from '../../shared/ErrorMessage';
 import Medium from '../../shared/Medium';
+import Tags from '../../shared/Tags';
+
+// Import actions
+import {notifyMessage} from '../../../actions/notification';
+
+// Import SVGs
+import CashOnly from '../../../assets/images/cash-only.svg';
+import Formal from '../../../assets/images/formal.svg';
+import OutdoorSeating from '../../../assets/images/outdoor-seating.svg';
+import Parking from '../../../assets/images/parking.svg';
+import Reservation from '../../../assets/images/reservation.svg';
+import Waiter from '../../../assets/images/waiter.svg';
+import Wifi from '../../../assets/images/wifi.svg';
+import Wink from '../../../assets/images/wink.svg';
 
 /**
- * Component to render the new article form
+ * Component to render the new listing form
  */
 class ListingForm extends React.Component {
   /**
@@ -86,7 +102,16 @@ class ListingForm extends React.Component {
         showoffToYourFriends: false,
         forTheGram: false,
       },
-      amenities: [],
+      amenities: {
+        outdoorSeating: false,
+        formal: false,
+        cashOnly: false,
+        parking: false,
+        reservation: false,
+        wifi: false,
+        waiter: false,
+        wink: false,
+      },
       pending: false,
     };
 
@@ -101,7 +126,7 @@ class ListingForm extends React.Component {
     this.handleChangeWebsite = this.handleChangeWebsite.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleClickCategory = this.handleClickCategory.bind(this);
-    this.handleChangeAmenity = this.handleChangeAmenity.bind(this);
+    this.handleClickAmenity = this.handleClickAmenity.bind(this);
     this.displayImages = this.displayImages.bind(this);
     this.removeImage = this.removeImage.bind(this);
   }
@@ -111,8 +136,6 @@ class ListingForm extends React.Component {
    */
   componentDidMount() {
     window.scrollTo(0, 0);
-    // Update the title
-    document.title = "Nalda | New Listing";
 
     // Handle resizing textarea
     autosize(document.querySelectorAll('textarea'));
@@ -216,8 +239,19 @@ class ListingForm extends React.Component {
   /**
    * Helper method to handle a change tto the amenities
    */
-  handleChangeAmenity(event) {
-    console.log('change amenity');
+  handleClickAmenity(event, name) {
+    // Copy over the existing state
+    const newAmenityState = {
+      ...this.state.amenities,
+    };
+
+    // Update the state for the passed in field
+    newAmenityState[name] = !this.state.amenities[name];
+
+    // Update the component state
+    this.setState({
+      amenities: newAmenityState,
+    });
   }
 
   /**
@@ -404,7 +438,10 @@ class ListingForm extends React.Component {
                   pending: false,
                 });
               } else {
-                // Redirect to the created article if successful
+                // Notify success
+                this.props.notifyMessage("Successfully created listing.");
+
+                // Redirect to the created listing if successful
                 this.setState({
                   listingId: resp.data.data._id,
                   redirectToHome: true,
@@ -475,10 +512,6 @@ class ListingForm extends React.Component {
       this.setState({
         error: "At least 1 image must be provided.",
       });
-    } else if (this.state.amenities.length > 10) {
-      this.setState({
-        error: "You may only add 10 amenities",
-      });
     } else if (!document.getElementById("location").value) {
       this.setState({
         error: "Location must be populated.",
@@ -499,6 +532,7 @@ class ListingForm extends React.Component {
   render() {
     return (
       <div>
+        <Tags title="New Listing" />
         { this.state.redirectToHome && <Redirect to={`/listings/${this.state.listingId}`}/> }
         <Medium>
           <div className="card thin-form no-pad">
@@ -925,6 +959,75 @@ class ListingForm extends React.Component {
                 </p>
               </div>
 
+              <label className="marg-bot-1">
+                Amenities
+              </label>
+              <div className="categories-form marg-bot-1">
+                {/* Begin first row of categories */}
+                <div className="row">
+                  <div className="col-12 col-md-6">
+                    <p
+                      onClick={ (e) => this.handleClickAmenity(e, "cashOnly") }
+                      className={ this.state.amenities.cashOnly && "active" }
+                    >
+                      <CashOnly />
+                      Cash only
+                    </p>
+                    <p
+                      onClick={ (e) => this.handleClickAmenity(e, "formal") }
+                      className={ this.state.amenities.formal && "active" }
+                    >
+                      <Formal />
+                      Formal
+                    </p>
+                    <p
+                      onClick={ (e) => this.handleClickAmenity(e, "outdoorSeating") }
+                      className={ this.state.amenities.outdoorSeating && "active" }
+                    >
+                      <OutdoorSeating />
+                      Outdoor seating
+                    </p>
+                    <p
+                      onClick={ (e) => this.handleClickAmenity(e, "wink") }
+                      className={ this.state.amenities.wink && "active" }
+                    >
+                      <Wink />
+                      Wink
+                    </p>
+                  </div>
+                  <div className="col-12 col-md-6">
+                    <p
+                      onClick={ (e) => this.handleClickAmenity(e, "parking") }
+                      className={ this.state.amenities.parking && "active" }
+                    >
+                      <Parking />
+                      Parking
+                    </p>
+                    <p
+                      onClick={ (e) => this.handleClickAmenity(e, "reservation") }
+                      className={ this.state.amenities.reservation && "active" }
+                    >
+                      <Reservation />
+                      Reservation
+                    </p>
+                    <p
+                      onClick={ (e) => this.handleClickAmenity(e, "wifi") }
+                      className={ this.state.amenities.wifi && "active" }
+                    >
+                      <Wifi />
+                      Wifi
+                    </p>
+                    <p
+                      onClick={ (e) => this.handleClickAmenity(e, "waiter") }
+                      className={ this.state.amenities.waiter && "active" }
+                    >
+                      <Waiter />
+                      Waiter
+                    </p>
+                  </div>
+                </div>
+              </div>
+
               <input
                 type="submit"
                 value={ this.state.pending ? "Creating listing..." : "Create listing" }
@@ -935,7 +1038,6 @@ class ListingForm extends React.Component {
                     this.state.naldaFavorite &&
                     this.state.website &&
                     this.state.image &&
-                    this.state.rating &&
                     this.state.price &&
                     document.getElementById("location").value
                   ) ? (
@@ -954,4 +1056,16 @@ class ListingForm extends React.Component {
   }
 }
 
-export default ListingForm;
+// Prop validations
+ListingForm.propTypes = {
+  notifyMessage: PropTypes.func,
+};
+
+// Redux
+const mapDispatchToProps = dispatch => ({
+  notifyMessage: message => dispatch(notifyMessage(message)),
+});
+
+export default connect(
+  mapDispatchToProps,
+)(ListingForm);

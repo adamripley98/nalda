@@ -253,7 +253,7 @@ class Account extends Component {
 
   // Helper method that is fired when a profile picture is added
   onDrop(acceptedFiles, rejectedFiles) {
-    if (acceptedFiles.length) {
+    if (acceptedFiles && acceptedFiles.length) {
       // Read only the first file passed in
       const profilePicture = acceptedFiles[0];
 

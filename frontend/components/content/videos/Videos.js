@@ -8,6 +8,7 @@ import ErrorMessage from '../../shared/ErrorMessage';
 import Button from '../../shared/Button';
 import Preview from '../Preview';
 import Blurb from '../../shared/Blurb';
+import Tags from '../../shared/Tags';
 
 /**
  * Component for the homepage of the application
@@ -39,8 +40,6 @@ class Videos extends React.Component {
    */
   componentDidMount() {
     window.scrollTo(0, 0);
-    // Update the title
-    document.title = "Nalda | Videos";
 
     // Pull the data
     axios.get('/api/videos')
@@ -142,6 +141,7 @@ class Videos extends React.Component {
   render() {
     return (
       <div className="container home">
+        <Tags title="Videos" description="List of all videos" />
         <div className="space-1"/>
         <h3 className="title section-title">
           Videos

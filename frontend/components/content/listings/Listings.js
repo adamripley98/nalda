@@ -8,6 +8,7 @@ import ErrorMessage from '../../shared/ErrorMessage';
 import Button from '../../shared/Button';
 import Preview from '../Preview';
 import Blurb from '../../shared/Blurb';
+import Tags from '../../shared/Tags';
 
 /**
  * Component for the listings of the application
@@ -41,8 +42,6 @@ class Listings extends React.Component {
    */
   componentDidMount() {
     window.scrollTo(0, 0);
-    // Update the title
-    document.title = "Nalda | Listings";
 
     // Pull data
     axios.get('/api/listings')
@@ -202,6 +201,7 @@ class Listings extends React.Component {
   render() {
     return (
       <div className="container home">
+        <Tags title="Listings" description="View all listings" />
         <div className="space-1"/>
         <h3 className="title section-title">
           Listings

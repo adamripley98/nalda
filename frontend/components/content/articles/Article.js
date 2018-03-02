@@ -10,10 +10,10 @@ import Loading from '../../shared/Loading';
 import NotFoundSection from '../../NotFoundSection';
 import ErrorMessage from '../../shared/ErrorMessage';
 import Author from '../../shared/Author';
+import Tags from '../../shared/Tags';
 
 /**
  * Component to render an article
- * TODO edit functionality
  */
 class Article extends React.Component {
   /**
@@ -21,7 +21,6 @@ class Article extends React.Component {
    */
   constructor(props) {
     super(props);
-
     this.state = {
       error: "",
       author: {
@@ -102,30 +101,30 @@ class Article extends React.Component {
 
     // Post to backend
     axios.delete(`/api/articles/${id}`)
-    .then(resp => {
-      if (resp.data.success) {
-        // If the request was successful
-        // Collapse the modal upon success
-        $('#deleteModal').modal('toggle');
+      .then(resp => {
+        if (resp.data.success) {
+          // If the request was successful
+          // Collapse the modal upon success
+          $('#deleteModal').modal('toggle');
 
-        // Update the state and redirect to home
+          // Update the state and redirect to home
+          this.setState({
+            redirectToHome: true,
+            pendingDelete: false,
+          });
+        } else {
+          this.setState({
+            deleteError: resp.data.error,
+            pendingDelete: false,
+          });
+        }
+      })
+      .catch(err => {
         this.setState({
-          redirectToHome: true,
+          deleteError: err,
           pendingDelete: false,
         });
-      } else {
-        this.setState({
-          deleteError: resp.data.error,
-          pendingDelete: false,
-        });
-      }
-    })
-    .catch(err => {
-      this.setState({
-        deleteError: err,
-        pendingDelete: false,
       });
-    });
   }
 
   /**
@@ -207,89 +206,90 @@ class Article extends React.Component {
 
     return (
       <div className="container">
-          {
-            (this.state.pending) ? (
-              <div>
-                <Loading />
-              </div>
+        <Tags title={this.state.title} description={this.state.subtitle} image={this.state.image} />
+        {
+          (this.state.pending) ? (
+            <div>
+              <Loading />
+            </div>
+          ) : (
+            this.state.error ? (
+              <NotFoundSection
+                title="Article not found"
+                content="Uh-oh! Looks like the article you were looking for was either removed or does not exist."
+                url="/articles"
+                urlText="Back to all articles"
+              />
             ) : (
-              this.state.error ? (
-                <NotFoundSection
-                  title="Article not found"
-                  content="Uh-oh! Looks like the article you were looking for was either removed or does not exist."
-                  url="/articles"
-                  urlText="Back to all articles"
-                />
-              ) : (
-                <div className="row article">
-                  <div className="col-12 col-md-10 offset-md-1">
-                    { this.state.redirectToHome && <Redirect to="/"/> }
-                    { this.renderButtons() }
-                    <h1 className="title">
-                      { this.state.title }
-                    </h1>
-                    <h3 className="subtitle">
-                      { this.state.subtitle }
-                    </h3>
+              <div className="row article">
+                <div className="col-12 col-md-10 offset-md-1">
+                  { this.state.redirectToHome && <Redirect to="/"/> }
+                  { this.renderButtons() }
+                  <h1 className="title">
+                    { this.state.title }
+                  </h1>
+                  <h3 className="subtitle">
+                    { this.state.subtitle }
+                  </h3>
 
-                    <Author
-                      createdAt={ this.state.createdAt }
-                      updatedAt={ this.state.updatedAt }
-                      name={ this.state.author.name }
-                      profilePicture={ this.state.author.profilePicture }
-                      _id={ this.state.author._id }
-                    />
+                  <Author
+                    createdAt={ this.state.createdAt }
+                    updatedAt={ this.state.updatedAt }
+                    name={ this.state.author.name }
+                    profilePicture={ this.state.author.profilePicture }
+                    _id={ this.state.author._id }
+                  />
 
-                    <img
-                      src={ this.state.image }
-                      alt={ this.state.title }
-                      className="img-fluid"
-                    />
-                  </div>
-
-                  <div className="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-                    {
-                      this.state.body.map((component, index) => {
-                        if (component.componentType === "text") {
-                          return (
-                            <p key={ index }>
-                              { component.body }
-                            </p>
-                          );
-                        } else if (component.componentType === "image") {
-                          return (
-                            <img
-                              key={ index }
-                              src={ component.body }
-                              alt={ this.state.title }
-                              className="img-fluid"
-                            />
-                          );
-                        } else if (component.componentType === "quote") {
-                          return (
-                            <p key={ index } className="quote">
-                              { component.body }
-                            </p>
-                          );
-                        } else if (component.componentType === "header") {
-                          return (
-                            <h3 key={ index } className="header">
-                              { component.body }
-                            </h3>
-                          );
-                        }
-
-                        // If there was not a component type match
-                        return null;
-                      })
-                    }
-                    <div className="space-1" />
-                    <Button />
-                  </div>
+                  <img
+                    src={ this.state.image }
+                    alt={ this.state.title }
+                    className="img-fluid"
+                  />
                 </div>
-              )
+
+                <div className="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+                  {
+                    this.state.body.map((component, index) => {
+                      if (component.componentType === "text") {
+                        return (
+                          <p key={ index }>
+                            { component.body }
+                          </p>
+                        );
+                      } else if (component.componentType === "image") {
+                        return (
+                          <img
+                            key={ index }
+                            src={ component.body }
+                            alt={ this.state.title }
+                            className="img-fluid"
+                          />
+                        );
+                      } else if (component.componentType === "quote") {
+                        return (
+                          <p key={ index } className="quote">
+                            { component.body }
+                          </p>
+                        );
+                      } else if (component.componentType === "header") {
+                        return (
+                          <h3 key={ index } className="header">
+                            { component.body }
+                          </h3>
+                        );
+                      }
+
+                      // If there was not a component type match
+                      return null;
+                    })
+                  }
+                  <div className="space-1" />
+                  <Button />
+                </div>
+              </div>
             )
-          }
+          )
+        }
       </div>
     );
   }

@@ -12,6 +12,7 @@ import { login } from '../actions/index.js';
 // Shared and general components
 import Nav from '../components/nav/Nav';
 import Footer from '../components/shared/Footer';
+import Notification from '../components/shared/Notification';
 
 // Authorization components
 import Login from '../components/auth/Login';
@@ -92,6 +93,7 @@ class AppContainer extends Component {
       if (!resp.data.success) {
         // Dispatch the logout action
         onLogout();
+
         // Set the state to redirect to login
         this.setState({
           redirectToLogin: true,
@@ -122,6 +124,7 @@ class AppContainer extends Component {
         <Router>
           <div>
             <Nav />
+            <Notification />
             <div className="nav-space" />
             <div className="app-content">
               <Switch>

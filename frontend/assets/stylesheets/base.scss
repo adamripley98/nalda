@@ -11,6 +11,7 @@
 @import './video';
 @import './home';
 @import './form';
+@import './notification';
 
 /**
  * General styles relevant to the whole application
@@ -107,10 +108,18 @@ h6,
   }
 }
 
+// Hide overflow for body
+html, body {
+  max-width: 100%;
+  width: 100%;
+  overflow-x: hidden !important;
+}
+
 // Make each page take up the full-height of the screen (at least)
 .app-content {
   min-height: calc(100vh - 56.27px);
-  width: 100%;
+  width: 100% !important;
+  overflow-x: hidden !important;
   margin: 0rem !important;
   padding: 0rem !important;
 }
@@ -533,12 +542,12 @@ a {
 
     .image-wrapper {
       height: 10rem;
-      padding: 1rem 0rem;
+      padding: 2rem 0rem;
       display: block;
 
       img {
         margin: 0 auto;
-        height: 8rem;
+        height: 6rem;
         width: auto;
         display: block;
         opacity: 0.5;

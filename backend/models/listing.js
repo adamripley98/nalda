@@ -47,7 +47,17 @@ const listingSchema = new Schema({
     showoffToYourFriends: Boolean,
     forTheGram: Boolean,
   },
-  amenities: [],
+  amenities: {
+    outdoorSeating: Boolean,
+    formal: Boolean,
+    cashOnly: Boolean,
+    parking: Boolean,
+    reservation: Boolean,
+    wifi: Boolean,
+    waiter: Boolean,
+    wink: Boolean,
+  },
+  customAmenities: [],
   reviews: [
     {
       rating: Number,

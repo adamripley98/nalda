@@ -8,6 +8,7 @@ import ErrorMessage from '../../shared/ErrorMessage';
 import Button from '../../shared/Button';
 import Preview from '../Preview';
 import Blurb from '../../shared/Blurb';
+import Tags from '../../shared/Tags';
 
 /**
  * Component for displaying all articles of the application
@@ -35,8 +36,6 @@ class Articles extends React.Component {
   // Load articles from Mongo once thre component mounts
   componentDidMount() {
     window.scrollTo(0, 0);
-    // Update the title
-    document.title = "Nalda | Articles";
 
     // Pull the data
     axios.get('/api/articles')
@@ -157,6 +156,7 @@ class Articles extends React.Component {
   render() {
     return (
       <div className="container home">
+        <Tags title="Articles" description="View all articles." keywords="Nalda,articles,all" />
         <div className="space-1"/>
         <h3 className="title section-title">
           Articles
