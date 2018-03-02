@@ -13,6 +13,9 @@ import Tags from '../../shared/Tags';
 import Author from '../../shared/Author';
 import Medium from '../../shared/Medium';
 
+// Import actions
+import {notifyMessage} from '../../../actions/notification';
+
 /**
  * Component to render the new article form
  */
@@ -272,6 +275,9 @@ class ArticleForm extends React.Component {
           })
             .then(res => {
               if (res.data.success) {
+                // Notify success
+                this.props.notifyMessage("Successfully created article.");
+
                 // If creating the article was successful
                 this.setState({
                   error: '',
@@ -526,10 +532,12 @@ class ArticleForm extends React.Component {
   }
 }
 
+// Prop validations
 ArticleForm.propTypes = {
   userId: PropTypes.string,
   name: PropTypes.string,
   profilePicture: PropTypes.string,
+  notifyMessage: PropTypes.func,
 };
 
 // Necessary so we can access this.props.userId
@@ -541,7 +549,15 @@ const mapStateToProps = (state) => {
   };
 };
 
+// Allows us to dispatch notifications
+const mapDispatchToProps = dispatch => {
+  return {
+    notifyMessage: (message) => dispatch(notifyMessage(message)),
+  };
+};
+
 // Redux config
 export default connect(
   mapStateToProps,
+  mapDispatchToProps,
 )(ArticleForm);

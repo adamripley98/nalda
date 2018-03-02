@@ -7,12 +7,16 @@ import PropTypes from 'prop-types';
 import Dropzone from 'react-dropzone';
 import uuid from 'uuid-v4';
 import async from 'async';
+import {connect} from 'react-redux';
 
 // Import components
 import ErrorMessage from '../../shared/ErrorMessage';
 import Medium from '../../shared/Medium';
 import Loading from '../../shared/Loading';
 import Tags from '../../shared/Tags';
+
+// Import actions
+import {notifyMessage} from '../../../actions/notification';
 
 /**
  * Component to render the edit article form
@@ -431,6 +435,9 @@ class EditListingForm extends React.Component {
                   pendingSubmit: false,
                 });
               } else {
+                // Notify success
+                this.props.notifyMessage("Successfully updated listing.");
+
                 // Redirect to home if successful
                 this.setState({
                   listingId: resp.data.data._id,
@@ -973,8 +980,15 @@ class EditListingForm extends React.Component {
   }
 }
 
+// Prop validations
 EditListingForm.propTypes = {
   match: PropTypes.object,
+  notifyMessage: PropTypes.func,
 };
 
-export default EditListingForm;
+// Redux
+const mapDispatchToProps = dispatch => ({
+  notifyMessage: message => dispatch(notifyMessage(message)),
+});
+
+export default connect(mapDispatchToProps)(EditListingForm);

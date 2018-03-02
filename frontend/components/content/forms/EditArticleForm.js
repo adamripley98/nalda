@@ -13,6 +13,9 @@ import ErrorMessage from '../../shared/ErrorMessage';
 import Medium from '../../shared/Medium';
 import Tags from '../../shared/Tags';
 
+// Import actions
+import {notifyMessage} from '../../../actions/notification';
+
 /**
  * Component to render the edit article form
  */
@@ -300,6 +303,9 @@ class EditArticleForm extends React.Component {
           })
             .then((res) => {
               if (res.data.success) {
+                // Notify success
+                this.props.notifyMessage("Successfully updated article.");
+
                 // If creating the article was successful
                 this.setState({
                   articleId: res.data.data._id,
@@ -572,6 +578,7 @@ class EditArticleForm extends React.Component {
 EditArticleForm.propTypes = {
   userId: PropTypes.string,
   match: PropTypes.object,
+  notifyMessage: PropTypes.func,
 };
 
 // Necessary so we can access this.props.userId
@@ -581,7 +588,15 @@ const mapStateToProps = (state) => {
   };
 };
 
+// Necessary to notify
+const mapDispatchToProps = dispatch => {
+  return {
+    notifyMessage: (message) => dispatch(notifyMessage(message)),
+  };
+};
+
 // Redux config
 export default connect(
   mapStateToProps,
+  mapDispatchToProps,
 )(EditArticleForm);

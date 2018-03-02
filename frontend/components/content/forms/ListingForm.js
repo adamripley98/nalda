@@ -6,11 +6,16 @@ import axios from 'axios';
 import Dropzone from 'react-dropzone';
 import uuid from 'uuid-v4';
 import async from 'async';
+import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
 
 // Import components
 import ErrorMessage from '../../shared/ErrorMessage';
 import Medium from '../../shared/Medium';
 import Tags from '../../shared/Tags';
+
+// Import actions
+import {notifyMessage} from '../../../actions/notification';
 
 /**
  * Component to render the new listing form
@@ -403,6 +408,9 @@ class ListingForm extends React.Component {
                   pending: false,
                 });
               } else {
+                // Notify success
+                this.props.notifyMessage("Successfully created listing.");
+
                 // Redirect to the created listing if successful
                 this.setState({
                   listingId: resp.data.data._id,
@@ -954,4 +962,16 @@ class ListingForm extends React.Component {
   }
 }
 
-export default ListingForm;
+// Prop validations
+ListingForm.propTypes = {
+  notifyMessage: PropTypes.func,
+};
+
+// Redux
+const mapDispatchToProps = dispatch => ({
+  notifyMessage: message => dispatch(notifyMessage(message)),
+});
+
+export default connect(
+  mapDispatchToProps,
+)(ListingForm);
