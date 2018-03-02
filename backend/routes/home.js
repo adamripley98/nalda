@@ -142,6 +142,104 @@ module.exports = () => {
     });
   });
 
+  // Route to handle adding content to homepage recommended
+  router.post('/recommended/add', (req, res) => {
+    console.log('enter backend recommejnded');
+    AdminCheck(req, (authRes) => {
+      if (!authRes.success) {
+        res.send({
+          success: false,
+          error: authRes.error,
+        });
+      } else {
+        const contentId = req.body.contentId;
+        Listing.findById(contentId, (errListing, listing) => {
+          Article.findById(contentId, (errArticle, article) => {
+            Video.findById(contentId, (errVideo, video) => {
+              if (errListing || errArticle || errVideo) {
+                res.send({
+                  success: false,
+                  error: 'Error finding content.'
+                });
+              // Make sure id is of right format
+              } else if (!contentId.match(/^[0-9a-fA-F]{24}$/)) {
+                res.send({
+                  success: false,
+                  error: 'No content with that id exists.'
+                });
+                // Make sure content with given id exists
+              } else if (!article && !listing && !video) {
+                res.send({
+                  success: false,
+                  error: 'No content with that ID exists.',
+                });
+              } else {
+                // TODO update homepage in mongo
+                Homepage.find({}, (errHomepage, home) => {
+                  if (errHomepage) {
+                    res.send({
+                      success: false,
+                      error: 'Error loading homepage.',
+                    });
+                  } else {
+                    const homepage = home[0];
+                    const recommended = homepage.recommended.slice();
+                    // Error check for duplicate content in banner
+                    let duplicate = false;
+                    recommended.forEach((item) => {
+                      if (item.contentId === contentId) {
+                        duplicate = true;
+                      }
+                    });
+                    if (duplicate) {
+                      res.send({
+                        success: false,
+                        error: 'This content is already in the recommended content section.',
+                      });
+                    } else {
+                      // Create object to pass back, of type article or listing
+                      let contentType = '';
+                      if (article) {
+                        contentType = 'article';
+                      } else if (listing) {
+                        contentType = 'listing';
+                      } else {
+                        contentType = 'video';
+                      }
+                      const newRecommendedContent = {
+                        contentType,
+                        contentId,
+                      };
+                      // Add to Recommended
+                      recommended.push(newRecommendedContent);
+                      homepage.recommended = recommended;
+                      // Save new banner to mongo
+                      homepage.save((errSave) => {
+                        if (errSave) {
+                          res.send({
+                            success: false,
+                            error: errSave,
+                          });
+                        } else {
+                          res.send({
+                            success: true,
+                            error: '',
+                            data: homepage.recommended,
+                          });
+                        }
+                      });
+                    }
+                  }
+                });
+              }
+            });
+          });
+        });
+      }
+    });
+  });
+
+  // Route to handle adding content to homepage banner
   router.post('/banner/add', (req, res) => {
     AdminCheck(req, (authRes) => {
       if (!authRes.success) {
@@ -151,8 +249,8 @@ module.exports = () => {
         });
       } else {
         // Isolate body params
-        const contentId = req.body.contentId;
-        const contentImage = req.body.imageToAdd;
+        const contentId = req.body.bannerContentId;
+        const contentImage = req.body.bannerImageToAdd;
         // Attempt to find content in listing or article
         Listing.findById(contentId, (errListing, listing) => {
           Article.findById(contentId, (errArticle, article) => {
@@ -281,9 +379,9 @@ module.exports = () => {
   });
 
   // Route to handle deleting an item from the banner
-  router.post('/banner/remove/:contentId', (req, res) => {
+  router.post('/banner/remove/:bannerContentId', (req, res) => {
     // Find the id from the url
-    const contentId = req.params.contentId;
+    const contentId = req.params.bannerContentId;
     AdminCheck(req, (authRes) => {
       if (!authRes.success) {
         res.send({
@@ -319,6 +417,56 @@ module.exports = () => {
                   success: true,
                   error: '',
                   data: homepage.banner,
+                });
+              }
+            });
+          }
+        });
+      }
+    });
+  });
+
+  // Route to handle deleting an item from the recommended
+  router.post('/recommended/remove/:recommendedContentId', (req, res) => {
+    // Find the id from the url
+    const contentId = req.params.recommendedContentId;
+    console.log('cc', contentId);
+    AdminCheck(req, (authRes) => {
+      if (!authRes.success) {
+        res.send({
+          success: false,
+          error: authRes.error,
+        });
+      } else {
+        Homepage.find({}, (err, home) => {
+          if (err) {
+            res.send({
+              success: false,
+              error: 'Error retrieving homepage data.',
+            });
+          } else {
+            const homepage = home[0];
+            const recommended = homepage.recommended.slice();
+            // Loop through to delete specific item
+            recommended.forEach((item) => {
+              if (item.contentId === contentId) {
+                recommended.splice(recommended.indexOf(item), 1);
+                return;
+              }
+            });
+            homepage.recommended = recommended;
+            homepage.save((errHome) => {
+              if (errHome) {
+                res.send({
+                  success: false,
+                  error: errHome,
+                });
+              } else {
+                console.log('successful removal');
+                res.send({
+                  success: true,
+                  error: '',
+                  data: homepage.recommended,
                 });
               }
             });

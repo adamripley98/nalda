@@ -24,24 +24,30 @@ class Admin extends Component {
       email: "",
       error: "",
       success: "",
-      contentId: '',
-      imageToAdd: '',
+      bannerContentId: '',
+      bannerImageToAdd: '',
+      recommendedContentId: '',
       pending: true,
       curator: [],
       admin: [],
       users: [],
       banner: [],
+      recommended: [],
     };
 
     // Bind this to helper methods
     this.onDrop = this.onDrop.bind(this);
+    this.editHomepage = this.editHomepage.bind(this);
     this.handleChangeEmail = this.handleChangeEmail.bind(this);
-    this.handleChangeContentId = this.handleChangeContentId.bind(this);
+    this.handleChangeBannerContentId = this.handleChangeBannerContentId.bind(this);
+    this.handleChangeRecommended = this.handleChangeRecommended.bind(this);
     this.onSubmitAdmin = this.onSubmitAdmin.bind(this);
     this.onSubmitCurator = this.onSubmitCurator.bind(this);
     this.onSubmitRemoveCurator = this.onSubmitRemoveCurator.bind(this);
     this.onSubmitRemoveBannerContent = this.onSubmitRemoveBannerContent.bind(this);
     this.onSubmitChangeBanner = this.onSubmitChangeBanner.bind(this);
+    this.onSubmitChangeRecommended = this.onSubmitChangeRecommended.bind(this);
+    this.onSubmitRemoveRecommendedContent = this.onSubmitRemoveRecommendedContent.bind(this);
     this.displayCurators = this.displayCurators.bind(this);
     this.displayAdmins = this.displayAdmins.bind(this);
     this.displayUsers = this.displayUsers.bind(this);
@@ -69,6 +75,7 @@ class Admin extends Component {
           listings: resp.data.data.listings,
           videos: resp.data.data.videos,
           banner: resp.data.data.homepageContent ? resp.data.data.homepageContent.banner : null,
+          recommended: resp.data.data.homepageContent ? resp.data.data.homepageContent.recommended : null,
           pending: false,
         });
       } else {
@@ -94,45 +101,52 @@ class Admin extends Component {
   }
 
   // Handle when admin types into content to add field
-  handleChangeContentId(event) {
+  handleChangeBannerContentId(event) {
     this.setState({
-      contentId: event.target.value,
+      bannerContentId: event.target.value,
+    });
+  }
+
+  // Handle when admin types into recommended field
+  handleChangeRecommended(event) {
+    this.setState({
+      recommendedContentId: event.target.value,
     });
   }
 
   // Helper method to change which images are on the banner
   onSubmitChangeBanner(event) {
     event.preventDefault();
-    const contentId = this.state.contentId;
-    const imageToAdd = this.state.imageToAdd;
-    if (!contentId) {
+    const bannerContentId = this.state.bannerContentId;
+    const bannerImageToAdd = this.state.bannerImageToAdd;
+    if (!bannerContentId) {
       this.setState({
         error: 'Enter a content Id.',
       });
-    } else if (!imageToAdd) {
+    } else if (!bannerImageToAdd) {
       this.setState({
         error: 'Select an image to upload.',
       });
     } else {
       // Post to backend to add content to banner
       axios.post('/api/home/banner/add', {
-        contentId,
-        imageToAdd,
+        bannerContentId,
+        bannerImageToAdd,
       })
       .then((resp) => {
         if (resp.data.error) {
           this.setState({
             error: resp.data.error,
-            contentId: '',
-            imageToAdd: '',
+            bannerContentId: '',
+            bannerImageToAdd: '',
           });
         } else {
           this.setState({
             error: '',
             success: 'Banner content updated.',
             banner: resp.data.data,
-            contentId: '',
-            imageToAdd: '',
+            bannerContentId: '',
+            bannerImageToAdd: '',
           });
         }
       })
@@ -140,16 +154,17 @@ class Admin extends Component {
         this.setState({
           error: err,
           success: '',
-          contentId: '',
-          imageToAdd: '',
+          bannerContentId: '',
+          bannerImageToAdd: '',
         });
       });
     }
   }
 
   // Helper method to remove a banner item
-  onSubmitRemoveBannerContent(contentId) {
-    axios.post(`/api/home/banner/remove/${contentId}`)
+  onSubmitRemoveBannerContent(bannerContentId) {
+    console.log('id', bannerContentId);
+    axios.post(`/api/home/banner/remove/${bannerContentId}`)
     .then((resp) => {
       if (!resp.data.success) {
         this.setState({
@@ -159,6 +174,29 @@ class Admin extends Component {
         this.setState({
           error: '',
           banner: resp.data.data,
+        });
+      }
+    })
+    .catch((err) => {
+      this.setState({
+        error: err,
+      });
+    });
+  }
+
+  // Helper method to remove an item from recommended section
+  onSubmitRemoveRecommendedContent(recommendedContentId) {
+    console.log('id', recommendedContentId);
+    axios.post(`/api/home/recommended/remove/${recommendedContentId}`)
+    .then((resp) => {
+      if (!resp.data.success) {
+        this.setState({
+          error: resp.data.error,
+        });
+      } else {
+        this.setState({
+          error: '',
+          recommended: resp.data.data,
         });
       }
     })
@@ -292,6 +330,35 @@ class Admin extends Component {
       this.setState({
         error: err,
         success: "",
+      });
+    });
+  }
+
+  // Helper method to handle changing recommended content on homepage
+  onSubmitChangeRecommended(event) {
+    event.preventDefault();
+    console.log('submitting my duded');
+    console.log(this.state.recommendedContentId);
+    axios.post('/api/home/recommended/add', {
+      contentId: this.state.recommendedContentId,
+    })
+    .then((resp) => {
+      if (resp.data.success) {
+        // TODO Show on frontend that item has been added
+        this.setState({
+          error: '',
+          success: 'Content added to Recommended.',
+          recommended: resp.data.data,
+        });
+      } else {
+        this.setState({
+          error: resp.data.error,
+        });
+      }
+    })
+    .catch((err) => {
+      this.setState({
+        error: err,
       });
     });
   }
@@ -576,7 +643,7 @@ class Admin extends Component {
       reader.onload = (upload) => {
         // Set images to state
         this.setState({
-          imageToAdd: upload.target.result,
+          bannerImageToAdd: upload.target.result,
           error: '',
         });
       };
@@ -604,12 +671,13 @@ class Admin extends Component {
       ));
       return (
         <div className="col-6">
+          SECTION FOR BANNER
           <textarea
             type="text"
             placeholder="Content Id"
             className="form-control marg-bot-1 border"
-            value={ this.state.contentId }
-            onChange={ this.handleChangeContentId}
+            value={ this.state.bannerContentId }
+            onChange={ this.handleChangeBannerContentId}
             rows="1"
           />
           <Dropzone
@@ -625,7 +693,7 @@ class Admin extends Component {
           <button
             onClick={(e) => this.onSubmitChangeBanner(e)}
             className={
-              this.state.contentId ? (
+              this.state.bannerContentId ? (
                 "btn btn-primary full-width cursor"
               ) : (
                 "btn btn-primary full-width disabled"
@@ -640,12 +708,13 @@ class Admin extends Component {
     }
     return (
       <div className="col-6">
+        SECTION FOR BANNER
         <textarea
           type="text"
           placeholder="Content Id"
           className="form-control marg-bot-1 border"
-          value={ this.state.contentId }
-          onChange={ this.handleChangeContentId}
+          value={ this.state.bannerContentId }
+          onChange={ this.handleChangeBannerContentId}
           rows="1"
         />
         <Dropzone
@@ -661,7 +730,7 @@ class Admin extends Component {
         <button
           onClick={(e) => this.onSubmitChangeBanner(e)}
           className={
-            this.state.contentId ? (
+            this.state.bannerContentId ? (
               "btn btn-primary full-width cursor"
             ) : (
               "btn btn-primary full-width disabled"
@@ -670,6 +739,58 @@ class Admin extends Component {
         >
           Add content to homepage banner
         </button>
+      </div>
+    );
+  }
+
+  // Helper method to edit what is seen on homepage
+  editHomepage() {
+    let recommended = '';
+    if (this.state.recommended && this.state.recommended.length) {
+      console.log('recommened', this.state.recommended);
+      recommended = this.state.recommended.map((item) => (
+        <div>
+          <div>{item.contentId}</div>
+          <div onClick={() => this.onSubmitRemoveRecommendedContent(item.contentId)}>DELETE </div>
+        </div>
+      ));
+    }
+    console.log('rec', this.state.recommended);
+    return (
+      <div className="row">
+        <div className="col-12 col-md-10 col-lg-8 col-xl-6">
+          <form>
+            <h4 className="bold marg-bot-1">
+              Recommended
+            </h4>
+            <p className="marg-bot-1">
+              Enter the content Id of the content you would like to appear in the recommended section of the homepage.
+            </p>
+
+            <textarea
+              type="text"
+              placeholder="Content Id"
+              className="form-control marg-bot-1 border"
+              value={ this.state.recommendedContentId }
+              onChange={ this.handleChangeRecommended }
+              rows="1"
+            />
+            <button
+              onClick={(e) => this.onSubmitChangeRecommended(e)}
+              className={
+                this.state.recommendedContentId ? (
+                  "btn btn-primary full-width cursor"
+                ) : (
+                  "btn btn-primary full-width disabled"
+                )
+              }
+            >
+              Add Recommended
+            </button>
+          </form>
+          <div className="space-1" />
+          {recommended}
+        </div>
       </div>
     );
   }
@@ -764,6 +885,7 @@ class Admin extends Component {
             {this.displayListings()}
             {this.displayVideos()}
             {this.displayBanner()}
+            {this.editHomepage()}
           </div>
         )}
         <div className="space-2" />
