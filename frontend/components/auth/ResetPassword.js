@@ -11,8 +11,6 @@ import Thin from '../shared/Thin';
 
 /**
  * Component for a user to reset their password
- * TODO don't pass user ID
- * TODO better frontend password checks (at least for length)
  */
 class ResetPassword extends Component {
   /**

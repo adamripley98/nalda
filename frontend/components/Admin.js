@@ -4,6 +4,7 @@ import autosize from 'autosize';
 import axios from 'axios';
 import uuid from 'uuid-v4';
 import { Link } from 'react-router-dom';
+import Dropzone from 'react-dropzone';
 
 // Import components
 import ErrorMessage from './shared/ErrorMessage';
@@ -23,17 +24,39 @@ class Admin extends Component {
       email: "",
       error: "",
       success: "",
+      bannerContentId: '',
+      bannerImageToAdd: '',
+      recommendedContentId: '',
+      fromTheEditorsContentId: '',
+      naldaVideosContentId: '',
       pending: true,
       curator: [],
       admin: [],
       users: [],
+      banner: [],
+      recommended: [],
+      fromTheEditors: [],
+      naldaVideos: [],
     };
 
     // Bind this to helper methods
+    this.onDrop = this.onDrop.bind(this);
+    this.editHomepage = this.editHomepage.bind(this);
     this.handleChangeEmail = this.handleChangeEmail.bind(this);
+    this.handleChangeBannerContentId = this.handleChangeBannerContentId.bind(this);
+    this.handleChangeRecommended = this.handleChangeRecommended.bind(this);
+    this.handleChangeFromTheEditors = this.handleChangeFromTheEditors.bind(this);
+    this.handleChangeNaldaVideos = this.handleChangeNaldaVideos.bind(this);
     this.onSubmitAdmin = this.onSubmitAdmin.bind(this);
     this.onSubmitCurator = this.onSubmitCurator.bind(this);
     this.onSubmitRemoveCurator = this.onSubmitRemoveCurator.bind(this);
+    this.onSubmitRemoveBannerContent = this.onSubmitRemoveBannerContent.bind(this);
+    this.onSubmitChangeBanner = this.onSubmitChangeBanner.bind(this);
+    this.onSubmitChangeRecommended = this.onSubmitChangeRecommended.bind(this);
+    this.onSubmitRemoveRecommendedContent = this.onSubmitRemoveRecommendedContent.bind(this);
+    this.onSubmitRemoveFromTheEditorsContent = this.onSubmitRemoveFromTheEditorsContent.bind(this);
+    this.onSubmitChangeFromTheEditors = this.onSubmitChangeFromTheEditors.bind(this);
+    this.onSubmitChangeNaldaVideos = this.onSubmitChangeNaldaVideos.bind(this);
     this.displayCurators = this.displayCurators.bind(this);
     this.displayAdmins = this.displayAdmins.bind(this);
     this.displayUsers = this.displayUsers.bind(this);
@@ -41,6 +64,7 @@ class Admin extends Component {
     this.displayArticles = this.displayArticles.bind(this);
     this.displayListings = this.displayListings.bind(this);
     this.displayVideos = this.displayVideos.bind(this);
+    this.displayBanner = this.displayBanner.bind(this);
   }
 
   componentDidMount() {
@@ -59,6 +83,10 @@ class Admin extends Component {
           articles: resp.data.data.articles,
           listings: resp.data.data.listings,
           videos: resp.data.data.videos,
+          banner: resp.data.data.homepageContent ? resp.data.data.homepageContent.banner : null,
+          recommended: resp.data.data.homepageContent ? resp.data.data.homepageContent.recommended : null,
+          fromTheEditors: resp.data.data.homepageContent ? resp.data.data.homepageContent.fromTheEditors : null,
+          naldaVideos: resp.data.data.homepageContent ? resp.data.data.homepageContent.naldaVideos : null,
           pending: false,
         });
       } else {
@@ -80,6 +108,169 @@ class Admin extends Component {
   handleChangeEmail(event) {
     this.setState({
       email: event.target.value,
+    });
+  }
+
+  // Handle when admin types into content to add field
+  handleChangeBannerContentId(event) {
+    this.setState({
+      bannerContentId: event.target.value,
+    });
+  }
+
+  // Handle when admin types into recommended field
+  handleChangeRecommended(event) {
+    this.setState({
+      recommendedContentId: event.target.value,
+    });
+  }
+
+  // Handle when admin types into from the editors field
+  handleChangeFromTheEditors(event) {
+    this.setState({
+      fromTheEditorsContentId: event.target.value,
+    });
+  }
+
+  // Handle when admin types into videos field
+  handleChangeNaldaVideos(event) {
+    this.setState({
+      naldaVideosContentId: event.target.value,
+    });
+  }
+
+  // Helper method to change which images are on the banner
+  onSubmitChangeBanner(event) {
+    event.preventDefault();
+    const bannerContentId = this.state.bannerContentId;
+    const bannerImageToAdd = this.state.bannerImageToAdd;
+    if (!bannerContentId) {
+      this.setState({
+        error: 'Enter a content Id.',
+      });
+    } else if (!bannerImageToAdd) {
+      this.setState({
+        error: 'Select an image to upload.',
+      });
+    } else {
+      // Post to backend to add content to banner
+      axios.post('/api/home/banner/add', {
+        bannerContentId,
+        bannerImageToAdd,
+      })
+      .then((resp) => {
+        if (resp.data.error) {
+          this.setState({
+            error: resp.data.error,
+            bannerContentId: '',
+            bannerImageToAdd: '',
+          });
+        } else {
+          this.setState({
+            error: '',
+            success: 'Banner content updated.',
+            banner: resp.data.data,
+            bannerContentId: '',
+            bannerImageToAdd: '',
+          });
+        }
+      })
+      .catch((err) => {
+        this.setState({
+          error: err,
+          success: '',
+          bannerContentId: '',
+          bannerImageToAdd: '',
+        });
+      });
+    }
+  }
+
+  // Helper method to remove a banner item
+  onSubmitRemoveBannerContent(bannerContentId) {
+    axios.post(`/api/home/banner/remove/${bannerContentId}`)
+    .then((resp) => {
+      if (!resp.data.success) {
+        this.setState({
+          error: resp.data.error,
+        });
+      } else {
+        this.setState({
+          error: '',
+          banner: resp.data.data,
+        });
+      }
+    })
+    .catch((err) => {
+      this.setState({
+        error: err,
+      });
+    });
+  }
+
+  // Helper method to remove an item from recommended section
+  onSubmitRemoveRecommendedContent(recommendedContentId) {
+    axios.post(`/api/home/recommended/remove/${recommendedContentId}`)
+    .then((resp) => {
+      if (!resp.data.success) {
+        this.setState({
+          error: resp.data.error,
+        });
+      } else {
+        this.setState({
+          error: '',
+          recommended: resp.data.data,
+        });
+      }
+    })
+    .catch((err) => {
+      this.setState({
+        error: err,
+      });
+    });
+  }
+
+  // Helper method to remove an item from the from the editors section
+  onSubmitRemoveFromTheEditorsContent(fromTheEditorsContentId) {
+    axios.post(`/api/home/recommended/remove/${fromTheEditorsContentId}`)
+    .then((resp) => {
+      if (!resp.data.success) {
+        this.setState({
+          error: resp.data.error,
+        });
+      } else {
+        this.setState({
+          error: '',
+          fromTheEditors: resp.data.data,
+        });
+      }
+    })
+    .catch((err) => {
+      this.setState({
+        error: err,
+      });
+    });
+  }
+
+  // Helper method to remove an item from the nalda videos section
+  onSubmitRemoveNaldaVideosContent(naldaVideosContentId) {
+    axios.post(`/api/home/naldaVideos/remove/${naldaVideosContentId}`)
+    .then((resp) => {
+      if (!resp.data.success) {
+        this.setState({
+          error: resp.data.error,
+        });
+      } else {
+        this.setState({
+          error: '',
+          naldaVideos: resp.data.data,
+        });
+      }
+    })
+    .catch((err) => {
+      this.setState({
+        error: err,
+      });
     });
   }
 
@@ -206,6 +397,95 @@ class Admin extends Component {
       this.setState({
         error: err,
         success: "",
+      });
+    });
+  }
+
+  // Helper method to handle changing recommended content on homepage
+  onSubmitChangeRecommended(event) {
+    event.preventDefault();
+    axios.post('/api/home/recommended/add', {
+      contentId: this.state.recommendedContentId,
+    })
+    .then((resp) => {
+      if (resp.data.success) {
+        // TODO Show on frontend that item has been added
+        this.setState({
+          error: '',
+          success: 'Content added to Recommended.',
+          recommended: resp.data.data,
+          recommendedContentId: '',
+        });
+      } else {
+        this.setState({
+          error: resp.data.error,
+          recommendedContentId: '',
+        });
+      }
+    })
+    .catch((err) => {
+      this.setState({
+        error: err,
+      });
+    });
+  }
+
+  // Helper method to handle changing from the editors content on homepage
+  onSubmitChangeFromTheEditors(event) {
+    event.preventDefault();
+    axios.post('/api/home/fromTheEditors/add', {
+      contentId: this.state.fromTheEditorsContentId,
+    })
+    .then((resp) => {
+      if (resp.data.success) {
+        // TODO Show on frontend that item has been added
+        this.setState({
+          error: '',
+          success: 'Content added to From the Editors.',
+          fromTheEditors: resp.data.data,
+          fromTheEditorsContentId: '',
+        });
+      } else {
+        this.setState({
+          error: resp.data.error,
+          fromTheEditorsContentId: '',
+        });
+      }
+    })
+    .catch((err) => {
+      this.setState({
+        error: err,
+        fromTheEditorsContentId: '',
+      });
+    });
+  }
+
+  // Helper method to handle changing videos content on homepage
+  onSubmitChangeNaldaVideos(event) {
+    event.preventDefault();
+    axios.post('/api/home/naldaVideos/add', {
+      contentId: this.state.naldaVideosContentId,
+    })
+    .then((resp) => {
+      if (resp.data.success) {
+        // TODO Show on frontend that item has been added
+        this.setState({
+          error: '',
+          success: 'Content added to Nalda Videos.',
+          naldaVideos: resp.data.data,
+          naldaVideosContentId: '',
+        });
+      } else {
+        this.setState({
+          error: resp.data.error,
+          naldaVideosContentId: '',
+        });
+      }
+    })
+    .catch((err) => {
+      this.setState({
+        error: err,
+        naldaVideosContentId: '',
       });
     });
   }
@@ -363,11 +643,7 @@ class Admin extends Component {
           </td>
           <td>
             {
-              (article.subtitle.length > 50) ? (
-                article.subtitle.substring(0, 50) + "..."
-              ) : (
-                article.subtitle
-              )
+              article._id
             }
           </td>
         </tr>
@@ -382,7 +658,7 @@ class Admin extends Component {
             <thead>
               <th scope="col">#</th>
               <th scope="col">Title</th>
-              <th scope="col">Subtitle</th>
+              <th scope="col">Article ID</th>
             </thead>
             <tbody>
               { articles }
@@ -411,11 +687,7 @@ class Admin extends Component {
           </td>
           <td>
             {
-              (listing.description.length > 50) ? (
-                listing.description.substring(0, 50) + "..."
-              ) : (
-                listing.description
-              )
+              listing._id
             }
           </td>
         </tr>
@@ -430,7 +702,7 @@ class Admin extends Component {
             <thead>
               <th scope="col">#</th>
               <th scope="col">Name</th>
-              <th scope="col">Description</th>
+              <th scope="col">Listing ID</th>
             </thead>
             <tbody>
               { listings }
@@ -459,11 +731,7 @@ class Admin extends Component {
           </td>
           <td>
             {
-              (video.description.length > 50) ? (
-                video.description.substring(0, 50) + "..."
-              ) : (
-                video.description
-              )
+              video._id
             }
           </td>
         </tr>
@@ -478,7 +746,7 @@ class Admin extends Component {
             <thead>
               <th scope="col">#</th>
               <th scope="col">Title</th>
-              <th scope="col">Description</th>
+              <th scope="col">Video ID</th>
             </thead>
             <tbody>
               { videos }
@@ -489,6 +757,250 @@ class Admin extends Component {
     }
     return (
       <Blurb message="There are no videos to display" />
+    );
+  }
+
+  // Helper method for image uploads
+  // TODO some sort of frontend display that image has been uploaded
+  onDrop(acceptedFiles, rejectedFiles) {
+    // Ensure at leat one valid image was uploaded
+    if (acceptedFiles.length) {
+      const image = acceptedFiles[0];
+      const reader = new FileReader();
+      reader.onload = (upload) => {
+        // Set images to state
+        this.setState({
+          bannerImageToAdd: upload.target.result,
+          error: '',
+        });
+      };
+      // File reader set up
+      reader.onabort = () => this.setState({error: "File read aborted."});
+      reader.onerror = () => this.setState({error: "File read error."});
+      reader.readAsDataURL(image);
+    }
+    if (rejectedFiles.length) {
+      // Display error with wrong file type
+      this.setState({
+        error: rejectedFiles[0].name + ' is not an image.',
+      });
+    }
+  }
+
+  // Helper method to display banner options
+  displayBanner() {
+    if (this.state.banner && this.state.banner.length) {
+      const banner = this.state.banner.map((item) => (
+        <div>
+          <img alt="idk" src={`${item.contentImage}`}/>
+          <div onClick={() => this.onSubmitRemoveBannerContent(item.contentId)}>DELETE </div>
+        </div>
+      ));
+      return (
+        <div className="col-6">
+          SECTION FOR BANNER
+          <textarea
+            type="text"
+            placeholder="Content Id"
+            className="form-control marg-bot-1 border"
+            value={ this.state.bannerContentId }
+            onChange={ this.handleChangeBannerContentId}
+            rows="1"
+          />
+          <Dropzone
+            onDrop={(acceptedFiles, rejectedFiles) => this.onDrop(acceptedFiles, rejectedFiles)}
+            accept="image/*"
+            style={{ marginBottom: "1rem" }}
+            >
+            <p className="dropzone">
+              <i className="fa fa-file-o" aria-hidden="true" />
+              Try dropping an image here, or click to select image to upload.
+            </p>
+          </Dropzone>
+          <button
+            onClick={(e) => this.onSubmitChangeBanner(e)}
+            className={
+              this.state.bannerContentId ? (
+                "btn btn-primary full-width cursor"
+              ) : (
+                "btn btn-primary full-width disabled"
+              )
+            }
+          >
+            Add content to homepage banner
+          </button>
+          { banner }
+        </div>
+      );
+    }
+    return (
+      <div className="col-6">
+        SECTION FOR BANNER
+        <textarea
+          type="text"
+          placeholder="Content Id"
+          className="form-control marg-bot-1 border"
+          value={ this.state.bannerContentId }
+          onChange={ this.handleChangeBannerContentId}
+          rows="1"
+        />
+        <Dropzone
+          onDrop={(acceptedFiles, rejectedFiles) => this.onDrop(acceptedFiles, rejectedFiles)}
+          accept="image/*"
+          style={{ marginBottom: "1rem" }}
+          >
+          <p className="dropzone">
+            <i className="fa fa-file-o" aria-hidden="true" />
+            Try dropping an image here, or click to select image to upload.
+          </p>
+        </Dropzone>
+        <button
+          onClick={(e) => this.onSubmitChangeBanner(e)}
+          className={
+            this.state.bannerContentId ? (
+              "btn btn-primary full-width cursor"
+            ) : (
+              "btn btn-primary full-width disabled"
+            )
+          }
+        >
+          Add content to homepage banner
+        </button>
+      </div>
+    );
+  }
+
+  // Helper method to edit what is seen on homepage
+  editHomepage() {
+    let recommended = '';
+    let fromTheEditors = '';
+    let naldaVideos = '';
+    if (this.state.recommended && this.state.recommended.length) {
+      recommended = this.state.recommended.map((item) => (
+        <div>
+          <div>{item.contentId}</div>
+          <div onClick={() => this.onSubmitRemoveRecommendedContent(item.contentId)}>Remove </div>
+        </div>
+      ));
+    }
+    if (this.state.fromTheEditors && this.state.fromTheEditors.length) {
+      fromTheEditors = this.state.fromTheEditors.map((item) => (
+        <div>
+          <div>{item.contentId}</div>
+          <div onClick={() => this.onSubmitRemoveFromTheEditorsContent(item.contentId)}>Remove </div>
+        </div>
+      ));
+    }
+    if (this.state.naldaVideos && this.state.naldaVideos.length) {
+      naldaVideos = this.state.naldaVideos.map((item) => (
+        <div>
+          <div>{item.contentId}</div>
+          <div onClick={() => this.onSubmitRemoveNaldaVideosContent(item.contentId)}>Remove </div>
+        </div>
+      ));
+    }
+    return (
+      <div className="row">
+        <div className="col-12 col-md-10 col-lg-8 col-xl-6">
+          <form>
+            <h4 className="bold marg-bot-1">
+              Recommended
+            </h4>
+            <p className="marg-bot-1">
+              Enter the content Id of the content you would like to appear in the recommended section of the homepage.
+            </p>
+
+            <textarea
+              type="text"
+              placeholder="Content Id"
+              className="form-control marg-bot-1 border"
+              value={ this.state.recommendedContentId }
+              onChange={ this.handleChangeRecommended }
+              rows="1"
+            />
+            <button
+              onClick={(e) => this.onSubmitChangeRecommended(e)}
+              className={
+                this.state.recommendedContentId ? (
+                  "btn btn-primary full-width cursor"
+                ) : (
+                  "btn btn-primary full-width disabled"
+                )
+              }
+            >
+              Add Recommended
+            </button>
+          </form>
+          <div className="space-1" />
+          {recommended}
+        </div>
+        <div className="col-12 col-md-10 col-lg-8 col-xl-6">
+          <form>
+            <h4 className="bold marg-bot-1">
+              From the Editors
+            </h4>
+            <p className="marg-bot-1">
+              Enter the content Id of the content you would like to appear in the from the editors section of the homepage.
+            </p>
+
+            <textarea
+              type="text"
+              placeholder="Content Id"
+              className="form-control marg-bot-1 border"
+              value={ this.state.fromTheEditorsContentId }
+              onChange={ this.handleChangeFromTheEditors }
+              rows="1"
+            />
+            <button
+              onClick={(e) => this.onSubmitChangeFromTheEditors(e)}
+              className={
+                this.state.fromTheEditorsContentId ? (
+                  "btn btn-primary full-width cursor"
+                ) : (
+                  "btn btn-primary full-width disabled"
+                )
+              }
+            >
+              Add From the Editors
+            </button>
+          </form>
+          <div className="space-1" />
+          {fromTheEditors}
+        </div>
+        <div className="col-12 col-md-10 col-lg-8 col-xl-6">
+          <form>
+            <h4 className="bold marg-bot-1">
+              Nalda Videos
+            </h4>
+            <p className="marg-bot-1">
+              Enter the content Id of the content you would like to appear in the Nalda videos section of the homepage.
+            </p>
+
+            <textarea
+              type="text"
+              placeholder="Content Id"
+              className="form-control marg-bot-1 border"
+              value={ this.state.naldaVideosContentId }
+              onChange={ this.handleChangeNaldaVideos }
+              rows="1"
+            />
+            <button
+              onClick={(e) => this.onSubmitChangeNaldaVideos(e)}
+              className={
+                this.state.naldaVideosContentId ? (
+                  "btn btn-primary full-width cursor"
+                ) : (
+                  "btn btn-primary full-width disabled"
+                )
+              }
+            >
+              Add Nalda's Video
+            </button>
+          </form>
+          <div className="space-1" />
+          {naldaVideos}
+        </div>
+      </div>
     );
   }
 
@@ -581,6 +1093,8 @@ class Admin extends Component {
             {this.displayArticles()}
             {this.displayListings()}
             {this.displayVideos()}
+            {this.displayBanner()}
+            {this.editHomepage()}
           </div>
         )}
         <div className="space-2" />

@@ -13,6 +13,7 @@ const User = require('../models/user');
 const Article = require('../models/article');
 const Listing = require('../models/listing');
 const Video = require('../models/video');
+const Homepage = require('../models/homepage');
 
 // Import helper methods
 const {AdminCheck} = require('../helperMethods/authChecking');
@@ -41,58 +42,61 @@ module.exports = () => {
         Article.find({}, (errArticles, articles) => {
           Listing.find({}, (errListings, listings) => {
             Video.find({}, (errVideos, videos) => {
-              // Send back any errors
-              if (errArticles || errListings || errVideos) {
-                res.send({
-                  success: false,
-                  error: 'Error finding content.',
-                });
-              } else {
-                // Find all curators and admins
-                User.find({}, (err, profiles) => {
-                  if (err) {
-                    res.send({
-                      success: false,
-                      error: err.message,
-                    });
-                  } else {
-                    const userData = {
-                      totalUsers: 0,
-                      weeklyRegisters: 0,
-                    };
-                    // Display pertinent information
-                    profiles.forEach((user) => {
-                      if (user.userType === 'curator') {
-                        curators.push({name: user.name, username: user.username, userId: user._id});
-                      } else if (user.userType === 'admin') {
-                        admins.push({name: user.name, username: user.username, userId: user._id});
-                      } else if (user.userType === 'user') {
-                        users.push({name: user.name, username: user.username, userId: user._id});
-                        // Increment total users
-                        userData.totalUsers++;
-                        // Count number of users who registered this week
-                        if (user._id.getTimestamp() < new Date() - 7) {
-                          userData.weeklyRegisters++;
+              Homepage.find({}, (errHomepage, homepageContent) => {
+                // Send back any errors
+                if (errArticles || errListings || errVideos || errHomepage) {
+                  res.send({
+                    success: false,
+                    error: 'Error finding content.',
+                  });
+                } else {
+                  // Find all curators and admins
+                  User.find({}, (err, profiles) => {
+                    if (err) {
+                      res.send({
+                        success: false,
+                        error: err.message,
+                      });
+                    } else {
+                      const userData = {
+                        totalUsers: 0,
+                        weeklyRegisters: 0,
+                      };
+                      // Display pertinent information
+                      profiles.forEach((user) => {
+                        if (user.userType === 'curator') {
+                          curators.push({name: user.name, username: user.username, userId: user._id});
+                        } else if (user.userType === 'admin') {
+                          admins.push({name: user.name, username: user.username, userId: user._id});
+                        } else if (user.userType === 'user') {
+                          users.push({name: user.name, username: user.username, userId: user._id});
+                          // Increment total users
+                          userData.totalUsers++;
+                          // Count number of users who registered this week
+                          if (user._id.getTimestamp() < new Date() - 7) {
+                            userData.weeklyRegisters++;
+                          }
                         }
-                      }
-                    });
-
-                    res.send({
-                      success: true,
-                      error: '',
-                      data: {
-                        curators,
-                        admins,
-                        users,
-                        userData,
-                        articles,
-                        listings,
-                        videos,
-                      }
-                    });
-                  }
-                });
-              }
+                      });
+                      // Send back information
+                      res.send({
+                        success: true,
+                        error: '',
+                        data: {
+                          curators,
+                          admins,
+                          users,
+                          homepageContent: homepageContent[0],
+                          userData,
+                          articles,
+                          listings,
+                          videos,
+                        }
+                      });
+                    }
+                  });
+                }
+              });
             });
           });
         });

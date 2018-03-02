@@ -43,6 +43,24 @@ DELETE '/api/videos/:id'       // Delete a specific article
 ```
 # Feature tracking
 
+## Cam
+- [ ] Make homepage view
+  - [ ] Banner on top (probably carousal), (banner is stored as array in this.state.banner)
+  - [ ] Recommended section style (this.state.recommended array)
+  - [ ] Editors choice section style (this.state.fromTheEditors array)
+  - [ ] Style categories (this.state.categories array)
+  - [ ] Style video section (this.state.naldaVideos array)
+- [ ] Split admin panel into tabs
+  - [ ] Admins
+  - [ ] Curators
+  - [ ] Users
+  - [ ] Content
+  - [ ] Updating homepage
+  - [ ] Analytics
+- [ ] Add icons for deleting content, users, adding as admin/curator
+- [ ] Style image previews for banner in `Admin.j`
+- [ ] Adding amenities to `ListingForm.js`
+
 ## By 2/17
 - [X] Image upload
   - [X] Profile picture
@@ -199,6 +217,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [ ] Delete a user, delete all content of that user
 - [ ] When article or listing is deleted, content is deleted from AWS
 - [ ] When content is edited, old images are deleted from AWS
+- [ ] Pass all errors back as `res.status(404).send`
 
 ## Other
 - [ ] Google Analytics

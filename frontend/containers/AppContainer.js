@@ -25,7 +25,7 @@ import ResetPassword from '../components/auth/ResetPassword';
 import Verify from '../components/auth/Verify';
 
 // Content viewing components
-import Home from '../components/Home';
+import Home from '../components/HomeV2';
 import Article from '../components/content/articles/Article';
 import Articles from '../components/content/articles/Articles';
 import Listing from '../components/content/listings/Listing';

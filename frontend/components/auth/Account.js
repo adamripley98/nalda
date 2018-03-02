@@ -17,8 +17,6 @@ import ErrorMessage from '../shared/ErrorMessage';
 import Button from '../shared/Button';
 import Loading from '../shared/Loading';
 
-// TODO error check on empty inputs
-// TODO style file upload
 /**
  * Component to render a user's account information
   */
