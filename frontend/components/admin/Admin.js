@@ -815,24 +815,27 @@ class Admin extends Component {
 
   // Helper method to display banner options
   displayBanner() {
-    let banner = null;
-    if (this.state.banner && this.state.banner.length) {
-      banner = this.state.banner.map((item) => (
-        <div>
-          <img alt="idk" className="img-fluid" src={`${item.contentImage}`}/>
-          <div onClick={() => this.onSubmitRemoveBannerContent(item.contentId)}>
-            DELETE
+    const banner = this.state.banner.map((image, i) => {
+      console.log(image.contentImage);
+      return (
+        <li key={image.contentId}>
+          <img
+            src={image.contentImage}
+            alt={"banner image " + i}
+          />
+          <div onClick={() => this.onSubmitRemoveBannerContent(image.contentId)}>
+            <i className="fa fa-close" aria-hidden="true" />
           </div>
-        </div>
-      ));
-    }
+        </li>
+      );
+    });
 
     return (
       <div>
         <h4>Banner</h4>
-        <textarea
+        <input
           type="text"
-          placeholder="Content Id"
+          placeholder="Content ID"
           className="form-control marg-bot-1 border"
           value={ this.state.bannerContentId }
           onChange={ this.handleChangeBannerContentId}
@@ -852,15 +855,24 @@ class Admin extends Component {
           onClick={(e) => this.onSubmitChangeBanner(e)}
           className={
             this.state.bannerContentId ? (
-              "btn btn-primary full-width cursor"
+              "btn btn-primary cursor marg-bot-1"
             ) : (
-              "btn btn-primary full-width disabled"
+              "btn btn-primary disabled marg-bot-1"
             )
           }
         >
           Add content to homepage banner
         </button>
-        { banner }
+
+        {
+          (banner && banner.length) && (
+            <ul className="carousel-preview">
+              {banner}
+            </ul>
+          )
+        }
+
+        <div className="line" />
       </div>
     );
   }
@@ -904,31 +916,36 @@ class Admin extends Component {
             Enter the content Id of the content you would like to appear in the recommended section of the homepage.
           </p>
 
-          <textarea
-            type="text"
-            placeholder="Content Id"
-            className="form-control marg-bot-1 border"
-            value={ this.state.recommendedContentId }
-            onChange={ this.handleChangeRecommended }
-            rows="1"
-          />
-          <button
-            onClick={(e) => this.onSubmitChangeRecommended(e)}
-            className={
-              this.state.recommendedContentId ? (
-                "btn btn-primary full-width cursor"
-              ) : (
-                "btn btn-primary full-width disabled"
-              )
-            }
-          >
-            Add Recommended
-          </button>
+          <div className="inline-field">
+            <input
+              type="text"
+              placeholder="Content ID"
+              className="form-control border"
+              value={ this.state.recommendedContentId }
+              onChange={ this.handleChangeRecommended }
+              rows="1"
+            />
+            <button
+              onClick={(e) => this.onSubmitChangeRecommended(e)}
+              className={
+                this.state.recommendedContentId ? (
+                  "btn btn-primary cursor"
+                ) : (
+                  "btn btn-primary disabled"
+                )
+              }
+            >
+              Add
+            </button>
+          </div>
         </form>
 
         <div className="space-1" />
 
         {recommended}
+
+        <div className="line" />
+
         <form>
           <h4 className="bold marg-bot-1">
             From the Editors
@@ -937,31 +954,35 @@ class Admin extends Component {
             Enter the content Id of the content you would like to appear in the from the editors section of the homepage.
           </p>
 
-          <textarea
-            type="text"
-            placeholder="Content Id"
-            className="form-control marg-bot-1 border"
-            value={ this.state.fromTheEditorsContentId }
-            onChange={ this.handleChangeFromTheEditors }
-            rows="1"
-          />
-          <button
-            onClick={(e) => this.onSubmitChangeFromTheEditors(e)}
-            className={
-              this.state.fromTheEditorsContentId ? (
-                "btn btn-primary full-width cursor"
-              ) : (
-                "btn btn-primary full-width disabled"
-              )
-            }
-          >
-            Add From the Editors
-          </button>
+          <div className="inline-field">
+            <input
+              type="text"
+              placeholder="Content Id"
+              className="form-control border"
+              value={ this.state.fromTheEditorsContentId }
+              onChange={ this.handleChangeFromTheEditors }
+              rows="1"
+            />
+            <button
+              onClick={(e) => this.onSubmitChangeFromTheEditors(e)}
+              className={
+                this.state.fromTheEditorsContentId ? (
+                  "btn btn-primary cursor"
+                ) : (
+                  "btn btn-primary disabled"
+                )
+              }
+            >
+              Add
+            </button>
+          </div>
         </form>
 
         <div className="space-1" />
 
         {fromTheEditors}
+
+        <div className="line" />
 
         <form>
           <h4 className="bold marg-bot-1">
@@ -971,26 +992,28 @@ class Admin extends Component {
             Enter the content Id of the content you would like to appear in the Nalda videos section of the homepage.
           </p>
 
-          <textarea
-            type="text"
-            placeholder="Content Id"
-            className="form-control marg-bot-1 border"
-            value={ this.state.naldaVideosContentId }
-            onChange={ this.handleChangeNaldaVideos }
-            rows="1"
-          />
-          <button
-            onClick={(e) => this.onSubmitChangeNaldaVideos(e)}
-            className={
-              this.state.naldaVideosContentId ? (
-                "btn btn-primary full-width cursor"
-              ) : (
-                "btn btn-primary full-width disabled"
-              )
-            }
-          >
-            Add Nalda's Video
-          </button>
+          <div className="inline-field">
+            <input
+              type="text"
+              placeholder="Content ID"
+              className="form-control border"
+              value={ this.state.naldaVideosContentId }
+              onChange={ this.handleChangeNaldaVideos }
+              rows="1"
+            />
+            <button
+              onClick={(e) => this.onSubmitChangeNaldaVideos(e)}
+              className={
+                this.state.naldaVideosContentId ? (
+                  "btn btn-primary cursor"
+                ) : (
+                  "btn btn-primary disabled"
+                )
+              }
+            >
+              Add
+            </button>
+          </div>
         </form>
 
         <div className="space-1" />
@@ -1101,8 +1124,8 @@ class Admin extends Component {
               { this.state.to === "videos" && this.displayVideos() }
               { this.state.to === "homepage" && (
                 <div>
-                  {this.editHomepage()}
                   {this.displayBanner()}
+                  {this.editHomepage()}
                 </div>
               )}
               <div className="space-2" />
