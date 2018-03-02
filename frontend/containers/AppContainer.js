@@ -49,7 +49,7 @@ import Contact from '../components/Contact';
 import Credits from '../components/Credits';
 import Terms from '../components/Terms';
 import Privacy from '../components/Privacy';
-import Admin from '../components/Admin';
+import Admin from '../components/admin/Admin';
 import NotFoundSection from '../components/NotFoundSection';
 import Profile from '../components/Profile';
 
