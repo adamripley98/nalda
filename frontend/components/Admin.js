@@ -27,12 +27,14 @@ class Admin extends Component {
       bannerContentId: '',
       bannerImageToAdd: '',
       recommendedContentId: '',
+      fromTheEditorsContentId: '',
       pending: true,
       curator: [],
       admin: [],
       users: [],
       banner: [],
       recommended: [],
+      fromTheEditors: [],
     };
 
     // Bind this to helper methods
@@ -41,6 +43,7 @@ class Admin extends Component {
     this.handleChangeEmail = this.handleChangeEmail.bind(this);
     this.handleChangeBannerContentId = this.handleChangeBannerContentId.bind(this);
     this.handleChangeRecommended = this.handleChangeRecommended.bind(this);
+    this.handleChangeFromTheEditors = this.handleChangeFromTheEditors.bind(this);
     this.onSubmitAdmin = this.onSubmitAdmin.bind(this);
     this.onSubmitCurator = this.onSubmitCurator.bind(this);
     this.onSubmitRemoveCurator = this.onSubmitRemoveCurator.bind(this);
@@ -48,6 +51,8 @@ class Admin extends Component {
     this.onSubmitChangeBanner = this.onSubmitChangeBanner.bind(this);
     this.onSubmitChangeRecommended = this.onSubmitChangeRecommended.bind(this);
     this.onSubmitRemoveRecommendedContent = this.onSubmitRemoveRecommendedContent.bind(this);
+    this.onSubmitRemoveFromTheEditorsContent = this.onSubmitRemoveFromTheEditorsContent.bind(this);
+    this.onSubmitChangeFromTheEditors = this.onSubmitChangeFromTheEditors.bind(this);
     this.displayCurators = this.displayCurators.bind(this);
     this.displayAdmins = this.displayAdmins.bind(this);
     this.displayUsers = this.displayUsers.bind(this);
@@ -76,6 +81,7 @@ class Admin extends Component {
           videos: resp.data.data.videos,
           banner: resp.data.data.homepageContent ? resp.data.data.homepageContent.banner : null,
           recommended: resp.data.data.homepageContent ? resp.data.data.homepageContent.recommended : null,
+          fromTheEditors: resp.data.data.homepageContent ? resp.data.data.homepageContent.fromTheEditors : null,
           pending: false,
         });
       } else {
@@ -111,6 +117,13 @@ class Admin extends Component {
   handleChangeRecommended(event) {
     this.setState({
       recommendedContentId: event.target.value,
+    });
+  }
+
+  // Handle when admin types into from the editors field
+  handleChangeFromTheEditors(event) {
+    this.setState({
+      fromTheEditorsContentId: event.target.value,
     });
   }
 
@@ -163,7 +176,6 @@ class Admin extends Component {
 
   // Helper method to remove a banner item
   onSubmitRemoveBannerContent(bannerContentId) {
-    console.log('id', bannerContentId);
     axios.post(`/api/home/banner/remove/${bannerContentId}`)
     .then((resp) => {
       if (!resp.data.success) {
@@ -186,7 +198,6 @@ class Admin extends Component {
 
   // Helper method to remove an item from recommended section
   onSubmitRemoveRecommendedContent(recommendedContentId) {
-    console.log('id', recommendedContentId);
     axios.post(`/api/home/recommended/remove/${recommendedContentId}`)
     .then((resp) => {
       if (!resp.data.success) {
@@ -197,6 +208,28 @@ class Admin extends Component {
         this.setState({
           error: '',
           recommended: resp.data.data,
+        });
+      }
+    })
+    .catch((err) => {
+      this.setState({
+        error: err,
+      });
+    });
+  }
+
+  // Helper method to remove an item from the from the editors section
+  onSubmitRemoveFromTheEditorsContent(fromTheEditorsContentId) {
+    axios.post(`/api/home/recommended/remove/${fromTheEditorsContentId}`)
+    .then((resp) => {
+      if (!resp.data.success) {
+        this.setState({
+          error: resp.data.error,
+        });
+      } else {
+        this.setState({
+          error: '',
+          fromTheEditors: resp.data.data,
         });
       }
     })
@@ -337,8 +370,6 @@ class Admin extends Component {
   // Helper method to handle changing recommended content on homepage
   onSubmitChangeRecommended(event) {
     event.preventDefault();
-    console.log('submitting my duded');
-    console.log(this.state.recommendedContentId);
     axios.post('/api/home/recommended/add', {
       contentId: this.state.recommendedContentId,
     })
@@ -349,6 +380,33 @@ class Admin extends Component {
           error: '',
           success: 'Content added to Recommended.',
           recommended: resp.data.data,
+        });
+      } else {
+        this.setState({
+          error: resp.data.error,
+        });
+      }
+    })
+    .catch((err) => {
+      this.setState({
+        error: err,
+      });
+    });
+  }
+
+  // Helper method to handle changing from the editors content on homepage
+  onSubmitChangeFromTheEditors(event) {
+    event.preventDefault();
+    axios.post('/api/home/fromTheEditors/add', {
+      contentId: this.state.fromTheEditorsContentId,
+    })
+    .then((resp) => {
+      if (resp.data.success) {
+        // TODO Show on frontend that item has been added
+        this.setState({
+          error: '',
+          success: 'Content added to From the Editors.',
+          fromTheEditors: resp.data.data,
         });
       } else {
         this.setState({
@@ -746,8 +804,8 @@ class Admin extends Component {
   // Helper method to edit what is seen on homepage
   editHomepage() {
     let recommended = '';
+    let fromTheEditors = '';
     if (this.state.recommended && this.state.recommended.length) {
-      console.log('recommened', this.state.recommended);
       recommended = this.state.recommended.map((item) => (
         <div>
           <div>{item.contentId}</div>
@@ -755,7 +813,14 @@ class Admin extends Component {
         </div>
       ));
     }
-    console.log('rec', this.state.recommended);
+    if (this.state.fromTheEditors && this.state.fromTheEditors.length) {
+      fromTheEditors = this.state.fromTheEditors.map((item) => (
+        <div>
+          <div>{item.contentId}</div>
+          <div onClick={() => this.onSubmitRemoveFromTheEditorsContent(item.contentId)}>DELETE </div>
+        </div>
+      ));
+    }
     return (
       <div className="row">
         <div className="col-12 col-md-10 col-lg-8 col-xl-6">
@@ -790,6 +855,39 @@ class Admin extends Component {
           </form>
           <div className="space-1" />
           {recommended}
+        </div>
+        <div className="col-12 col-md-10 col-lg-8 col-xl-6">
+          <form>
+            <h4 className="bold marg-bot-1">
+              From the Editors
+            </h4>
+            <p className="marg-bot-1">
+              Enter the content Id of the content you would like to appear in the from the editors section of the homepage.
+            </p>
+
+            <textarea
+              type="text"
+              placeholder="Content Id"
+              className="form-control marg-bot-1 border"
+              value={ this.state.fromTheEditorsContentId }
+              onChange={ this.handleChangeFromTheEditors }
+              rows="1"
+            />
+            <button
+              onClick={(e) => this.onSubmitChangeFromTheEditors(e)}
+              className={
+                this.state.fromTheEditorsContentId ? (
+                  "btn btn-primary full-width cursor"
+                ) : (
+                  "btn btn-primary full-width disabled"
+                )
+              }
+            >
+              Add From the Editors
+            </button>
+          </form>
+          <div className="space-1" />
+          {fromTheEditors}
         </div>
       </div>
     );
