@@ -524,15 +524,17 @@ class Admin extends Component {
       ));
 
       return (
-        <div className="marg-top-1 marg-bot-1">
+        <div>
           <h4 className="bold">
             Curators
           </h4>
           <table className="table">
             <thead>
-              <th scope="col">#</th>
-              <th scope="col">Name</th>
-              <th scope="col">Email</th>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Email</th>
+              </tr>
             </thead>
             <tbody>
               { curators }
@@ -572,9 +574,11 @@ class Admin extends Component {
           </h4>
           <table className="table">
             <thead>
-              <th scope="col">#</th>
-              <th scope="col">Name</th>
-              <th scope="col">Email</th>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Email</th>
+              </tr>
             </thead>
             <tbody>
               { admins }
@@ -606,15 +610,17 @@ class Admin extends Component {
       ));
 
       return (
-        <div className="marg-top-1 marg-bot-1">
+        <div>
           <h4 className="bold">
             Users
           </h4>
           <table className="table">
             <thead>
-              <th scope="col">#</th>
-              <th scope="col">Name</th>
-              <th scope="col">Email</th>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Email</th>
+              </tr>
             </thead>
             <tbody>
               { users }
@@ -664,15 +670,17 @@ class Admin extends Component {
       ));
 
       return (
-        <div className="marg-top-1 marg-bot-1">
+        <div>
           <h4 className="bold">
             Articles
           </h4>
           <table className="table">
             <thead>
-              <th scope="col">#</th>
-              <th scope="col">Title</th>
-              <th scope="col">Article ID</th>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Title</th>
+                <th scope="col">Article ID</th>
+              </tr>
             </thead>
             <tbody>
               { articles }
@@ -708,15 +716,17 @@ class Admin extends Component {
       ));
 
       return (
-        <div className="marg-top-1 marg-bot-1">
+        <div>
           <h4 className="bold">
             Listings
           </h4>
           <table className="table">
             <thead>
-              <th scope="col">#</th>
-              <th scope="col">Name</th>
-              <th scope="col">Listing ID</th>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Listing ID</th>
+              </tr>
             </thead>
             <tbody>
               { listings }
@@ -752,15 +762,17 @@ class Admin extends Component {
       ));
 
       return (
-        <div className="marg-top-1 marg-bot-1">
+        <div>
           <h4 className="bold">
             Videos
           </h4>
           <table className="table">
             <thead>
-              <th scope="col">#</th>
-              <th scope="col">Title</th>
-              <th scope="col">Video ID</th>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Title</th>
+                <th scope="col">Video ID</th>
+              </tr>
             </thead>
             <tbody>
               { videos }
@@ -803,53 +815,21 @@ class Admin extends Component {
 
   // Helper method to display banner options
   displayBanner() {
+    let banner = null;
     if (this.state.banner && this.state.banner.length) {
-      const banner = this.state.banner.map((item) => (
+      banner = this.state.banner.map((item) => (
         <div>
-          <img alt="idk" src={`${item.contentImage}`}/>
-          <div onClick={() => this.onSubmitRemoveBannerContent(item.contentId)}>DELETE </div>
+          <img alt="idk" className="img-fluid" src={`${item.contentImage}`}/>
+          <div onClick={() => this.onSubmitRemoveBannerContent(item.contentId)}>
+            DELETE
+          </div>
         </div>
       ));
-      return (
-        <div className="col-6">
-          SECTION FOR BANNER
-          <textarea
-            type="text"
-            placeholder="Content Id"
-            className="form-control marg-bot-1 border"
-            value={ this.state.bannerContentId }
-            onChange={ this.handleChangeBannerContentId}
-            rows="1"
-          />
-          <Dropzone
-            onDrop={(acceptedFiles, rejectedFiles) => this.onDrop(acceptedFiles, rejectedFiles)}
-            accept="image/*"
-            style={{ marginBottom: "1rem" }}
-            >
-            <p className="dropzone">
-              <i className="fa fa-file-o" aria-hidden="true" />
-              Try dropping an image here, or click to select image to upload.
-            </p>
-          </Dropzone>
-          <button
-            onClick={(e) => this.onSubmitChangeBanner(e)}
-            className={
-              this.state.bannerContentId ? (
-                "btn btn-primary full-width cursor"
-              ) : (
-                "btn btn-primary full-width disabled"
-              )
-            }
-          >
-            Add content to homepage banner
-          </button>
-          { banner }
-        </div>
-      );
     }
+
     return (
-      <div className="col-6">
-        SECTION FOR BANNER
+      <div>
+        <h4>Banner</h4>
         <textarea
           type="text"
           placeholder="Content Id"
@@ -880,6 +860,7 @@ class Admin extends Component {
         >
           Add content to homepage banner
         </button>
+        { banner }
       </div>
     );
   }
@@ -914,106 +895,106 @@ class Admin extends Component {
       ));
     }
     return (
-      <div className="row">
-        <div className="col-12 col-md-10 col-lg-8 col-xl-6">
-          <form>
-            <h4 className="bold marg-bot-1">
-              Recommended
-            </h4>
-            <p className="marg-bot-1">
-              Enter the content Id of the content you would like to appear in the recommended section of the homepage.
-            </p>
+      <div>
+        <form>
+          <h4 className="bold marg-bot-1">
+            Recommended
+          </h4>
+          <p className="marg-bot-1">
+            Enter the content Id of the content you would like to appear in the recommended section of the homepage.
+          </p>
 
-            <textarea
-              type="text"
-              placeholder="Content Id"
-              className="form-control marg-bot-1 border"
-              value={ this.state.recommendedContentId }
-              onChange={ this.handleChangeRecommended }
-              rows="1"
-            />
-            <button
-              onClick={(e) => this.onSubmitChangeRecommended(e)}
-              className={
-                this.state.recommendedContentId ? (
-                  "btn btn-primary full-width cursor"
-                ) : (
-                  "btn btn-primary full-width disabled"
-                )
-              }
-            >
-              Add Recommended
-            </button>
-          </form>
-          <div className="space-1" />
-          {recommended}
-        </div>
-        <div className="col-12 col-md-10 col-lg-8 col-xl-6">
-          <form>
-            <h4 className="bold marg-bot-1">
-              From the Editors
-            </h4>
-            <p className="marg-bot-1">
-              Enter the content Id of the content you would like to appear in the from the editors section of the homepage.
-            </p>
+          <textarea
+            type="text"
+            placeholder="Content Id"
+            className="form-control marg-bot-1 border"
+            value={ this.state.recommendedContentId }
+            onChange={ this.handleChangeRecommended }
+            rows="1"
+          />
+          <button
+            onClick={(e) => this.onSubmitChangeRecommended(e)}
+            className={
+              this.state.recommendedContentId ? (
+                "btn btn-primary full-width cursor"
+              ) : (
+                "btn btn-primary full-width disabled"
+              )
+            }
+          >
+            Add Recommended
+          </button>
+        </form>
 
-            <textarea
-              type="text"
-              placeholder="Content Id"
-              className="form-control marg-bot-1 border"
-              value={ this.state.fromTheEditorsContentId }
-              onChange={ this.handleChangeFromTheEditors }
-              rows="1"
-            />
-            <button
-              onClick={(e) => this.onSubmitChangeFromTheEditors(e)}
-              className={
-                this.state.fromTheEditorsContentId ? (
-                  "btn btn-primary full-width cursor"
-                ) : (
-                  "btn btn-primary full-width disabled"
-                )
-              }
-            >
-              Add From the Editors
-            </button>
-          </form>
-          <div className="space-1" />
-          {fromTheEditors}
-        </div>
-        <div className="col-12 col-md-10 col-lg-8 col-xl-6">
-          <form>
-            <h4 className="bold marg-bot-1">
-              Nalda Videos
-            </h4>
-            <p className="marg-bot-1">
-              Enter the content Id of the content you would like to appear in the Nalda videos section of the homepage.
-            </p>
+        <div className="space-1" />
 
-            <textarea
-              type="text"
-              placeholder="Content Id"
-              className="form-control marg-bot-1 border"
-              value={ this.state.naldaVideosContentId }
-              onChange={ this.handleChangeNaldaVideos }
-              rows="1"
-            />
-            <button
-              onClick={(e) => this.onSubmitChangeNaldaVideos(e)}
-              className={
-                this.state.naldaVideosContentId ? (
-                  "btn btn-primary full-width cursor"
-                ) : (
-                  "btn btn-primary full-width disabled"
-                )
-              }
-            >
-              Add Nalda's Video
-            </button>
-          </form>
-          <div className="space-1" />
-          {naldaVideos}
-        </div>
+        {recommended}
+        <form>
+          <h4 className="bold marg-bot-1">
+            From the Editors
+          </h4>
+          <p className="marg-bot-1">
+            Enter the content Id of the content you would like to appear in the from the editors section of the homepage.
+          </p>
+
+          <textarea
+            type="text"
+            placeholder="Content Id"
+            className="form-control marg-bot-1 border"
+            value={ this.state.fromTheEditorsContentId }
+            onChange={ this.handleChangeFromTheEditors }
+            rows="1"
+          />
+          <button
+            onClick={(e) => this.onSubmitChangeFromTheEditors(e)}
+            className={
+              this.state.fromTheEditorsContentId ? (
+                "btn btn-primary full-width cursor"
+              ) : (
+                "btn btn-primary full-width disabled"
+              )
+            }
+          >
+            Add From the Editors
+          </button>
+        </form>
+
+        <div className="space-1" />
+
+        {fromTheEditors}
+
+        <form>
+          <h4 className="bold marg-bot-1">
+            Nalda Videos
+          </h4>
+          <p className="marg-bot-1">
+            Enter the content Id of the content you would like to appear in the Nalda videos section of the homepage.
+          </p>
+
+          <textarea
+            type="text"
+            placeholder="Content Id"
+            className="form-control marg-bot-1 border"
+            value={ this.state.naldaVideosContentId }
+            onChange={ this.handleChangeNaldaVideos }
+            rows="1"
+          />
+          <button
+            onClick={(e) => this.onSubmitChangeNaldaVideos(e)}
+            className={
+              this.state.naldaVideosContentId ? (
+                "btn btn-primary full-width cursor"
+              ) : (
+                "btn btn-primary full-width disabled"
+              )
+            }
+          >
+            Add Nalda's Video
+          </button>
+        </form>
+
+        <div className="space-1" />
+        {naldaVideos}
       </div>
     );
   }
@@ -1037,7 +1018,7 @@ class Admin extends Component {
           ) : null
         }
 
-        <textarea
+        <input
           type="text"
           placeholder="Email"
           className="form-control marg-bot-1 border"
@@ -1102,20 +1083,26 @@ class Admin extends Component {
       <div className="container-fluid">
         <div className="row">
           <Sidebar cb={(to) => this.sidebarCallback(to)} />
-            <div className="col-12 col-md-8 col-lg-9">
+            <div className="col-12 col-md-8 col-lg-8 col-xl-7">
               <div className="space-1" />
+              { this.state.to === "" && (
+                <div>
+                  <h4>Admin panel</h4>
+                  Welcome to the admin panel; through this portion of the application you can keep track of your user base, recommended content, and created content.
+                  { this.displayUserData() }
+                </div>
+              )}
               { this.state.to === "admins" && this.displayAdmins() }
               { this.state.to === "curators" && this.displayCurators() }
               { this.state.to === "users" && this.displayUsers() }
               { this.state.to === "manage-admins" && this.displayAdminForm() }
-              { this.state.to === "xyz" && (
+              { this.state.to === "listings" && this.displayListings() }
+              { this.state.to === "articles" && this.displayArticles() }
+              { this.state.to === "videos" && this.displayVideos() }
+              { this.state.to === "homepage" && (
                 <div>
-                  {this.displayUserData()}
-                  {this.displayArticles()}
-                  {this.displayListings()}
-                  {this.displayVideos()}
-                  {this.displayBanner()}
                   {this.editHomepage()}
+                  {this.displayBanner()}
                 </div>
               )}
               <div className="space-2" />
