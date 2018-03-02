@@ -65,6 +65,14 @@
 
     .amenity {
       margin-bottom: 0.5rem;
+
+      svg {
+        opacity: 0.9;
+        transform: translateY(2px);
+        width: 16px;
+        height: auto;
+        margin-right: 6px;
+      }
     }
   }
 
