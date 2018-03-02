@@ -28,6 +28,7 @@ class Admin extends Component {
       bannerImageToAdd: '',
       recommendedContentId: '',
       fromTheEditorsContentId: '',
+      naldaVideosContentId: '',
       pending: true,
       curator: [],
       admin: [],
@@ -35,6 +36,7 @@ class Admin extends Component {
       banner: [],
       recommended: [],
       fromTheEditors: [],
+      naldaVideos: [],
     };
 
     // Bind this to helper methods
@@ -44,6 +46,7 @@ class Admin extends Component {
     this.handleChangeBannerContentId = this.handleChangeBannerContentId.bind(this);
     this.handleChangeRecommended = this.handleChangeRecommended.bind(this);
     this.handleChangeFromTheEditors = this.handleChangeFromTheEditors.bind(this);
+    this.handleChangeNaldaVideos = this.handleChangeNaldaVideos.bind(this);
     this.onSubmitAdmin = this.onSubmitAdmin.bind(this);
     this.onSubmitCurator = this.onSubmitCurator.bind(this);
     this.onSubmitRemoveCurator = this.onSubmitRemoveCurator.bind(this);
@@ -53,6 +56,7 @@ class Admin extends Component {
     this.onSubmitRemoveRecommendedContent = this.onSubmitRemoveRecommendedContent.bind(this);
     this.onSubmitRemoveFromTheEditorsContent = this.onSubmitRemoveFromTheEditorsContent.bind(this);
     this.onSubmitChangeFromTheEditors = this.onSubmitChangeFromTheEditors.bind(this);
+    this.onSubmitChangeNaldaVideos = this.onSubmitChangeNaldaVideos.bind(this);
     this.displayCurators = this.displayCurators.bind(this);
     this.displayAdmins = this.displayAdmins.bind(this);
     this.displayUsers = this.displayUsers.bind(this);
@@ -82,6 +86,7 @@ class Admin extends Component {
           banner: resp.data.data.homepageContent ? resp.data.data.homepageContent.banner : null,
           recommended: resp.data.data.homepageContent ? resp.data.data.homepageContent.recommended : null,
           fromTheEditors: resp.data.data.homepageContent ? resp.data.data.homepageContent.fromTheEditors : null,
+          naldaVideos: resp.data.data.homepageContent ? resp.data.data.homepageContent.naldaVideos : null,
           pending: false,
         });
       } else {
@@ -124,6 +129,13 @@ class Admin extends Component {
   handleChangeFromTheEditors(event) {
     this.setState({
       fromTheEditorsContentId: event.target.value,
+    });
+  }
+
+  // Handle when admin types into videos field
+  handleChangeNaldaVideos(event) {
+    this.setState({
+      naldaVideosContentId: event.target.value,
     });
   }
 
@@ -230,6 +242,28 @@ class Admin extends Component {
         this.setState({
           error: '',
           fromTheEditors: resp.data.data,
+        });
+      }
+    })
+    .catch((err) => {
+      this.setState({
+        error: err,
+      });
+    });
+  }
+
+  // Helper method to remove an item from the nalda videos section
+  onSubmitRemoveNaldaVideosContent(naldaVideosContentId) {
+    axios.post(`/api/home/naldaVideos/remove/${naldaVideosContentId}`)
+    .then((resp) => {
+      if (!resp.data.success) {
+        this.setState({
+          error: resp.data.error,
+        });
+      } else {
+        this.setState({
+          error: '',
+          naldaVideos: resp.data.data,
         });
       }
     })
@@ -380,10 +414,12 @@ class Admin extends Component {
           error: '',
           success: 'Content added to Recommended.',
           recommended: resp.data.data,
+          recommendedContentId: '',
         });
       } else {
         this.setState({
           error: resp.data.error,
+          recommendedContentId: '',
         });
       }
     })
@@ -407,16 +443,49 @@ class Admin extends Component {
           error: '',
           success: 'Content added to From the Editors.',
           fromTheEditors: resp.data.data,
+          fromTheEditorsContentId: '',
         });
       } else {
         this.setState({
           error: resp.data.error,
+          fromTheEditorsContentId: '',
         });
       }
     })
     .catch((err) => {
       this.setState({
         error: err,
+        fromTheEditorsContentId: '',
+      });
+    });
+  }
+
+  // Helper method to handle changing videos content on homepage
+  onSubmitChangeNaldaVideos(event) {
+    event.preventDefault();
+    axios.post('/api/home/naldaVideos/add', {
+      contentId: this.state.naldaVideosContentId,
+    })
+    .then((resp) => {
+      if (resp.data.success) {
+        // TODO Show on frontend that item has been added
+        this.setState({
+          error: '',
+          success: 'Content added to Nalda Videos.',
+          naldaVideos: resp.data.data,
+          naldaVideosContentId: '',
+        });
+      } else {
+        this.setState({
+          error: resp.data.error,
+          naldaVideosContentId: '',
+        });
+      }
+    })
+    .catch((err) => {
+      this.setState({
+        error: err,
+        naldaVideosContentId: '',
       });
     });
   }
@@ -805,11 +874,12 @@ class Admin extends Component {
   editHomepage() {
     let recommended = '';
     let fromTheEditors = '';
+    let naldaVideos = '';
     if (this.state.recommended && this.state.recommended.length) {
       recommended = this.state.recommended.map((item) => (
         <div>
           <div>{item.contentId}</div>
-          <div onClick={() => this.onSubmitRemoveRecommendedContent(item.contentId)}>DELETE </div>
+          <div onClick={() => this.onSubmitRemoveRecommendedContent(item.contentId)}>Remove </div>
         </div>
       ));
     }
@@ -817,7 +887,15 @@ class Admin extends Component {
       fromTheEditors = this.state.fromTheEditors.map((item) => (
         <div>
           <div>{item.contentId}</div>
-          <div onClick={() => this.onSubmitRemoveFromTheEditorsContent(item.contentId)}>DELETE </div>
+          <div onClick={() => this.onSubmitRemoveFromTheEditorsContent(item.contentId)}>Remove </div>
+        </div>
+      ));
+    }
+    if (this.state.naldaVideos && this.state.naldaVideos.length) {
+      naldaVideos = this.state.naldaVideos.map((item) => (
+        <div>
+          <div>{item.contentId}</div>
+          <div onClick={() => this.onSubmitRemoveNaldaVideosContent(item.contentId)}>Remove </div>
         </div>
       ));
     }
@@ -888,6 +966,39 @@ class Admin extends Component {
           </form>
           <div className="space-1" />
           {fromTheEditors}
+        </div>
+        <div className="col-12 col-md-10 col-lg-8 col-xl-6">
+          <form>
+            <h4 className="bold marg-bot-1">
+              Nalda Videos
+            </h4>
+            <p className="marg-bot-1">
+              Enter the content Id of the content you would like to appear in the Nalda videos section of the homepage.
+            </p>
+
+            <textarea
+              type="text"
+              placeholder="Content Id"
+              className="form-control marg-bot-1 border"
+              value={ this.state.naldaVideosContentId }
+              onChange={ this.handleChangeNaldaVideos }
+              rows="1"
+            />
+            <button
+              onClick={(e) => this.onSubmitChangeNaldaVideos(e)}
+              className={
+                this.state.naldaVideosContentId ? (
+                  "btn btn-primary full-width cursor"
+                ) : (
+                  "btn btn-primary full-width disabled"
+                )
+              }
+            >
+              Add Nalda's Video
+            </button>
+          </form>
+          <div className="space-1" />
+          {naldaVideos}
         </div>
       </div>
     );

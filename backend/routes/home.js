@@ -135,6 +135,8 @@ module.exports = () => {
           error: '',
           data: {
             banner: homepage.banner,
+            fromTheEditors: homepage.fromTheEditors,
+            naldaVideos: homepage.naldaVideos,
           }
         });
       }
@@ -419,6 +421,136 @@ module.exports = () => {
                   success: true,
                   error: '',
                   data: homepage.fromTheEditors,
+                });
+              }
+            });
+          }
+        });
+      }
+    });
+  });
+
+  // Route to handle adding content to homepage nalda videos
+  router.post('/naldaVideos/add', (req, res) => {
+    AdminCheck(req, (authRes) => {
+      if (!authRes.success) {
+        res.send({
+          success: false,
+          error: authRes.error,
+        });
+      } else {
+        const contentId = req.body.contentId;
+        Video.findById(contentId, (errVideo, video) => {
+          if (errVideo) {
+            res.send({
+              success: false,
+              error: 'Error finding content.'
+            });
+          } else if (!contentId.match(/^[0-9a-fA-F]{24}$/)) {
+            res.send({
+              success: false,
+              error: 'No video with that id exists.'
+            });
+            // Make sure content with given id exists
+          } else if (!video) {
+            res.send({
+              success: false,
+              error: 'No video with that ID exists.',
+            });
+          } else {
+            Homepage.find({}, (errHomepage, home) => {
+              if (errHomepage) {
+                res.send({
+                  success: false,
+                  error: 'Error loading homepage.',
+                });
+              } else {
+                const homepage = home[0];
+                const naldaVideos = homepage.naldaVideos.slice();
+                // Error check for duplicate content in banner
+                let duplicate = false;
+                naldaVideos.forEach((item) => {
+                  if (item.contentId === contentId) {
+                    duplicate = true;
+                  }
+                });
+                if (duplicate) {
+                  res.send({
+                    success: false,
+                    error: 'This content is already in the Nalda Videos content section.',
+                  });
+                } else {
+                  // Create object to pass back, of type article or listing
+                  const newNaldaVideoContent = {
+                    contentType: 'video',
+                    contentId,
+                  };
+                  // Add to Nalda Video
+                  naldaVideos.push(newNaldaVideoContent);
+                  homepage.naldaVideos = naldaVideos;
+                  // Save new banner to mongo
+                  homepage.save((errSave) => {
+                    if (errSave) {
+                      res.send({
+                        success: false,
+                        error: errSave,
+                      });
+                    } else {
+                      res.send({
+                        success: true,
+                        error: '',
+                        data: homepage.naldaVideos,
+                      });
+                    }
+                  });
+                }
+              }
+            });
+          }
+        });
+      }
+    });
+  });
+
+  // Route to handle deleting an item from the nalda videos
+  router.post('/naldaVideos/remove/:naldaVideosContentId', (req, res) => {
+    // Find the id from the url
+    const contentId = req.params.naldaVideosContentId;
+    AdminCheck(req, (authRes) => {
+      if (!authRes.success) {
+        res.send({
+          success: false,
+          error: authRes.error,
+        });
+      } else {
+        Homepage.find({}, (err, home) => {
+          if (err) {
+            res.send({
+              success: false,
+              error: 'Error retrieving homepage data.',
+            });
+          } else {
+            const homepage = home[0];
+            const naldaVideos = homepage.naldaVideos.slice();
+            // Loop through to delete specific item
+            naldaVideos.forEach((item) => {
+              if (item.contentId === contentId) {
+                naldaVideos.splice(naldaVideos.indexOf(item), 1);
+                return;
+              }
+            });
+            homepage.naldaVideos = naldaVideos;
+            homepage.save((errHome) => {
+              if (errHome) {
+                res.send({
+                  success: false,
+                  error: errHome,
+                });
+              } else {
+                res.send({
+                  success: true,
+                  error: '',
+                  data: homepage.naldaVideos,
                 });
               }
             });
