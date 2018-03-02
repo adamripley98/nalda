@@ -1,5 +1,6 @@
 // Import framworks
 import React, { Component } from 'react';
+import { Helmet } from 'react-helmet';
 
 // Import components
 import Thin from './shared/Thin';
@@ -11,7 +12,7 @@ class About extends Component {
   componentDidMount() {
     window.scrollTo(0, 0);
     // Update the title
-    document.title = "Nalda | About";
+    // document.title = "Nalda | About";
   }
 
   /**
@@ -21,6 +22,10 @@ class About extends Component {
     return (
       <Thin>
         <div>
+          <Helmet>
+            <title>Nalda | About</title>
+            <meta name="description" content="Learn more about Nalda: a centralized source for information, food, activities, and fun on your campus." />
+          </Helmet>
           <h3 className="primary-text marg-top-1 marg-bot-1">
             Hey there, we're Nalda
           </h3>
