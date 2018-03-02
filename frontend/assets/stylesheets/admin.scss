@@ -29,3 +29,19 @@
     min-height: 100vh;
   }
 }
+
+.table {
+  border: 1px solid $border;
+
+  .fa-close {
+    cursor: hand;
+    cursor: pointer;
+    color: $gray;
+
+    &:hover,
+    &:focus,
+    &:active {
+      color: $dark-gray;
+    }
+  }
+}

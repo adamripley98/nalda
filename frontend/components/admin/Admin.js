@@ -816,7 +816,6 @@ class Admin extends Component {
   // Helper method to display banner options
   displayBanner() {
     const banner = this.state.banner.map((image, i) => {
-      console.log(image.contentImage);
       return (
         <li key={image.contentId}>
           <img
@@ -883,27 +882,36 @@ class Admin extends Component {
     let fromTheEditors = '';
     let naldaVideos = '';
     if (this.state.recommended && this.state.recommended.length) {
-      recommended = this.state.recommended.map((item) => (
-        <div>
-          <div>{item.contentId}</div>
-          <div onClick={() => this.onSubmitRemoveRecommendedContent(item.contentId)}>Remove </div>
-        </div>
+      recommended = this.state.recommended.map((item, i) => (
+        <tr>
+          <th>{i + 1}</th>
+          <td>{item.contentId}</td>
+          <td onClick={() => this.onSubmitRemoveRecommendedContent(item.contentId)}>
+            <i className="fa fa-close" aria-hidden="true" />
+          </td>
+        </tr>
       ));
     }
     if (this.state.fromTheEditors && this.state.fromTheEditors.length) {
-      fromTheEditors = this.state.fromTheEditors.map((item) => (
-        <div>
-          <div>{item.contentId}</div>
-          <div onClick={() => this.onSubmitRemoveFromTheEditorsContent(item.contentId)}>Remove </div>
-        </div>
+      fromTheEditors = this.state.fromTheEditors.map((item, i) => (
+        <tr>
+          <th>{i + 1}</th>
+          <td>{item.contentId}</td>
+          <td onClick={() => this.onSubmitRemoveFromTheEditorsContent(item.contentId)}>
+            <i className="fa fa-close" aria-hidden="true" />
+          </td>
+        </tr>
       ));
     }
     if (this.state.naldaVideos && this.state.naldaVideos.length) {
-      naldaVideos = this.state.naldaVideos.map((item) => (
-        <div>
-          <div>{item.contentId}</div>
-          <div onClick={() => this.onSubmitRemoveNaldaVideosContent(item.contentId)}>Remove </div>
-        </div>
+      naldaVideos = this.state.naldaVideos.map((item, i) => (
+        <tr>
+          <th>{i + 1}</th>
+          <td>{item.contentId}</td>
+          <td onClick={() => this.onSubmitRemoveNaldaVideosContent(item.contentId)}>
+            <i className="fa fa-close" aria-hidden="true" />
+          </td>
+        </tr>
       ));
     }
     return (
@@ -942,7 +950,18 @@ class Admin extends Component {
 
         <div className="space-1" />
 
-        {recommended}
+        <table className="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Content ID</th>
+              <th />
+            </tr>
+          </thead>
+          <tbody>
+            {recommended}
+          </tbody>
+        </table>
 
         <div className="line" />
 
@@ -980,7 +999,18 @@ class Admin extends Component {
 
         <div className="space-1" />
 
-        {fromTheEditors}
+        <table className="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Content ID</th>
+              <th />
+            </tr>
+          </thead>
+          <tbody>
+            {fromTheEditors}
+          </tbody>
+        </table>
 
         <div className="line" />
 
@@ -1017,7 +1047,19 @@ class Admin extends Component {
         </form>
 
         <div className="space-1" />
-        {naldaVideos}
+
+        <table className="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Content ID</th>
+              <th />
+            </tr>
+          </thead>
+          <tbody>
+            {naldaVideos}
+          </tbody>
+        </table>
       </div>
     );
   }
