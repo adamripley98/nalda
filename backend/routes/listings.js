@@ -236,7 +236,6 @@ module.exports = () => {
 
         // Keep track of any errors
         let error = "";
-        // const urlRegexp = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/;
 
         // Perform error checking on variables
         if (!title) {
@@ -247,10 +246,6 @@ module.exports = () => {
           error = "Nalda's Favorite must be populated.";
         } else if (!image) {
           error = "Image must be populated.";
-        } else if (!rating) {
-          error = "Rating must be populated.";
-        } else if (!images.length) {
-          error = "Images must be populated.";
         } else if (!price) {
           error = "Price must be populated.";
         } else if (!website) {
@@ -581,12 +576,8 @@ module.exports = () => {
           error = "Nalda's Favorite must be populated.";
         } else if (!image) {
           error = "Hero image must be populated.";
-        } else if (!images.length) {
-          error = "Images must be populated.";
-        } else if (!images.length) {
+        } else if (images && images.length > 6) {
           error = "Maximum of 6 images.";
-        } else if (!rating) {
-          error = "Rating must be populated.";
         } else if (!price) {
           error = "Price must be populated.";
         } else if (!website) {

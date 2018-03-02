@@ -1038,7 +1038,6 @@ class ListingForm extends React.Component {
                     this.state.naldaFavorite &&
                     this.state.website &&
                     this.state.image &&
-                    this.state.rating &&
                     this.state.price &&
                     document.getElementById("location").value
                   ) ? (

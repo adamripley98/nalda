@@ -86,11 +86,7 @@ class ReviewForm extends React.Component {
     // Prevent the default form action
     event.preventDefault();
     // Post to backend
-    if (!this.state.rating) {
-      this.setState({
-        error: "Rating must be populated.",
-      });
-    } else if (!this.state.title) {
+    if (!this.state.title) {
       this.setState({
         error: "Title must be populated.",
       });

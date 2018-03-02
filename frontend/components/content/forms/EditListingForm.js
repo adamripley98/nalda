@@ -18,6 +18,16 @@ import Tags from '../../shared/Tags';
 // Import actions
 import {notifyMessage} from '../../../actions/notification';
 
+// Import SVGs
+import CashOnly from '../../../assets/images/cash-only.svg';
+import Formal from '../../../assets/images/formal.svg';
+import OutdoorSeating from '../../../assets/images/outdoor-seating.svg';
+import Parking from '../../../assets/images/parking.svg';
+import Reservation from '../../../assets/images/reservation.svg';
+import Waiter from '../../../assets/images/waiter.svg';
+import Wifi from '../../../assets/images/wifi.svg';
+import Wink from '../../../assets/images/wink.svg';
+
 /**
  * Component to render the edit article form
  */
@@ -103,6 +113,7 @@ class EditListingForm extends React.Component {
     this.handleChangePrice = this.handleChangePrice.bind(this);
     this.handleChangeWebsite = this.handleChangeWebsite.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleClickAmenity = this.handleClickAmenity.bind(this);
     this.handleClickCategory = this.handleClickCategory.bind(this);
     this.onDrop = this.onDrop.bind(this);
     this.displayImages = this.displayImages.bind(this);
@@ -255,6 +266,24 @@ class EditListingForm extends React.Component {
   handleChangeWebsite(event) {
     this.setState({
       website: event.target.value,
+    });
+  }
+
+  /**
+   * Helper method to handle a change tto the amenities
+   */
+  handleClickAmenity(event, name) {
+    // Copy over the existing state
+    const newAmenityState = {
+      ...this.state.amenities,
+    };
+
+    // Update the state for the passed in field
+    newAmenityState[name] = !this.state.amenities[name];
+
+    // Update the component state
+    this.setState({
+      amenities: newAmenityState,
     });
   }
 
@@ -548,16 +577,6 @@ class EditListingForm extends React.Component {
                     value={ this.state.title }
                     onChange={ this.handleChangeTitle }
                   />
-                  {/* <label>
-                    Image (url to an image)
-                  </label>
-                  <input
-                    name="image"
-                    type="url"
-                    className="form-control marg-bot-1"
-                    value={ this.state.image }
-                    onChange={ this.handleChangeImage }
-                  /> */}
                   <label>
                     Hero Image (url to an image)
                   </label>
@@ -948,6 +967,75 @@ class EditListingForm extends React.Component {
                     </p>
                   </div>
 
+                  <label className="marg-bot-1">
+                    Amenities
+                  </label>
+                  <div className="categories-form marg-bot-1">
+                    {/* Begin first row of categories */}
+                    <div className="row">
+                      <div className="col-12 col-md-6">
+                        <p
+                          onClick={ (e) => this.handleClickAmenity(e, "cashOnly") }
+                          className={ this.state.amenities.cashOnly && "active" }
+                        >
+                          <CashOnly />
+                          Cash only
+                        </p>
+                        <p
+                          onClick={ (e) => this.handleClickAmenity(e, "formal") }
+                          className={ this.state.amenities.formal && "active" }
+                        >
+                          <Formal />
+                          Formal
+                        </p>
+                        <p
+                          onClick={ (e) => this.handleClickAmenity(e, "outdoorSeating") }
+                          className={ this.state.amenities.outdoorSeating && "active" }
+                        >
+                          <OutdoorSeating />
+                          Outdoor seating
+                        </p>
+                        <p
+                          onClick={ (e) => this.handleClickAmenity(e, "wink") }
+                          className={ this.state.amenities.wink && "active" }
+                        >
+                          <Wink />
+                          Wink
+                        </p>
+                      </div>
+                      <div className="col-12 col-md-6">
+                        <p
+                          onClick={ (e) => this.handleClickAmenity(e, "parking") }
+                          className={ this.state.amenities.parking && "active" }
+                        >
+                          <Parking />
+                          Parking
+                        </p>
+                        <p
+                          onClick={ (e) => this.handleClickAmenity(e, "reservation") }
+                          className={ this.state.amenities.reservation && "active" }
+                        >
+                          <Reservation />
+                          Reservation
+                        </p>
+                        <p
+                          onClick={ (e) => this.handleClickAmenity(e, "wifi") }
+                          className={ this.state.amenities.wifi && "active" }
+                        >
+                          <Wifi />
+                          Wifi
+                        </p>
+                        <p
+                          onClick={ (e) => this.handleClickAmenity(e, "waiter") }
+                          className={ this.state.amenities.waiter && "active" }
+                        >
+                          <Waiter />
+                          Waiter
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
                   <input
                     type="submit"
                     value={ this.state.pendingSubmit ? "Updating listing..." : "Update listing" }
@@ -957,7 +1045,6 @@ class EditListingForm extends React.Component {
                         this.state.description &&
                         this.state.website &&
                         this.state.image &&
-                        this.state.rating &&
                         this.state.price &&
                         document.getElementById("location") &&
                         document.getElementById("location").value
