@@ -150,6 +150,7 @@ class Admin extends Component {
   sidebarCallback(to) {
     this.setState({
       to,
+      error: "",
     });
   }
 
@@ -508,7 +509,7 @@ class Admin extends Component {
   displayCurators() {
     if (this.state.curators && this.state.curators.length) {
       const curators = this.state.curators.map((curator, i) => (
-        <tr key={ uuid() }>
+        <tr key={ curator._id }>
           <th scope="row">
             {i + 1}
           </th>
@@ -552,12 +553,12 @@ class Admin extends Component {
   displayAdmins() {
     if (this.state.admins && this.state.admins.length) {
       const admins = this.state.admins.map((admin, i) => (
-        <tr key={ uuid() }>
+        <tr key={ admin._id }>
           <th scope="row">
             {i + 1}
           </th>
           <td>
-            <Link key={ uuid() } to={`/users/${admin.userId}`}>
+            <Link to={`/users/${admin.userId}`}>
               { admin.name }
             </Link>
           </td>
@@ -596,7 +597,7 @@ class Admin extends Component {
   displayUsers() {
     if (this.state.users && this.state.users.length) {
       const users = this.state.users.map((user, i) => (
-        <tr key={ uuid() }>
+        <tr key={ user._id }>
           <th scope="row">
             {i + 1}
           </th>
@@ -652,12 +653,12 @@ class Admin extends Component {
   displayArticles() {
     if (this.state.articles && this.state.articles.length) {
       const articles = this.state.articles.map((article, i) => (
-        <tr key={ uuid() }>
+        <tr key={ article._id }>
           <th scope="row">
             {i + 1}
           </th>
           <td>
-            <Link key={ uuid() } to={`/articles/${article._id}`}>
+            <Link to={`/articles/${article._id}`}>
               { article.title }
             </Link>
           </td>
@@ -698,12 +699,12 @@ class Admin extends Component {
   displayListings() {
     if (this.state.listings && this.state.listings.length) {
       const listings = this.state.listings.map((listing, i) => (
-        <tr key={ uuid() }>
+        <tr key={ listing._id }>
           <th scope="row">
             {i + 1}
           </th>
           <td>
-            <Link key={ uuid() } to={`/listings/${listing._id}`}>
+            <Link to={`/listings/${listing._id}`}>
               { listing.title }
             </Link>
           </td>
@@ -744,12 +745,12 @@ class Admin extends Component {
   displayVideos() {
     if (this.state.videos && this.state.videos.length) {
       const videos = this.state.videos.map((video, i) => (
-        <tr key={ uuid() }>
+        <tr key={ video._id }>
           <th scope="row">
             {i + 1}
           </th>
           <td>
-            <Link key={ uuid() } to={`/videos/${video._id}`}>
+            <Link to={`/videos/${video._id}`}>
               { video.title }
             </Link>
           </td>
@@ -829,6 +830,7 @@ class Admin extends Component {
       );
     });
 
+    // TODO SHOW THAT IMAGE WAS ADDED
     return (
       <div>
         <h4>Banner</h4>
@@ -883,7 +885,7 @@ class Admin extends Component {
     let naldaVideos = '';
     if (this.state.recommended && this.state.recommended.length) {
       recommended = this.state.recommended.map((item, i) => (
-        <tr>
+        <tr key={item.contentId + "recommended"}>
           <th>{i + 1}</th>
           <td>{item.contentId}</td>
           <td onClick={() => this.onSubmitRemoveRecommendedContent(item.contentId)}>
@@ -894,7 +896,7 @@ class Admin extends Component {
     }
     if (this.state.fromTheEditors && this.state.fromTheEditors.length) {
       fromTheEditors = this.state.fromTheEditors.map((item, i) => (
-        <tr>
+        <tr key={item.contentId + "fromTheEditors"}>
           <th>{i + 1}</th>
           <td>{item.contentId}</td>
           <td onClick={() => this.onSubmitRemoveFromTheEditorsContent(item.contentId)}>
@@ -905,7 +907,7 @@ class Admin extends Component {
     }
     if (this.state.naldaVideos && this.state.naldaVideos.length) {
       naldaVideos = this.state.naldaVideos.map((item, i) => (
-        <tr>
+        <tr key={item.contentId + "naldaVideos"}>
           <th>{i + 1}</th>
           <td>{item.contentId}</td>
           <td onClick={() => this.onSubmitRemoveNaldaVideosContent(item.contentId)}>
@@ -1074,7 +1076,6 @@ class Admin extends Component {
         <p className="marg-bot-1">
           Enter a user's email address in order to add them as an admin or as a content curator or to remove them as a content creator.
         </p>
-        <ErrorMessage error={ this.state.error } />
         {
           this.state.success ? (
             <div className="alert alert-success marg-bot-1">
@@ -1150,6 +1151,7 @@ class Admin extends Component {
           <Sidebar cb={(to) => this.sidebarCallback(to)} />
             <div className="col-12 col-md-8 col-lg-8 col-xl-7">
               <div className="space-1" />
+              <ErrorMessage error={ this.state.error } />
               { this.state.to === "" && (
                 <div>
                   <h4>Admin panel</h4>
