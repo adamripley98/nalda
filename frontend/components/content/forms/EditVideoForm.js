@@ -1,15 +1,19 @@
 // Import frameworks
 import React from 'react';
 import autosize from 'autosize';
-import { Redirect } from 'react-router-dom';
+import {Redirect} from 'react-router-dom';
 import axios from 'axios';
 import PropTypes from 'prop-types';
+import {connect} from 'react-redux';
 
 // Import components
 import ErrorMessage from '../../shared/ErrorMessage';
 import Loading from '../../shared/Loading';
 import Medium from '../../shared/Medium';
 import Tags from '../../shared/Tags';
+
+// Import actions
+import {notifyMessage} from '../../../actions/notification';
 
 /**
  * Component to render the edit video form
@@ -225,6 +229,9 @@ class EditVideoForm extends React.Component {
                 pendingSubmit: false,
               });
             } else {
+              // Notify success
+              this.props.notifyMessage("Successfully edited video.");
+
               // Redirect to home after successful submission
               this.setState({
                 redirectToHome: true,
@@ -333,8 +340,15 @@ class EditVideoForm extends React.Component {
   }
 }
 
+// Prop validations
 EditVideoForm.propTypes = {
   match: PropTypes.object,
+  notifyMessage: PropTypes.string,
 };
 
-export default EditVideoForm;
+// Redux
+const mapDispatchToProps = dispatch => ({
+  notifyMessage: message => dispatch(notifyMessage(message)),
+});
+
+export default connect(mapDispatchToProps)(EditVideoForm);

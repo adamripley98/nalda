@@ -3,10 +3,15 @@ import Medium from '../../shared/Medium';
 import autosize from 'autosize';
 import { Link, Redirect } from 'react-router-dom';
 import axios from 'axios';
+import {connect} from 'react-redux';
+import PropTypes from 'prop-types';
 
 // Import components
 import ErrorMessage from '../../shared/ErrorMessage';
 import Tags from '../../shared/Tags';
+
+// Import actions
+import {notifyMessage} from '../../../actions/notification';
 
 /**
  * Component to render the new video form
@@ -178,6 +183,9 @@ class VideoForm extends React.Component {
                   pendingSubmit: false,
                 });
               } else {
+                // Notify success
+                this.props.notifyMessage("Successfully created video");
+
                 // Redirect to home after successful submission
                 this.setState({
                   videoId: resp.data.data._id,
@@ -286,4 +294,14 @@ class VideoForm extends React.Component {
   }
 }
 
-export default VideoForm;
+// Prop validations
+VideoForm.propTypes = {
+  notifyMessage: PropTypes.func,
+};
+
+// Redux
+const mapDispatchToProps = dispatch => ({
+  notifyMessage: message => dispatch(notifyMessage(message)),
+});
+
+export default connect(mapDispatchToProps)(VideoForm);
