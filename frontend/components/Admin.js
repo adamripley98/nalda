@@ -5,7 +5,6 @@ import axios from 'axios';
 import uuid from 'uuid-v4';
 import { Link } from 'react-router-dom';
 import Dropzone from 'react-dropzone';
-import async from 'async';
 
 // Import components
 import ErrorMessage from './shared/ErrorMessage';
@@ -613,6 +612,16 @@ class Admin extends Component {
             onChange={ this.handleChangeContentId}
             rows="1"
           />
+          <Dropzone
+            onDrop={(acceptedFiles, rejectedFiles) => this.onDrop(acceptedFiles, rejectedFiles)}
+            accept="image/*"
+            style={{ marginBottom: "1rem" }}
+            >
+            <p className="dropzone">
+              <i className="fa fa-file-o" aria-hidden="true" />
+              Try dropping an image here, or click to select image to upload.
+            </p>
+          </Dropzone>
           <button
             onClick={(e) => this.onSubmitChangeBanner(e)}
             className={

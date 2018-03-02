@@ -120,6 +120,28 @@ module.exports = () => {
     });
   });
 
+  router.get('/testing', (req, res) => {
+    console.log('enters testing');
+    Homepage.find({}, (errHome, home) => {
+      if (errHome) {
+        res.send({
+          success: false,
+          error: 'Cannot return homepage.',
+        });
+      } else {
+        const homepage = home[0];
+        console.log('what is home', homepage.banner);
+        res.send({
+          success: true,
+          error: '',
+          data: {
+            banner: homepage.banner,
+          }
+        });
+      }
+    });
+  });
+
   router.post('/banner/add', (req, res) => {
     AdminCheck(req, (authRes) => {
       if (!authRes.success) {
