@@ -19,6 +19,13 @@ import {notifyMessage} from '../../../actions/notification';
 
 // Import SVGs
 import CashOnly from '../../../assets/images/cash-only.svg';
+import Formal from '../../../assets/images/formal.svg';
+import OutdoorSeating from '../../../assets/images/outdoor-seating.svg';
+import Parking from '../../../assets/images/parking.svg';
+import Reservation from '../../../assets/images/reservation.svg';
+import Waiter from '../../../assets/images/waiter.svg';
+import Wifi from '../../../assets/images/wifi.svg';
+import Wink from '../../../assets/images/wink.svg';
 
 /**
  * Component to render the new listing form
@@ -970,18 +977,21 @@ class ListingForm extends React.Component {
                       onClick={ (e) => this.handleClickAmenity(e, "formal") }
                       className={ this.state.amenities.formal && "active" }
                     >
+                      <Formal />
                       Formal
                     </p>
                     <p
                       onClick={ (e) => this.handleClickAmenity(e, "outdoorSeating") }
                       className={ this.state.amenities.outdoorSeating && "active" }
                     >
+                      <OutdoorSeating />
                       Outdoor seating
                     </p>
                     <p
                       onClick={ (e) => this.handleClickAmenity(e, "wink") }
                       className={ this.state.amenities.wink && "active" }
                     >
+                      <Wink />
                       Wink
                     </p>
                   </div>
@@ -990,25 +1000,29 @@ class ListingForm extends React.Component {
                       onClick={ (e) => this.handleClickAmenity(e, "parking") }
                       className={ this.state.amenities.parking && "active" }
                     >
+                      <Parking />
                       Parking
                     </p>
                     <p
                       onClick={ (e) => this.handleClickAmenity(e, "reservation") }
                       className={ this.state.amenities.reservation && "active" }
                     >
+                      <Reservation />
                       Reservation
                     </p>
                     <p
                       onClick={ (e) => this.handleClickAmenity(e, "wifi") }
                       className={ this.state.amenities.wifi && "active" }
                     >
+                      <Wifi />
                       Wifi
                     </p>
                     <p
                       onClick={ (e) => this.handleClickAmenity(e, "waiter") }
                       className={ this.state.amenities.waiter && "active" }
                     >
-                      <img src={require('../../../assets/images/waiter.png')} alt="waiter" /> Waiter
+                      <Waiter />
+                      Waiter
                     </p>
                   </div>
                 </div>

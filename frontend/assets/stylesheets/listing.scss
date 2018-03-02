@@ -292,9 +292,10 @@
 
   p {
     img, svg {
-      height: 16px;
-      width: auto;
+      width: 16px;
+      height: auto;
       margin-right: 6px;
+      opacity: 0.4;
     }
 
     text-decoration: line-through;
@@ -307,6 +308,10 @@
     &.active {
       color: $dark-gray;
       text-decoration: none;
+
+      img, svg {
+        opacity: 1;
+      }
     }
   }
 }
