@@ -8,13 +8,23 @@ import PropTypes from 'prop-types';
  * TODO more tags
  */
 const Tags = ({title, description, img, keywords}) => {
+  // Crosscheck passed in props with default props
   const tags = {
     title: title ? `Nalda | ${title}` : "Nalda",
+    description: description ? description : "A centralized source for information, food, activities, and fun on your campus.",
+    keywords: keywords ? keywords : "Nalda,food,campus,map,fun,drinks,study,spots,spaces,restaurants",
+    image: img ? img : "https://s3.amazonaws.com/nalda/nalda-overview.png",
   };
 
   return (
     <Helmet>
       <title>{tags.title}</title>
+      <meta name="description" content={tags.description} />
+      <meta name="keywords" content={tags.keywords} />
+      <meta property="og:image" content={tags.image} />
+      <meta property="og:title" content={tags.title} />
+      <meta property="og:description" content={tags.description} />
+      <meta property="og:image" content={tags.image} />
     </Helmet>
   );
 };

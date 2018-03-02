@@ -1,9 +1,9 @@
 // Import framworks
 import React, { Component } from 'react';
-import { Helmet } from 'react-helmet';
 
 // Import components
 import Thin from './shared/Thin';
+import Tags from './shared/Tags';
 
 class About extends Component {
   /**
@@ -22,10 +22,7 @@ class About extends Component {
     return (
       <Thin>
         <div>
-          <Helmet>
-            <title>Nalda | About</title>
-            <meta name="description" content="Learn more about Nalda: a centralized source for information, food, activities, and fun on your campus." />
-          </Helmet>
+          <Tags title="About" description="Learn more about Nalda." />
           <h3 className="primary-text marg-top-1 marg-bot-1">
             Hey there, we're Nalda
           </h3>
