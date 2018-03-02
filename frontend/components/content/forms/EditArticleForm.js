@@ -15,7 +15,6 @@ import Medium from '../../shared/Medium';
 
 /**
  * Component to render the edit article form
- * TODO make sure that this works with location
  */
 class EditArticleForm extends React.Component {
   // Constructor method

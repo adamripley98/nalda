@@ -31,7 +31,6 @@ const s3bucket = new AWS.S3({
   Bucket: AWS_BUCKET_NAME,
 });
 
-
 // Export the following methods for routing
 module.exports = () => {
 /**

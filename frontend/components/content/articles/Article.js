@@ -13,7 +13,6 @@ import Author from '../../shared/Author';
 
 /**
  * Component to render an article
- * TODO edit functionality
  */
 class Article extends React.Component {
   /**

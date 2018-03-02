@@ -7,9 +7,10 @@
 // Import frameworks
 const express = require('express');
 const router = express.Router();
+const AWS = require('aws-sdk');
+const uuid = require('uuid-v4');
 
 // Import database models
-const User = require('../models/user');
 const Article = require('../models/article');
 const Listing = require('../models/listing');
 const Video = require('../models/video');
@@ -17,6 +18,18 @@ const Homepage = require('../models/homepage');
 
 // Import helper methods
 const {AdminCheck} = require('../helperMethods/authChecking');
+
+// Isolate environmental variables
+const AWS_BUCKET_NAME = process.env.AWS_BUCKET_NAME;
+const AWS_USER_KEY = process.env.AWS_USER_KEY;
+const AWS_USER_SECRET = process.env.AWS_USER_SECRET;
+
+// Set up bucket
+const s3bucket = new AWS.S3({
+  accessKeyId: AWS_USER_KEY,
+  secretAccessKey: AWS_USER_SECRET,
+  Bucket: AWS_BUCKET_NAME,
+});
 
 // Export the following methods for routing
 module.exports = () => {
@@ -115,11 +128,12 @@ module.exports = () => {
           error: authRes.error,
         });
       } else {
-        const contentToAdd = req.body.contentToAdd;
+        // Isolate body params
+        const contentId = req.body.contentId;
         const contentImage = req.body.imageToAdd;
         // Attempt to find content in listing or article
-        Listing.findById(contentToAdd, (errListing, listing) => {
-          Article.findById(contentToAdd, (errArticle, article) => {
+        Listing.findById(contentId, (errListing, listing) => {
+          Article.findById(contentId, (errArticle, article) => {
             // Pass back errors
             if (errListing || errArticle) {
               res.send({
@@ -127,7 +141,7 @@ module.exports = () => {
                 error: 'Error finding content.',
               });
               // Make sure id is of right format
-            } else if (!contentToAdd.match(/^[0-9a-fA-F]{24}$/)) {
+            } else if (!contentId.match(/^[0-9a-fA-F]{24}$/)) {
               res.send({
                 success: false,
                 error: 'No content with that id exists.'
@@ -139,80 +153,103 @@ module.exports = () => {
                 error: 'No article or listing with that ID exists.',
               });
             } else {
-              // Find homepage
-              Homepage.find({}, (errHomepage, home) => {
-                if (errHomepage) {
-                  res.send({
-                    success: false,
-                    error: errHomepage,
-                  });
-                // NOTE this is only to declare a homepage in the database for the first time
-                } else if (!home.length) {
-                  // Create new homepage
-                  const newHomepage = new Homepage({
-                    banner: [],
-                    naldaVideos: [],
-                    categories: [],
-                    recommended: [],
-                    fromTheEditors: [],
-                  });
-                  // save new homepage in mongo
-                  newHomepage.save((err) => {
-                    if (err) {
-                      res.send({
-                        success: false,
-                        error: err,
-                      });
-                    } else {
-                      res.send({
-                        success: false,
-                        error: 'You just created the first instance of a homepage, try adding a banner again.',
-                      });
-                    }
-                  });
-                } else {
-                  const homepage = home[0];
-                  const banner = homepage.banner.slice();
-                  // Error check for duplicate content in banner
-                  let duplicate = false;
-                  banner.forEach((item) => {
-                    if (item.contentId === contentToAdd) {
-                      duplicate = true;
-                    }
-                  });
-                  if (duplicate) {
+              // Convert article picture to a form that s3 can display
+              const imageConverted = new Buffer(contentImage.replace(/^data:image\/\w+;base64,/, ""), 'base64');
+              // Create bucket
+              s3bucket.createBucket(() => {
+                var params = {
+                  Bucket: AWS_BUCKET_NAME,
+                  Key: `bannerpictures/${uuid()}`,
+                  ContentType: 'image/jpeg',
+                  Body: imageConverted,
+                  ContentEncoding: 'base64',
+                  ACL: 'public-read',
+                };
+                // Upload photo
+                s3bucket.upload(params, (errUpload, data) => {
+                  if (errUpload) {
                     res.send({
                       success: false,
-                      error: 'This content is already in the banner.',
+                      error: 'Error uploading profile picture.',
                     });
                   } else {
-                    // Create object to pass back, of type article or listing
-                    const newBannerContent = {
-                      contentType: article ? "article" : "listing",
-                      contentId: contentToAdd,
-                      contentImage,
-                    };
-                    // Add to banner
-                    banner.push(newBannerContent);
-                    homepage.banner = banner;
-                    // Save new banner to mongo
-                    homepage.save((errSave) => {
-                      if (errSave) {
+                    // Find homepage
+                    Homepage.find({}, (errHomepage, home) => {
+                      if (errHomepage) {
                         res.send({
                           success: false,
-                          error: errSave,
+                          error: errHomepage,
+                        });
+                      // NOTE this is only to declare a homepage in the database for the first time
+                      } else if (!home.length) {
+                        // Create new homepage
+                        const newHomepage = new Homepage({
+                          banner: [],
+                          naldaVideos: [],
+                          categories: [],
+                          recommended: [],
+                          fromTheEditors: [],
+                        });
+                        // save new homepage in mongo
+                        newHomepage.save((err) => {
+                          if (err) {
+                            res.send({
+                              success: false,
+                              error: err,
+                            });
+                          } else {
+                            res.send({
+                              success: false,
+                              error: 'You just created the first instance of a homepage, try adding a banner again.',
+                            });
+                          }
                         });
                       } else {
-                        // Send back success
-                        res.send({
-                          success: true,
-                          error: '',
-                          data: homepage.banner,
+                        const homepage = home[0];
+                        const banner = homepage.banner.slice();
+                        // Error check for duplicate content in banner
+                        let duplicate = false;
+                        banner.forEach((item) => {
+                          if (item.contentId === contentId) {
+                            duplicate = true;
+                          }
                         });
+                        if (duplicate) {
+                          res.send({
+                            success: false,
+                            error: 'This content is already in the banner.',
+                          });
+                        } else {
+                          // Create object to pass back, of type article or listing
+                          const newBannerContent = {
+                            contentType: article ? "article" : "listing",
+                            contentId,
+                            contentImage: data.Location,
+                          };
+                          // Add to banner
+                          banner.push(newBannerContent);
+                          homepage.banner = banner;
+                          // Save new banner to mongo
+                          homepage.save((errSave) => {
+                            if (errSave) {
+                              res.send({
+                                success: false,
+                                error: errSave,
+                              });
+                            } else {
+                              // Send back success
+                              res.send({
+                                success: true,
+                                error: '',
+                                data: homepage.banner,
+                              });
+                            }
+                          });
+                        }
                       }
                     });
                   }
-                }
+                });
               });
             }
           });
@@ -225,7 +262,6 @@ module.exports = () => {
   router.post('/banner/remove/:contentId', (req, res) => {
     // Find the id from the url
     const contentId = req.params.contentId;
-    console.log('cont id', contentId);
     AdminCheck(req, (authRes) => {
       if (!authRes.success) {
         res.send({
@@ -257,9 +293,8 @@ module.exports = () => {
                   error: errHome,
                 });
               } else {
-                console.log('sucezzzz');
                 res.send({
-                  success: false,
+                  success: true,
                   error: '',
                   data: homepage.banner,
                 });

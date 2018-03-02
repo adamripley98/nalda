@@ -59,6 +59,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
   - [ ] Analytics
 - [ ] Add icons for deleting content, users, adding as admin/curator
 - [ ] Style image previews for banner in `Admin.j`
+- [ ] Adding amenities to `ListingForm.js`
 
 ## By 2/17
 - [X] Image upload

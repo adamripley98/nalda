@@ -12,7 +12,6 @@ import Medium from '../../shared/Medium';
 
 /**
  * Component to render the edit video form
- * TODO Autocomplete not working
  */
 class EditVideoForm extends React.Component {
   /**

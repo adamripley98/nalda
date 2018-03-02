@@ -12,7 +12,6 @@ const sgMail = require('@sendgrid/mail');
 // Export the following methods for routing
 module.exports = () => {
   // Route to send an email to Nalda team
-  // TODO: implement
   router.post('/', (req, res) => {
     // Error check for empty fields
     if (!req.body.email) {

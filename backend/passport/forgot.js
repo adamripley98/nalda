@@ -10,7 +10,6 @@ const User = require('../models/user');
 /**
  * Route to send a user a reset password email
  */
- // TODO security
 module.exports = () => {
   router.post('/forgot', (req, res) => {
     // Ensure user has entered an email

@@ -1,10 +1,7 @@
 /**
- * Handles all backend routes
+ * Handles SSL work
  * NOTE all of these routes are prefixed with "/api"
  * NOTE these routes serve and accept JSON-formatted data
- * TODO file should be split up into many smaller files
- *      for example, all routes prefixed with "/articles" can be in their own
- *      router imported here.
  */
 
 // Import frameworks

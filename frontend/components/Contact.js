@@ -4,12 +4,10 @@ import autosize from 'autosize';
 import axios from 'axios';
 
 // Import components
-import Thin from './shared/Thin';
 import ErrorMessage from './shared/ErrorMessage';
 
 /**
  * Component for contacting Nalda
- * TODO link this to service like sendgrid or nodemailer
  */
 class Contact extends Component {
   // Constructor method

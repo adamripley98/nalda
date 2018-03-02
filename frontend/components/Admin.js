@@ -4,6 +4,8 @@ import autosize from 'autosize';
 import axios from 'axios';
 import uuid from 'uuid-v4';
 import { Link } from 'react-router-dom';
+import Dropzone from 'react-dropzone';
+import async from 'async';
 
 // Import components
 import ErrorMessage from './shared/ErrorMessage';
@@ -23,7 +25,7 @@ class Admin extends Component {
       email: "",
       error: "",
       success: "",
-      contentToAdd: "",
+      contentId: '',
       imageToAdd: '',
       pending: true,
       curator: [],
@@ -33,9 +35,9 @@ class Admin extends Component {
     };
 
     // Bind this to helper methods
+    this.onDrop = this.onDrop.bind(this);
     this.handleChangeEmail = this.handleChangeEmail.bind(this);
-    this.handleChangeContentToAdd = this.handleChangeContentToAdd.bind(this);
-    this.handleChangeImageToAdd = this.handleChangeImageToAdd.bind(this);
+    this.handleChangeContentId = this.handleChangeContentId.bind(this);
     this.onSubmitAdmin = this.onSubmitAdmin.bind(this);
     this.onSubmitCurator = this.onSubmitCurator.bind(this);
     this.onSubmitRemoveCurator = this.onSubmitRemoveCurator.bind(this);
@@ -93,53 +95,57 @@ class Admin extends Component {
   }
 
   // Handle when admin types into content to add field
-  handleChangeContentToAdd(event) {
+  handleChangeContentId(event) {
     this.setState({
-      contentToAdd: event.target.value,
-    });
-  }
-
-  // Handle when admin types into image to add field
-  handleChangeImageToAdd(event) {
-    this.setState({
-      imageToAdd: event.target.value,
+      contentId: event.target.value,
     });
   }
 
   // Helper method to change which images are on the banner
   onSubmitChangeBanner(event) {
     event.preventDefault();
-    // Post to backend to add content to banner
-    // TODO contentimage as well
-    axios.post('/api/home/banner/add', {
-      contentToAdd: this.state.contentToAdd,
-      imageToAdd: this.state.imageToAdd,
-    })
-    .then((resp) => {
-      if (resp.data.error) {
-        this.setState({
-          error: resp.data.error,
-          contentToAdd: '',
-          imageToAdd: '',
-        });
-      } else {
-        this.setState({
-          error: '',
-          success: 'Banner content updated.',
-          banner: resp.data.data,
-          contentToAdd: '',
-          imageToAdd: '',
-        });
-      }
-    })
-    .catch((err) => {
+    const contentId = this.state.contentId;
+    const imageToAdd = this.state.imageToAdd;
+    if (!contentId) {
       this.setState({
-        error: err,
-        success: '',
-        contentToAdd: '',
-        imageToAdd: '',
+        error: 'Enter a content Id.',
       });
-    });
+    } else if (!imageToAdd) {
+      this.setState({
+        error: 'Select an image to upload.',
+      });
+    } else {
+      // Post to backend to add content to banner
+      axios.post('/api/home/banner/add', {
+        contentId,
+        imageToAdd,
+      })
+      .then((resp) => {
+        if (resp.data.error) {
+          this.setState({
+            error: resp.data.error,
+            contentId: '',
+            imageToAdd: '',
+          });
+        } else {
+          this.setState({
+            error: '',
+            success: 'Banner content updated.',
+            banner: resp.data.data,
+            contentId: '',
+            imageToAdd: '',
+          });
+        }
+      })
+      .catch((err) => {
+        this.setState({
+          error: err,
+          success: '',
+          contentId: '',
+          imageToAdd: '',
+        });
+      });
+    }
   }
 
   // Helper method to remove a banner item
@@ -151,9 +157,6 @@ class Admin extends Component {
           error: resp.data.error,
         });
       } else {
-        // TODO Update state with new banner (this one removed)
-        console.log('successful!');
-        console.log(resp.data.data);
         this.setState({
           error: '',
           banner: resp.data.data,
@@ -564,6 +567,33 @@ class Admin extends Component {
     );
   }
 
+  // Helper method for image uploads
+  // TODO some sort of frontend display that image has been uploaded
+  onDrop(acceptedFiles, rejectedFiles) {
+    // Ensure at leat one valid image was uploaded
+    if (acceptedFiles.length) {
+      const image = acceptedFiles[0];
+      const reader = new FileReader();
+      reader.onload = (upload) => {
+        // Set images to state
+        this.setState({
+          imageToAdd: upload.target.result,
+          error: '',
+        });
+      };
+      // File reader set up
+      reader.onabort = () => this.setState({error: "File read aborted."});
+      reader.onerror = () => this.setState({error: "File read error."});
+      reader.readAsDataURL(image);
+    }
+    if (rejectedFiles.length) {
+      // Display error with wrong file type
+      this.setState({
+        error: rejectedFiles[0].name + ' is not an image.',
+      });
+    }
+  }
+
   // Helper method to display banner options
   displayBanner() {
     if (this.state.banner && this.state.banner.length) {
@@ -579,22 +609,14 @@ class Admin extends Component {
             type="text"
             placeholder="Content Id"
             className="form-control marg-bot-1 border"
-            value={ this.state.contentToAdd }
-            onChange={ this.handleChangeContentToAdd}
-            rows="1"
-          />
-          <textarea
-            type="text"
-            placeholder="Image (link to url)"
-            className="form-control marg-bot-1 border"
-            value={ this.state.imageToAdd }
-            onChange={ this.handleChangeImageToAdd}
+            value={ this.state.contentId }
+            onChange={ this.handleChangeContentId}
             rows="1"
           />
           <button
             onClick={(e) => this.onSubmitChangeBanner(e)}
             className={
-              this.state.contentToAdd ? (
+              this.state.contentId ? (
                 "btn btn-primary full-width cursor"
               ) : (
                 "btn btn-primary full-width disabled"
@@ -613,22 +635,24 @@ class Admin extends Component {
           type="text"
           placeholder="Content Id"
           className="form-control marg-bot-1 border"
-          value={ this.state.contentToAdd }
-          onChange={ this.handleChangeContentToAdd}
+          value={ this.state.contentId }
+          onChange={ this.handleChangeContentId}
           rows="1"
         />
-        <textarea
-          type="text"
-          placeholder="Image (link to url)"
-          className="form-control marg-bot-1 border"
-          value={ this.state.imageToAdd }
-          onChange={ this.handleChangeImageToAdd}
-          rows="1"
-        />
+        <Dropzone
+          onDrop={(acceptedFiles, rejectedFiles) => this.onDrop(acceptedFiles, rejectedFiles)}
+          accept="image/*"
+          style={{ marginBottom: "1rem" }}
+          >
+          <p className="dropzone">
+            <i className="fa fa-file-o" aria-hidden="true" />
+            Try dropping an image here, or click to select image to upload.
+          </p>
+        </Dropzone>
         <button
           onClick={(e) => this.onSubmitChangeBanner(e)}
           className={
-            this.state.contentToAdd ? (
+            this.state.contentId ? (
               "btn btn-primary full-width cursor"
             ) : (
               "btn btn-primary full-width disabled"
