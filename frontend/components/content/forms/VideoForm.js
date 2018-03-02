@@ -6,6 +6,7 @@ import axios from 'axios';
 
 // Import components
 import ErrorMessage from '../../shared/ErrorMessage';
+import Tags from '../../shared/Tags';
 
 /**
  * Component to render the new video form
@@ -39,8 +40,6 @@ class VideoForm extends React.Component {
    */
   componentDidMount() {
     window.scrollTo(0, 0);
-    // Update the title
-    document.title = "Nalda | New Video";
 
     // Resize textarea to fit input
     autosize(document.querySelectorAll('textarea'));
@@ -204,6 +203,8 @@ class VideoForm extends React.Component {
   render() {
     return (
       <div>
+        <Tags title="New Video" />
+
         {/* Redirect to the video if it has been created */}
         { this.state.redirectToHome && <Redirect to={`/videos/${this.state.videoId}`}/> }
 

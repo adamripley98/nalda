@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import ErrorMessage from '../../shared/ErrorMessage';
 import Loading from '../../shared/Loading';
 import Medium from '../../shared/Medium';
+import Tags from '../../shared/Tags';
 
 /**
  * Component to render the edit video form
@@ -45,8 +46,6 @@ class EditVideoForm extends React.Component {
    */
   componentDidMount() {
     window.scrollTo(0, 0);
-    // Update the title
-    document.title = "Nalda | Edit Video";
 
     // Isolate the id
     const id = this.props.match.params.id;
@@ -249,6 +248,7 @@ class EditVideoForm extends React.Component {
   render() {
     return (
       <div>
+        <Tags title="Edit Video" />
         { this.state.redirectToHome && <Redirect to={`/videos/${this.state.videoId}`}/> }
         <Medium>
           <div className="card thin-form no-pad">

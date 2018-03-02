@@ -7,13 +7,13 @@ import PropTypes from 'prop-types';
  * Component which leverages react hemlet to set meta tags of the page
  * TODO more tags
  */
-const Tags = ({title, description, img, keywords}) => {
+const Tags = ({title, description, image, keywords}) => {
   // Crosscheck passed in props with default props
   const tags = {
     title: title ? `Nalda | ${title}` : "Nalda",
     description: description ? description : "A centralized source for information, food, activities, and fun on your campus.",
     keywords: keywords ? keywords : "Nalda,food,campus,map,fun,drinks,study,spots,spaces,restaurants",
-    image: img ? img : "https://s3.amazonaws.com/nalda/nalda-overview.png",
+    image: image ? image : "https://s3.amazonaws.com/nalda/nalda-overview.png",
   };
 
   return (
@@ -33,7 +33,7 @@ const Tags = ({title, description, img, keywords}) => {
 Tags.propTypes = {
   title: PropTypes.string,
   description: PropTypes.string,
-  img: PropTypes.string,
+  image: PropTypes.string,
   keywords: PropTypes.string,
 };
 

@@ -8,6 +8,7 @@ import ErrorMessage from './shared/ErrorMessage';
 import Button from './shared/Button';
 import Preview from './content/Preview';
 import Blurb from './shared/Blurb';
+import Tags from './shared/Tags';
 
 /**
  * Component for the homepage of the application
@@ -65,14 +66,6 @@ class Home extends React.Component {
           error: err,
         });
       });
-  }
-
-  /**
-   * When the component updates
-   */
-  componentDidUpdate() {
-    // Update the page title
-    document.title = "Nalda";
   }
 
   /**
@@ -161,6 +154,7 @@ class Home extends React.Component {
   render() {
     return (
       <div className="container home">
+        <Tags title="Nalda" />
         <div className="space-1"/>
         <ErrorMessage error={ this.state.error } />
 

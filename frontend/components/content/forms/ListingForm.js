@@ -10,9 +10,10 @@ import async from 'async';
 // Import components
 import ErrorMessage from '../../shared/ErrorMessage';
 import Medium from '../../shared/Medium';
+import Tags from '../../shared/Tags';
 
 /**
- * Component to render the new article form
+ * Component to render the new listing form
  */
 class ListingForm extends React.Component {
   /**
@@ -111,8 +112,6 @@ class ListingForm extends React.Component {
    */
   componentDidMount() {
     window.scrollTo(0, 0);
-    // Update the title
-    document.title = "Nalda | New Listing";
 
     // Handle resizing textarea
     autosize(document.querySelectorAll('textarea'));
@@ -404,7 +403,7 @@ class ListingForm extends React.Component {
                   pending: false,
                 });
               } else {
-                // Redirect to the created article if successful
+                // Redirect to the created listing if successful
                 this.setState({
                   listingId: resp.data.data._id,
                   redirectToHome: true,
@@ -499,6 +498,7 @@ class ListingForm extends React.Component {
   render() {
     return (
       <div>
+        <Tags title="New Listing" />
         { this.state.redirectToHome && <Redirect to={`/listings/${this.state.listingId}`}/> }
         <Medium>
           <div className="card thin-form no-pad">

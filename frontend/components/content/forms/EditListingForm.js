@@ -12,6 +12,7 @@ import async from 'async';
 import ErrorMessage from '../../shared/ErrorMessage';
 import Medium from '../../shared/Medium';
 import Loading from '../../shared/Loading';
+import Tags from '../../shared/Tags';
 
 /**
  * Component to render the edit article form
@@ -109,8 +110,6 @@ class EditListingForm extends React.Component {
    */
   componentDidMount() {
     window.scrollTo(0, 0);
-    // Update the title
-    document.title = "Nalda | Edit Listing";
 
     // Isolate the id
     const id = this.props.match.params.id;
@@ -517,6 +516,7 @@ class EditListingForm extends React.Component {
   render() {
     return (
       <div>
+        <Tags title="Edit Listing" />
         { this.state.redirectToHome && <Redirect to={`/listings/${this.state.listingId}`}/> }
         <Medium>
           <div className="card thin-form no-pad">

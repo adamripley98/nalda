@@ -10,6 +10,7 @@ import {login} from '../../actions/index.js';
 
 // Import components
 import Thin from '../shared/Thin';
+import Tags from '../shared/Tags';
 import ErrorMessage from '../shared/ErrorMessage';
 
 /**
@@ -39,8 +40,6 @@ class Login extends Component {
    */
   componentDidMount() {
     window.scrollTo(0, 0);
-    // Update the title
-    document.title = "Nalda | Login";
   }
 
   // When login button clicked, will attempt to login on backend (login.js)
@@ -151,6 +150,7 @@ class Login extends Component {
     // If user is logged in or if user successfully logs in, redirects to home
     return (
       <div>
+        <Tags title="Login" description="Login to Nalda" keywords="Nalda,Login,login,penn" />
         {(this.props.userId) && <Redirect to="/"/>}
         <div className="space-2" />
         <Thin>

@@ -4,12 +4,11 @@ import autosize from 'autosize';
 import axios from 'axios';
 
 // Import components
-import Thin from './shared/Thin';
+import Tags from './shared/Tags';
 import ErrorMessage from './shared/ErrorMessage';
 
 /**
  * Component for contacting Nalda
- * TODO link this to service like sendgrid or nodemailer
  */
 class Contact extends Component {
   // Constructor method
@@ -35,8 +34,6 @@ class Contact extends Component {
   // Resize textarea to fit input
   componentDidMount() {
     window.scrollTo(0, 0);
-    // Update the title
-    document.title = "Nalda | Contact";
 
     // Autosize textarea
     autosize(document.querySelectorAll('textarea'));
@@ -112,6 +109,7 @@ class Contact extends Component {
   render() {
     return (
       <div className="container">
+        <Tags title="Contact" descritption="Contact us and we will get back to you as soon as possible" keywords="Nalda,contact" />
         <div className="row">
           <div className="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2 col-xl-6 offset-xl-3">
             <div className="space-2" />

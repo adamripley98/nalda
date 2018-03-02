@@ -1,14 +1,17 @@
 // Import frameworks
 import React from 'react';
-import Medium from '../../shared/Medium';
 import autosize from 'autosize';
 import { Link, Redirect } from 'react-router-dom';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import Author from '../../shared/Author';
 import Dropzone from 'react-dropzone';
+
+// Import components
 import ErrorMessage from '../../shared/ErrorMessage';
+import Tags from '../../shared/Tags';
+import Author from '../../shared/Author';
+import Medium from '../../shared/Medium';
 
 /**
  * Component to render the new article form
@@ -51,8 +54,6 @@ class ArticleForm extends React.Component {
    */
   componentDidMount() {
     window.scrollTo(0, 0);
-    // Upate the title
-    document.title = "Nalda | New Article";
 
     // Expand textareas to fit input
     autosize(document.querySelectorAll('textarea'));
@@ -302,6 +303,7 @@ class ArticleForm extends React.Component {
   render() {
     return (
       <div>
+        <Tags title="New Article" description="Write a new article" keywords="nalda,article,new,create" />
         { this.state.redirectToHome && <Redirect to={`/articles/${this.state.articleId}`}/> }
         <Medium>
           <div className="card thin-form no-pad">

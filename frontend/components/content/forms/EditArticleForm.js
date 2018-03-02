@@ -7,15 +7,14 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Dropzone from 'react-dropzone';
 
-
 // Import components
 import Loading from '../../shared/Loading';
 import ErrorMessage from '../../shared/ErrorMessage';
 import Medium from '../../shared/Medium';
+import Tags from '../../shared/Tags';
 
 /**
  * Component to render the edit article form
- * TODO make sure that this works with location
  */
 class EditArticleForm extends React.Component {
   // Constructor method
@@ -53,8 +52,6 @@ class EditArticleForm extends React.Component {
   // Handle resizing textarea
   componentDidMount() {
     window.scrollTo(0, 0);
-    // Update the title
-    document.title = "Nalda | Edit Article";
 
     // Isolate the id
     const id = this.props.match.params.id;
@@ -333,6 +330,7 @@ class EditArticleForm extends React.Component {
   render() {
     return (
       <div>
+        <Tags title="Edit Article" />
         { this.state.redirectToHome && <Redirect to={`/articles/${this.state.articleId}`}/> }
         <Medium>
           <div className="card thin-form no-pad">

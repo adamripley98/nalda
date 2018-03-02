@@ -11,8 +11,6 @@ class About extends Component {
    */
   componentDidMount() {
     window.scrollTo(0, 0);
-    // Update the title
-    // document.title = "Nalda | About";
   }
 
   /**
