@@ -6,12 +6,12 @@
 
   .parallax-wrapper {
     width: 100%;
-    height: 50vh;
+    height: 52vh;
     overflow: hidden;
 
     img {
       min-width: 100%;
-      min-height: 50vh;
+      min-height: 52vh;
       height: auto;
     }
   }
@@ -291,6 +291,12 @@
   }
 
   p {
+    img, svg {
+      height: 16px;
+      width: auto;
+      margin-right: 6px;
+    }
+
     text-decoration: line-through;
     width: 100%;
     color: $gray;

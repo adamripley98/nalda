@@ -17,6 +17,9 @@ import Tags from '../../shared/Tags';
 // Import actions
 import {notifyMessage} from '../../../actions/notification';
 
+// Import SVGs
+import CashOnly from '../../../assets/images/cash-only.svg';
+
 /**
  * Component to render the new listing form
  */
@@ -92,7 +95,16 @@ class ListingForm extends React.Component {
         showoffToYourFriends: false,
         forTheGram: false,
       },
-      amenities: [],
+      amenities: {
+        outdoorSeating: false,
+        formal: false,
+        cashOnly: false,
+        parking: false,
+        reservation: false,
+        wifi: false,
+        waiter: false,
+        wink: false,
+      },
       pending: false,
     };
 
@@ -107,7 +119,7 @@ class ListingForm extends React.Component {
     this.handleChangeWebsite = this.handleChangeWebsite.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleClickCategory = this.handleClickCategory.bind(this);
-    this.handleChangeAmenity = this.handleChangeAmenity.bind(this);
+    this.handleClickAmenity = this.handleClickAmenity.bind(this);
     this.displayImages = this.displayImages.bind(this);
     this.removeImage = this.removeImage.bind(this);
   }
@@ -220,8 +232,19 @@ class ListingForm extends React.Component {
   /**
    * Helper method to handle a change tto the amenities
    */
-  handleChangeAmenity(event) {
-    console.log('change amenity');
+  handleClickAmenity(event, name) {
+    // Copy over the existing state
+    const newAmenityState = {
+      ...this.state.amenities,
+    };
+
+    // Update the state for the passed in field
+    newAmenityState[name] = !this.state.amenities[name];
+
+    // Update the component state
+    this.setState({
+      amenities: newAmenityState,
+    });
   }
 
   /**
@@ -481,10 +504,6 @@ class ListingForm extends React.Component {
     } else if (!this.state.images.length) {
       this.setState({
         error: "At least 1 image must be provided.",
-      });
-    } else if (this.state.amenities.length > 10) {
-      this.setState({
-        error: "You may only add 10 amenities",
       });
     } else if (!document.getElementById("location").value) {
       this.setState({
@@ -931,6 +950,68 @@ class ListingForm extends React.Component {
                 >
                   #forthegram
                 </p>
+              </div>
+
+              <label className="marg-bot-1">
+                Amenities
+              </label>
+              <div className="categories-form marg-bot-1">
+                {/* Begin first row of categories */}
+                <div className="row">
+                  <div className="col-12 col-md-6">
+                    <p
+                      onClick={ (e) => this.handleClickAmenity(e, "cashOnly") }
+                      className={ this.state.amenities.cashOnly && "active" }
+                    >
+                      <CashOnly />
+                      Cash only
+                    </p>
+                    <p
+                      onClick={ (e) => this.handleClickAmenity(e, "formal") }
+                      className={ this.state.amenities.formal && "active" }
+                    >
+                      Formal
+                    </p>
+                    <p
+                      onClick={ (e) => this.handleClickAmenity(e, "outdoorSeating") }
+                      className={ this.state.amenities.outdoorSeating && "active" }
+                    >
+                      Outdoor seating
+                    </p>
+                    <p
+                      onClick={ (e) => this.handleClickAmenity(e, "wink") }
+                      className={ this.state.amenities.wink && "active" }
+                    >
+                      Wink
+                    </p>
+                  </div>
+                  <div className="col-12 col-md-6">
+                    <p
+                      onClick={ (e) => this.handleClickAmenity(e, "parking") }
+                      className={ this.state.amenities.parking && "active" }
+                    >
+                      Parking
+                    </p>
+                    <p
+                      onClick={ (e) => this.handleClickAmenity(e, "reservation") }
+                      className={ this.state.amenities.reservation && "active" }
+                    >
+                      Reservation
+                    </p>
+                    <p
+                      onClick={ (e) => this.handleClickAmenity(e, "wifi") }
+                      className={ this.state.amenities.wifi && "active" }
+                    >
+                      Wifi
+                    </p>
+                    <p
+                      onClick={ (e) => this.handleClickAmenity(e, "waiter") }
+                      className={ this.state.amenities.waiter && "active" }
+                    >
+                      <img src={require('../../../assets/images/waiter.png')} alt="waiter" /> Waiter
+                    </p>
+                  </div>
+                </div>
               </div>
 
               <input

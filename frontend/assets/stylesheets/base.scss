@@ -108,10 +108,18 @@ h6,
   }
 }
 
+// Hide overflow for body
+html, body {
+  max-width: 100%;
+  width: 100%;
+  overflow-x: hidden !important;
+}
+
 // Make each page take up the full-height of the screen (at least)
 .app-content {
   min-height: calc(100vh - 56.27px);
-  width: 100%;
+  width: 100% !important;
+  overflow-x: hidden !important;
   margin: 0rem !important;
   padding: 0rem !important;
 }
