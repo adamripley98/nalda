@@ -58,13 +58,19 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Passport configuration work, makes sessions persistant
 const expressSession = require('express-session');
 const MongoStore = require('connect-mongo')(expressSession);
-app.use(expressSession({
-  secret: 'mySecretKey',
-  store: new MongoStore({
-    mongooseConnection: mongoose.connection
+app.use(
+  expressSession({
+    secret: 'mySecretKey',
+    store: new MongoStore({
+      mongooseConnection: mongoose.connection
+    })
   })
-})
 );
+
+// Favicon config
+const favicon = require('serve-favicon');
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+
 // app.use(expressSession({secret: 'mySecretKey'}));
 app.use(passport.initialize());
 app.use(passport.session());

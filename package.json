@@ -60,6 +60,7 @@
     "redux-logger": "^3.0.6",
     "redux-persist": "^5.4.0",
     "sass-loader": "^6.0.3",
+    "serve-favicon": "^2.4.5",
     "style-loader": "^0.16.1",
     "uuid-v4": "^0.1.0",
     "webpack": "^2.3.3"
