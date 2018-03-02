@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 
 // Import actions
 import { login } from '../../actions/index.js';
+import { notifyMessage } from '../../actions/notification';
 
 // Import components
 import ErrorMessage from '../shared/ErrorMessage';
@@ -49,9 +50,6 @@ class LoginModalForm extends Component {
     // Prevent the default form action
     event.preventDefault();
 
-    // Find the needed variables
-    const onLogin = this.props.onLogin;
-
     // Fontend variable validations
     if (!this.state.username) {
       this.setState({
@@ -82,8 +80,11 @@ class LoginModalForm extends Component {
             // Collapse the modal
             $('#loginModal').modal('toggle');
 
+            // Dispatch the notification
+            this.props.notifyMessage("Successfully logged in.");
+
             // Dispatch login event for redux state
-            onLogin(
+            this.props.onLogin(
               resp.data.user._id,
               resp.data.user.userType,
               resp.data.user.name,
@@ -230,6 +231,7 @@ class LoginModalForm extends Component {
 
 LoginModalForm.propTypes = {
   userId: PropTypes.string,
+  notifyMessage: PropTypes.func,
   onLogin: PropTypes.func,
 };
 
@@ -243,7 +245,8 @@ const mapStateToProps = state => {
 // Allows us to dispatch a login event by calling this.props.onLogin
 const mapDispatchToProps = dispatch => {
   return {
-    onLogin: (userId, userType, name, location, profilePicture) => dispatch(login(userId, userType, name, location, profilePicture))
+    onLogin: (userId, userType, name, location, profilePicture) => dispatch(login(userId, userType, name, location, profilePicture)),
+    notifyMessage: (message) => dispatch(notifyMessage(message)),
   };
 };
 

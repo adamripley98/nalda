@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 
 // Import actions
 import { register } from '../../actions/index.js';
+import { notifyMessage } from '../../actions/notification';
 
 // Import components
 import ErrorMessage from '../shared/ErrorMessage';
@@ -141,6 +142,9 @@ class RegisterModalForm extends Component {
               } else {
                 // Collapse the modal
                 $('#loginModal').modal('toggle');
+
+                // Denote success to the user
+                this.props.notifyMessage("Successfully created account.");
 
                 // Dispatch a register event
                 onRegister(
@@ -336,6 +340,7 @@ class RegisterModalForm extends Component {
 RegisterModalForm.propTypes = {
   userId: PropTypes.string,
   onRegister: PropTypes.func,
+  notifyMessage: PropTypes.func,
 };
 
 // Allows us to access redux state as this.props.userId inside component
@@ -348,7 +353,8 @@ const mapStateToProps = state => {
 // Allows us to dispatch a login event by calling this.props.onLogin
 const mapDispatchToProps = dispatch => {
   return {
-    onRegister: (userId, userType, name, location, profilePicture) => dispatch(register(userId, userType, name, location, profilePicture))
+    onRegister: (userId, userType, name, location, profilePicture) => dispatch(register(userId, userType, name, location, profilePicture)),
+    notifyMessage: (message) => dispatch(notifyMessage(message)),
   };
 };
 

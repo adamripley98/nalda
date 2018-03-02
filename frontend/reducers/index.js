@@ -4,6 +4,7 @@ import storage from 'redux-persist/es/storage';
 
 // Import reducers from other files
 import authReducer from './authReducer';
+import notificationReducer from './notificationReducer';
 
 // Config necessary for state persistance
 const config = {
@@ -14,6 +15,7 @@ const config = {
 // Root reducer combines all separate reducers and calls appropriate one
 const rootReducer = persistCombineReducers(config, {
   authState: authReducer,
+  notificationState: notificationReducer,
 });
 
 export default rootReducer;

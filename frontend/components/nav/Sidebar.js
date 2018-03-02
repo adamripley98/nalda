@@ -9,7 +9,8 @@ import PropTypes from 'prop-types';
 import ErrorMessage from '../shared/ErrorMessage';
 
 // Import actions
-import { logout } from '../../actions/index.js';
+import { logout } from '../../actions/index';
+import { notifyMessage } from '../../actions/notification';
 
 /**
  * Render the sidebar component of the navbar
@@ -48,7 +49,6 @@ class Sidebar extends Component {
     // Prevent the default action
     event.preventDefault();
 
-    const onLogout = this.props.onLogout;
     axios.post('/api/logout')
       // If successful, will dispatch logout event which will clear user from redux state
       .then((resp) => {
@@ -56,7 +56,9 @@ class Sidebar extends Component {
           // Close side menu
           this.toggleMenu();
           // Dispatch the action
-          onLogout();
+          this.props.onLogout();
+          this.props.notifyMessage("Successfully logged out.");
+
           // Set the state to redirect to login
           this.setState({
             redirectToLogin: true,
@@ -213,6 +215,7 @@ Sidebar.propTypes = {
   userType: PropTypes.string,
   onLogout: PropTypes.func,
   modalCallback: PropTypes.func,
+  notifyMessage: PropTypes.func,
 };
 
 // Allows us to access redux state as this.props.userId inside component
@@ -227,6 +230,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     onLogout: () => dispatch(logout()),
+    notifyMessage: (message) => dispatch(notifyMessage(message)),
   };
 };
 

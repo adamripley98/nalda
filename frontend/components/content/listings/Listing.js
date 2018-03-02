@@ -16,8 +16,8 @@ import Stars from './Stars';
 import Carousel from './Carousel';
 import ErrorMessage from '../../shared/ErrorMessage';
 import Author from '../../shared/Author';
-import Head from '../../shared/Head';
 import Blurb from '../../shared/Blurb';
+import Tags from '../../shared/Tags';
 
 /**
  * Component to render a listing
@@ -578,7 +578,7 @@ class Listing extends React.Component {
         ) : (
           <div className="listing">
             {/* Render the head */}
-            <Head title={ this.state.title } />
+            <Tags title={this.state.title} description={this.state.naldaFavorite}/>
 
             <div className="parallax-wrapper">
               <img src={ this.state.image } alt={ this.state.title } className="img-fluid" id="parallax" />

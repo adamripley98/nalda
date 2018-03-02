@@ -6,7 +6,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 // Import actions
-import {login} from '../../actions/index.js';
+import {login} from '../../actions/index';
+import {notifyMessage} from '../../actions/notification';
 
 // Import components
 import Thin from '../shared/Thin';
@@ -55,8 +56,7 @@ class Login extends Component {
 
     // Prevent the default form action
     event.preventDefault();
-    // Find the needed variables
-    const onLogin = this.props.onLogin;
+
     // Frontend validations
     if (!this.state.username) {
       this.setState({
@@ -84,8 +84,11 @@ class Login extends Component {
               pending: false,
             });
           } else {
+            // Notify success
+            this.props.notifyMessage("Successfully logged in.");
+
             // Dispatch login event for redux state
-            onLogin(
+            this.props.onLogin(
               resp.data.user._id,
               resp.data.user.userType,
               resp.data.user.name,
@@ -240,6 +243,7 @@ class Login extends Component {
 Login.propTypes = {
   userId: PropTypes.string,
   onLogin: PropTypes.func,
+  notifyMessage: PropTypes.func,
 };
 
 // Allows us to access redux state as this.props.userId inside component
@@ -252,7 +256,8 @@ const mapStateToProps = state => {
 // Allows us to dispatch a login event by calling this.props.onLogin
 const mapDispatchToProps = dispatch => {
   return {
-    onLogin: (userId, userType, name, location, profilePicture) => dispatch(login(userId, userType, name, location, profilePicture))
+    onLogin: (userId, userType, name, location, profilePicture) => dispatch(login(userId, userType, name, location, profilePicture)),
+    notifyMessage: (message) => dispatch(notifyMessage(message)),
   };
 };
 

@@ -154,7 +154,7 @@ class Home extends React.Component {
   render() {
     return (
       <div className="container home">
-        <Tags title="Nalda" />
+        <Tags />
         <div className="space-1"/>
         <ErrorMessage error={ this.state.error } />
 

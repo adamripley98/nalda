@@ -1,6 +1,8 @@
 // Import frameworks
 import React from 'react';
-import Tags from './shated/Tags';
+
+// Import components
+import Tags from './shared/Tags';
 
 /**
  * Component to render Nalda's privacy policy
