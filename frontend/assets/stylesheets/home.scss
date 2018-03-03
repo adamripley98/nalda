@@ -9,24 +9,33 @@
   padding-bottom: 1rem;
 
   .shift {
-    margin-top: calc(30vh - 1.2rem);
-    color: $gray;
+    height: 60vh;
+    padding: calc(30vh - 1.4rem) 1rem;
+    color: white;
+    opacity: 0.6;
     position: absolute;
     z-index: 2;
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     cursor: hand;
     cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      opacity: 1;
+    }
 
     &.right {
-      right: 1rem;
+      right: 0rem;
     }
 
     &.left {
-      left: 1rem;
+      left: 0rem;
     }
   }
 
-  .banner-item {
+  .banner-item,
+  a.banner-item {
+    display: block;
     width: 80vw;
     height: 60vh;
     background: $light-gray;
@@ -37,6 +46,8 @@
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
+    text-align: center;
+    color: white;
 
     &.toRight {
       margin-left: -72.5vw;
@@ -58,5 +69,75 @@
       display: block;
       margin-left: 10vw;
     }
+  }
+}
+
+@media screen and (min-width: 1024px) and (min-device-width: 1024px) {
+  .banner {
+    .banner-item,
+    a.banner-item {
+      width: 60vw;
+
+      &.toLeft {
+        margin-left: 82.5vw;
+      }
+
+      &.toRight {
+        margin-left: -42.5vw;
+      }
+
+      &.offLeft {
+        margin-left: 145;
+      }
+
+      &.offRight {
+        margin-left: -105vw;
+      }
+
+      &.active {
+        margin-left: 20vw;
+      }
+    }
+  }
+}
+
+.inline-header-link {
+  width: 100%;
+
+  h4 {
+    display: inline-block;
+  }
+
+  a {
+    float: right;
+    display: inline-block;
+    color: $gray;
+    transition: all 0.2s ease;
+
+    &:hover {
+      color: $dark-gray;
+    }
+  }
+}
+
+.home-categories {
+  padding-left: 0;
+  margin-left: 0;
+  width: 100%;
+  list-style: none;
+  color: $gray;
+}
+
+@media screen and (min-width: 748px) and (min-device-width: 748px) {
+  .home-categories .category {
+    display: inline-block;
+    width: 50%;
+  }
+}
+
+@media screen and (min-width: 1024px) and (min-device-width: 1024px) {
+  .home-categories .category {
+    display: inline-block;
+    width: 33%;
   }
 }

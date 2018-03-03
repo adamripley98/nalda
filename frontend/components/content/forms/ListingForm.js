@@ -112,6 +112,8 @@ class ListingForm extends React.Component {
         waiter: false,
         wink: false,
       },
+      additionalAmenities: [],
+      additionalAmenitiesString: "",
       pending: false,
     };
 
@@ -129,6 +131,8 @@ class ListingForm extends React.Component {
     this.handleClickAmenity = this.handleClickAmenity.bind(this);
     this.displayImages = this.displayImages.bind(this);
     this.removeImage = this.removeImage.bind(this);
+    this.handleChangeAdditionalAmenities = this.handleChangeAdditionalAmenities.bind(this);
+    this.renderAdditionalAmenities = this.renderAdditionalAmenities.bind(this);
   }
 
   /**
@@ -224,6 +228,35 @@ class ListingForm extends React.Component {
     }
     this.setState({
       hours: currentHours,
+    });
+  }
+
+  /**
+   * Handle change additional amenities
+   */
+  handleChangeAdditionalAmenities(event) {
+    // Prevent the default action
+    event.preventDefault();
+
+    // Create the tag array, removing whitespace and uppercase letters
+    const additionalAmenitiesString = event.target.value;
+    let additionalAmenities = additionalAmenitiesString.split(",").map(tag => tag.trim().toLowerCase());
+
+    // Remove all duplicate items
+    additionalAmenities = additionalAmenities.filter((value, index, self) => {
+      // If the value is empty
+      if (!value || value === "") {
+        return false;
+      }
+
+      // Else, ensure the value does not occur earlier in the array
+      return self.indexOf(value) === index;
+    });
+
+    // Update the state
+    this.setState({
+      additionalAmenitiesString,
+      additionalAmenities,
     });
   }
 
@@ -524,6 +557,21 @@ class ListingForm extends React.Component {
       error: "",
     });
     return true;
+  }
+
+  /**
+   * Render additional amenities
+   */
+  renderAdditionalAmenities() {
+    if (!this.state.additionalAmenities || !this.state.additionalAmenities.length) return null;
+    const amenities =  this.state.additionalAmenities.map(amenity => (
+      <span className="category">{amenity}</span>
+    ));
+    return (
+      <div className="categories">
+        {amenities}
+      </div>
+    );
   }
 
   /**
@@ -995,7 +1043,7 @@ class ListingForm extends React.Component {
                       Wink
                     </p>
                   </div>
-                  <div className="col-12 col-md-6">
+                  <div className="col-12 col-md-6 marg-bot-1">
                     <p
                       onClick={ (e) => this.handleClickAmenity(e, "parking") }
                       className={ this.state.amenities.parking && "active" }
@@ -1024,6 +1072,15 @@ class ListingForm extends React.Component {
                       <Waiter />
                       Waiter
                     </p>
+                  </div>
+                  <div className="col-12">
+                    <input
+                      className="form-control border marg-bot-1"
+                      placeholder="Add comma separated additional amenities..."
+                      value={this.state.additionalAmenitiesString}
+                      onChange={this.handleChangeAdditionalAmenities}
+                    />
+                    { this.renderAdditionalAmenities() }
                   </div>
                 </div>
               </div>
