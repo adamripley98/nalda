@@ -299,9 +299,21 @@ VideoForm.propTypes = {
   notifyMessage: PropTypes.func,
 };
 
-// Redux
-const mapDispatchToProps = dispatch => ({
-  notifyMessage: message => dispatch(notifyMessage(message)),
-});
+const mapStateToProps = state => {
+  return {
+    userId: state.authState.userId,
+  };
+};
 
-export default connect(mapDispatchToProps)(VideoForm);
+// Redux
+const mapDispatchToProps = dispatch => {
+  return {
+    notifyMessage: (message) => dispatch(notifyMessage(message)),
+  };
+};
+
+VideoForm = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(VideoForm);
+export default VideoForm;

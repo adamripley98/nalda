@@ -1073,9 +1073,21 @@ EditListingForm.propTypes = {
   notifyMessage: PropTypes.func,
 };
 
-// Redux
-const mapDispatchToProps = dispatch => ({
-  notifyMessage: message => dispatch(notifyMessage(message)),
-});
+const mapStateToProps = state => {
+  return {
+    userId: state.authState.userId,
+  };
+};
 
-export default connect(mapDispatchToProps)(EditListingForm);
+// Redux
+const mapDispatchToProps = dispatch => {
+  return {
+    notifyMessage: (message) => dispatch(notifyMessage(message)),
+  };
+};
+
+EditListingForm = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(EditListingForm);
+export default EditListingForm;

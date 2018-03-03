@@ -137,6 +137,7 @@ module.exports = () => {
             banner: homepage.banner,
             fromTheEditors: homepage.fromTheEditors,
             naldaVideos: homepage.naldaVideos,
+            recommended: homepage.recommended,
           }
         });
       }

@@ -1061,11 +1061,21 @@ ListingForm.propTypes = {
   notifyMessage: PropTypes.func,
 };
 
-// Redux
-const mapDispatchToProps = dispatch => ({
-  notifyMessage: message => dispatch(notifyMessage(message)),
-});
+const mapStateToProps = state => {
+  return {
+    userId: state.authState.userId,
+  };
+};
 
-export default connect(
+// Redux
+const mapDispatchToProps = dispatch => {
+  return {
+    notifyMessage: (message) => dispatch(notifyMessage(message)),
+  };
+};
+
+ListingForm = connect(
+  mapStateToProps,
   mapDispatchToProps,
 )(ListingForm);
+export default ListingForm;
