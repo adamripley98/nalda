@@ -57,7 +57,7 @@ const listingSchema = new Schema({
     waiter: Boolean,
     wink: Boolean,
   },
-  customAmenities: [],
+  additionalAmenities: [],
   reviews: [
     {
       rating: Number,

@@ -66,6 +66,10 @@
     .amenity {
       margin-bottom: 0.5rem;
 
+      &.no-icon {
+        margin-left: 22px;
+      }
+
       svg {
         opacity: 0.9;
         transform: translateY(2px);
