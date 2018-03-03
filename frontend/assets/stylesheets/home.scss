@@ -72,6 +72,35 @@
   }
 }
 
+@media screen and (min-width: 1024px) and (min-device-width: 1024px) {
+  .banner {
+    .banner-item,
+    a.banner-item {
+      width: 60vw;
+
+      &.toLeft {
+        margin-left: 82.5vw;
+      }
+
+      &.toRight {
+        margin-left: -42.5vw;
+      }
+
+      &.offLeft {
+        margin-left: 145;
+      }
+
+      &.offRight {
+        margin-left: -105vw;
+      }
+
+      &.active {
+        margin-left: 20vw;
+      }
+    }
+  }
+}
+
 .inline-header-link {
   width: 100%;
 

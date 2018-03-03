@@ -7,24 +7,37 @@ import moment from 'moment';
  * Renders an error message to the user
  */
 class Preview extends Component {
-  render() {
-    // Find the type of the content
-    let type = "";
-    if (this.props.isArticle) {
-      type = "articles";
-    } else if (this.props.isListing) {
-      type = "listings";
-    } else if (this.props.isVideo) {
-      type = "videos";
-    }
+  constructor(props) {
+    super(props);
 
+    // Bind this to helper methods
+    this.getType = this.getType.bind(this);
+    this.getSubtitle = this.getSubtitle.bind(this);
+  }
+
+  getSubtitle() {
     // Update the subtitle to a shortened version if need be
-    const formattedSubtitle = this.props.subtitle.length > 100 ? this.props.subtitle.substring(0, 100) + "..." : this.props.subtitle;
+    if (this.props.subtitle.length > 100) return this.props.subtitle.substring(0, 100) + "...";
+    return this.props.subtitle;
+  }
 
+  getType() {
+    // Find the type of the content
+    if (this.props.isArticle) {
+      return "articles";
+    } else if (this.props.isListing) {
+      return "listings";
+    } else if (this.props.isVideo) {
+      return "videos";
+    }
+    return "";
+  }
+
+  render() {
     // Return the content preview
     return (
       <div className={this.props.isThin ? "col-12 col-md-6" : "col-6 col-xl-3"} key={this.props._id}>
-        <Link to={ `/${type}/${this.props._id}` }>
+        <Link to={ `/${this.getType()}/${this.props._id}` }>
           <div className="content-preview">
             <div
               className="background-image"
@@ -40,12 +53,15 @@ class Preview extends Component {
                 </div>
               )}
             </div>
+
             <h2 className="title">
               { this.props.title }
             </h2>
+
             <h6 className="subtitle">
-              { formattedSubtitle }
+              { this.getSubtitle() }
             </h6>
+
             {
               this.props.timestamp && (
                 <p className="gray-text marg-bot-0 marg-top-05 right italic">
