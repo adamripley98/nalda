@@ -462,6 +462,7 @@ class ListingForm extends React.Component {
             website: this.state.website,
             categories: this.state.categories,
             amenities: this.state.amenities,
+            additionalAmenities: this.state.additionalAmenities,
           })
             .then((resp) => {
               // Display any errors
@@ -565,7 +566,7 @@ class ListingForm extends React.Component {
   renderAdditionalAmenities() {
     if (!this.state.additionalAmenities || !this.state.additionalAmenities.length) return null;
     const amenities =  this.state.additionalAmenities.map(amenity => (
-      <span className="category">{amenity}</span>
+      <span className="category" key={amenity}>{amenity}</span>
     ));
     return (
       <div className="categories">

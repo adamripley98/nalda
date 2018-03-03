@@ -49,6 +49,7 @@ class Listing extends React.Component {
       price: "",
       categories: {},
       amenities: {},
+      additionalAmenities: [],
       location: {
         name: "",
         lat: null,
@@ -72,6 +73,7 @@ class Listing extends React.Component {
 
     // Bind this to helper methods
     this.renderAmenities = this.renderAmenities.bind(this);
+    this.renderAdditionalAmenities = this.renderAdditionalAmenities.bind(this);
     this.renderReviewsSection = this.renderReviewsSection.bind(this);
     this.renderReviews = this.renderReviews.bind(this);
     this.handleClickInfoTrigger = this.handleClickInfoTrigger.bind(this);
@@ -346,6 +348,55 @@ class Listing extends React.Component {
     });
   }
 
+  /**
+   * Helper method to render additional amenities
+   */
+  renderAdditionalAmenities() {
+    // If amenities are in the state (this should always be the case)
+    if (this.state.additionalAmenities && this.state.additionalAmenities.length) {
+      // Return an amenity div tag for each amenity which is true in the state
+      // That is, if the curator marked that the listing has said amenity
+      return this.state.additionalAmenities.map(amenity => (
+        <div className="amenity no-icon" key={ amenity }>
+          { amenity }
+        </div>
+      ));
+    }
+
+    // If there are no amentities
+    return (
+      <Blurb message="No amenities have been marked for this listing." />
+    );
+  }
+
+  // Helper method to handle a user clicking on the info trigger
+  handleClickInfoTrigger() {
+    this.setState({
+      infoTrigger: !this.state.infoTrigger,
+    });
+  }
+
+  // Helper method to delete reviews
+  deleteReview(reviewId) {
+    axios.post('/api/reviews/delete', {
+      reviewId,
+      listingId: this.state.listingId,
+    })
+    .then((resp) => {
+      if (resp.data.success) {
+        this.updateReviews();
+      } else {
+        this.setState({
+          error: resp.data.error,
+        });
+      }
+    })
+    .catch((err) => {
+      this.setState({
+        error: err,
+      });
+    });
+  }
 
   // Helper method to render the entire reviews section
   renderReviewsSection() {
@@ -668,6 +719,7 @@ class Listing extends React.Component {
                     Amenities
                   </h5>
                   { this.renderAmenities() }
+                  { this.renderAdditionalAmenities() }
 
                   {
                     (

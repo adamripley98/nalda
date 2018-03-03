@@ -226,6 +226,7 @@ module.exports = () => {
         const rating = req.body.rating;
         const description = req.body.description;
         const amenities = req.body.amenities;
+        const additionalAmenities = req.body.additionalAmenities;
         const naldaFavorite = req.body.naldaFavorite;
         const categories = req.body.categories;
         const price = req.body.price;
@@ -360,6 +361,7 @@ module.exports = () => {
                               listing.location = location;
                               listing.categories = categories;
                               listing.amenities = amenities;
+                              listing.additionalAmenities = additionalAmenities;
                               listing.hours = hours;
                               listing.website = website;
                               listing.updatedAt = new Date().getTime();
@@ -461,6 +463,7 @@ module.exports = () => {
                         listing.location = location;
                         listing.categories = categories;
                         listing.amenities = amenities;
+                        listing.additionalAmenities = additionalAmenities;
                         listing.hours = hours;
                         listing.website = website;
                         listing.updatedAt = new Date().getTime();
@@ -560,6 +563,7 @@ module.exports = () => {
         const website = req.body.website;
         const categories = req.body.categories;
         const amenities = req.body.amenities;
+        const additionalAmenities = req.body.additionalAmenities;
         const location = req.body.location;
         const userId  = req.session.passport.user;
 
@@ -663,6 +667,7 @@ module.exports = () => {
                       website,
                       categories,
                       amenities,
+                      additionalAmenities,
                       location,
                       author: userId,
                       createdAt: Date.now(),

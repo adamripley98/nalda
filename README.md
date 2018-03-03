@@ -43,6 +43,12 @@ DELETE '/api/videos/:id'       // Delete a specific article
 ```
 # Feature tracking
 
+## TODO ASAP
+- [ ] Finish homepage
+- [ ] Finish filter by category
+- [ ] Finish adding additional amenities backend
+- [ ] Additional amenities edit listing form
+
 ## Cam
 - [ ] Make homepage view
   - [ ] Banner on top (probably carousal), (banner is stored as array in this.state.banner)
