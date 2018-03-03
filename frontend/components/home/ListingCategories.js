@@ -13,7 +13,7 @@ class ListingCategories extends Component {
     return (
       <div className="container">
         <div className="inline-header-link">
-          <h4 className="marg-bot-1">
+          <h4 className="marg-bot-1 dark-gray-text">
             Categories
           </h4>
           <ul className="home-categories">

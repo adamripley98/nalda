@@ -2,6 +2,9 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
+// Import components
+import Preview from '../content/Preview';
+
 /**
  * Render the recommended content on the homepage
  */
@@ -11,7 +14,14 @@ class FromTheEditors extends Component {
     return (
       <div className="container">
         <div className="inline-header-link">
-          <h4>From the Editors</h4>
+          <h4 className="marg-bot-1 dark-gray-text">From the Editors</h4>
+        </div>
+        <div className="row">
+          {
+            this.props.content.map(c => (
+              <Preview content={c} key={`content-${c.contentId}`} />
+            ))
+          }
         </div>
         <div className="line" />
       </div>
