@@ -33,6 +33,10 @@
 .table {
   border: 1px solid $border;
 
+  thead {
+    background: $lighter-gray;
+  }
+
   .fa-close {
     cursor: hand;
     cursor: pointer;

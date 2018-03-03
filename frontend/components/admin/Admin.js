@@ -2,15 +2,19 @@
 import React, { Component } from 'react';
 import autosize from 'autosize';
 import axios from 'axios';
-import uuid from 'uuid-v4';
 import { Link } from 'react-router-dom';
 import Dropzone from 'react-dropzone';
+import PropTypes from 'prop-types';
+import {connect} from 'react-redux';
 
 // Import components
 import ErrorMessage from '../shared/ErrorMessage';
 import Loading from '../shared/Loading';
 import Blurb from '../shared/Blurb';
 import Sidebar from './Sidebar';
+
+// Import actions
+import {notifyMessage} from '../../actions/notification';
 
 /**
  * Component for Admin only, allows them to add and remove other admins and content curators
@@ -27,6 +31,8 @@ class Admin extends Component {
       success: "",
       bannerContentId: '',
       bannerImageToAdd: '',
+      bannerImagePreview: '',
+      bannerImageName: '',
       recommendedContentId: '',
       fromTheEditorsContentId: '',
       naldaVideosContentId: '',
@@ -179,14 +185,22 @@ class Admin extends Component {
             error: resp.data.error,
             bannerContentId: '',
             bannerImageToAdd: '',
+            bannerImageName: '',
+            bannerImagePreview: '',
           });
         } else {
+          // Notify success
+          this.props.notifyMessage("Successfully added banner image.");
+
+          // Set the state
           this.setState({
             error: '',
             success: 'Banner content updated.',
             banner: resp.data.data,
             bannerContentId: '',
             bannerImageToAdd: '',
+            bannerImageName: '',
+            bannerImagePreview: '',
           });
         }
       })
@@ -509,13 +523,13 @@ class Admin extends Component {
   displayCurators() {
     if (this.state.curators && this.state.curators.length) {
       const curators = this.state.curators.map((curator, i) => (
-        <tr key={ curator._id }>
+        <tr key={ curator.userId }>
           <th scope="row">
             {i + 1}
           </th>
           <td>
-            <Link key={ uuid() } to={`/users/${curator.userId}`}>
-              { curator.name }
+            <Link to={`/users/${curator.userId}`}>
+              {curator.name}
             </Link>
           </td>
           <td>
@@ -553,13 +567,13 @@ class Admin extends Component {
   displayAdmins() {
     if (this.state.admins && this.state.admins.length) {
       const admins = this.state.admins.map((admin, i) => (
-        <tr key={ admin._id }>
+        <tr key={admin.userId}>
           <th scope="row">
             {i + 1}
           </th>
           <td>
             <Link to={`/users/${admin.userId}`}>
-              { admin.name }
+              {admin.name}
             </Link>
           </td>
           <td>
@@ -597,7 +611,7 @@ class Admin extends Component {
   displayUsers() {
     if (this.state.users && this.state.users.length) {
       const users = this.state.users.map((user, i) => (
-        <tr key={ user._id }>
+        <tr key={ user.userId }>
           <th scope="row">
             {i + 1}
           </th>
@@ -745,19 +759,17 @@ class Admin extends Component {
   displayVideos() {
     if (this.state.videos && this.state.videos.length) {
       const videos = this.state.videos.map((video, i) => (
-        <tr key={ video._id }>
+        <tr key={video._id}>
           <th scope="row">
             {i + 1}
           </th>
           <td>
             <Link to={`/videos/${video._id}`}>
-              { video.title }
+              {video.title}
             </Link>
           </td>
           <td>
-            {
-              video._id
-            }
+            {video._id}
           </td>
         </tr>
       ));
@@ -788,7 +800,6 @@ class Admin extends Component {
   }
 
   // Helper method for image uploads
-  // TODO some sort of frontend display that image has been uploaded
   onDrop(acceptedFiles, rejectedFiles) {
     // Ensure at leat one valid image was uploaded
     if (acceptedFiles.length) {
@@ -798,6 +809,8 @@ class Admin extends Component {
         // Set images to state
         this.setState({
           bannerImageToAdd: upload.target.result,
+          bannerImagePreview: image.preview,
+          bannerImageName: image.name,
           error: '',
         });
       };
@@ -816,19 +829,22 @@ class Admin extends Component {
 
   // Helper method to display banner options
   displayBanner() {
-    const banner = this.state.banner.map((image, i) => {
-      return (
-        <li key={image.contentId}>
-          <img
-            src={image.contentImage}
-            alt={"banner image " + i}
-          />
-          <div onClick={() => this.onSubmitRemoveBannerContent(image.contentId)}>
-            <i className="fa fa-close" aria-hidden="true" />
-          </div>
-        </li>
-      );
-    });
+    let banner = null;
+    if (this.state.banner && this.state.banner.length) {
+      banner = this.state.banner.map((image, i) => {
+        return (
+          <li key={image.contentId}>
+            <img
+              src={image.contentImage}
+              alt={"banner image " + i}
+            />
+            <div onClick={() => this.onSubmitRemoveBannerContent(image.contentId)}>
+              <i className="fa fa-close" aria-hidden="true" />
+            </div>
+          </li>
+        );
+      });
+    }
 
     // TODO SHOW THAT IMAGE WAS ADDED
     return (
@@ -842,6 +858,11 @@ class Admin extends Component {
           onChange={ this.handleChangeBannerContentId}
           rows="1"
         />
+        {
+          this.state.bannerImagePreview ? (
+            <img src={this.state.bannerImagePreview} alt="Banner preview" className="img-fluid img" style={{width: "10rem"}} />
+          ) : null
+        }
         <Dropzone
           onDrop={(acceptedFiles, rejectedFiles) => this.onDrop(acceptedFiles, rejectedFiles)}
           accept="image/*"
@@ -849,7 +870,13 @@ class Admin extends Component {
           >
           <p className="dropzone">
             <i className="fa fa-file-o" aria-hidden="true" />
-            Try dropping an image here, or click to select image to upload.
+            {
+              this.state.bannerImageName ? (
+                this.state.bannerImageName
+              ) : (
+                "Try dropping an image here, or click to select image to upload."
+              )
+            }
           </p>
         </Dropzone>
         <button
@@ -866,11 +893,11 @@ class Admin extends Component {
         </button>
 
         {
-          (banner && banner.length) && (
+          (banner && banner.length) ? (
             <ul className="carousel-preview">
               {banner}
             </ul>
-          )
+          ) : null
         }
 
         <div className="line" />
@@ -1180,4 +1207,14 @@ class Admin extends Component {
   }
 }
 
-export default Admin;
+// Prop validations
+Admin.propTypes = {
+  notifyMessage: PropTypes.func,
+};
+
+// Redux
+const mapDispatchToProps = dispatch => ({
+  notifyMessage: message => dispatch(notifyMessage(message)),
+});
+
+export default connect(mapDispatchToProps)(Admin);
