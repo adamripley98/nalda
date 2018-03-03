@@ -1,12 +1,12 @@
 // Import frameworks
-import React, {Component} from 'React';
+import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 /**
  * Render the recommended content on the homepage
  */
-class Recommended extends Component {
+class NaldaVideo extends Component {
   render() {
     if (!this.props.content || !this.props.content.length) return null;
     return (
@@ -22,8 +22,8 @@ class Recommended extends Component {
 }
 
 // Prop validations
-Recommended.propTypes = {
+NaldaVideo.propTypes = {
   content: PropTypes.array,
 };
 
-export default Recommended;
+export default NaldaVideo;

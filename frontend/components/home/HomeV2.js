@@ -6,8 +6,9 @@ import axios from 'axios';
 import Loading from '../shared/Loading';
 import ErrorMessage from '../shared/ErrorMessage';
 import Banner from './Banner';
-import Recommended from './Recommended';
 import NaldaVideo from './NaldaVideo';
+import ListingCategories from './ListingCategories';
+import RecommendedContent from './RecommendedContent';
 import Tags from '../shared/Tags';
 
 /**
@@ -83,7 +84,8 @@ class HomeV2 extends React.Component {
         <div className="container">
           <div className="space-3"/>
           <ErrorMessage error={this.state.error} />
-          <Recommended content={this.state.fromTheEditors}/>
+          <RecommendedContent content={this.state.fromTheEditors}/>
+          <ListingCategories />
           <NaldaVideo content={this.state.naldaVideos} />
         </div>
       </div>
