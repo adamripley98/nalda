@@ -54,6 +54,7 @@ class Banner extends Component {
     return (
       <div className="banner">
         { this.props.banners.map((banner, index) => {
+          console.log(banner);
           let bannerClass = "";
           if (this.state.active === index) bannerClass = "active";
           else if (this.state.toLeft === index) bannerClass = "toLeft";

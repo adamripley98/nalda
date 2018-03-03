@@ -81,8 +81,8 @@ class HomeV2 extends React.Component {
         <div className="container">
           <div className="space-1"/>
           <ErrorMessage error={ this.state.error } />
-          this is the new home
-          <div className="space-2" />
+          <div className="space-1" />
+          <h4>Recommended for you</h4>
         </div>
       </div>
     );
