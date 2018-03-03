@@ -9,20 +9,27 @@
   padding-bottom: 1rem;
 
   .shift {
-    margin-top: calc(30vh - 1.2rem);
-    color: $gray;
+    height: 60vh;
+    padding: calc(30vh - 1.4rem) 1rem;
+    color: white;
+    opacity: 0.6;
     position: absolute;
     z-index: 2;
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     cursor: hand;
     cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      opacity: 1;
+    }
 
     &.right {
-      right: 1rem;
+      right: 0rem;
     }
 
     &.left {
-      left: 1rem;
+      left: 0rem;
     }
   }
 
@@ -81,5 +88,27 @@
     &:hover {
       color: $dark-gray;
     }
+  }
+}
+
+.home-categories {
+  padding-left: 0;
+  margin-left: 0;
+  width: 100%;
+  list-style: none;
+  color: $gray;
+}
+
+@media screen and (min-width: 748px) and (min-device-width: 748px) {
+  .home-categories .category {
+    display: inline-block;
+    width: 50%;
+  }
+}
+
+@media screen and (min-width: 1024px) and (min-device-width: 1024px) {
+  .home-categories .category {
+    display: inline-block;
+    width: 33%;
   }
 }

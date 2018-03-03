@@ -10,6 +10,7 @@ import NaldaVideo from './NaldaVideo';
 import ListingCategories from './ListingCategories';
 import RecommendedContent from './RecommendedContent';
 import Tags from '../shared/Tags';
+import FromTheEditors from './FromTheEditors';
 
 /**
  * Component for the homepage of the application
@@ -84,8 +85,9 @@ class HomeV2 extends React.Component {
         <div className="container">
           <div className="space-3"/>
           <ErrorMessage error={this.state.error} />
-          <RecommendedContent content={this.state.fromTheEditors}/>
+          <RecommendedContent content={this.state.recommended}/>
           <ListingCategories />
+          <FromTheEditors content={this.state.fromTheEditors}/>
           <NaldaVideo content={this.state.naldaVideos} />
         </div>
       </div>

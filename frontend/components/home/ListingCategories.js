@@ -10,11 +10,12 @@ import categoryMap from '../json/categoryMap';
  */
 class ListingCategories extends Component {
   render() {
-    console.log(categoryMap);
     return (
       <div className="container">
         <div className="inline-header-link">
-          <h4>Categories</h4>
+          <h4 className="marg-bot-1">
+            Categories
+          </h4>
           <ul className="home-categories">
             {
               Object.keys(categoryMap).map(key => (

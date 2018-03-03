@@ -15,7 +15,6 @@ class NaldaVideo extends Component {
           <h4>Nalda's Videos</h4>
           <Link to="/videos">View all</Link>
         </div>
-        <div className="line" />
       </div>
     );
   }
