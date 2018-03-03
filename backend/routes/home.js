@@ -10,6 +10,8 @@ const router = express.Router();
 const AWS = require('aws-sdk');
 const uuid = require('uuid-v4');
 const async = require('async');
+const _ = require('lodash');
+
 
 // Import database models
 const Article = require('../models/article');
@@ -162,6 +164,7 @@ module.exports = () => {
               contentId: item.contentId,
               title: content.title,
               description: content.description,
+              location: content.location,
               image: content.image,
               rating: content.rating,
               price: content.price,
@@ -846,6 +849,41 @@ module.exports = () => {
                   data: homepage.banner,
                 });
               }
+            });
+          }
+        });
+      }
+    });
+  });
+
+  // Route to filter by categories
+  router.post('/categories', (req, res) => {
+    const categories = req.body.categories;
+    Listing.find({}, (errListing, listings) => {
+      if (errListing) {
+        res.send({
+          success: false,
+          error: 'Error finding listings.',
+        });
+      } else {
+        const filteredListings = [];
+        // Loop through all listings to check if filters match
+        async.eachSeries(listings, (listing, cb) => {
+          if (_.difference(listing.categories, categories).length === 0) {
+            console.log('listing matches');
+            console.log(listing);
+            filteredListings.push(listing);
+            cb();
+          } else {
+            console.log('listing doesnt match filters');
+            console.log(listing);
+            cb();
+          }
+        }, (asyncErr) => {
+          if (asyncErr) {
+            res.send({
+              success: false,
+              error: 'Async error.',
             });
           }
         });
