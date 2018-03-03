@@ -1,3 +1,37 @@
 /**
  * Styling for the homepage
  */
+.banner {
+  padding-top: 1rem;
+  height: 60vh;
+  width: 100%;
+  text-align: center;
+
+  .banner-item {
+    width: 80vw;
+    height: 60vh;
+    background: $light-gray;
+    border-radius: 0.4rem;
+    position: absolute;
+    transition: 0.2s;
+
+    &.toRight,
+    &.toLeft {
+      top: calc(57.2px + 1rem);
+    }
+
+    &.toRight {
+      margin-left: -72.5vw;
+    }
+
+    &.toLeft {
+      margin-left: 92.5vw;
+    }
+
+    &.active {
+      display: block;
+      margin-left: 10vw;
+      background: $gold;
+    }
+  }
+}
