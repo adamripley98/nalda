@@ -1,6 +1,7 @@
 // Import frameworks
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
+import {Link} from 'react-router-dom';
 
 /**
  * Component to render the banner images at the top of the homepage
@@ -54,15 +55,24 @@ class Banner extends Component {
     return (
       <div className="banner">
         { this.props.banners.map((banner, index) => {
-          console.log(banner);
           let bannerClass = "";
           if (this.state.active === index) bannerClass = "active";
           else if (this.state.toLeft === index) bannerClass = "toLeft";
           else if (this.state.toRight === index) bannerClass = "toRight";
           else if (this.state.toRight < index) bannerClass = "offRight";
           else bannerClass = "offLeft";
+          if (bannerClass === "active") {
+            return (
+              <Link to={`/${banner.contentType}s/${banner.contentId}`}
+                key={index}
+                className={`banner-item background-image ${bannerClass}`}
+                style={{backgroundImage: `url(${banner.contentImage})`}}
+              />
+            );
+          }
+
           return (
-            <div
+            <Link to={`/`}
               key={index}
               className={`banner-item background-image ${bannerClass}`}
               style={{backgroundImage: `url(${banner.contentImage})`}}

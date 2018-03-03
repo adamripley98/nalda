@@ -26,7 +26,9 @@
     }
   }
 
-  .banner-item {
+  .banner-item,
+  a.banner-item {
+    display: block;
     width: 80vw;
     height: 60vh;
     background: $light-gray;
@@ -59,6 +61,25 @@
     &.active {
       display: block;
       margin-left: 10vw;
+    }
+  }
+}
+
+.inline-header-link {
+  width: 100%;
+
+  h4 {
+    display: inline-block;
+  }
+
+  a {
+    float: right;
+    display: inline-block;
+    color: $gray;
+    transition: all 0.2s ease;
+
+    &:hover {
+      color: $dark-gray;
     }
   }
 }

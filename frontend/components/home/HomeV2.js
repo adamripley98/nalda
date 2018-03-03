@@ -5,8 +5,10 @@ import axios from 'axios';
 // Import components
 import Loading from '../shared/Loading';
 import ErrorMessage from '../shared/ErrorMessage';
-import Blurb from '../shared/Blurb';
 import Banner from './Banner';
+import Recommended from './Recommended';
+import NaldaVideo from './NaldaVideo';
+import Tags from '../shared/Tags';
 
 /**
  * Component for the homepage of the application
@@ -41,9 +43,8 @@ class HomeV2 extends React.Component {
 
     // Pull all articles, listings, and videos from the database
     axios.get('/api/home/testing')
-      .then((resp) => {
+      .then(resp => {
         if (resp.data.success) {
-          console.log('data', resp.data.data);
           this.setState({
             ...resp.data.data,
             pending: false,
@@ -77,12 +78,13 @@ class HomeV2 extends React.Component {
     if (this.state.pending) return (<Loading />);
     return (
       <div>
+        <Tags />
         <Banner banners={this.state.banner} />
         <div className="container">
-          <div className="space-1"/>
-          <ErrorMessage error={ this.state.error } />
-          <div className="space-1" />
-          <h4>Recommended for you</h4>
+          <div className="space-3"/>
+          <ErrorMessage error={this.state.error} />
+          <Recommended content={this.state.fromTheEditors}/>
+          <NaldaVideo content={this.state.naldaVideos} />
         </div>
       </div>
     );
