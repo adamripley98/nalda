@@ -1,3 +1,62 @@
 /**
  * Styling for the homepage
  */
+.banner {
+  padding-top: 1rem;
+  height: 60vh;
+  width: 100%;
+  text-align: center;
+  padding-bottom: 1rem;
+
+  .shift {
+    margin-top: calc(30vh - 1.2rem);
+    color: $gray;
+    position: absolute;
+    z-index: 2;
+    font-size: 1.2rem;
+    cursor: hand;
+    cursor: pointer;
+
+    &.right {
+      right: 1rem;
+    }
+
+    &.left {
+      left: 1rem;
+    }
+  }
+
+  .banner-item {
+    width: 80vw;
+    height: 60vh;
+    background: $light-gray;
+    box-shadow: 0rem 0.15rem 0.5rem rgba(0, 0, 0, 0.25);
+    border-radius: 0.4rem;
+    position: absolute;
+    transition: all 0.5s ease;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+
+    &.toRight {
+      margin-left: -72.5vw;
+    }
+
+    &.toLeft {
+      margin-left: 92.5vw;
+    }
+
+    &.offRight {
+      margin-left: -155vw;
+    }
+
+    &.offLeft {
+      margin-left: 175vw;
+    }
+
+    &.active {
+      display: block;
+      margin-left: 10vw;
+    }
+  }
+}

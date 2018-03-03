@@ -13,12 +13,6 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 // Import environmental variables
 const PORT = process.env.PORT || 3000;
-const FACEBOOK_APP_ID = process.env.FACEBOOK_APP_ID;
-const FACEBOOK_APP_SECRET = process.env.FACEBOOK_APP_SECRET;
-const FACEBOOK_APP_CALLBACK = process.env.FACEBOOK_APP_CALLBACK;
-const GOOGLE_APP_ID = process.env.GOOGLE_APP_ID;
-const GOOGLE_APP_SECRET = process.env.GOOGLE_APP_SECRET;
-const GOOGLE_APP_CALLBACK = process.env.GOOGLE_APP_CALLBACK;
 
 // Import Models
 const User = require('./backend/models/user');
@@ -47,9 +41,44 @@ const contact = require('./backend/routes/contact')();
 const reviews = require('./backend/routes/reviews')();
 const home = require('./backend/routes/home')();
 
+// Pull all env variables are present
+const {
+  MONGODB_URI,
+  FACEBOOK_APP_ID,
+  FACEBOOK_APP_SECRET,
+  FACEBOOK_APP_CALLBACK,
+  GOOGLE_APP_ID,
+  GOOGLE_APP_SECRET,
+  GOOGLE_APP_CALLBACK,
+  SENDGRID_API_KEY,
+  SENDGRID_EMAIL,
+  AWS_BUCKET_NAME,
+  AWS_USER_KEY,
+  AWS_USER_SECRET,
+  HOST_URL,
+} = process.env;
+
+// Ensure that each variable is present
+let envError = "";
+if (!MONGODB_URI) envError = "MONGODB_URI";
+else if (!FACEBOOK_APP_ID) envError = "FACEBOOK_APP_ID";
+else if (!FACEBOOK_APP_SECRET) envError = "FACEBOOK_APP_SECRET";
+else if (!GOOGLE_APP_ID) envError = "GOOGLE_APP_ID";
+else if (!GOOGLE_APP_SECRET) envError = "GOOGLE_APP_SECRET";
+else if (!GOOGLE_APP_CALLBACK) envError = "GOOGLE_APP_CALLBACK";
+else if (!SENDGRID_API_KEY) envError = "SENDGRID_API_KEY";
+else if (!SENDGRID_EMAIL) envError = "SENDGRID_EMAIL";
+else if (!AWS_BUCKET_NAME) envError = "AWS_BUCKET_NAME";
+else if (!AWS_USER_KEY) envError = "AWS_USER_KEY";
+else if (!AWS_USER_SECRET) envError = "AWS_USER_SECRET";
+else if (!HOST_URL) envError = "HOST_URL";
+if (envError) {
+  console.error(`ERROR: ${envError} environment variable not found`);
+  process.exit(1);
+}
+
 // Connecting to mongo
-const connect = process.env.MONGODB_URI;
-mongoose.connect(connect);
+mongoose.connect(MONGODB_URI);
 
 // Middleware
 app.use(bodyParser.json({limit: '50mb'}));
@@ -127,7 +156,7 @@ passport.use(
     process.nextTick(() => {
       User.findOne({username: profile._json.email}, (err, user) => {
         if (err) {
-          return cb(err, null);
+          cb(err, null);
           // If no user, create him in Mongo
         } else if (!user) {
           // Create a new user
@@ -142,7 +171,7 @@ passport.use(
           // Send new user a welcome email
           sendWelcomeEmail(newUser, (resp) => {
             if (!resp.success) {
-              return cb(resp.error, null);
+              cb(resp.error, null);
             }
             // Update new user
             newUser.accountVerified = false;
@@ -150,10 +179,11 @@ passport.use(
             // Save new user in mongo
             newUser.save((errSave) => {
               if (errSave) {
-                return cb(errSave, null);
+                cb(errSave, null);
+              } else {
+                // If successful return profile
+                cb(null, newUser);
               }
-              // If successful return profile
-              return cb(null, newUser);
             });
           });
         } else {
@@ -162,10 +192,11 @@ passport.use(
           // Save changes
           user.save((errSave) => {
             if (errSave) {
-              return cb(errSave, null);
+              cb(errSave, null);
+            } else {
+              // User already exists
+              cb(null, user);
             }
-            // User already exists
-            return cb(null, user);
           });
         }
       });
@@ -182,7 +213,7 @@ passport.use(new GoogleStrategy({
   process.nextTick(() => {
     User.findOne({username: profile.emails[0].value}, (err, user) => {
       if (err) {
-        return cb(err, null);
+        cb(err, null);
         // If no user, create him in Mongo
       } else if (!user) {
         // Create a new user
@@ -197,19 +228,21 @@ passport.use(new GoogleStrategy({
         // Send new user a welcome email
         sendWelcomeEmail(newUser, (resp) => {
           if (!resp.success) {
-            return cb(resp.error, null);
+            cb(resp.error, null);
+          } else {
+            // Update new user
+            newUser.accountVerified = false;
+            newUser.verificationToken = resp.token;
+            // Save new user in mongo
+            newUser.save((errSave) => {
+              if (errSave) {
+                cb(errSave, null);
+              } else {
+                // If successful return profile
+                cb(null, newUser);
+              }
+            });
           }
-          // Update new user
-          newUser.accountVerified = false;
-          newUser.verificationToken = resp.token;
-          // Save new user in mongo
-          newUser.save((errSave) => {
-            if (errSave) {
-              return cb(errSave, null);
-            }
-            // If successful return profile
-            return cb(null, newUser);
-          });
         });
       } else {
         // Update existing user
@@ -217,10 +250,11 @@ passport.use(new GoogleStrategy({
         // Save changes in Mongo
         user.save((errSave) => {
           if (errSave) {
-            return cb(errSave, null);
+            cb(errSave, null);
+          } else {
+            // User already exists
+            cb(null, user);
           }
-          // User already exists
-          return cb(null, user);
         });
       }
     });

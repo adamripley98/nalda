@@ -25,7 +25,7 @@ import ResetPassword from '../components/auth/ResetPassword';
 import Verify from '../components/auth/Verify';
 
 // Content viewing components
-import Home from '../components/HomeV2';
+import Home from '../components/home/HomeV2';
 import Article from '../components/content/articles/Article';
 import Articles from '../components/content/articles/Articles';
 import Listing from '../components/content/listings/Listing';
@@ -49,7 +49,7 @@ import Contact from '../components/Contact';
 import Credits from '../components/Credits';
 import Terms from '../components/Terms';
 import Privacy from '../components/Privacy';
-import Admin from '../components/Admin';
+import Admin from '../components/admin/Admin';
 import NotFoundSection from '../components/NotFoundSection';
 import Profile from '../components/Profile';
 

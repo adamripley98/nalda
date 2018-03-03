@@ -1,0 +1,51 @@
+/**
+ * Styling for the admin panel
+ */
+.admin-sidebar {
+  background: $lighter-gray;
+  padding: 0rem;
+  box-shadow: 0.1rem 0rem 0.1rem rgba(0, 0, 0, 0.025);
+  border-right: 1px solid rgba(0, 0, 0, 0.05);
+
+  .link {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    color: $dark-gray;
+    cursor: hand;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+
+    &:hover,
+    &:active,
+    &:focus {
+      background: $light-gray;
+    }
+  }
+}
+
+@media screen and (min-width: 768px) and (min-device-width: 768px) {
+  .admin-sidebar {
+    min-height: 100vh;
+  }
+}
+
+.table {
+  border: 1px solid $border;
+
+  thead {
+    background: $lighter-gray;
+  }
+
+  .fa-close {
+    cursor: hand;
+    cursor: pointer;
+    color: $gray;
+
+    &:hover,
+    &:focus,
+    &:active {
+      color: $dark-gray;
+    }
+  }
+}
