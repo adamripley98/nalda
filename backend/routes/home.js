@@ -9,6 +9,7 @@ const express = require('express');
 const router = express.Router();
 const AWS = require('aws-sdk');
 const uuid = require('uuid-v4');
+const async = require('async');
 
 // Import database models
 const Article = require('../models/article');
@@ -121,7 +122,82 @@ module.exports = () => {
   });
 
   router.get('/testing', (req, res) => {
-    console.log('enters testing');
+    // Helper function to avoid repeated code
+    const pullData = (arr, callback) => {
+      const returnArr = [];
+      // Loop through array and pull pertinent data
+      async.eachSeries(arr, (item, cb) => {
+        let Model = '';
+        if (item.contentType === 'article') {
+          Model = Article;
+        } else if (item.contentType === 'listing') {
+          Model = Listing;
+        } else {
+          Model = Video;
+        }
+        // Find given content
+        Model.findById(item.contentId, (errContent, content) => {
+          if (errContent) {
+            callback({
+              success: false,
+              error: 'Homepage content not found',
+            });
+            return;
+          }
+          let newContent = {};
+          if (item.contentType === 'article') {
+            newContent = {
+              contentType: item.contentType,
+              contentId: item.contentId,
+              title: content.title,
+              subtitle: content.subtitle,
+              image: content.image,
+              createdAt: content.createdAt,
+              updatedAt: content.updatedAt,
+              location: content.location,
+            };
+          } else if (item.contentType === 'listing') {
+            newContent = {
+              contentType: item.contentType,
+              contentId: item.contentId,
+              title: content.title,
+              description: content.description,
+              image: content.image,
+              rating: content.rating,
+              price: content.price,
+            };
+          } else {
+            // Content is a video
+            newContent = {
+              contentType: item.contentType,
+              contentId: item.contentId,
+              title: content.title,
+              description: content.description,
+              url: content.url,
+              location: content.location,
+              createdAt: content.createdAt,
+              updatedAt: content.updatedAt,
+            };
+          }
+          returnArr.push(newContent);
+          cb();
+        });
+      }, (asyncErr) => {
+        if (asyncErr) {
+          res.send({
+            success: false,
+            error: asyncErr,
+          });
+        } else {
+          callback({
+            success: true,
+            error: '',
+            returnArr,
+          });
+        }
+      });
+    };
+
     Homepage.find({}, (errHome, home) => {
       if (errHome) {
         res.send({
@@ -130,14 +206,44 @@ module.exports = () => {
         });
       } else {
         const homepage = home[0];
-        res.send({
-          success: true,
-          error: '',
-          data: {
-            banner: homepage.banner,
-            fromTheEditors: homepage.fromTheEditors,
-            naldaVideos: homepage.naldaVideos,
-            recommended: homepage.recommended,
+        pullData(homepage.fromTheEditors, (editorsResp) => {
+          if (!editorsResp.success) {
+            res.send({
+              success: false,
+              error: editorsResp.error,
+            });
+          } else {
+            const fromTheEditors = editorsResp.returnArr;
+            pullData(homepage.naldaVideos, (videosResp) => {
+              if (!videosResp.success) {
+                res.send({
+                  success: false,
+                  error: videosResp.error,
+                });
+              } else {
+                const naldaVideos = videosResp.returnArr;
+                pullData(homepage.recommended, (recResp) => {
+                  if (!recResp.success) {
+                    res.send({
+                      success: false,
+                      error: recResp.error,
+                    });
+                  } else {
+                    const recommended = recResp.returnArr;
+                    res.send({
+                      success: true,
+                      error: '',
+                      data: {
+                        banner: homepage.banner,
+                        fromTheEditors,
+                        naldaVideos,
+                        recommended,
+                      }
+                    });
+                  }
+                });
+              }
+            });
           }
         });
       }
@@ -243,7 +349,6 @@ module.exports = () => {
   router.post('/recommended/remove/:recommendedContentId', (req, res) => {
     // Find the id from the url
     const contentId = req.params.recommendedContentId;
-    console.log('cc', contentId);
     AdminCheck(req, (authRes) => {
       if (!authRes.success) {
         res.send({
