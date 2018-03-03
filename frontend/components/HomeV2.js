@@ -3,10 +3,11 @@ import React from 'react';
 import axios from 'axios';
 
 // Import components
-import Loading from '../shared/Loading';
-import ErrorMessage from '../shared/ErrorMessage';
-import Blurb from '../shared/Blurb';
-import Banner from './Banner';
+import Loading from './shared/Loading';
+import ErrorMessage from './shared/ErrorMessage';
+import Button from './shared/Button';
+import Preview from './content/Preview';
+import Blurb from './shared/Blurb';
 
 /**
  * Component for the homepage of the application
@@ -73,16 +74,12 @@ class HomeV2 extends React.Component {
 
   // Function to render the component
   render() {
-    if (this.state.pending) return (<Loading />);
     return (
-      <div>
-        <Banner banners={this.state.banner} />
-        <div className="container">
-          <div className="space-1"/>
-          <ErrorMessage error={ this.state.error } />
-          this is the new home
-          <div className="space-2" />
-        </div>
+      <div className="container home">
+        <div className="space-1"/>
+        <ErrorMessage error={ this.state.error } />
+        this is the new home
+        <div className="space-2" />
       </div>
     );
   }

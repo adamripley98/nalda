@@ -17,7 +17,7 @@ const store = createStore(
   rootReducer,
   undefined,
   compose(
-    applyMiddleware(logger),
+    // applyMiddleware(logger),
   )
 );
 
