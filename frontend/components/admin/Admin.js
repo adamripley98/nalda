@@ -180,7 +180,10 @@ class Admin extends Component {
         bannerImageToAdd,
       })
       .then((resp) => {
-        if (resp.data.error) {
+        console.log("RESPONSE");
+        console.log(resp);
+
+        if (!resp.data.success) {
           this.setState({
             error: resp.data.error,
             bannerContentId: '',
@@ -224,6 +227,7 @@ class Admin extends Component {
           error: resp.data.error,
         });
       } else {
+        this.props.notifyMessage("Successfully removed banner image");
         this.setState({
           error: '',
           banner: resp.data.data,
@@ -859,7 +863,7 @@ class Admin extends Component {
           rows="1"
         />
         {
-          this.state.bannerImagePreview ? (
+          (this.state.bannerImageToAdd && this.state.bannerImagePreview) ? (
             <img src={this.state.bannerImagePreview} alt="Banner preview" className="img-fluid img" style={{width: "10rem"}} />
           ) : null
         }
@@ -1212,9 +1216,21 @@ Admin.propTypes = {
   notifyMessage: PropTypes.func,
 };
 
-// Redux
-const mapDispatchToProps = dispatch => ({
-  notifyMessage: message => dispatch(notifyMessage(message)),
-});
+const mapStateToProps = state => {
+  return {
+    userId: state.authState.userId,
+  };
+};
 
-export default connect(mapDispatchToProps)(Admin);
+// Redux
+const mapDispatchToProps = dispatch => {
+  return {
+    notifyMessage: (message) => dispatch(notifyMessage(message)),
+  };
+};
+
+Admin = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Admin);
+export default Admin;

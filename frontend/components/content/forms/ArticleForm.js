@@ -327,7 +327,7 @@ class ArticleForm extends React.Component {
             />
 
             <form onSubmit={ this.handleSubmit } id="article-form">
-              <ErrorMessage message={this.state.error} />
+              <ErrorMessage error={this.state.error} />
 
               <textarea
                 rows="1"

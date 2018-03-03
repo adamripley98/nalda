@@ -74,9 +74,10 @@ class HomeV2 extends React.Component {
 
   // Function to render the component
   render() {
+    if (this.state.pending) return (<Loading />);
     return (
       <div>
-        <Banner />
+        <Banner banners={this.state.banner} />
         <div className="container">
           <div className="space-1"/>
           <ErrorMessage error={ this.state.error } />

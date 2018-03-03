@@ -639,7 +639,7 @@ class Listing extends React.Component {
                       _id={ this.state.author._id }
                       profilePicture={ this.state.author.profilePicture }
                     />
-                    <ErrorMessage message={this.state.error} />
+                    <ErrorMessage error={this.state.error} />
                   </div>
                   <div className="categories">
                     { this.renderCategories() }
