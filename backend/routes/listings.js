@@ -700,5 +700,41 @@ module.exports = () => {
     });
   });
 
+  // Route to filter by categories
+  router.get('/categories/:categoryName', (req, res) => {
+    const categoryName = req.params.categoryName;
+    const filteredListings = [];
+    Listing.find({}, (errListing, listings) => {
+      if (errListing) {
+        res.send({
+          success: false,
+          error: 'Error finding listings.',
+        });
+      } else {
+        // Loop through all listings to check if filters match
+        async.eachSeries(listings, (listing, cb) => {
+          const categories = listing.categories;
+          if (categories[categoryName]) {
+            filteredListings.push(listing);
+          }
+          cb();
+        }, (asyncErr) => {
+          if (asyncErr) {
+            res.send({
+              success: false,
+              error: 'Async error.',
+            });
+          } else {
+            res.send({
+              success: true,
+              error: '',
+              data: filteredListings,
+            });
+          }
+        });
+      }
+    });
+  });
+
   return router;
 };
