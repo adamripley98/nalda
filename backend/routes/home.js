@@ -10,8 +10,6 @@ const router = express.Router();
 const AWS = require('aws-sdk');
 const uuid = require('uuid-v4');
 const async = require('async');
-const _ = require('lodash');
-
 
 // Import database models
 const Article = require('../models/article');
@@ -38,92 +36,8 @@ const s3bucket = new AWS.S3({
 module.exports = () => {
   /**
    * Get content for the homepage
-   * 4 most recent articles, listings, and videos
-   * TODO pull content from the user's location
-   // TODO pull from new homepage model
    */
   router.get('/', (req, res) => {
-    // Start by finding articles
-    Article.find((articleErr, articles) => {
-      if (articleErr) {
-        res.send({
-          success: false,
-          error: articleErr.message,
-        });
-      } else {
-        /**
-         * Find the four most recent articles
-         */
-        let recentArticles;
-        if (articles.length <= 4) {
-          recentArticles = articles;
-        } else {
-          recentArticles = articles.slice(articles.length - 4);
-        }
-
-        // Display in correct order
-        recentArticles.reverse();
-
-        // Find listings
-        Listing.find((listingErr, listings) => {
-          if (listingErr) {
-            res.send({
-              success: false,
-              error: listingErr.message,
-            });
-          } else {
-            /**
-             * Find the four most recent listings
-             */
-            let recentListings;
-            if (listings.length <= 4) {
-              recentListings = listings;
-            } else {
-              recentListings = listings.slice(listings.length - 4);
-            }
-
-            // Display in correct order
-            recentListings.reverse();
-
-            // Find videos
-            Video.find((videoErr, videos) => {
-              if (videoErr) {
-                res.send({
-                  success: false,
-                  error: videoErr.message,
-                });
-              } else {
-                /**
-                 * Find the four most recent videos
-                 */
-                let recentVideos;
-                if (videos.length <= 4) {
-                  recentVideos = videos;
-                } else {
-                  recentVideos = videos.slice(videos.length - 4);
-                }
-
-                // Display in correct order
-                recentVideos.reverse();
-
-                // Send the articles, listings, and videos
-                res.send({
-                  success: true,
-                  data: {
-                    articles: recentArticles,
-                    listings: recentListings,
-                    videos: recentVideos,
-                  },
-                });
-              }
-            });
-          }
-        });
-      }
-    });
-  });
-
-  router.get('/testing', (req, res) => {
     // Helper function to avoid repeated code
     const pullData = (arr, callback) => {
       const returnArr = [];
@@ -145,51 +59,58 @@ module.exports = () => {
               error: 'Homepage content not found',
             });
             return;
-          }
-          let newContent = {};
-          if (item.contentType === 'article') {
-            newContent = {
-              contentType: item.contentType,
-              contentId: item.contentId,
-              title: content.title,
-              subtitle: content.subtitle,
-              image: content.image,
-              createdAt: content.createdAt,
-              updatedAt: content.updatedAt,
-              location: content.location,
-            };
-          } else if (item.contentType === 'listing') {
-            newContent = {
-              contentType: item.contentType,
-              contentId: item.contentId,
-              title: content.title,
-              description: content.description,
-              location: content.location,
-              image: content.image,
-              rating: content.rating,
-              price: content.price,
-            };
+          } else if (!content) {
+            callback({
+              success: false,
+              error: 'Homepage content not found',
+            });
           } else {
-            // Content is a video
-            newContent = {
-              contentType: item.contentType,
-              contentId: item.contentId,
-              title: content.title,
-              description: content.description,
-              url: content.url,
-              location: content.location,
-              createdAt: content.createdAt,
-              updatedAt: content.updatedAt,
-            };
+            let newContent = {};
+            if (item.contentType === 'article') {
+              newContent = {
+                contentType: item.contentType,
+                contentId: item.contentId,
+                title: content.title,
+                subtitle: content.subtitle,
+                image: content.image,
+                createdAt: content.createdAt,
+                updatedAt: content.updatedAt,
+                location: content.location,
+              };
+            } else if (item.contentType === 'listing') {
+              newContent = {
+                contentType: item.contentType,
+                contentId: item.contentId,
+                title: content.title,
+                description: content.description,
+                location: content.location,
+                image: content.image,
+                rating: content.rating,
+                price: content.price,
+                categories: content.categories,
+              };
+            } else {
+              // Content is a video
+              newContent = {
+                contentType: item.contentType,
+                contentId: item.contentId,
+                title: content.title,
+                description: content.description,
+                url: content.url,
+                location: content.location,
+                createdAt: content.createdAt,
+                updatedAt: content.updatedAt,
+              };
+            }
+            returnArr.push(newContent);
+            cb();
           }
-          returnArr.push(newContent);
-          cb();
         });
       }, (asyncErr) => {
         if (asyncErr) {
           res.send({
             success: false,
-            error: asyncErr,
+            error: 'Error loading homepage.',
           });
         } else {
           callback({
@@ -254,7 +175,6 @@ module.exports = () => {
   });
 
   // Route to handle adding content to homepage recommended
-  // TODO only listings
   router.post('/recommended/add', (req, res) => {
     AdminCheck(req, (authRes) => {
       if (!authRes.success) {
@@ -318,7 +238,7 @@ module.exports = () => {
                     if (errSave) {
                       res.send({
                         success: false,
-                        error: errSave,
+                        error: 'Error adding recommended.',
                       });
                     } else {
                       res.send({
@@ -369,7 +289,7 @@ module.exports = () => {
               if (errHome) {
                 res.send({
                   success: false,
-                  error: errHome,
+                  error: 'Error removing recommended.',
                 });
               } else {
                 res.send({
@@ -449,7 +369,7 @@ module.exports = () => {
                     if (errSave) {
                       res.send({
                         success: false,
-                        error: errSave,
+                        error: 'Error adding content to homepage.',
                       });
                     } else {
                       res.send({
@@ -469,7 +389,7 @@ module.exports = () => {
   });
 
   // Route to handle deleting an item from the from the editors
-  router.post('/recommended/remove/:fromTheEditorsContentId', (req, res) => {
+  router.post('/fromTheEditors/remove/:fromTheEditorsContentId', (req, res) => {
     // Find the id from the url
     const contentId = req.params.fromTheEditorsContentId;
     AdminCheck(req, (authRes) => {
@@ -500,7 +420,7 @@ module.exports = () => {
               if (errHome) {
                 res.send({
                   success: false,
-                  error: errHome,
+                  error: "error removing homeepage content.",
                 });
               } else {
                 res.send({
@@ -579,7 +499,7 @@ module.exports = () => {
                     if (errSave) {
                       res.send({
                         success: false,
-                        error: errSave,
+                        error: 'Error adding content to homepage.',
                       });
                     } else {
                       res.send({
@@ -630,7 +550,7 @@ module.exports = () => {
               if (errHome) {
                 res.send({
                   success: false,
-                  error: errHome,
+                  error: 'Error removing content from homepage.',
                 });
               } else {
                 res.send({
@@ -705,7 +625,7 @@ module.exports = () => {
                       if (errHomepage) {
                         res.send({
                           success: false,
-                          error: errHomepage,
+                          error: 'Error finding homepage.',
                         });
                       // NOTE this is only to declare a homepage in the database for the first time
                       } else if (!home.length) {
@@ -722,7 +642,7 @@ module.exports = () => {
                           if (err) {
                             res.send({
                               success: false,
-                              error: err,
+                              error: 'Error on homepage.',
                             });
                           } else {
                             res.send({
@@ -761,7 +681,7 @@ module.exports = () => {
                             if (errSave) {
                               res.send({
                                 success: false,
-                                error: errSave,
+                                error: 'Error saving image.',
                               });
                             } else {
                               // Send back success
@@ -817,7 +737,7 @@ module.exports = () => {
               if (errHome) {
                 res.send({
                   success: false,
-                  error: errHome,
+                  error: 'Error remvoing content.',
                 });
               } else {
                 res.send({
@@ -826,41 +746,6 @@ module.exports = () => {
                   data: homepage.banner,
                 });
               }
-            });
-          }
-        });
-      }
-    });
-  });
-
-  // Route to filter by categories
-  router.post('/categories', (req, res) => {
-    const categories = req.body.categories;
-    Listing.find({}, (errListing, listings) => {
-      if (errListing) {
-        res.send({
-          success: false,
-          error: 'Error finding listings.',
-        });
-      } else {
-        const filteredListings = [];
-        // Loop through all listings to check if filters match
-        async.eachSeries(listings, (listing, cb) => {
-          if (_.difference(listing.categories, categories).length === 0) {
-            console.log('listing matches');
-            console.log(listing);
-            filteredListings.push(listing);
-            cb();
-          } else {
-            console.log('listing doesnt match filters');
-            console.log(listing);
-            cb();
-          }
-        }, (asyncErr) => {
-          if (asyncErr) {
-            res.send({
-              success: false,
-              error: 'Async error.',
             });
           }
         });

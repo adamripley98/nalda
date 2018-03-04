@@ -41,6 +41,7 @@ module.exports = () => {
         const listing = authRes.listing;
         const reviews = [];
         // Delete review
+        // TODO Do this better
         listing.reviews.forEach((rev) => {
           if (rev._id.toString() !== reviewId) {
             reviews.push(rev);
@@ -53,7 +54,7 @@ module.exports = () => {
           if (errSave) {
             res.send({
               success: false,
-              error: errSave,
+              error: 'Error deleting review.',
             });
           } else {
             res.send({
@@ -99,7 +100,7 @@ module.exports = () => {
             if (errUser) {
               res.send({
                 success: false,
-                error: 'Error finding user' + errUser.message,
+                error: 'Error posting review.'
               });
             } else
 
@@ -110,15 +111,13 @@ module.exports = () => {
                 error: 'User does not exist.'
               });
             } else {
-              // TODO Will eventually also want to store reviews in user model
               // If no errors can now save new reviews
-              // First find given listing
               Listing.findById(req.body.listingId, (errListing, listing) => {
                 // Error finding listing
                 if (errListing) {
                   res.send({
                     success: false,
-                    error: errListing.message,
+                    error: 'Error posting review.',
                   });
                 } else
 
@@ -126,7 +125,7 @@ module.exports = () => {
                 if (!listing) {
                   res.send({
                     success: false,
-                    error: 'Cannot find listing.',
+                    error: 'Error posting review.',
                   });
                 } else {
                   // If listing has been found, update it with review
@@ -145,7 +144,7 @@ module.exports = () => {
                       // TODO
                       res.send({
                         success: false,
-                        error: asyncErr,
+                        error: 'Error posting review.',
                       });
                     } else {
                       // If already left a review send back error
@@ -171,7 +170,7 @@ module.exports = () => {
                           if (er) {
                             res.send({
                               success: false,
-                              error: 'Error saving review' + er.message,
+                              error: 'Error saving review.',
                             });
                           } else {
                             // Finally, if review is saved successfully

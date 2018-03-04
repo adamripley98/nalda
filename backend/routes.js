@@ -47,7 +47,7 @@ module.exports = () => {
         if (err) {
           res.send({
             success: false,
-            error: err.message,
+            error: 'State sync error.',
           });
         } else if (!user) {
           res.send({
@@ -94,7 +94,7 @@ module.exports = () => {
       if (errArticle) {
         res.send({
           success: false,
-          error: errArticle.message
+          error: 'Search error.'
         });
       } else {
         // Now search through listings
@@ -104,7 +104,7 @@ module.exports = () => {
           if (errListing) {
             res.send({
               success: false,
-              error: errListing.message,
+              error: 'Search error.',
             });
           } else {
             // Now search through videos
@@ -113,7 +113,7 @@ module.exports = () => {
               if (errVideo) {
                 res.send({
                   success: false,
-                  error: errVideo.message,
+                  error: 'Search error.',
                 });
               } else {
                 // Now search through users
@@ -122,7 +122,7 @@ module.exports = () => {
                   if (errUser) {
                     res.send({
                       success: false,
-                      error: errUser.message,
+                      error: 'Search error.',
                     });
                   } else {
                     // Make sure that users are curators or admins, do not want to be able to search for regular users
@@ -187,7 +187,7 @@ module.exports = () => {
           // If there was an error with the request
             res.send({
               success: false,
-              error: err.message,
+              error: 'Error finding information.',
             });
             // If no user exists
           } else if (!user) {

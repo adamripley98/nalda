@@ -55,7 +55,7 @@ module.exports = () => {
                     if (err) {
                       res.send({
                         success: false,
-                        error: err.message,
+                        error: 'Error finding content.',
                       });
                     } else {
                       const userData = {
@@ -124,7 +124,7 @@ module.exports = () => {
           if (err) {
             res.send({
               success: false,
-              error: err.message,
+              error: 'Error adding admin.',
             });
           // Makes sure that user exists
           } else if (!user) {
@@ -145,7 +145,7 @@ module.exports = () => {
               if (errSave) {
                 res.send({
                   success: false,
-                  error: errSave.message,
+                  error: "Error saving admin.",
                 });
               } else {
                 // Create new admin to pass back
@@ -190,7 +190,7 @@ module.exports = () => {
           if (err) {
             res.send({
               success: false,
-              error: err.message,
+              error: "Error adding curator.",
             });
           // Makes sure that user exists
           } else if (!user) {
@@ -216,7 +216,7 @@ module.exports = () => {
               if (errSave) {
                 res.send({
                   success: false,
-                  error: errSave.message,
+                  error: "Error saving curator.",
                 });
               } else {
                 // Create new admin to pass back
@@ -261,7 +261,7 @@ module.exports = () => {
           if (err) {
             res.send({
               success: false,
-              error: err.message,
+              error: "Error finding content",
             });
           // Makes sure that user exists
           } else if (!user) {
@@ -278,7 +278,7 @@ module.exports = () => {
                 if (errSave) {
                   res.send({
                     success: false,
-                    error: errSave.message,
+                    error: 'Error saving curator.',
                   });
                 } else {
                   const removedCurator = {

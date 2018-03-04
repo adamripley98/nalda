@@ -22,7 +22,7 @@ class ListingCategories extends Component {
           {
             Object.keys(categoryMap).map(key => (
               <li className="category" key={key}>
-                <Link to={`/categories/${key}`}>
+                <Link to={`/listings/categories/${key}`}>
                   {categoryMap[key]}
                 </Link>
               </li>

@@ -29,7 +29,7 @@ module.exports = () => {
         // If there was an error with the request
         res.send({
           success: false,
-          error: err.message,
+          error: 'Error finding videos.',
         });
       } else {
         // Send videos back in correct order
@@ -61,7 +61,7 @@ module.exports = () => {
       if (err) {
         res.status(404).send({
           success: false,
-          error: err.message,
+          error: 'Video not found.',
         });
       // If the video doesn't exist
       } else if (!video) {
@@ -77,7 +77,7 @@ module.exports = () => {
             // Error finding author
             res.send({
               success: false,
-              error: er.message,
+              error: 'Video not found.',
             });
           } else if (!author) {
             res.send({
@@ -137,7 +137,7 @@ module.exports = () => {
           if (errRemove) {
             res.send({
               success: false,
-              error: errRemove.message,
+              error: 'Error deleting video.',
             });
           // Send back success
           } else {
@@ -205,7 +205,7 @@ module.exports = () => {
             if (err) {
               res.send({
                 success: false,
-                error: 'Error finding author ' + err.message
+                error: 'Error finding author.'
               });
             } else if (!author) {
               res.send({
@@ -218,7 +218,7 @@ module.exports = () => {
                 if (videoErr) {
                   res.send({
                     success: false,
-                    error: videoErr.message,
+                    error: 'Error editting video.',
                   });
                 } else {
                   // Make changes to given video
@@ -233,7 +233,7 @@ module.exports = () => {
                     if (errSave) {
                       res.send({
                         success: false,
-                        error: errSave.message,
+                        error: 'Error editting video.',
                       });
                     } else {
                       res.send({
@@ -311,7 +311,7 @@ module.exports = () => {
               // If there was an error saving the video
               res.send({
                 success: false,
-                error: errVideo.message,
+                error: 'Error posting video.',
               });
             } else {
               // Successfully send back data
