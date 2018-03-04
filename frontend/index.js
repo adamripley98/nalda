@@ -6,7 +6,7 @@ import { render } from 'react-dom';
 import { persistStore } from 'redux-persist';
 import { compose, createStore, applyMiddleware } from 'redux';
 import rootReducer from './reducers';
-import logger from 'redux-logger';
+// import logger from 'redux-logger';
 import Root from './containers/Root';
 
 // Imported for styling

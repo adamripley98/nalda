@@ -110,7 +110,7 @@ module.exports = () => {
         if (asyncErr) {
           res.send({
             success: false,
-            error: asyncErr,
+            error: 'Error loading homepage.',
           });
         } else {
           callback({
@@ -238,7 +238,7 @@ module.exports = () => {
                     if (errSave) {
                       res.send({
                         success: false,
-                        error: errSave,
+                        error: 'Error adding recommended.',
                       });
                     } else {
                       res.send({
@@ -289,7 +289,7 @@ module.exports = () => {
               if (errHome) {
                 res.send({
                   success: false,
-                  error: errHome,
+                  error: 'Error removing recommended.',
                 });
               } else {
                 res.send({
@@ -369,7 +369,7 @@ module.exports = () => {
                     if (errSave) {
                       res.send({
                         success: false,
-                        error: errSave,
+                        error: 'Error adding content to homepage.',
                       });
                     } else {
                       res.send({
@@ -389,7 +389,7 @@ module.exports = () => {
   });
 
   // Route to handle deleting an item from the from the editors
-  router.post('/recommended/remove/:fromTheEditorsContentId', (req, res) => {
+  router.post('/fromTheEditors/remove/:fromTheEditorsContentId', (req, res) => {
     // Find the id from the url
     const contentId = req.params.fromTheEditorsContentId;
     AdminCheck(req, (authRes) => {
@@ -420,7 +420,7 @@ module.exports = () => {
               if (errHome) {
                 res.send({
                   success: false,
-                  error: errHome,
+                  error: "error removing homeepage content.",
                 });
               } else {
                 res.send({
@@ -499,7 +499,7 @@ module.exports = () => {
                     if (errSave) {
                       res.send({
                         success: false,
-                        error: errSave,
+                        error: 'Error adding content to homepage.',
                       });
                     } else {
                       res.send({
@@ -550,7 +550,7 @@ module.exports = () => {
               if (errHome) {
                 res.send({
                   success: false,
-                  error: errHome,
+                  error: 'Error removing content from homepage.',
                 });
               } else {
                 res.send({
@@ -625,7 +625,7 @@ module.exports = () => {
                       if (errHomepage) {
                         res.send({
                           success: false,
-                          error: errHomepage,
+                          error: 'Error finding homepage.',
                         });
                       // NOTE this is only to declare a homepage in the database for the first time
                       } else if (!home.length) {
@@ -642,7 +642,7 @@ module.exports = () => {
                           if (err) {
                             res.send({
                               success: false,
-                              error: err,
+                              error: 'Error on homepage.',
                             });
                           } else {
                             res.send({
@@ -681,7 +681,7 @@ module.exports = () => {
                             if (errSave) {
                               res.send({
                                 success: false,
-                                error: errSave,
+                                error: 'Error saving image.',
                               });
                             } else {
                               // Send back success
@@ -737,7 +737,7 @@ module.exports = () => {
               if (errHome) {
                 res.send({
                   success: false,
-                  error: errHome,
+                  error: 'Error remvoing content.',
                 });
               } else {
                 res.send({

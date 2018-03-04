@@ -43,7 +43,7 @@ module.exports = () => {
         // If there was an error with the request
         res.send({
           success: false,
-          error: err.message,
+          error: 'Error finding listings.',
         });
       } else {
         // Send listings back in correct order
@@ -135,7 +135,7 @@ module.exports = () => {
                 User.findById(review.authorId, (errAuthor, revAuthor) => {
                   // Error finding author
                   if (errAuthor) {
-                    reviewError = errAuthor.message;
+                    reviewError = 'Cannot find review author.';
                   // Author can't be found
                   } else if (!revAuthor) {
                     reviewError = "Cannot find review author.";
@@ -161,7 +161,7 @@ module.exports = () => {
                 if (asyncErr) {
                   res.send({
                     success: false,
-                    error: 'Async error',
+                    error: 'Error getting content',
                   });
                 } else {
                   // Check for error with reviews
@@ -326,7 +326,7 @@ module.exports = () => {
                     if (asyncErr) {
                       res.send({
                         success: false,
-                        error: asyncErr,
+                        error: 'Error editting.',
                       });
                     } else {
                       // Find the author
@@ -347,7 +347,7 @@ module.exports = () => {
                             if (listingErr) {
                               res.send({
                                 success: false,
-                                error: listingErr.message,
+                                error: 'Error editting.',
                               });
                             } else {
                               // Make changes to given listing
@@ -371,7 +371,7 @@ module.exports = () => {
                                 if (errSave) {
                                   res.send({
                                     success: false,
-                                    error: errSave.message,
+                                    error: 'Error saving listing.',
                                   });
                                 } else {
                                   res.send({
@@ -428,7 +428,7 @@ module.exports = () => {
               if (asyncErr) {
                 res.send({
                   success: false,
-                  error: asyncErr,
+                  error: 'Error editting listing.',
                 });
               } else {
                 // Find the author
@@ -436,7 +436,7 @@ module.exports = () => {
                   if (err) {
                     res.send({
                       success: false,
-                      error: 'Error finding author ' + err.message
+                      error: 'Error finding author.',
                     });
                   } else if (!author) {
                     res.send({
@@ -449,7 +449,7 @@ module.exports = () => {
                       if (listingErr) {
                         res.send({
                           success: false,
-                          error: listingErr.message,
+                          error: 'Error editting listing.',
                         });
                       } else {
                         // Make changes to given listing
@@ -473,7 +473,7 @@ module.exports = () => {
                           if (errSave) {
                             res.send({
                               success: false,
-                              error: errSave.message,
+                              error: 'Error saving listing.',
                             });
                           } else {
                             res.send({
@@ -517,7 +517,7 @@ module.exports = () => {
           if (errRemove) {
             res.send({
               success: false,
-              error: errRemove.message,
+              error: 'Error deleting listing.',
             });
           // Send back success
           } else {
@@ -651,7 +651,7 @@ module.exports = () => {
                   if (asyncErr) {
                     res.send({
                       success: false,
-                      error: asyncErr,
+                      error: 'Error posting listing.',
                     });
                   } else {
                     // Creates a new listing with given params
@@ -680,7 +680,7 @@ module.exports = () => {
                         // Pass on any error to the user
                         res.send({
                           success: false,
-                          error: er.message,
+                          error: 'Error posting listing.',
                         });
                       } else {
                         // Send the data along if it was successfully stored
@@ -722,7 +722,7 @@ module.exports = () => {
           if (asyncErr) {
             res.send({
               success: false,
-              error: 'Async error.',
+              error: 'Error finding listings.',
             });
           } else {
             res.send({

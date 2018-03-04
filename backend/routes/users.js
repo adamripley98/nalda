@@ -67,7 +67,7 @@ module.exports = () => {
             if (err) {
               res.send({
                 success: false,
-                error: err.message,
+                error: 'Error changing name.',
               });
             // User doesn't exist in Mongo
             } else if (!user) {
@@ -85,7 +85,7 @@ module.exports = () => {
                 if (errUser) {
                   res.send({
                     success: false,
-                    error: errUser.message,
+                    error: 'Error changing name.',
                   });
                 } else {
                   // User name updated successfully
@@ -131,7 +131,7 @@ module.exports = () => {
             if (err) {
               res.send({
                 success: false,
-                error: err.message,
+                error: 'Error changing bio.',
               });
             // User doesn't exist in Mongo
             } else if (!user) {
@@ -148,7 +148,7 @@ module.exports = () => {
                 if (errUser) {
                   res.send({
                     success: false,
-                    error: errUser.message,
+                    error: 'Error changing bio.',
                   });
                 } else {
                   // User bio updated successfully
@@ -196,7 +196,7 @@ module.exports = () => {
               // Error finding user
               res.send({
                 success: false,
-                error: err.message,
+                error: 'Error changing profile picture.',
               });
             } else if (!user) {
               res.send({
@@ -229,10 +229,10 @@ module.exports = () => {
                     user.profilePicture = data.Location;
                     // Save the changes
                     user.save((errSave) => {
-                      if (err) {
+                      if (errSave) {
                         res.send({
                           success: false,
-                          error: errSave.message,
+                          error: 'Error changing profile picture.',
                         });
                       } else {
                         res.send({
@@ -270,7 +270,7 @@ module.exports = () => {
           if (err) {
             res.send({
               success: false,
-              error: err.message,
+              error: 'Error changing location',
             });
           } else if (!user) {
             res.send({
@@ -285,7 +285,7 @@ module.exports = () => {
               if (errSave) {
                 res.send({
                   success: false,
-                  error: errSave.message,
+                  error: 'Error changing location.',
                 });
               } else {
                 res.send({
@@ -361,21 +361,21 @@ module.exports = () => {
           if (errArticles) {
             res.send({
               success: false,
-              error: errArticles.message,
+              error: 'Error finding user.',
             });
           } else {
             Listing.find({author: id}, (errListings, listings) => {
               if (errListings) {
                 res.send({
                   success: false,
-                  error: errListings.message,
+                  error: 'Error finding user.',
                 });
               } else {
                 Video.find({author: id}, (errVideo, videos) => {
                   if (errVideo) {
                     res.send({
                       success: false,
-                      error: errVideo.message,
+                      error: 'Error finding user.',
                     });
                   } else {
                     // Remove private data before sending back

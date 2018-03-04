@@ -43,7 +43,7 @@ module.exports = () => {
         // If there was an error with the request
         res.send({
           success: false,
-          error: err.message,
+          error: 'Error finding articles.',
         });
       } else {
         // Add a timestamp field for sorting
@@ -136,7 +136,7 @@ module.exports = () => {
             if (err) {
               res.send({
                 success: false,
-                error: 'Error finding author ' + err.message
+                error: 'Error finding author.',
               });
             } else if (!author) {
               res.send({
@@ -201,7 +201,7 @@ module.exports = () => {
                       if (asyncErr) {
                         res.send({
                           success: false,
-                          error: asyncErr,
+                          error: 'Error posting article.',
                         });
                       } else {
                         // Creates a new article with given params
@@ -222,7 +222,7 @@ module.exports = () => {
                             // If there was an error saving the article
                             res.send({
                               success: false,
-                              error: errArticle.message,
+                              error: 'Error posting article.',
                             });
                           } else {
                             // Successfully send back data
@@ -388,7 +388,7 @@ module.exports = () => {
                     if (asyncErr) {
                       res.send({
                         success: false,
-                        error: asyncErr,
+                        error: 'Error posting article.',
                       });
                     } else {
                       // Find the author
@@ -396,7 +396,7 @@ module.exports = () => {
                         if (err) {
                           res.send({
                             success: false,
-                            error: 'Error finding author ' + err.message
+                            error: 'Error finding author.',
                           });
                         } else if (!author) {
                           res.send({
@@ -409,7 +409,7 @@ module.exports = () => {
                             if (articleErr) {
                               res.send({
                                 success: false,
-                                error: articleErr.message,
+                                error: 'Error editting article.',
                               });
                             } else {
                               // Make changes to given article
@@ -425,7 +425,7 @@ module.exports = () => {
                                 if (errSave) {
                                   res.send({
                                     success: false,
-                                    error: errSave.message,
+                                    error: 'Error editting article.',
                                   });
                                 } else {
                                   res.send({
@@ -490,7 +490,7 @@ module.exports = () => {
               if (asyncErr) {
                 res.send({
                   success: false,
-                  error: asyncErr,
+                  error: 'Error posting article.',
                 });
               } else {
                 // Find the author
@@ -498,7 +498,7 @@ module.exports = () => {
                   if (err) {
                     res.send({
                       success: false,
-                      error: 'Error finding author ' + err.message
+                      error: 'Error finding author.',
                     });
                   } else if (!author) {
                     res.send({
@@ -511,7 +511,7 @@ module.exports = () => {
                       if (articleErr) {
                         res.send({
                           success: false,
-                          error: articleErr.message,
+                          error: 'Error posting article.',
                         });
                       } else {
                         // Make changes to given article
@@ -527,7 +527,7 @@ module.exports = () => {
                           if (errSave) {
                             res.send({
                               success: false,
-                              error: errSave.message,
+                              error: 'Error posting article.',
                             });
                           } else {
                             res.send({
@@ -567,7 +567,7 @@ module.exports = () => {
       if (err) {
         res.status(404).send({
           success: false,
-          error: err.message,
+          error: "Article not found.",
         });
       // If the article doesn't exist
       } else if (!article) {
@@ -584,7 +584,7 @@ module.exports = () => {
             // Error finding author
             res.send({
               success: false,
-              error: er.message,
+              error: "Article not found.",
             });
           } else if (!author) {
             res.send({
@@ -641,7 +641,7 @@ module.exports = () => {
           if (errRemove) {
             res.send({
               success: false,
-              error: errRemove.message,
+              error: "Error deleting article.",
             });
           // Send back success
           } else {
