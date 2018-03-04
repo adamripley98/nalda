@@ -179,7 +179,11 @@ class Admin extends Component {
         bannerContentId,
         bannerImageToAdd,
       })
+<<<<<<< HEAD
       .then(resp => {
+=======
+      .then((resp) => {
+>>>>>>> lastmin
         if (!resp.data.success) {
           this.setState({
             error: resp.data.error,

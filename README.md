@@ -51,20 +51,20 @@ DELETE '/api/videos/:id'       // Delete a specific article
 
 ## Cam
 - [ ] Make homepage view
-  - [ ] Banner on top (probably carousal), (banner is stored as array in this.state.banner)
+  - [X] Banner on top (probably carousal), (banner is stored as array in this.state.banner)
   - [ ] Recommended section style (this.state.recommended array)
   - [ ] Editors choice section style (this.state.fromTheEditors array)
   - [ ] Style categories (this.state.categories array)
   - [ ] Style video section (this.state.naldaVideos array)
 - [ ] Split admin panel into tabs
-  - [ ] Admins
-  - [ ] Curators
-  - [ ] Users
-  - [ ] Content
-  - [ ] Updating homepage
-  - [ ] Analytics
+  - [X] Admins
+  - [X] Curators
+  - [X] Users
+  - [X] Content
+  - [X] Updating homepage
+  - [X] Analytics
 - [ ] Add icons for deleting content, users, adding as admin/curator
-- [ ] Style image previews for banner in `Admin.j`
+- [X] Style image previews for banner in `Admin.j`
 - [ ] Adding amenities to `ListingForm.js`
 
 ## By 2/17
@@ -76,12 +76,12 @@ DELETE '/api/videos/:id'       // Delete a specific article
   - [X] Edit listings
   - [X] Styling for all these
   - [X] Error handling
-- [ ] Ensure everything works on live site
+- [X] Ensure everything works on live site
   - [X] Google oAuth
   - [X] Facebook oAuth
   - [X] Sendgrid
   - [X] Image upload
-    - [ ] Especially on mobile
+    - [X] Especially on mobile
 - [X] SSL fix
 - [X] Gallery on listing
   - [X] Backend
@@ -94,7 +94,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
   - [X] Curator/Admin list
   - [X] See users (scroll menu)
   - [X] See all content
-- [ ] Rough beginning to homepage
+- [X] Rough beginning to homepage
 - [ ] Random bug fixes
   - [ ] Ensure all locations entered are valid addresses/cities
   - [ ] Error check for empty inputs
@@ -111,7 +111,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [ ] Admin panel work
   - [X] No link to user pages
   - [ ] Ability to delete users from admin panel
-  - [ ] Categories should be scroll (or only show 10 of each) or search
+  - [X] Categories should be scroll (or only show 10 of each) or search
   - [X] Email should link to a sendto=email
   - [ ] Add as admin/curator should be next to users name (along with delete)
   - [ ] Add area to pick homepage featured images
@@ -174,8 +174,8 @@ DELETE '/api/videos/:id'       // Delete a specific article
 
 # TODO from Feb 11 meeting
 - [ ] Listing changes
-  - [ ] Description text area
-  - [ ] Editor's review section (listings)
+  - [X] Description text area
+  - [X] Editor's review section (listings)
   - [X] Mobile At a glance
   - [X] Also make it default close
   - [X] Change icons for that
@@ -190,8 +190,8 @@ DELETE '/api/videos/:id'       // Delete a specific article
   - [ ] Component for product thumbnails "featured in this video" (links to other things)
   - [X] Play button on top of video
 - [ ] Home page
-  - [ ] Banner on top, primarily articles and videos.
-    - [ ] Upload specific hero images for home page banner
+  - [X] Banner on top, primarily articles and videos.
+    - [X] Upload specific hero images for home page banner
   - [ ] Underneath banner, different listing options
   - [ ] Featured, Recommended for you, etc.
   - [ ] Browse by category
@@ -203,7 +203,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [ ] Searching content by location
 - [ ] Ask users for current location
 - [ ] Google maps pulling hours for companies and such
-- [ ] Make it scroll to the top when you load a new page
+- [X] Make it scroll to the top when you load a new page
 - [ ] Media library of images from AWS already uploaded to make curators life easier
 
 ## Code refactoring

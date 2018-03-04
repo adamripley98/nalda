@@ -7,7 +7,6 @@ import PropTypes from 'prop-types';
 const ErrorMessage = ({ error }) => {
   // Ensure that the passed in message is a string and not an object
   if (error && typeof error !== "string") {
-    console.log("ERROR");
     console.dir(error);
     return null;
   }
