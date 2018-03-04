@@ -543,22 +543,22 @@ a {
 
     .image-wrapper {
       height: 10rem;
-      padding: 2rem 0rem;
+      padding: 3rem 0rem;
       display: block;
 
       img {
         margin: 0 auto;
-        height: 6rem;
+        height: 4rem;
         width: auto;
         display: block;
-        opacity: 0.5;
+        opacity: 0.6;
         transition: all 0.2s ease;
       }
     }
 
     &:hover {
       .image-wrapper img {
-        opacity: 0.75;
+        opacity: 0.8;
       }
     }
   }
