@@ -126,6 +126,16 @@
   width: 100%;
   list-style: none;
   color: $gray;
+
+  a {
+    color: $gray;
+
+    &:hover,
+    &:active,
+    &:focus {
+      color: $dark-gray;
+    }
+  }
 }
 
 @media screen and (min-width: 748px) and (min-device-width: 748px) {
