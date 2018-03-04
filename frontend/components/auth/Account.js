@@ -1,6 +1,6 @@
 // Import framworks
 import React, { Component } from 'react';
-import { Redirect, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import PropTypes from 'prop-types';
@@ -390,164 +390,143 @@ class Account extends Component {
    */
   renderInfo() {
     return (
-      <table className="table account">
-        <tbody>
-          <tr>
-            <td className="bold">
-              Name
-            </td>
-            <td>
-              <span style={{ display: this.state.editName && "none" }}>
-                { this.state.name }
-              </span>
-              <input
-                className="form-control"
-                id="name"
-                ref={(input) => { this.nameInput = input; }}
-                value={ this.state.name }
-                onChange={ this.handleChangeName }
-                style={{ display: !this.state.editName && "none" }}
-              />
-            </td>
-            <td>
-              <i
-                className="fa fa-pencil"
-                aria-hidden="true"
-                onClick={ this.handleNameClick }
-              />
-            </td>
-          </tr>
-          <tr>
-            <td className="bold">
-               Profile Picture
-            </td>
-            <td>
-                <div
-                  className="profile-picture background-image"
-                  style={{
-                    display: this.state.editProfilePicture && "none",
-                    backgroundImage: `url(${ this.props.profilePicture })`
-                  }}
-                />
+      <form className="account">
+        <div>
+          <label className="bold">
+            Name
+          </label>
+          <span style={{ display: this.state.editName && "none" }}>
+            { this.state.name }
+          </span>
+          <input
+            className="form-control border"
+            id="name"
+            ref={(input) => { this.nameInput = input; }}
+            value={ this.state.name }
+            onChange={ this.handleChangeName }
+            style={{ display: !this.state.editName && "none" }}
+          />
+          <i
+            className="fa fa-pencil"
+            aria-hidden="true"
+            onClick={ this.handleNameClick }
+          />
+        </div>
+        <div>
+          <label className="bold">
+             Profile Picture
+          </label>
+          <div
+            className="profile-picture background-image"
+            style={{
+              display: this.state.editProfilePicture && "none",
+              backgroundImage: `url(${ this.props.profilePicture })`
+            }}
+          />
 
-                <Dropzone
-                  onDrop={this.onDrop}
-                  accept="image/*"
-                  style={{ display: !this.state.editProfilePicture && "none" }}>
-                  <p className="dropzone">
-                    <i className="fa fa-file-o" aria-hidden="true" />
-                    {
-                      this.state.profilePictureName ? (
-                        this.state.profilePictureName
-                      ) : (
-                        "Try dropping some files here, or click to select files to upload."
-                      )
-                    }
-                  </p>
-                </Dropzone>
-            </td>
-            <td>
-              <i
-                className="fa fa-pencil"
-                aria-hidden="true"
-                onClick={ this.handleProfilePictureClick }
-              />
-            </td>
-          </tr>
-          <tr>
-            <td className="bold">
-              Email
-            </td>
-            <td>
-              { this.state.email }
-            </td>
-            <td />
-          </tr>
-          <tr>
-            <td className="bold">
-              Type
-            </td>
-            <td>
-              { this.state.type }
-              <div
-                className="gray marg-top-1"
-                style={{ display: this.state.adminPopover ? "inherit" : "none" }}>
-                A user can either be an admin, curator, or general user. Only Nalda administrators can change your account type.
-              </div>
-            </td>
-            <td>
-              <i className="fa fa-question" aria-hidden="true" onClick={ this.handleAdminClick } />
-            </td>
-          </tr>
-          <tr>
-            <td className="bold">
-              Bio
-            </td>
-            <td>
-              <span style={{ display: this.state.editBio && "none" }}>
-                {
-                  this.state.bio ||
-                  <span className="gray-text cursor" onClick={ this.handleBioClick }>
-                    Add a bio here...
-                  </span>
-                }
+          <Dropzone
+            onDrop={this.onDrop}
+            accept="image/*"
+            style={{ display: !this.state.editProfilePicture && "none" }}>
+            <p className="dropzone">
+              <i className="fa fa-file-o" aria-hidden="true" />
+              {
+                this.state.profilePictureName ? (
+                  this.state.profilePictureName
+                ) : (
+                  "Try dropping some files here, or click to select files to upload."
+                )
+              }
+            </p>
+          </Dropzone>
+          <i
+            className="fa fa-pencil"
+            aria-hidden="true"
+            onClick={ this.handleProfilePictureClick }
+          />
+        </div>
+        <div>
+          <label className="bold">
+            Email
+          </label>
+          { this.state.email }
+        </div>
+        <div>
+          <label className="bold">
+            Type
+          </label>
+          { this.state.type }
+          <div
+            className="gray marg-top-1"
+            style={{ display: this.state.adminPopover ? "inherit" : "none" }}>
+            A user can either be an admin, curator, or general user. Only Nalda administrators can change your account type.
+          </div>
+          <i className="fa fa-question" aria-hidden="true" onClick={ this.handleAdminClick } />
+        </div>
+        <div>
+          <label>
+            Bio
+          </label>
+          <span style={{ display: this.state.editBio && "none" }}>
+            {
+              this.state.bio ||
+              <span className="gray-text cursor" onClick={ this.handleBioClick }>
+                Add a bio here...
               </span>
-              <textarea
-                className="form-control"
-                id="bio"
-                ref={(input) => { this.bioInput = input; }}
-                value={ this.state.bio }
-                onChange={ this.handleChangeBio }
-                style={{ display: !this.state.editBio && "none" }}
-              />
-            </td>
-            <td>
-              <i
-                className="fa fa-pencil"
-                aria-hidden="true"
-                onClick={ this.handleBioClick }
-              />
-            </td>
-          </tr>
-          <tr>
-            <td className="bold">
-              Location
-            </td>
-            <td>
-              <span style={{ display: this.state.editLocation && "none" }}>
-                { this.props.location }
-              </span>
-              <input
-                className="form-control"
-                id="location"
-                type="text"
-                ref={(input) => { this.locationInput = input; }}
-                style={{ display: !this.state.editLocation && "none" }}
-              />
-            </td>
-            <td>
-              <i
-                className="fa fa-pencil"
-                aria-hidden="true"
-                onClick={ this.handleLocationClick}
-              />
-            </td>
-          </tr>
-          <tr>
-            <td className="bold">
-              Password
-            </td>
-            <td>
-              ●●●●●●●
-            </td>
-            <td>
-              <Link to="/password">
-                <i className="fa fa-pencil" aria-hidden="true" />
-              </Link>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+            }
+          </span>
+          <textarea
+            className="form-control border"
+            id="bio"
+            ref={(input) => { this.bioInput = input; }}
+            value={ this.state.bio }
+            onChange={ this.handleChangeBio }
+            style={{ display: !this.state.editBio && "none" }}
+          />
+          <i
+            className="fa fa-pencil"
+            aria-hidden="true"
+            onClick={ this.handleBioClick }
+          />
+        </div>
+        <div>
+          <label>
+            Location
+          </label>
+          <span style={{ display: this.state.editLocation && "none" }}>
+            { this.props.location }
+          </span>
+          <input
+            className="form-control border"
+            id="location"
+            type="text"
+            ref={(input) => { this.locationInput = input; }}
+            style={{ display: !this.state.editLocation && "none" }}
+          />
+          <i
+            className="fa fa-pencil"
+            aria-hidden="true"
+            onClick={ this.handleLocationClick}
+          />
+        </div>
+        <div>
+          <label>
+            Password
+          </label>
+          ●●●●●●●
+          <Link to="/password">
+            <i className="fa fa-pencil" aria-hidden="true" />
+          </Link>
+        </div>
+        <div className="save-changes">
+          <Link to="/" className="btn btn-secondary">
+            Cancel
+          </Link>
+          <submit className="btn btn-primary disabled">
+            Save changes
+          </submit>
+        </div>
+      </form>
     );
   }
 
@@ -568,9 +547,7 @@ class Account extends Component {
               {
                 (!this.state.pending && !this.state.accountVerified) ? (
                   <div className="alert alert-warning marg-bot-1" onClick={this.handleVerifyEmail}>
-                    {
-                      this.state.info ? this.state.info : "Please verify your account by clicking here"
-                    }
+                    {this.state.info ? this.state.info : "Please verify your account by clicking here"}
                   </div>
                 ) : null
               }
