@@ -52,20 +52,19 @@ DELETE '/api/videos/:id'       // Delete a specific article
 ## Cam
 - [ ] Make homepage view
   - [ ] Get categories for listings
-  - [ ] Banner on top (probably carousal), (banner is stored as array in this.state.banner)
+  - [x] Banner on top (probably carousal), (banner is stored as array in this.state.banner)
   - [ ] Recommended section style (this.state.recommended array)
   - [ ] Editors choice section style (this.state.fromTheEditors array)
   - [ ] Style categories (this.state.categories array)
   - [ ] Style video section (this.state.naldaVideos array)
-- [ ] Split admin panel into tabs
-  - [ ] Admins
-  - [ ] Curators
-  - [ ] Users
-  - [ ] Content
-  - [ ] Updating homepage
-  - [ ] Analytics
+- [x] Split admin panel into tabs
+  - [x] Admins
+  - [x] Curators
+  - [x] Users
+  - [x] Content
+  - [x] Updating homepage
 - [ ] Add icons for deleting content, users, adding as admin/curator
-- [ ] Style image previews for banner in `Admin.j`
+- [ ] Style image previews for banner in `Admin.js`
 - [ ] Adding amenities to `ListingForm.js`
 
 ## By 2/17
@@ -115,12 +114,12 @@ DELETE '/api/videos/:id'       // Delete a specific article
   - [ ] Categories should be scroll (or only show 10 of each) or search
   - [X] Email should link to a sendto=email
   - [ ] Add as admin/curator should be next to users name (along with delete)
-  - [ ] Add area to pick homepage featured images
+  - [x] Add area to pick homepage featured images
   - [X] After upgrading from curator to admin, should refresh and show state instantaneously
 - [ ] Delete account functionality
 
 # Cam
-- [ ] Style frontend for homepage
+- [x] Style frontend for homepage
 
 ## Users
 - [ ] Reviews should be stored in user model too.
@@ -130,7 +129,6 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [ ] Sort by date
 
 ## Videos
-- [ ] Preview needs time stamp
 - [ ] Individual video frontend updates
   - [ ] Show Location
   - [x] Show date created
@@ -148,7 +146,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
   - [x] Show author data
 
 ## Frontend
-- [ ] Icons for all amenities
+- [x] Icons for all amenities
 - [ ] Make it easier for an admin to enter hours (some sort of autofill)
 - [ ] Get rid of any userId passing from frontend unless it is for comparing to backend userId
 - [ ] Clear hashtag from url after google login
