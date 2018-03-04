@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
 // Import components
-import Preview from '../content/Preview';
+import ArticlePreview from '../content/articles/ArticlePreview';
 
 /**
  * Render the recommended content on the homepage
@@ -19,7 +19,13 @@ class FromTheEditors extends Component {
         <div className="row">
           {
             this.props.content.map(c => (
-              <Preview content={c} key={`content-${c.contentId}`} />
+              <ArticlePreview
+                title={c.title}
+                subtitle={c.subtitle}
+                image={c.image}
+                contentId={c.contentId}
+                key={`content-${c.contentId}`}
+              />
             ))
           }
         </div>

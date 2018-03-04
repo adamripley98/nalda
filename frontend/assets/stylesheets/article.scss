@@ -100,3 +100,43 @@
     font-size: 1.4rem;
   }
 }
+
+/**
+ * Styling article previews
+ */
+.article-preview {
+  height: 60vh;
+  border-radius: 0.4rem;
+  color: white;
+  padding: 0.5rem 0rem 0rem 0rem;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  margin-bottom: 1rem;
+  vertical-align: bottom;
+
+  h4, p {
+    width: 100%;
+    display: block;
+    color: white;
+    margin-bottom: 0.4rem;
+  }
+
+  p {
+    margin-bottom: 0rem;
+  }
+
+  .content {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding: 0rem 1rem 1rem 1rem;
+
+    .shade {
+      background: rgba(0, 0, 0, 0.5);
+      background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+      border-radius: 0rem 0rem 0.4rem 0.4rem;
+      padding: 20vh 1rem 1rem 1rem;
+    }
+  }
+}

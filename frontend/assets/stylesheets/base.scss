@@ -563,6 +563,14 @@ a {
     }
   }
 
+  .location {
+    text-transform: uppercase;
+    margin-bottom: 0.2rem;
+    font-size: 0.8rem;
+    color: $gray;
+    font-weight: bold;
+  }
+
   .title {
     font-weight: bold;
     margin-bottom: 0.25rem !important;

@@ -1,7 +1,11 @@
+// Import frameworks
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import moment from 'moment';
+// import moment from 'moment';
+
+// Import components
+import Stars from './listings/Stars';
 
 /**
  * Renders an error message to the user
@@ -13,12 +17,21 @@ class Preview extends Component {
     // Bind this to helper methods
     this.getType = this.getType.bind(this);
     this.getSubtitle = this.getSubtitle.bind(this);
+    this.getLocation = this.getLocation.bind(this);
+    this.getCategories = this.getCategories.bind(this);
   }
 
   getSubtitle() {
+    if (this.props.isListing || this.props.contentType === "listing") return null;
+
     // Update the subtitle to a shortened version if need be
-    if (this.props.subtitle.length > 100) return this.props.subtitle.substring(0, 100) + "...";
-    return this.props.subtitle;
+    let subtitle = this.props.subtitle;
+    if (this.props.subtitle.length > 100) subtitle = this.props.subtitle.substring(0, 100) + "...";
+    return (
+      <h6 className="subtitle">
+        { subtitle }
+      </h6>
+    );
   }
 
   getType() {
@@ -30,12 +43,41 @@ class Preview extends Component {
     } else if (this.props.isVideo || this.props.contentType === "video") {
       return "videos";
     }
+
+    // If none of the types match
     return "";
+  }
+
+  getLocation() {
+    // If there is no location, return null
+    if (!this.props.location) return null;
+
+    // Else, if there is a location return it but make sure it is not too long
+    let location = this.props.location;
+    if (location.length > 32) location = location.substring(0, 32).trim() + '...';
+    return (
+      <p className="location">
+        {location}
+      </p>
+    );
+  }
+
+  getCategories() {
+    // If there are no categories, return null
+    if (!this.props.categories || !this.props.categories.length) return null;
+
+    // If there are categories to return
+    return (
+      <div className="categories">
+        {this.props.categories.map(category => <span className="category">{category}</span>)}
+      </div>
+    );
   }
 
   render() {
     // If an object was passed in, recursively render the preview
     if (this.props.content) {
+      // Find the image for the content depending on its type
       let image = "";
       if (this.props.content.contentType === "video") {
         const videoId = this.props.content.url.substring(this.props.content.url.indexOf("v=") + 2);
@@ -44,11 +86,14 @@ class Preview extends Component {
         image = this.props.content.image;
       }
 
+      // Render a preview with the specific props
       return (
         <Preview
-          _id={ this.props.content.contentId }
-          key={ this.props.content.contentId }
-          title={ this.props.content.title }
+          _id={this.props.content.contentId}
+          key={this.props.content.contentId}
+          title={this.props.content.title}
+          categories={this.props.content.categories}
+          location={this.props.content.location ? this.props.content.location.name : ""}
           subtitle={
             this.props.content.subtitle ? (
               this.props.content.subtitle
@@ -56,6 +101,7 @@ class Preview extends Component {
               this.props.content.description
             )
           }
+          rating={this.props.content.rating}
           image={image}
           contentType={ this.props.content.contentType }
         />
@@ -82,21 +128,19 @@ class Preview extends Component {
               )}
             </div>
 
-            <h2 className="title">
-              { this.props.title }
-            </h2>
+            {this.getLocation()}
+            <h2 className="title">{this.props.title}</h2>
+            {this.getCategories()}
+            {this.props.rating && <Stars rating={this.props.rating} />}
+            {this.getSubtitle()}
 
-            <h6 className="subtitle">
-              { this.getSubtitle() }
-            </h6>
-
-            {
+            {/*
               this.props.timestamp && (
                 <p className="gray-text marg-bot-0 marg-top-05 right italic">
                   { moment(new Date(Number(this.props.timestamp))).fromNow(true) }
                 </p>
               )
-            }
+            */}
           </div>
         </Link>
       </div>
@@ -117,6 +161,9 @@ Preview.propTypes = {
   timestamp: PropTypes.number,
   content: PropTypes.object,
   contentType: PropTypes.string,
+  rating: PropTypes.number,
+  location: PropTypes.string,
+  categories: PropTypes.array,
 };
 
 export default Preview;

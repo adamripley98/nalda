@@ -51,6 +51,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
 
 ## Cam
 - [ ] Make homepage view
+  - [ ] Get categories for listings
   - [ ] Banner on top (probably carousal), (banner is stored as array in this.state.banner)
   - [ ] Recommended section style (this.state.recommended array)
   - [ ] Editors choice section style (this.state.fromTheEditors array)
