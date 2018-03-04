@@ -36,92 +36,8 @@ const s3bucket = new AWS.S3({
 module.exports = () => {
   /**
    * Get content for the homepage
-   * 4 most recent articles, listings, and videos
-   * TODO pull content from the user's location
-   // TODO pull from new homepage model
    */
   router.get('/', (req, res) => {
-    // Start by finding articles
-    Article.find((articleErr, articles) => {
-      if (articleErr) {
-        res.send({
-          success: false,
-          error: articleErr.message,
-        });
-      } else {
-        /**
-         * Find the four most recent articles
-         */
-        let recentArticles;
-        if (articles.length <= 4) {
-          recentArticles = articles;
-        } else {
-          recentArticles = articles.slice(articles.length - 4);
-        }
-
-        // Display in correct order
-        recentArticles.reverse();
-
-        // Find listings
-        Listing.find((listingErr, listings) => {
-          if (listingErr) {
-            res.send({
-              success: false,
-              error: listingErr.message,
-            });
-          } else {
-            /**
-             * Find the four most recent listings
-             */
-            let recentListings;
-            if (listings.length <= 4) {
-              recentListings = listings;
-            } else {
-              recentListings = listings.slice(listings.length - 4);
-            }
-
-            // Display in correct order
-            recentListings.reverse();
-
-            // Find videos
-            Video.find((videoErr, videos) => {
-              if (videoErr) {
-                res.send({
-                  success: false,
-                  error: videoErr.message,
-                });
-              } else {
-                /**
-                 * Find the four most recent videos
-                 */
-                let recentVideos;
-                if (videos.length <= 4) {
-                  recentVideos = videos;
-                } else {
-                  recentVideos = videos.slice(videos.length - 4);
-                }
-
-                // Display in correct order
-                recentVideos.reverse();
-
-                // Send the articles, listings, and videos
-                res.send({
-                  success: true,
-                  data: {
-                    articles: recentArticles,
-                    listings: recentListings,
-                    videos: recentVideos,
-                  },
-                });
-              }
-            });
-          }
-        });
-      }
-    });
-  });
-
-  router.get('/testing', (req, res) => {
     // Helper function to avoid repeated code
     const pullData = (arr, callback) => {
       const returnArr = [];
@@ -143,45 +59,52 @@ module.exports = () => {
               error: 'Homepage content not found',
             });
             return;
-          }
-          let newContent = {};
-          if (item.contentType === 'article') {
-            newContent = {
-              contentType: item.contentType,
-              contentId: item.contentId,
-              title: content.title,
-              subtitle: content.subtitle,
-              image: content.image,
-              createdAt: content.createdAt,
-              updatedAt: content.updatedAt,
-              location: content.location,
-            };
-          } else if (item.contentType === 'listing') {
-            newContent = {
-              contentType: item.contentType,
-              contentId: item.contentId,
-              title: content.title,
-              description: content.description,
-              location: content.location,
-              image: content.image,
-              rating: content.rating,
-              price: content.price,
-            };
+          } else if (!content) {
+            callback({
+              success: false,
+              error: 'Homepage content not found',
+            });
           } else {
-            // Content is a video
-            newContent = {
-              contentType: item.contentType,
-              contentId: item.contentId,
-              title: content.title,
-              description: content.description,
-              url: content.url,
-              location: content.location,
-              createdAt: content.createdAt,
-              updatedAt: content.updatedAt,
-            };
+            let newContent = {};
+            if (item.contentType === 'article') {
+              newContent = {
+                contentType: item.contentType,
+                contentId: item.contentId,
+                title: content.title,
+                subtitle: content.subtitle,
+                image: content.image,
+                createdAt: content.createdAt,
+                updatedAt: content.updatedAt,
+                location: content.location,
+              };
+            } else if (item.contentType === 'listing') {
+              newContent = {
+                contentType: item.contentType,
+                contentId: item.contentId,
+                title: content.title,
+                description: content.description,
+                location: content.location,
+                image: content.image,
+                rating: content.rating,
+                price: content.price,
+                categories: content.categories,
+              };
+            } else {
+              // Content is a video
+              newContent = {
+                contentType: item.contentType,
+                contentId: item.contentId,
+                title: content.title,
+                description: content.description,
+                url: content.url,
+                location: content.location,
+                createdAt: content.createdAt,
+                updatedAt: content.updatedAt,
+              };
+            }
+            returnArr.push(newContent);
+            cb();
           }
-          returnArr.push(newContent);
-          cb();
         });
       }, (asyncErr) => {
         if (asyncErr) {
@@ -252,7 +175,6 @@ module.exports = () => {
   });
 
   // Route to handle adding content to homepage recommended
-  // TODO only listings
   router.post('/recommended/add', (req, res) => {
     AdminCheck(req, (authRes) => {
       if (!authRes.success) {
