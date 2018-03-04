@@ -7,19 +7,24 @@ import {Link} from 'react-router-dom';
  * Component to render the banner images at the top of the homepage
  */
 class Banner extends Component {
+  /**
+   * Constructor method
+   */
   constructor(props) {
     super(props);
-    if (this.props.banners.length === 1) {
+
+    // Find the new banners with first and last images as dummy banners
+    this.props.banners.push({ isEmpty: true, });
+    this.props.banners.unshift({ isEmpty: true, });
+
+    // Set the initial state depending on the number of banner images there are
+    if (this.props.banners.length <= 4) {
       this.state = {
-        active: 0,
-        toLeft: -1,
-        toRight: 1,
+        active: this.props.banners.length - 2,
       };
     } else {
       this.state = {
-        active: 1,
-        toLeft: 0,
-        toRight: 2,
+        active: this.props.banners.length - 3,
       };
     }
 
@@ -28,28 +33,33 @@ class Banner extends Component {
     this.shiftLeft = this.shiftLeft.bind(this);
   }
 
+  /**
+   * Helper method to shift the banner images when a user clicks right shift
+   */
   shiftRight() {
     // If we have not reached the right-most item
-    if (this.state.active > 0) {
+    if (this.state.active > 1) {
       this.setState({
         active: this.state.active - 1,
-        toLeft: this.state.toLeft - 1,
-        toRight: this.state.toRight - 1,
       });
     }
   }
 
+  /**
+   * Helper method to shift the banner images whena a user clicks left shift
+   */
   shiftLeft() {
     // If we have not reached the left most item
-    if (this.state.active < this.props.banners.length - 1) {
+    if (this.state.active < this.props.banners.length - 2) {
       this.setState({
         active: this.state.active + 1,
-        toLeft: this.state.toLeft + 1,
-        toRight: this.state.toRight + 1,
       });
     }
   }
 
+  /**
+   * Render the banner and banner images
+   */
   render() {
     if (!this.props.banners || !this.props.banners.length) return null;
     return (
@@ -57,9 +67,9 @@ class Banner extends Component {
         { this.props.banners.map((banner, index) => {
           let bannerClass = "";
           if (this.state.active === index) bannerClass = "active";
-          else if (this.state.toLeft === index) bannerClass = "toLeft";
-          else if (this.state.toRight === index) bannerClass = "toRight";
-          else if (this.state.toRight < index) bannerClass = "offRight";
+          else if (this.state.active - 1 === index) bannerClass = "toLeft";
+          else if (this.state.active + 1 === index) bannerClass = "toRight";
+          else if (this.state.active + 1 < index) bannerClass = "offRight";
           else bannerClass = "offLeft";
           if (bannerClass === "active") {
             return (
@@ -80,7 +90,7 @@ class Banner extends Component {
           );
         })}
         {
-          this.state.active === this.props.banners.length - 1 ? (
+          this.state.active === this.props.banners.length - 2 ? (
             null
           ) : (
             <div className="shift left" onClick={this.shiftLeft}>
@@ -89,7 +99,7 @@ class Banner extends Component {
           )
         }
         {
-          this.state.active === 0 ? (
+          this.state.active === 1 ? (
             null
           ) : (
             <div className="shift right" onClick={this.shiftRight}>
