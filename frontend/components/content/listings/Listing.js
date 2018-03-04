@@ -29,6 +29,10 @@ import Waiter from '../../../assets/images/waiter.svg';
 import Wifi from '../../../assets/images/wifi.svg';
 import Wink from '../../../assets/images/wink.svg';
 
+// Import json
+import categoryMap from '../../json/categoryMap';
+import amenityMap from '../../json/amenityMap';
+
 /**
  * Component to render a listing
  */
@@ -226,43 +230,23 @@ class Listing extends React.Component {
    */
   renderCategories() {
     // If there are categories to display
-    if (this.state.categories && Object.keys(this.state.categories).length) {
+    if (this.state.categories) {
       // Get all keys from the object
       const keys = Object.keys(this.state.categories);
 
-      // Map from categories to properly formatted text
-      const map = {
-        foodTrucks: "Food truck",
-        lateNights: "Late nights",
-        healthy: "Healthy",
-        forTheSweetTooth: "For the sweet tooth",
-        forTheStudyGrind: "For the study grind",
-        openLate: "It's midnight and I'm hungry",
-        parentsVisiting: "Parents visiting!!??",
-        gotPlasteredLastNight: "Got plastered last night",
-        bars: "Bars",
-        byos: "BYO",
-        speakeasies: "Speakeasies",
-        dateNight: "Date night",
-        formals: "Formals",
-        birthdays: "Birthdays",
-        treatYourself: "Treat yourself",
-        adulting: "#adulting",
-        feelingLazy: "Feeling lazy",
-        holeInTheWall: "Hole in the wall",
-        showoffToYourFriends: "Show off to your friends",
-        forTheGram: "#forTheGram",
-      };
-
-      // Return an category div tag for each category which is true in the state
-      // That is, if the curator marked that the listing has said category
-      return keys.map(category => (
-        this.state.categories[category] ? (
-          <div className="category" key={ category }>
-            { map[category] ? map[category] : category }
-          </div>
-        ) : null
-      ));
+      // If there are any keys
+      if (keys.length) {
+        // Return an category div tag for each category which is true in the state
+        // That is, if the curator marked that the listing has said category
+        return keys.map(category => (
+          this.state.categories[category] ? (
+            <div className="category" key={ category }>
+              { categoryMap[category] ? categoryMap[category] : category }
+            </div>
+          ) : null
+        ));
+      }
+      return null;
     }
 
     // If there are no categories
@@ -276,18 +260,6 @@ class Listing extends React.Component {
     // If amenities are in the state (this should always be the case)
     if (this.state.amenities) {
       const keys = Object.keys(this.state.amenities);
-
-      // Mapping from keys to strings
-      const keyMap = {
-        outdoorSeating: "Outdoor seating",
-        wifi: "Wifi",
-        formal: "Formal",
-        cashOnly: "Cash only",
-        parking: "Parking",
-        reservation: "Reservation",
-        wink: "Wink",
-        waiter: "Waiter",
-      };
 
       // Map from keys to svgs
       const svgMap = {
@@ -307,7 +279,7 @@ class Listing extends React.Component {
         this.state.amenities[key] ? (
           <div className="amenity" key={ key }>
             { svgMap[key] }
-            { keyMap[key] }
+            { amenityMap[key] }
           </div>
         ) : null
       ));
