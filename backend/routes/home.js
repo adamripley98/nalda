@@ -253,6 +253,7 @@ module.exports = () => {
   });
 
   // Route to handle adding content to homepage recommended
+  // TODO only listings
   router.post('/recommended/add', (req, res) => {
     AdminCheck(req, (authRes) => {
       if (!authRes.success) {
@@ -263,85 +264,73 @@ module.exports = () => {
       } else {
         const contentId = req.body.contentId;
         Listing.findById(contentId, (errListing, listing) => {
-          Article.findById(contentId, (errArticle, article) => {
-            Video.findById(contentId, (errVideo, video) => {
-              if (errListing || errArticle || errVideo) {
+          if (errListing) {
+            res.send({
+              success: false,
+              error: 'Error finding content.'
+            });
+          // Make sure id is of right format
+          } else if (!contentId.match(/^[0-9a-fA-F]{24}$/)) {
+            res.send({
+              success: false,
+              error: 'No listing with that id exists.'
+            });
+            // Make sure content with given id exists
+          } else if (!listing) {
+            res.send({
+              success: false,
+              error: 'No listing with that ID exists.',
+            });
+          } else {
+            Homepage.find({}, (errHomepage, home) => {
+              if (errHomepage) {
                 res.send({
                   success: false,
-                  error: 'Error finding content.'
-                });
-              // Make sure id is of right format
-              } else if (!contentId.match(/^[0-9a-fA-F]{24}$/)) {
-                res.send({
-                  success: false,
-                  error: 'No content with that id exists.'
-                });
-                // Make sure content with given id exists
-              } else if (!article && !listing && !video) {
-                res.send({
-                  success: false,
-                  error: 'No content with that ID exists.',
+                  error: 'Error loading homepage.',
                 });
               } else {
-                Homepage.find({}, (errHomepage, home) => {
-                  if (errHomepage) {
-                    res.send({
-                      success: false,
-                      error: 'Error loading homepage.',
-                    });
-                  } else {
-                    const homepage = home[0];
-                    const recommended = homepage.recommended.slice();
-                    // Error check for duplicate content in banner
-                    let duplicate = false;
-                    recommended.forEach((item) => {
-                      if (item.contentId === contentId) {
-                        duplicate = true;
-                      }
-                    });
-                    if (duplicate) {
-                      res.send({
-                        success: false,
-                        error: 'This content is already in the recommended content section.',
-                      });
-                    } else {
-                      // Create object to pass back, of type article or listing
-                      let contentType = '';
-                      if (article) {
-                        contentType = 'article';
-                      } else if (listing) {
-                        contentType = 'listing';
-                      } else {
-                        contentType = 'video';
-                      }
-                      const newRecommendedContent = {
-                        contentType,
-                        contentId,
-                      };
-                      // Add to Recommended
-                      recommended.push(newRecommendedContent);
-                      homepage.recommended = recommended;
-                      // Save new banner to mongo
-                      homepage.save((errSave) => {
-                        if (errSave) {
-                          res.send({
-                            success: false,
-                            error: errSave,
-                          });
-                        } else {
-                          res.send({
-                            success: true,
-                            error: '',
-                            data: homepage.recommended,
-                          });
-                        }
-                      });
-                    }
+                const homepage = home[0];
+                const recommended = homepage.recommended.slice();
+                // Error check for duplicate content in banner
+                let duplicate = false;
+                recommended.forEach((item) => {
+                  if (item.contentId === contentId) {
+                    duplicate = true;
                   }
                 });
+                if (duplicate) {
+                  res.send({
+                    success: false,
+                    error: 'This listing is already in the recommended content section.',
+                  });
+                } else {
+                  // Create object to pass back, of type listing
+                  const newRecommendedContent = {
+                    contentType: 'listing',
+                    contentId,
+                  };
+                  // Add to Recommended
+                  recommended.push(newRecommendedContent);
+                  homepage.recommended = recommended;
+                  // Save new banner to mongo
+                  homepage.save((errSave) => {
+                    if (errSave) {
+                      res.send({
+                        success: false,
+                        error: errSave,
+                      });
+                    } else {
+                      res.send({
+                        success: true,
+                        error: '',
+                        data: homepage.recommended,
+                      });
+                    }
+                  });
+                }
               }
             });
-          });
+          }
         });
       }
     });
@@ -405,86 +394,74 @@ module.exports = () => {
         });
       } else {
         const contentId = req.body.contentId;
-        Listing.findById(contentId, (errListing, listing) => {
-          Article.findById(contentId, (errArticle, article) => {
-            Video.findById(contentId, (errVideo, video) => {
-              if (errListing || errArticle || errVideo) {
+        Article.findById(contentId, (errArticle, article) => {
+          if (errArticle) {
+            res.send({
+              success: false,
+              error: 'Error finding article.'
+            });
+          // Make sure id is of right format
+          } else if (!contentId.match(/^[0-9a-fA-F]{24}$/)) {
+            res.send({
+              success: false,
+              error: 'No article with that id exists.'
+            });
+            // Make sure article with given id exists
+          } else if (!article) {
+            res.send({
+              success: false,
+              error: 'No article with that ID exists.',
+            });
+          } else {
+            Homepage.find({}, (errHomepage, home) => {
+              if (errHomepage) {
                 res.send({
                   success: false,
-                  error: 'Error finding content.'
-                });
-              // Make sure id is of right format
-              } else if (!contentId.match(/^[0-9a-fA-F]{24}$/)) {
-                res.send({
-                  success: false,
-                  error: 'No content with that id exists.'
-                });
-                // Make sure content with given id exists
-              } else if (!article && !listing && !video) {
-                res.send({
-                  success: false,
-                  error: 'No content with that ID exists.',
+                  error: 'Error loading homepage.',
                 });
               } else {
-                Homepage.find({}, (errHomepage, home) => {
-                  if (errHomepage) {
-                    res.send({
-                      success: false,
-                      error: 'Error loading homepage.',
-                    });
-                  } else {
-                    const homepage = home[0];
-                    const fromTheEditors = homepage.fromTheEditors.slice();
-                    // Error check for duplicate content in banner
-                    let duplicate = false;
-                    fromTheEditors.forEach((item) => {
-                      if (item.contentId === contentId) {
-                        duplicate = true;
-                      }
-                    });
-                    if (duplicate) {
-                      res.send({
-                        success: false,
-                        error: 'This content is already in the from the editors content section.',
-                      });
-                    } else {
-                      // Create object to pass back, of type article or listing
-                      let contentType = '';
-                      if (article) {
-                        contentType = 'article';
-                      } else if (listing) {
-                        contentType = 'listing';
-                      } else {
-                        contentType = 'video';
-                      }
-                      const newFromTheEditorsContent = {
-                        contentType,
-                        contentId,
-                      };
-                      // Add to from the editors
-                      fromTheEditors.push(newFromTheEditorsContent);
-                      homepage.fromTheEditors = fromTheEditors;
-                      // Save new banner to mongo
-                      homepage.save((errSave) => {
-                        if (errSave) {
-                          res.send({
-                            success: false,
-                            error: errSave,
-                          });
-                        } else {
-                          res.send({
-                            success: true,
-                            error: '',
-                            data: homepage.fromTheEditors,
-                          });
-                        }
-                      });
-                    }
+                const homepage = home[0];
+                const fromTheEditors = homepage.fromTheEditors.slice();
+                // Error check for duplicate content in banner
+                let duplicate = false;
+                fromTheEditors.forEach((item) => {
+                  if (item.contentId === contentId) {
+                    duplicate = true;
                   }
                 });
+                if (duplicate) {
+                  res.send({
+                    success: false,
+                    error: 'This article is already in the from the editors content section.',
+                  });
+                } else {
+                  // Create object to pass back, of type article
+                  const newFromTheEditorsContent = {
+                    contentType: article,
+                    contentId,
+                  };
+                  // Add to from the editors
+                  fromTheEditors.push(newFromTheEditorsContent);
+                  homepage.fromTheEditors = fromTheEditors;
+                  // Save new banner to mongo
+                  homepage.save((errSave) => {
+                    if (errSave) {
+                      res.send({
+                        success: false,
+                        error: errSave,
+                      });
+                    } else {
+                      res.send({
+                        success: true,
+                        error: '',
+                        data: homepage.fromTheEditors,
+                      });
+                    }
+                  });
+                }
               }
             });
-          });
+          }
         });
       }
     });
