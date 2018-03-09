@@ -280,9 +280,6 @@ class Account extends Component {
             lng: longitude,
           };
 
-          console.log("DID CHANGE?");
-          console.log(this.state.profilePictureChanged);
-
           // Send the request to update the user
           // TODO make sure this works
           axios.post("/api/users/edit", {
@@ -293,7 +290,6 @@ class Account extends Component {
             profilePictureChanged: this.state.profilePictureChanged,
           })
             .then(res => {
-              console.log(res.data);
               if (!res.data.success) {
                 this.setState({
                   pending: false,

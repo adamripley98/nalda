@@ -40,7 +40,6 @@ module.exports = () => {
           } else {
             // Email addresses them by first name
             const displayName = user.name.split(' ').length > 1 ? user.name.split(' ')[0] : user.name;
-            // Create message
 
             // Set up the html
             const html = (

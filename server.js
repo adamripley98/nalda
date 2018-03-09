@@ -225,6 +225,7 @@ passport.use(new GoogleStrategy({
           googleId: profile.id,
           profilePicture: profile.photos[0].value,
         });
+
         // Send new user a welcome email
         sendWelcomeEmail(newUser, (resp) => {
           if (!resp.success) {
@@ -233,6 +234,7 @@ passport.use(new GoogleStrategy({
             // Update new user
             newUser.accountVerified = false;
             newUser.verificationToken = resp.token;
+
             // Save new user in mongo
             newUser.save((errSave) => {
               if (errSave) {

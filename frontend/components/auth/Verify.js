@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 // Import components
 import Thin from '../shared/Thin';
 import Loading from '../shared/Loading';
+import ErrorMessage from '../shared/ErrorMessage';
 
 /**
  * Component rendered to tell user that they've been verified
@@ -15,33 +16,38 @@ class Verify extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      verified: '',
+      verified: false,
       error: '',
+      pending: true,
     };
   }
 
   componentDidMount() {
     window.scrollTo(0, 0);
+
     // Isolate token from URL
     const token = this.props.match.params.token;
 
     axios.get(`/api/verified/${token}`)
-    .then((resp) => {
-      if (resp.data.success) {
+      .then(resp => {
+        if (resp.data.success) {
+          this.setState({
+            verified: true,
+            pending: false,
+          });
+        } else {
+          this.setState({
+            error: resp.data.error,
+            pending: false,
+          });
+        }
+      })
+      .catch(err => {
         this.setState({
-          verified: true,
+          error: err,
+          pending: false,
         });
-      } else {
-        this.setState({
-          error: resp.data.error,
-        });
-      }
-    })
-    .catch((err) => {
-      this.setState({
-        error: err,
       });
-    });
   }
 
   render() {
@@ -52,15 +58,20 @@ class Verify extends Component {
             Verification
           </h2>
           {
-            this.state.verified ? (
-              <div className="alert alert-success marg-bot-1">
-                Your account has been verified!
+            this.state.pending ? <Loading /> : (
+              <div>
+                { this.state.verified ? (
+                  <div className="alert alert-success marg-bot-1">
+                    Your account has been verified!
+                  </div>
+                ) : null }
+                <ErrorMessage error={this.state.error} />
+                <Link to="/" className="btn btn-primary full-width">
+                  Back to home
+                </Link>
               </div>
-            ) : <Loading />
+            )
           }
-          <Link to="/" className="btn btn-primary full-width">
-            Back to home
-          </Link>
         </div>
       </Thin>
     );

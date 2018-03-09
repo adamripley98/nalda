@@ -89,7 +89,7 @@ class AppContainer extends Component {
         userId,
       }
     })
-    .then((resp) => {
+    .then(resp => {
       // Redux persist and backend state are NOT synced. Need to wipe redux state and redirect to login
       if (!resp.data.success) {
         // Dispatch the logout action
@@ -110,12 +110,7 @@ class AppContainer extends Component {
         }
       }
     })
-    .catch((err) => {
-      /**
-       * TODO Handle error better
-       */
-      console.log('Error with syncing state', err);
-    });
+    .catch(() => {});
   }
 
   // Render the application
@@ -176,7 +171,7 @@ class AppContainer extends Component {
                 <Route exact path="/*" component={NotFoundSection}/>
 
                 {/* Redirect to the login page when the user signs out */}
-                { this.state.redirectToLogin && (<Redirect to="/login"/>) }
+                { (this.state.redirectToLogin && window.location.pathname !== "/login") && (<Redirect to="/login"/>) }
               </Switch>
             </div>
             <Footer />

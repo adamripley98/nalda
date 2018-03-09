@@ -154,7 +154,7 @@ class Login extends Component {
     return (
       <div>
         <Tags title="Login" description="Login to Nalda" keywords="Nalda,Login,login,penn" />
-        {(this.props.userId) && <Redirect to="/"/>}
+        {this.props.userId && <Redirect to="/" />}
         <div className="space-2" />
         <Thin>
           <div>

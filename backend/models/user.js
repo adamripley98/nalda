@@ -26,7 +26,7 @@ const userSchema = new Schema({
   googleId: String,
   resetPasswordToken: String,
   resetPasswordExpires: Date,
-  accountVerified: Boolean,
+  accountVerified: { type: Boolean, default: false },
   verificationToken: String,
 });
 
