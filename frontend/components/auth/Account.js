@@ -159,54 +159,51 @@ class Account extends Component {
     });
   }
 
-  /**
-   * Handle click to edit profile picture
-   */
-  handleProfilePictureClick() {
-    if (this.state.editProfilePicture) {
-      // Isolate variables
-      const changeProfilePic = this.props.changeProfilePic;
-      const userId = this.props.userId;
-      const profilePicture = this.state.profilePicture;
-      const profilePictureChanged = this.state.profilePictureChanged;
-
-      // Error checking
-      if (!profilePicture) {
-        this.setState({
-          error: 'Profile picture cannot be empty',
-        });
-      } else if (profilePictureChanged) {
-        // Post to backend to change profile picture
-        axios.post('/api/users/profilePicture', {
-          userId,
-          profilePicture,
-        })
-        .then((resp) => {
-          if (!resp.data.success) {
-            this.setState({
-              error: resp.data.error,
-            });
-          } else {
-            // Dispatch redux action to change profile picture
-            this.setState({
-              error: '',
-              profilePictureChanged: false,
-            });
-            changeProfilePic(profilePicture);
-          }
-        })
-        .catch((err) => {
-          this.setState({
-            error: err,
-          });
-        });
-      }
-    }
-    // Update the state
-    this.setState({
-      editProfilePicture: !this.state.editProfilePicture,
-    });
-  }
+  // /**
+  //  * Handle click to edit profile picture
+  //  */
+  // handleProfilePictureClick() {
+  //   if (this.state.editProfilePicture) {
+  //     // Isolate variables
+  //     const profilePictureChanged = this.state.profilePictureChanged;
+  //
+  //     // Error checking
+  //     if (!this.state.profilePicture) {
+  //       this.setState({
+  //         error: 'Profile picture cannot be empty',
+  //       });
+  //     } else if (profilePictureChanged) {
+  //       // Post to backend to change profile picture
+  //       axios.post('/api/users/profilePicture', {
+  //         userId: this.props.userId,
+  //         profilePicture: this.state.profilePicture,
+  //       })
+  //       .then((resp) => {
+  //         if (!resp.data.success) {
+  //           this.setState({
+  //             error: resp.data.error,
+  //           });
+  //         } else {
+  //           // Dispatch redux action to change profile picture
+  //           this.setState({
+  //             error: '',
+  //             profilePictureChanged: false,
+  //           });
+  //           this.props.changeProfilePic(profilePicture);
+  //         }
+  //       })
+  //       .catch((err) => {
+  //         this.setState({
+  //           error: err,
+  //         });
+  //       });
+  //     }
+  //   }
+  //   // Update the state
+  //   this.setState({
+  //     editProfilePicture: !this.state.editProfilePicture,
+  //   });
+  // }
 
   // Helper method that is fired when a profile picture is added
   onDrop(acceptedFiles, rejectedFiles) {
@@ -215,6 +212,7 @@ class Account extends Component {
       const profilePicture = acceptedFiles[0];
 
       const reader = new FileReader();
+
       // Convert from blob to a proper file object that can be passed to server
       reader.onload = (upload) => {
         this.setState({
@@ -222,8 +220,10 @@ class Account extends Component {
           error: '',
           profilePictureName: profilePicture.name,
           profilePictureChanged: true,
+          hasChanged: true,
         });
       };
+
       // File reader set up
       reader.onabort = () => this.setState({error: "File read aborted."});
       reader.onerror = () => this.setState({error: "File read error."});
@@ -280,6 +280,9 @@ class Account extends Component {
             lng: longitude,
           };
 
+          console.log("DID CHANGE?");
+          console.log(this.state.profilePictureChanged);
+
           // Send the request to update the user
           // TODO make sure this works
           axios.post("/api/users/edit", {
@@ -287,8 +290,10 @@ class Account extends Component {
             name: this.state.name,
             bio: this.state.bio,
             profilePicture: this.state.profilePicture,
+            profilePictureChanged: this.state.profilePictureChanged,
           })
             .then(res => {
+              console.log(res.data);
               if (!res.data.success) {
                 this.setState({
                   pending: false,
@@ -297,10 +302,14 @@ class Account extends Component {
               } else {
                 this.props.changeName(this.state.name);
                 this.props.changeLocation(newLocation.name);
-                this.props.changeProfilePic(this.state.profilePicture);
+                if (res.data.data) {
+                  this.props.changeProfilePic(res.data.data);
+                }
+
                 this.setState({
                   pending: false,
                   success: "Successfully updated account information.",
+                  profilePictureChanged: false,
                 });
               }
             })
@@ -343,8 +352,8 @@ class Account extends Component {
         </label>
 
         <div
-          className="profile-picture background-image"
-          style={{backgroundImage: `url(${this.props.profilePicture})`}}
+          className="profile-picture background-image marg-bot-1"
+          style={{backgroundImage: `url(${this.state.profilePicture ? this.state.profilePicture : this.props.profilePicture})`}}
         />
 
         <Dropzone onDrop={this.onDrop} accept="image/*" style={{ marginBottom: "1rem" }}>
@@ -474,11 +483,11 @@ Account.propTypes = {
 };
 
 // Allows us to access redux state as this.props.userId inside component
-const mapStateToProps = (state) => {
+const mapStateToProps = ({authState}) => {
   return {
-    userId: state.authState.userId,
-    profilePicture: state.authState.profilePicture,
-    location: state.authState.location,
+    userId: authState.userId,
+    profilePicture: authState.profilePicture,
+    location: authState.location,
   };
 };
 

@@ -20,9 +20,7 @@ const User = require('../models/user');
 const {UserCheck} = require('../helperMethods/authChecking');
 
 // Isolate environmental variables
-const AWS_BUCKET_NAME = process.env.AWS_BUCKET_NAME;
-const AWS_USER_KEY = process.env.AWS_USER_KEY;
-const AWS_USER_SECRET = process.env.AWS_USER_SECRET;
+const {AWS_BUCKET_NAME, AWS_USER_KEY, AWS_USER_SECRET} = process.env;
 
 // Set up bucket
 const s3bucket = new AWS.S3({
@@ -48,7 +46,7 @@ module.exports = () => {
         });
       } else {
         // Isolate variables from the request
-        const { name, bio, location, profilePicture } = req.body;
+        const { name, bio, location, profilePicture, profilePictureChanged } = req.body;
 
         // Error checking
         if (!name) {
@@ -82,12 +80,11 @@ module.exports = () => {
                 success: false,
                 error: 'Cannot find user.'
               });
-            } else {
+            } else if (!profilePictureChanged) {
               // Update user with new name
               user.name = name;
               user.location = location;
               user.bio = bio;
-              user.profilePicture = profilePicture;
 
               // Save in Mongo
               user.save(userErr => {
@@ -104,6 +101,54 @@ module.exports = () => {
                     error: '',
                   });
                 }
+              });
+            } else {
+              // TODO
+              // Convert profile picture to a form that s3 can display
+              const profilePictureConverted = new Buffer(profilePicture.replace(/^data:image\/\w+;base64,/, ""), 'base64');
+
+              // Create bucket
+              s3bucket.createBucket(() => {
+                const params = {
+                  Bucket: AWS_BUCKET_NAME,
+                  Key: `profilepictures/${uuid()}`,
+                  ContentType: 'image/jpeg',
+                  Body: profilePictureConverted,
+                  ContentEncoding: 'base64',
+                  ACL: 'public-read',
+                };
+
+                // Upload photo
+                s3bucket.upload(params, (errUpload, data) => {
+                  if (errUpload) {
+                    res.send({
+                      success: false,
+                      error: 'Error uploading profile picture.',
+                    });
+                  } else {
+                    // Update the user
+                    user.profilePicture = data.Location;
+                    user.name = name;
+                    user.location = location;
+                    user.bio = bio;
+
+                    // Save the changes
+                    user.save(userErr => {
+                      if (userErr) {
+                        res.send({
+                          success: false,
+                          error: 'There was an error updating your account information. Check the form and try again.',
+                        });
+                      } else {
+                        res.send({
+                          success: true,
+                          error: '',
+                          data: user.profilePicture,
+                        });
+                      }
+                    });
+                  }
+                });
               });
             }
           });

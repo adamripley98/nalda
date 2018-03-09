@@ -122,7 +122,7 @@ class Sidebar extends Component {
                     Videos
                   </Link>
                   <Link onClick={this.toggleMenu} to="/account" className="link line-above">
-                    Account
+                    Edit account
                   </Link>
 
                   {/* Link to the user's profile page */}
