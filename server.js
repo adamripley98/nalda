@@ -78,7 +78,10 @@ if (envError) {
 }
 
 // Connecting to mongo
-mongoose.connect(MONGODB_URI);
+const options = {
+  useMongoClient: true,
+};
+mongoose.connect(MONGODB_URI, options);
 
 // Middleware
 app.use(bodyParser.json({limit: '50mb'}));
@@ -93,7 +96,9 @@ app.use(
     secret: 'mySecretKey',
     store: new MongoStore({
       mongooseConnection: mongoose.connection
-    })
+    }),
+    resave: true,
+    saveUninitialized: true,
   })
 );
 
