@@ -11,6 +11,9 @@ const User = require('../models/user');
 // Import helper methods
 const {UserCheck} = require('../helperMethods/authChecking');
 
+// Import env variables
+const HOST_URL = process.env.HOST_URL;
+
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 /**
@@ -44,8 +47,8 @@ module.exports = () => {
               `<div style=\"background:#efefef;background-color:#efefef;width:100%;padding:0px,16px,32px,16px;\"` +
               `bgcolor:\"#efefef\"><div style=\"background:#ffffff;background-color:#ffffff;width:100%;padding:16px;` +
               `color:#606060;font-family:Verdana, serif;\" bgcolor=\"#ffffff\">` +
-              'Hi ' + displayName + ',\n Welcome to Nalda! Please verify your account at the following link:\n\n' +
-              'http://' + req.headers.host + '/verify/' + user.verificationToken + '\n\n'
+              'Hi ' + displayName + ',\n Please verify your account at the following link:\n\n' +
+              HOST_URL + '/verify/' + user.verificationToken + '\n\n'
             );
 
             // Compose message
@@ -53,8 +56,8 @@ module.exports = () => {
               to: user.username,
               from: process.env.SENDGRID_EMAIL,
               subject: 'Verify your account, ' + displayName,
-              text: 'Hi ' + displayName + ',\n Welcome to Nalda! Please verify your account at the following link:\n\n' +
-              'http://' + req.headers.host + '/verify/' + user.verificationToken + '\n\n',
+              text: 'Hi ' + displayName + ',\n Please verify your account at the following link:\n\n' +
+              HOST_URL + '/verify/' + user.verificationToken + '\n\n',
               html,
             };
 
