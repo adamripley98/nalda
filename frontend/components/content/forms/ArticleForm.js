@@ -361,7 +361,7 @@ class ArticleForm extends React.Component {
                 onDrop={(acceptedFiles, rejectedFiles) => this.onDrop(acceptedFiles, rejectedFiles, "main")}
                 accept="image/*"
                 style={{ marginBottom: "1rem" }}
-                >
+              >
                 <p className="dropzone">
                   <i className="fa fa-file-o" aria-hidden="true" />
                   {

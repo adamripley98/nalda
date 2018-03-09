@@ -868,20 +868,18 @@ class Admin extends Component {
           onDrop={(acceptedFiles, rejectedFiles) => this.onDrop(acceptedFiles, rejectedFiles)}
           accept="image/*"
           style={{ marginBottom: "1rem" }}
-          >
+        >
           <p className="dropzone">
             <i className="fa fa-file-o" aria-hidden="true" />
             {
               this.state.bannerImageName ? (
                 this.state.bannerImageName
-              ) : (
-                "Try dropping an image here, or click to select image to upload."
-              )
+              ) : ("Try dropping an image here, or click to select image to upload.")
             }
           </p>
         </Dropzone>
         <button
-          onClick={(e) => this.onSubmitChangeBanner(e)}
+          onClick={e => this.onSubmitChangeBanner(e)}
           className={
             this.state.bannerContentId ? (
               "btn btn-primary cursor marg-bot-1"

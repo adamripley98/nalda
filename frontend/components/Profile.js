@@ -10,6 +10,7 @@ import Loading from './shared/Loading';
 import Preview from './content/Preview';
 import NotFoundSection from './NotFoundSection';
 import Blurb from './shared/Blurb';
+import Tags from './shared/Tags';
 
 /**
  * Component to render a curators profile
@@ -262,18 +263,18 @@ class Profile extends Component {
 
     // If the info has loaded
     return (
-      <div>
-        <div className="container marg-top-1">
-          <div className="row">
-            <div className="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-              {
-                this.state.error ?
-                <ErrorMessage error={ this.state.error } /> :
-                this.renderInfo()
-              }
-              <div className="marg-top-1">
-                <Button />
-              </div>
+      <div className="container marg-top-1">
+        <Tags title={this.state.name} description={this.state.bio} />
+        <div className="row">
+          <div className="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+            <div className="space-1 hidden-md-down" />
+            {
+              this.state.error ?
+              <ErrorMessage error={ this.state.error } /> :
+              this.renderInfo()
+            }
+            <div className="marg-top-1">
+              <Button />
             </div>
           </div>
         </div>

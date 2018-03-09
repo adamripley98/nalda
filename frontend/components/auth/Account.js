@@ -341,22 +341,20 @@ class Account extends Component {
         <label className="bold">
            Profile Picture
         </label>
+
         <div
           className="profile-picture background-image"
           style={{backgroundImage: `url(${this.props.profilePicture})`}}
         />
 
-        <Dropzone
-          onDrop={this.onDrop}
-          accept="image/*"
-          style={{ display: !this.state.editProfilePicture && "none" }}>
+        <Dropzone onDrop={this.onDrop} accept="image/*" style={{ marginBottom: "1rem" }}>
           <p className="dropzone">
             <i className="fa fa-file-o" aria-hidden="true" />
             {
               this.state.profilePictureName ? (
                 this.state.profilePictureName
               ) : (
-                "Try dropping some files here, or click to select files to upload."
+                "Drop a file here, or click to select a file to upload."
               )
             }
           </p>
