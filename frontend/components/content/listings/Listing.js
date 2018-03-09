@@ -335,10 +335,8 @@ class Listing extends React.Component {
       ));
     }
 
-    // If there are no amentities
-    return (
-      <Blurb message="No amenities have been marked for this listing." />
-    );
+    // If there are no additional amenities
+    return null;
   }
 
   // Helper method to handle a user clicking on the info trigger

@@ -40,11 +40,6 @@ class Account extends Component {
       success: '',
       info: '',
       pending: true,
-      adminPopover: false,
-      editName: false,
-      editBio: false,
-      editLocation: false,
-      editProfilePicture: false,
     };
 
     // Bind this to helper methods
@@ -63,13 +58,16 @@ class Account extends Component {
    * Pull the user's information from the database then render it
    */
   componentDidMount() {
+    // Scroll to the top of the screen
     window.scrollTo(0, 0);
+
+    // Pull the user's account data
     axios.get('/api/account', {
       params: {
         userId: this.props.userId,
       }
     })
-    .then((resp) => {
+    .then(resp => {
       // If successful, will set state with user's information
       if (resp.data.success) {
         this.setState({
@@ -510,7 +508,7 @@ class Account extends Component {
         <Tags title="Account" description="Edit and view your account information." keywords="edit,account,nalda,information,profile,email,security" />
         <div className="container">
           <div className="row">
-            <div className="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+            <div className="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2 col-xl-6 offset-xl-3">
               <h4 className="bold marg-top-2 marg-bot-1">
                 Account information
               </h4>
