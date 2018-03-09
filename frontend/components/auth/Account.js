@@ -133,56 +133,17 @@ class Account extends Component {
         });
       });
   }
+
   /**
    * Handle a change to the name state
    */
   handleChangeName(event) {
     this.setState({
       name: event.target.value,
+      hasChanged: true,
     });
   }
 
-  /**
-   * Helper method to trigger edit name
-   */
-  handleNameClick() {
-    // Isolate function
-    const changeName = this.props.changeName;
-
-    if (this.state.editName) {
-      if (!this.state.name) {
-        this.setState({
-          error: 'Name cannot be empty.',
-          name: this.state.prevName,
-        });
-      } else {
-        // Save the updated name
-        axios.post('/api/users/name', {
-          userId: this.props.userId,
-          name: this.state.name,
-        })
-       .then((resp) => {
-         // If there was an error, display it
-         if (!resp.data.success) {
-           this.setState({
-             error: resp.data.error,
-           });
-         } else {
-           this.setState({
-             error: '',
-           });
-           // change redux state
-           changeName(this.state.name);
-         }
-       });
-      }
-    }
-    // Update the state
-    this.setState({
-      editName: !this.state.editName,
-      prevName: this.state.name,
-    });
-  }
   /**
    * Handle click to edit profile picture
    */
@@ -265,31 +226,7 @@ class Account extends Component {
   handleChangeBio(event) {
     this.setState({
       bio: event.target.value,
-    });
-  }
-
-  /**
-   * Helper method to trigger edit bio
-   */
-  handleBioClick() {
-    if (this.state.editBio) {
-      // Save the updated bio
-      axios.post('/api/users/bio', {
-        userId: this.props.userId,
-        bio: this.state.bio,
-      })
-      .then((resp) => {
-        // If there was an error, display it
-        if (!resp.data.success) {
-          this.setState({
-            error: resp.data.error,
-          });
-        }
-      });
-    }
-    // Update the state
-    this.setState({
-      editBio: !this.state.editBio,
+      hasChanged: true,
     });
   }
 
@@ -354,18 +291,9 @@ class Account extends Component {
     }
 
     // Update the state
-    this.setState({
-      editLocation: !this.state.editLocation,
-    });
-  }
-
-  /**
-   * Helper method to trigger popup
-   */
-  handleAdminClick() {
-    this.setState({
-      adminPopover: !this.state.adminPopover,
-    });
+    // this.setState({
+    //   editLocation: !this.state.editLocation,
+    // });
   }
 
   /**
@@ -385,38 +313,29 @@ class Account extends Component {
           onChange={ this.handleChangeName }
         />
 
-        <div>
-          <label className="bold">
-             Profile Picture
-          </label>
-          <div
-            className="profile-picture background-image"
-            style={{
-              backgroundImage: `url(${this.props.profilePicture})`
-            }}
-          />
+        <label className="bold">
+           Profile Picture
+        </label>
+        <div
+          className="profile-picture background-image"
+          style={{backgroundImage: `url(${this.props.profilePicture})`}}
+        />
 
-          <Dropzone
-            onDrop={this.onDrop}
-            accept="image/*"
-            style={{ display: !this.state.editProfilePicture && "none" }}>
-            <p className="dropzone">
-              <i className="fa fa-file-o" aria-hidden="true" />
-              {
-                this.state.profilePictureName ? (
-                  this.state.profilePictureName
-                ) : (
-                  "Try dropping some files here, or click to select files to upload."
-                )
-              }
-            </p>
-          </Dropzone>
-          <i
-            className="fa fa-pencil"
-            aria-hidden="true"
-            onClick={ this.handleProfilePictureClick }
-          />
-        </div>
+        <Dropzone
+          onDrop={this.onDrop}
+          accept="image/*"
+          style={{ display: !this.state.editProfilePicture && "none" }}>
+          <p className="dropzone">
+            <i className="fa fa-file-o" aria-hidden="true" />
+            {
+              this.state.profilePictureName ? (
+                this.state.profilePictureName
+              ) : (
+                "Try dropping some files here, or click to select files to upload."
+              )
+            }
+          </p>
+        </Dropzone>
 
         <label className="bold">
           Email
@@ -474,7 +393,7 @@ class Account extends Component {
           <Link to="/" className="btn btn-secondary">
             Cancel
           </Link>
-          <submit className="btn btn-primary disabled">
+          <submit className={this.state.hasChanged ? "btn btn-primary" : "btn btn-primary disabled"}>
             Save changes
           </submit>
         </div>

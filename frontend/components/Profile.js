@@ -89,7 +89,7 @@ class Profile extends Component {
 
     // Map through and display content
     if (articles && articles.length) {
-      return articles.map((art) => (
+      return articles.map(art => (
         <Preview
           key={ art._id }
           _id={ art._id }
@@ -104,7 +104,7 @@ class Profile extends Component {
 
     // If no articles were found
     return (
-      <div className="col-12">
+      <div className="col-12 marg-bot-1">
         <Blurb message="This author hasn't posted any articles yet!" />
       </div>
     );
@@ -134,7 +134,7 @@ class Profile extends Component {
 
     // If no listings were found
     return (
-      <div className="col-12">
+      <div className="col-12 marg-bot-1">
         <Blurb message="This author hasn't posted any listings yet!" />
       </div>
     );
@@ -164,8 +164,8 @@ class Profile extends Component {
 
     // If no videos were found
     return (
-      <div className="col-12">
-        <Blurb message="This author hasn't posted any videos yet!" />\
+      <div className="col-12 marg-bot-1">
+        <Blurb message="This author hasn't posted any videos yet!" />
       </div>
     );
   }
@@ -209,30 +209,29 @@ class Profile extends Component {
           (this.state.userType === 'admin' || this.state.userType === 'curator') ? (
             <div>
               <div className="line" />
-              <h5 className="bold marg-bot-1 dark-gray-text">
-                Content created
-              </h5>
               <div className="row">
                 <div className="col-12">
-                  <h6>
+                  <h5 className="dark-gray-text marg-bot-1">
                     Articles
-                  </h6>
+                  </h5>
                 </div>
                 { this.renderArticles() }
               </div>
+              <div className="line" />
               <div className="row">
                 <div className="col-12">
-                  <h6>
+                  <h5 className="dark-gray-text marg-bot-1">
                     Listings
-                  </h6>
+                  </h5>
                 </div>
                 { this.renderListings() }
               </div>
+              <div className="line" />
               <div className="row">
                 <div className="col-12">
-                  <h6>
+                  <h5 className="dark-gray-text marg-bot-1">
                     Videos
-                  </h6>
+                  </h5>
                 </div>
                 { this.renderVideos() }
               </div>
