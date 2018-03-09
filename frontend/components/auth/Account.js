@@ -14,6 +14,7 @@ import {changeUserLocation} from '../../actions/index.js';
 
 // Import components
 import ErrorMessage from '../shared/ErrorMessage';
+import SuccessMessage from '../shared/SuccessMessage';
 import Loading from '../shared/Loading';
 import Tags from '../shared/Tags';
 
@@ -66,9 +67,9 @@ class Account extends Component {
       params: {userId: this.props.userId}
     })
     .then(resp => {
-      console.dir(resp.data.data);
       // If successful, will set state with user's information
       if (resp.data.success) {
+        // Update the state
         this.setState({
           name: resp.data.data.name,
           email: resp.data.data.username,
@@ -81,6 +82,11 @@ class Account extends Component {
           pending: false,
           loading: false,
         });
+
+        // Set the location
+        if (resp.data.data.location && resp.data.data.location.name) {
+          document.getElementById('location').value = resp.data.data.location.name;
+        }
       } else {
         this.setState({
           error: resp.data.error,
@@ -240,77 +246,14 @@ class Account extends Component {
   }
 
   /**
-   * Helper method to trigger edit bio
-   */
-  handleLocationClick() {
-    // Isolate function
-    const changeLocation = this.props.changeLocation;
-
-    if (this.state.editLocation) {
-      // Check for empty location
-      if (Object.keys(location).length === 0) {
-        this.setState({
-          error: "Location must be populated.",
-          pending: false,
-        });
-      } else {
-        const location = document.getElementById('location').value;
-        // Find the longitude and latitude of the location passed in
-        const geocoder = new google.maps.Geocoder();
-        geocoder.geocode({ 'address': location }, (results, status) => {
-          if (status === google.maps.GeocoderStatus.OK) {
-            const latitude = results[0].geometry.location.lat();
-            const longitude = results[0].geometry.location.lng();
-            // Save the updated location
-            axios.post('/api/users/location', {
-              location: {
-                name: location,
-                lat: latitude,
-                lng: longitude,
-              },
-            })
-            .then((resp) => {
-              // If there was an error, display it
-              if (!resp.data.success) {
-                this.setState({
-                  error: resp.data.error,
-                });
-              } else {
-                // Update the state
-                this.setState({
-                  location,
-                });
-                changeLocation(location);
-              }
-            })
-            .catch((err) => {
-              this.setState({
-                success: false,
-                error: err,
-              });
-            });
-          } else {
-            this.setState({
-              error: "",
-              pending: false,
-            });
-          }
-        });
-      }
-    }
-
-    // Update the state
-    // this.setState({
-    //   editLocation: !this.state.editLocation,
-    // });
-  }
-
-  /**
    * Handle saving a user's profile information
    */
   handleSaveChanges(event) {
     // Prevent the default submit action
     event.preventDefault();
+
+    // Denote that the application is pending
+    this.setState({ pending: true, hasChanged: false });
 
     // Frontend error checking
     let error = "";
@@ -320,8 +263,60 @@ class Account extends Component {
     if (error) {
       this.setState({ error, pending: false, });
     } else {
-      // TODO
-      console.log("Save my dood");
+      // Check if the entered location is unique from the previous one
+      const location = document.getElementById('location').value;
+
+      // Find the longitude and latitude of the location passed in
+      const geocoder = new google.maps.Geocoder();
+      geocoder.geocode({ 'address': location }, (results, status) => {
+        if (status === google.maps.GeocoderStatus.OK) {
+          const latitude = results[0].geometry.location.lat();
+          const longitude = results[0].geometry.location.lng();
+
+          // Save the updated location
+          const newLocation = {
+            name: location,
+            lat: latitude,
+            lng: longitude,
+          };
+
+          // Send the request to update the user
+          // TODO make sure this works
+          axios.post("/api/users/edit", {
+            location: newLocation,
+            name: this.state.name,
+            bio: this.state.bio,
+            profilePicture: this.state.profilePicture,
+          })
+            .then(res => {
+              if (!res.data.success) {
+                this.setState({
+                  pending: false,
+                  error: res.data.error,
+                });
+              } else {
+                this.props.changeName(this.state.name);
+                this.props.changeLocation(newLocation.name);
+                this.props.changeProfilePic(this.state.profilePicture);
+                this.setState({
+                  pending: false,
+                  success: "Successfully updated account information.",
+                });
+              }
+            })
+            .catch(err => {
+              this.setState({
+                pending: false,
+                error: err,
+              });
+            });
+        } else {
+          this.setState({
+            error: "There was an error with the Google Maps API. Check the form and try again.",
+            pending: false,
+          });
+        }
+      });
     }
   }
 
@@ -378,9 +373,11 @@ class Account extends Component {
         <label className="bold">
           Type
         </label>
-        <p className="marg-bot-05">
-          { this.state.type }
-        </p>
+        <div className="tags">
+          <span className="tag marg-bot-05">
+            { this.state.type }
+          </span>
+        </div>
         <div className="gray marg-bot-1">
           A user can either be an admin, curator, or general user. Only Nalda administrators can change your account type.
         </div>
@@ -397,7 +394,6 @@ class Account extends Component {
           onChange={ this.handleChangeBio }
         />
 
-        {/* TODO load the location */}
         <label>
           Location
         </label>
@@ -425,7 +421,7 @@ class Account extends Component {
             Cancel
           </Link>
           <button className={(this.state.hasChanged && this.state.name) ? "btn btn-primary" : "btn btn-primary disabled"} type="submit" value="submit">
-            Save changes
+            { this.state.pending ? "Saving changes..." : "Save changes" }
           </button>
         </div>
       </form>
@@ -448,6 +444,7 @@ class Account extends Component {
                 Account information
               </h4>
               <ErrorMessage error={ this.state.error } />
+              <SuccessMessage message={ this.state.success } error={ this.state.error } />
               {
                 (!this.state.loading && !this.state.accountVerified) ? (
                   <div className="alert alert-warning marg-bot-1">
@@ -456,13 +453,6 @@ class Account extends Component {
                         Please verify your account by clicking <span className="cursor underline" onClick={this.handleVerifyEmail}>here.</span>
                       </span>
                     )}
-                  </div>
-                ) : null
-              }
-              {
-                this.state.success ? (
-                  <div className="alert alert-success marg-bot-1">
-                    { this.state.success }
                   </div>
                 ) : null
               }
