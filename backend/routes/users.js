@@ -20,9 +20,7 @@ const User = require('../models/user');
 const {UserCheck} = require('../helperMethods/authChecking');
 
 // Isolate environmental variables
-const AWS_BUCKET_NAME = process.env.AWS_BUCKET_NAME;
-const AWS_USER_KEY = process.env.AWS_USER_KEY;
-const AWS_USER_SECRET = process.env.AWS_USER_SECRET;
+const {AWS_BUCKET_NAME, AWS_USER_KEY, AWS_USER_SECRET} = process.env;
 
 // Set up bucket
 const s3bucket = new AWS.S3({
@@ -34,13 +32,12 @@ const s3bucket = new AWS.S3({
 // Export the following methods for routing
 module.exports = () => {
   /**
-   * Update a user's name
+   * Update a user's profile information
+   * TODO integrate profile picture updates
    */
-  router.post('/name', (req, res) => {
+  router.post('/edit', (req, res) => {
     // Check to make sure poster is logged in
     UserCheck(req, (authRes) => {
-      // Isolate variables from the request
-      const name = req.body.name;
       // Return any authentication errors
       if (!authRes.success) {
         res.send({
@@ -48,16 +45,24 @@ module.exports = () => {
           error: authRes.error,
         });
       } else {
+        // Isolate variables from the request
+        const { name, bio, location, profilePicture, profilePictureChanged } = req.body;
+
         // Error checking
         if (!name) {
           res.send({
             success: false,
-            error: "Name must be populated",
+            error: "Name must be populated.",
           });
         } else if (!name.indexOf(" ")) {
           res.send({
             success: false,
-            error: "Name must contain at least 1 space",
+            error: "Name must contain at least 1 space.",
+          });
+        } else if (bio && bio.length > 1000) {
+          res.send({
+            success: false,
+            error: "Bio cannot be longer than 1000 characters.",
           });
         } else {
           // The name is properly formatted
@@ -67,25 +72,27 @@ module.exports = () => {
             if (err) {
               res.send({
                 success: false,
-                error: 'Error changing name.',
+                error: 'Something went wrong. Check the form and try again.',
               });
-            // User doesn't exist in Mongo
             } else if (!user) {
+              // User doesn't exist in Mongo
               res.send({
                 success: false,
                 error: 'Cannot find user.'
               });
-            } else {
+            } else if (!profilePictureChanged) {
               // Update user with new name
               user.name = name;
+              user.location = location;
+              user.bio = bio;
 
               // Save in Mongo
-              user.save((errUser) => {
+              user.save(userErr => {
                 // Error saving user
-                if (errUser) {
+                if (userErr) {
                   res.send({
                     success: false,
-                    error: 'Error changing name.',
+                    error: 'Failed to update account information. Check the form and try again.',
                   });
                 } else {
                   // User name updated successfully
@@ -95,68 +102,53 @@ module.exports = () => {
                   });
                 }
               });
-            }
-          });
-        }
-      }
-    });
-  });
-
-  /**
-   * Update a user's bio
-   */
-  router.post('/bio', (req, res) => {
-    // Isolate variables from the request
-    const bio = req.body.bio;
-
-    // Check to make sure poster is logged in
-    UserCheck(req, (authRes) => {
-      // Return any authentication errors
-      if (!authRes.success) {
-        res.send({
-          success: false,
-          error: authRes.error,
-        });
-      } else {
-        // Error checking
-        if (bio.length > 500) {
-          res.send({
-            success: false,
-            error: "Bio length cannot exceed 500 characters.",
-          });
-        } else {
-          // Search for user in Mongo
-          User.findById(req.session.passport.user, (err, user) => {
-            // Error finding user
-            if (err) {
-              res.send({
-                success: false,
-                error: 'Error changing bio.',
-              });
-            // User doesn't exist in Mongo
-            } else if (!user) {
-              res.send({
-                success: false,
-                error: 'Cannot find user.'
-              });
             } else {
-              // Update user with new bio
-              user.bio = bio;
-              // Save in Mongo
-              user.save((errUser) => {
-                // Error saving user
-                if (errUser) {
-                  res.send({
-                    success: false,
-                    error: 'Error changing bio.',
-                  });
-                } else {
-                  // User bio updated successfully
-                  res.send({
-                    success: true,
-                    error: '',
-                  });
-                }
+              // TODO
+              // Convert profile picture to a form that s3 can display
+              const profilePictureConverted = new Buffer(profilePicture.replace(/^data:image\/\w+;base64,/, ""), 'base64');
+
+              // Create bucket
+              s3bucket.createBucket(() => {
+                const params = {
+                  Bucket: AWS_BUCKET_NAME,
+                  Key: `profilepictures/${uuid()}`,
+                  ContentType: 'image/jpeg',
+                  Body: profilePictureConverted,
+                  ContentEncoding: 'base64',
+                  ACL: 'public-read',
+                };
+
+                // Upload photo
+                s3bucket.upload(params, (errUpload, data) => {
+                  if (errUpload) {
+                    res.send({
+                      success: false,
+                      error: 'Error uploading profile picture.',
+                    });
+                  } else {
+                    // Update the user
+                    user.profilePicture = data.Location;
+                    user.name = name;
+                    user.location = location;
+                    user.bio = bio;
+
+                    // Save the changes
+                    user.save(userErr => {
+                      if (userErr) {
+                        res.send({
+                          success: false,
+                          error: 'There was an error updating your account information. Check the form and try again.',
+                        });
+                      } else {
+                        res.send({
+                          success: true,
+                          error: '',
+                          data: user.profilePicture,
+                        });
+                      }
+                    });
+                  }
+                });
               });
             }
           });
@@ -253,55 +245,7 @@ module.exports = () => {
   });
 
   /**
-   * Update a user's location
-   * @param location
-   */
-  router.post('/location', (req, res) => {
-    // Check to make sure poster is logged in
-    UserCheck(req, (authRes) => {
-      // Return any authentication errors
-      if (!authRes.success) {
-        res.send({
-          success: false,
-          error: authRes.error,
-        });
-      } else {
-        User.findById(req.session.passport.user, (err, user) => {
-          if (err) {
-            res.send({
-              success: false,
-              error: 'Error changing location',
-            });
-          } else if (!user) {
-            res.send({
-              success: false,
-              error: 'User not found.',
-            });
-          } else {
-            // Update the user's location
-            user.location = req.body.location;
-            // Save the changes in Mongo
-            user.save((errSave) => {
-              if (errSave) {
-                res.send({
-                  success: false,
-                  error: 'Error changing location.',
-                });
-              } else {
-                res.send({
-                  success: true,
-                  error: '',
-                });
-              }
-            });
-          }
-        });
-      }
-    });
-  });
-
-  /**
-   * Return a given user's username
+   * Return a given user's username (the user's email)
    */
   router.get('/username', (req, res) => {
     UserCheck(req, (authRes) => {
@@ -329,7 +273,7 @@ module.exports = () => {
   });
 
   /**
-   * Find a given user's profile
+   * Find a given user's profile information
    */
   router.get('/:id', (req, res) => {
     // Find the id from the url

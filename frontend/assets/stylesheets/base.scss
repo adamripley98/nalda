@@ -144,6 +144,13 @@ html, body {
   }
 }
 
+// Style profile pictures
+.profile-picture {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+}
+
 // On phones, parallax scrolling is buggy
 // Thus, we disable the parallax scrolling for smaller screen sizes
 @media screen and (max-device-width: 848px) {
