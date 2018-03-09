@@ -16,6 +16,7 @@ import {changeUserLocation} from '../../actions/index.js';
 import ErrorMessage from '../shared/ErrorMessage';
 import Button from '../shared/Button';
 import Loading from '../shared/Loading';
+import Tags from '../shared/Tags';
 
 /**
  * Component to render a user's account information
@@ -391,27 +392,17 @@ class Account extends Component {
   renderInfo() {
     return (
       <form className="account">
-        <div>
-          <label className="bold">
-            Name
-          </label>
-          <span style={{ display: this.state.editName && "none" }}>
-            { this.state.name }
-          </span>
-          <input
-            className="form-control border"
-            id="name"
-            ref={(input) => { this.nameInput = input; }}
-            value={ this.state.name }
-            onChange={ this.handleChangeName }
-            style={{ display: !this.state.editName && "none" }}
-          />
-          <i
-            className="fa fa-pencil"
-            aria-hidden="true"
-            onClick={ this.handleNameClick }
-          />
-        </div>
+        <label className="bold">
+          Name
+        </label>
+        <input
+          className="form-control border marg-bot-1"
+          id="name"
+          ref={(input) => { this.nameInput = input; }}
+          value={ this.state.name }
+          onChange={ this.handleChangeName }
+        />
+
         <div>
           <label className="bold">
              Profile Picture
@@ -419,8 +410,7 @@ class Account extends Component {
           <div
             className="profile-picture background-image"
             style={{
-              display: this.state.editProfilePicture && "none",
-              backgroundImage: `url(${ this.props.profilePicture })`
+              backgroundImage: `url(${this.props.profilePicture})`
             }}
           />
 
@@ -445,79 +435,59 @@ class Account extends Component {
             onClick={ this.handleProfilePictureClick }
           />
         </div>
-        <div>
-          <label className="bold">
-            Email
-          </label>
+
+        <label className="bold">
+          Email
+        </label>
+        <br />
+        <p className="marg-bot-1">
           { this.state.email }
-        </div>
-        <div>
-          <label className="bold">
-            Type
-          </label>
+        </p>
+
+        <label className="bold">
+          Type
+        </label>
+        <p className="marg-bot-05">
           { this.state.type }
-          <div
-            className="gray marg-top-1"
-            style={{ display: this.state.adminPopover ? "inherit" : "none" }}>
-            A user can either be an admin, curator, or general user. Only Nalda administrators can change your account type.
-          </div>
-          <i className="fa fa-question" aria-hidden="true" onClick={ this.handleAdminClick } />
+        </p>
+        <div className="gray marg-bot-1">
+          A user can either be an admin, curator, or general user. Only Nalda administrators can change your account type.
         </div>
-        <div>
-          <label>
-            Bio
-          </label>
-          <span style={{ display: this.state.editBio && "none" }}>
-            {
-              this.state.bio ||
-              <span className="gray-text cursor" onClick={ this.handleBioClick }>
-                Add a bio here...
-              </span>
-            }
-          </span>
-          <textarea
-            className="form-control border"
-            id="bio"
-            ref={(input) => { this.bioInput = input; }}
-            value={ this.state.bio }
-            onChange={ this.handleChangeBio }
-            style={{ display: !this.state.editBio && "none" }}
-          />
-          <i
-            className="fa fa-pencil"
-            aria-hidden="true"
-            onClick={ this.handleBioClick }
-          />
-        </div>
-        <div>
-          <label>
-            Location
-          </label>
-          <span style={{ display: this.state.editLocation && "none" }}>
-            { this.props.location }
-          </span>
-          <input
-            className="form-control border"
-            id="location"
-            type="text"
-            ref={(input) => { this.locationInput = input; }}
-            style={{ display: !this.state.editLocation && "none" }}
-          />
-          <i
-            className="fa fa-pencil"
-            aria-hidden="true"
-            onClick={ this.handleLocationClick}
-          />
-        </div>
-        <div>
-          <label>
-            Password
-          </label>
+
+        <label className="bold">
+          Bio
+        </label>
+        <textarea
+          className="form-control border marg-bot-1"
+          id="bio"
+          ref={(input) => { this.bioInput = input; }}
+          value={ this.state.bio }
+          onChange={ this.handleChangeBio }
+        />
+
+        {/* TODO load the location */}
+        <label>
+          Location
+        </label>
+        <input
+          className="form-control border marg-bot-1"
+          id="location"
+          type="text"
+          ref={(input) => { this.locationInput = input; }}
+        />
+
+        <label>
+          Password
+        </label>
+        <br />
+        <p className="marg-bot-05">
           ●●●●●●●
-          <Link to="/password">
-            <i className="fa fa-pencil" aria-hidden="true" />
-          </Link>
-        </div>
+        </p>
+        <Link to="/password">
+          Change your password <i className="fa fa-pencil" aria-hidden="true" />
+        </Link>
+        <div className="space-2" />
+
         <div className="save-changes">
           <Link to="/" className="btn btn-secondary">
             Cancel
@@ -537,6 +507,7 @@ class Account extends Component {
     // If user is logged in or if user successfully logs in, redirects to home
     return (
       <div>
+        <Tags title="Account" description="Edit and view your account information." keywords="edit,account,nalda,information,profile,email,security" />
         <div className="container">
           <div className="row">
             <div className="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
@@ -546,8 +517,12 @@ class Account extends Component {
               <ErrorMessage error={ this.state.error } />
               {
                 (!this.state.pending && !this.state.accountVerified) ? (
-                  <div className="alert alert-warning marg-bot-1" onClick={this.handleVerifyEmail}>
-                    {this.state.info ? this.state.info : "Please verify your account by clicking here"}
+                  <div className="alert alert-warning marg-bot-1">
+                    {this.state.info ? this.state.info : (
+                      <span>
+                        Please verify your account by clicking <span className="cursor underline" onClick={this.handleVerifyEmail}>here.</span>
+                      </span>
+                    )}
                   </div>
                 ) : null
               }
@@ -559,13 +534,6 @@ class Account extends Component {
                 ) : null
               }
               { this.state.pending ? <Loading /> : this.renderInfo() }
-              {
-                !this.state.pending && (
-                  <div className="marg-top-1">
-                    <Button />
-                  </div>
-                )
-              }
             </div>
           </div>
         </div>

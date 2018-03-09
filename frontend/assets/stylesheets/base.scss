@@ -70,6 +70,12 @@ h6,
   border: 1px solid $border;
 }
 
+// Modular class for underline
+.underline,
+a.underline {
+  text-decoration: underline;
+}
+
 // Modular class to make some text gray
 .gray {
   color: $gray !important;
