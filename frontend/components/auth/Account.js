@@ -14,7 +14,6 @@ import {changeUserLocation} from '../../actions/index.js';
 
 // Import components
 import ErrorMessage from '../shared/ErrorMessage';
-import Button from '../shared/Button';
 import Loading from '../shared/Loading';
 import Tags from '../shared/Tags';
 
@@ -27,6 +26,8 @@ class Account extends Component {
    */
   constructor(props) {
     super(props);
+
+    // Set the initial state
     this.state = {
       name: '',
       prevName: '',
@@ -42,11 +43,15 @@ class Account extends Component {
       loading: true,
       pending: false,
       hasChanged: false,
+      location: {},
     };
 
     // Bind this to helper methods
+    this.handleChangeBio = this.handleChangeBio.bind(this);
+    this.handleChangeName = this.handleChangeName.bind(this);
     this.handleVerifyEmail = this.handleVerifyEmail.bind(this);
     this.onDrop = this.onDrop.bind(this);
+    this.handleSaveChanges = this.handleSaveChanges.bind(this);
   }
 
   /**
@@ -58,11 +63,10 @@ class Account extends Component {
 
     // Pull the user's account data
     axios.get('/api/account', {
-      params: {
-        userId: this.props.userId,
-      }
+      params: {userId: this.props.userId}
     })
     .then(resp => {
+      console.dir(resp.data.data);
       // If successful, will set state with user's information
       if (resp.data.success) {
         this.setState({
@@ -72,18 +76,23 @@ class Account extends Component {
           bio: resp.data.data.bio || '',
           profilePicture: resp.data.data.profilePicture,
           accountVerified: resp.data.data.accountVerified,
+          location: resp.data.data.location || {},
           error: "",
           pending: false,
+          loading: false,
         });
       } else {
         this.setState({
           error: resp.data.error,
           pending: false,
+          loading: false,
         });
       }
-    }).catch(err => {
+    })
+    .catch(err => {
       this.setState({
         pending: false,
+        loading: false,
         error: err,
       });
     });
@@ -297,11 +306,31 @@ class Account extends Component {
   }
 
   /**
+   * Handle saving a user's profile information
+   */
+  handleSaveChanges(event) {
+    // Prevent the default submit action
+    event.preventDefault();
+
+    // Frontend error checking
+    let error = "";
+    if (!this.state.name) {
+      error = "You must enter a name.";
+    }
+    if (error) {
+      this.setState({ error, pending: false, });
+    } else {
+      // TODO
+      console.log("Save my dood");
+    }
+  }
+
+  /**
    * Helper function to render a user's information
    */
   renderInfo() {
     return (
-      <form className="account">
+      <form className="account" onSubmit={this.handleSaveChanges}>
         <label className="bold">
           Name
         </label>
@@ -310,6 +339,7 @@ class Account extends Component {
           id="name"
           ref={(input) => { this.nameInput = input; }}
           value={ this.state.name }
+          placeholder="Enter your name here"
           onChange={ this.handleChangeName }
         />
 
@@ -363,6 +393,7 @@ class Account extends Component {
           id="bio"
           ref={(input) => { this.bioInput = input; }}
           value={ this.state.bio }
+          placeholder="Enter a bio"
           onChange={ this.handleChangeBio }
         />
 
@@ -393,9 +424,9 @@ class Account extends Component {
           <Link to="/" className="btn btn-secondary">
             Cancel
           </Link>
-          <submit className={this.state.hasChanged ? "btn btn-primary" : "btn btn-primary disabled"}>
+          <button className={(this.state.hasChanged && this.state.name) ? "btn btn-primary" : "btn btn-primary disabled"} type="submit" value="submit">
             Save changes
-          </submit>
+          </button>
         </div>
       </form>
     );
@@ -409,10 +440,11 @@ class Account extends Component {
     return (
       <div>
         <Tags title="Account" description="Edit and view your account information." keywords="edit,account,nalda,information,profile,email,security" />
+
         <div className="container">
           <div className="row">
             <div className="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2 col-xl-6 offset-xl-3">
-              <h4 className="bold marg-top-2 marg-bot-1">
+              <h4 className="bold marg-top-2 marg-bot-1 dark-gray-text">
                 Account information
               </h4>
               <ErrorMessage error={ this.state.error } />
