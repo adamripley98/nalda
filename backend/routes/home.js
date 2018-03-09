@@ -10,8 +10,6 @@ const router = express.Router();
 const AWS = require('aws-sdk');
 const uuid = require('uuid-v4');
 const async = require('async');
-const _ = require('lodash');
-
 
 // Import database models
 const Article = require('../models/article');
@@ -38,92 +36,8 @@ const s3bucket = new AWS.S3({
 module.exports = () => {
   /**
    * Get content for the homepage
-   * 4 most recent articles, listings, and videos
-   * TODO pull content from the user's location
-   // TODO pull from new homepage model
    */
   router.get('/', (req, res) => {
-    // Start by finding articles
-    Article.find((articleErr, articles) => {
-      if (articleErr) {
-        res.send({
-          success: false,
-          error: articleErr.message,
-        });
-      } else {
-        /**
-         * Find the four most recent articles
-         */
-        let recentArticles;
-        if (articles.length <= 4) {
-          recentArticles = articles;
-        } else {
-          recentArticles = articles.slice(articles.length - 4);
-        }
-
-        // Display in correct order
-        recentArticles.reverse();
-
-        // Find listings
-        Listing.find((listingErr, listings) => {
-          if (listingErr) {
-            res.send({
-              success: false,
-              error: listingErr.message,
-            });
-          } else {
-            /**
-             * Find the four most recent listings
-             */
-            let recentListings;
-            if (listings.length <= 4) {
-              recentListings = listings;
-            } else {
-              recentListings = listings.slice(listings.length - 4);
-            }
-
-            // Display in correct order
-            recentListings.reverse();
-
-            // Find videos
-            Video.find((videoErr, videos) => {
-              if (videoErr) {
-                res.send({
-                  success: false,
-                  error: videoErr.message,
-                });
-              } else {
-                /**
-                 * Find the four most recent videos
-                 */
-                let recentVideos;
-                if (videos.length <= 4) {
-                  recentVideos = videos;
-                } else {
-                  recentVideos = videos.slice(videos.length - 4);
-                }
-
-                // Display in correct order
-                recentVideos.reverse();
-
-                // Send the articles, listings, and videos
-                res.send({
-                  success: true,
-                  data: {
-                    articles: recentArticles,
-                    listings: recentListings,
-                    videos: recentVideos,
-                  },
-                });
-              }
-            });
-          }
-        });
-      }
-    });
-  });
-
-  router.get('/testing', (req, res) => {
     // Helper function to avoid repeated code
     const pullData = (arr, callback) => {
       const returnArr = [];
@@ -145,51 +59,58 @@ module.exports = () => {
               error: 'Homepage content not found',
             });
             return;
-          }
-          let newContent = {};
-          if (item.contentType === 'article') {
-            newContent = {
-              contentType: item.contentType,
-              contentId: item.contentId,
-              title: content.title,
-              subtitle: content.subtitle,
-              image: content.image,
-              createdAt: content.createdAt,
-              updatedAt: content.updatedAt,
-              location: content.location,
-            };
-          } else if (item.contentType === 'listing') {
-            newContent = {
-              contentType: item.contentType,
-              contentId: item.contentId,
-              title: content.title,
-              description: content.description,
-              location: content.location,
-              image: content.image,
-              rating: content.rating,
-              price: content.price,
-            };
+          } else if (!content) {
+            callback({
+              success: false,
+              error: 'Homepage content not found',
+            });
           } else {
-            // Content is a video
-            newContent = {
-              contentType: item.contentType,
-              contentId: item.contentId,
-              title: content.title,
-              description: content.description,
-              url: content.url,
-              location: content.location,
-              createdAt: content.createdAt,
-              updatedAt: content.updatedAt,
-            };
+            let newContent = {};
+            if (item.contentType === 'article') {
+              newContent = {
+                contentType: item.contentType,
+                contentId: item.contentId,
+                title: content.title,
+                subtitle: content.subtitle,
+                image: content.image,
+                createdAt: content.createdAt,
+                updatedAt: content.updatedAt,
+                location: content.location,
+              };
+            } else if (item.contentType === 'listing') {
+              newContent = {
+                contentType: item.contentType,
+                contentId: item.contentId,
+                title: content.title,
+                description: content.description,
+                location: content.location,
+                image: content.image,
+                rating: content.rating,
+                price: content.price,
+                categories: content.categories,
+              };
+            } else {
+              // Content is a video
+              newContent = {
+                contentType: item.contentType,
+                contentId: item.contentId,
+                title: content.title,
+                description: content.description,
+                url: content.url,
+                location: content.location,
+                createdAt: content.createdAt,
+                updatedAt: content.updatedAt,
+              };
+            }
+            returnArr.push(newContent);
+            cb();
           }
-          returnArr.push(newContent);
-          cb();
         });
       }, (asyncErr) => {
         if (asyncErr) {
           res.send({
             success: false,
-            error: asyncErr,
+            error: 'Error loading homepage.',
           });
         } else {
           callback({
@@ -264,85 +185,73 @@ module.exports = () => {
       } else {
         const contentId = req.body.contentId;
         Listing.findById(contentId, (errListing, listing) => {
-          Article.findById(contentId, (errArticle, article) => {
-            Video.findById(contentId, (errVideo, video) => {
-              if (errListing || errArticle || errVideo) {
+          if (errListing) {
+            res.send({
+              success: false,
+              error: 'Error finding content.'
+            });
+          // Make sure id is of right format
+          } else if (!contentId.match(/^[0-9a-fA-F]{24}$/)) {
+            res.send({
+              success: false,
+              error: 'No listing with that id exists.'
+            });
+            // Make sure content with given id exists
+          } else if (!listing) {
+            res.send({
+              success: false,
+              error: 'No listing with that ID exists.',
+            });
+          } else {
+            Homepage.find({}, (errHomepage, home) => {
+              if (errHomepage) {
                 res.send({
                   success: false,
-                  error: 'Error finding content.'
-                });
-              // Make sure id is of right format
-              } else if (!contentId.match(/^[0-9a-fA-F]{24}$/)) {
-                res.send({
-                  success: false,
-                  error: 'No content with that id exists.'
-                });
-                // Make sure content with given id exists
-              } else if (!article && !listing && !video) {
-                res.send({
-                  success: false,
-                  error: 'No content with that ID exists.',
+                  error: 'Error loading homepage.',
                 });
               } else {
-                Homepage.find({}, (errHomepage, home) => {
-                  if (errHomepage) {
-                    res.send({
-                      success: false,
-                      error: 'Error loading homepage.',
-                    });
-                  } else {
-                    const homepage = home[0];
-                    const recommended = homepage.recommended.slice();
-                    // Error check for duplicate content in banner
-                    let duplicate = false;
-                    recommended.forEach((item) => {
-                      if (item.contentId === contentId) {
-                        duplicate = true;
-                      }
-                    });
-                    if (duplicate) {
-                      res.send({
-                        success: false,
-                        error: 'This content is already in the recommended content section.',
-                      });
-                    } else {
-                      // Create object to pass back, of type article or listing
-                      let contentType = '';
-                      if (article) {
-                        contentType = 'article';
-                      } else if (listing) {
-                        contentType = 'listing';
-                      } else {
-                        contentType = 'video';
-                      }
-                      const newRecommendedContent = {
-                        contentType,
-                        contentId,
-                      };
-                      // Add to Recommended
-                      recommended.push(newRecommendedContent);
-                      homepage.recommended = recommended;
-                      // Save new banner to mongo
-                      homepage.save((errSave) => {
-                        if (errSave) {
-                          res.send({
-                            success: false,
-                            error: errSave,
-                          });
-                        } else {
-                          res.send({
-                            success: true,
-                            error: '',
-                            data: homepage.recommended,
-                          });
-                        }
-                      });
-                    }
+                const homepage = home[0];
+                const recommended = homepage.recommended.slice();
+                // Error check for duplicate content in banner
+                let duplicate = false;
+                recommended.forEach((item) => {
+                  if (item.contentId === contentId) {
+                    duplicate = true;
                   }
                 });
+                if (duplicate) {
+                  res.send({
+                    success: false,
+                    error: 'This listing is already in the recommended content section.',
+                  });
+                } else {
+                  // Create object to pass back, of type listing
+                  const newRecommendedContent = {
+                    contentType: 'listing',
+                    contentId,
+                  };
+                  // Add to Recommended
+                  recommended.push(newRecommendedContent);
+                  homepage.recommended = recommended;
+                  // Save new banner to mongo
+                  homepage.save((errSave) => {
+                    if (errSave) {
+                      res.send({
+                        success: false,
+                        error: 'Error adding recommended.',
+                      });
+                    } else {
+                      res.send({
+                        success: true,
+                        error: '',
+                        data: homepage.recommended,
+                      });
+                    }
+                  });
+                }
               }
             });
-          });
+          }
         });
       }
     });
@@ -380,7 +289,7 @@ module.exports = () => {
               if (errHome) {
                 res.send({
                   success: false,
-                  error: errHome,
+                  error: 'Error removing recommended.',
                 });
               } else {
                 res.send({
@@ -406,93 +315,81 @@ module.exports = () => {
         });
       } else {
         const contentId = req.body.contentId;
-        Listing.findById(contentId, (errListing, listing) => {
-          Article.findById(contentId, (errArticle, article) => {
-            Video.findById(contentId, (errVideo, video) => {
-              if (errListing || errArticle || errVideo) {
+        Article.findById(contentId, (errArticle, article) => {
+          if (errArticle) {
+            res.send({
+              success: false,
+              error: 'Error finding article.'
+            });
+          // Make sure id is of right format
+          } else if (!contentId.match(/^[0-9a-fA-F]{24}$/)) {
+            res.send({
+              success: false,
+              error: 'No article with that id exists.'
+            });
+            // Make sure article with given id exists
+          } else if (!article) {
+            res.send({
+              success: false,
+              error: 'No article with that ID exists.',
+            });
+          } else {
+            Homepage.find({}, (errHomepage, home) => {
+              if (errHomepage) {
                 res.send({
                   success: false,
-                  error: 'Error finding content.'
-                });
-              // Make sure id is of right format
-              } else if (!contentId.match(/^[0-9a-fA-F]{24}$/)) {
-                res.send({
-                  success: false,
-                  error: 'No content with that id exists.'
-                });
-                // Make sure content with given id exists
-              } else if (!article && !listing && !video) {
-                res.send({
-                  success: false,
-                  error: 'No content with that ID exists.',
+                  error: 'Error loading homepage.',
                 });
               } else {
-                Homepage.find({}, (errHomepage, home) => {
-                  if (errHomepage) {
-                    res.send({
-                      success: false,
-                      error: 'Error loading homepage.',
-                    });
-                  } else {
-                    const homepage = home[0];
-                    const fromTheEditors = homepage.fromTheEditors.slice();
-                    // Error check for duplicate content in banner
-                    let duplicate = false;
-                    fromTheEditors.forEach((item) => {
-                      if (item.contentId === contentId) {
-                        duplicate = true;
-                      }
-                    });
-                    if (duplicate) {
-                      res.send({
-                        success: false,
-                        error: 'This content is already in the from the editors content section.',
-                      });
-                    } else {
-                      // Create object to pass back, of type article or listing
-                      let contentType = '';
-                      if (article) {
-                        contentType = 'article';
-                      } else if (listing) {
-                        contentType = 'listing';
-                      } else {
-                        contentType = 'video';
-                      }
-                      const newFromTheEditorsContent = {
-                        contentType,
-                        contentId,
-                      };
-                      // Add to from the editors
-                      fromTheEditors.push(newFromTheEditorsContent);
-                      homepage.fromTheEditors = fromTheEditors;
-                      // Save new banner to mongo
-                      homepage.save((errSave) => {
-                        if (errSave) {
-                          res.send({
-                            success: false,
-                            error: errSave,
-                          });
-                        } else {
-                          res.send({
-                            success: true,
-                            error: '',
-                            data: homepage.fromTheEditors,
-                          });
-                        }
-                      });
-                    }
+                const homepage = home[0];
+                const fromTheEditors = homepage.fromTheEditors.slice();
+                // Error check for duplicate content in banner
+                let duplicate = false;
+                fromTheEditors.forEach((item) => {
+                  if (item.contentId === contentId) {
+                    duplicate = true;
                   }
                 });
+                if (duplicate) {
+                  res.send({
+                    success: false,
+                    error: 'This article is already in the from the editors content section.',
+                  });
+                } else {
+                  // Create object to pass back, of type article
+                  const newFromTheEditorsContent = {
+                    contentType: article,
+                    contentId,
+                  };
+                  // Add to from the editors
+                  fromTheEditors.push(newFromTheEditorsContent);
+                  homepage.fromTheEditors = fromTheEditors;
+                  // Save new banner to mongo
+                  homepage.save((errSave) => {
+                    if (errSave) {
+                      res.send({
+                        success: false,
+                        error: 'Error adding content to homepage.',
+                      });
+                    } else {
+                      res.send({
+                        success: true,
+                        error: '',
+                        data: homepage.fromTheEditors,
+                      });
+                    }
+                  });
+                }
               }
             });
-          });
+          }
         });
       }
     });
   });
 
   // Route to handle deleting an item from the from the editors
-  router.post('/recommended/remove/:fromTheEditorsContentId', (req, res) => {
+  router.post('/fromTheEditors/remove/:fromTheEditorsContentId', (req, res) => {
     // Find the id from the url
     const contentId = req.params.fromTheEditorsContentId;
     AdminCheck(req, (authRes) => {
@@ -523,7 +420,7 @@ module.exports = () => {
               if (errHome) {
                 res.send({
                   success: false,
-                  error: errHome,
+                  error: "error removing homeepage content.",
                 });
               } else {
                 res.send({
@@ -602,7 +499,7 @@ module.exports = () => {
                     if (errSave) {
                       res.send({
                         success: false,
-                        error: errSave,
+                        error: 'Error adding content to homepage.',
                       });
                     } else {
                       res.send({
@@ -653,7 +550,7 @@ module.exports = () => {
               if (errHome) {
                 res.send({
                   success: false,
-                  error: errHome,
+                  error: 'Error removing content from homepage.',
                 });
               } else {
                 res.send({
@@ -728,7 +625,7 @@ module.exports = () => {
                       if (errHomepage) {
                         res.send({
                           success: false,
-                          error: errHomepage,
+                          error: 'Error finding homepage.',
                         });
                       // NOTE this is only to declare a homepage in the database for the first time
                       } else if (!home.length) {
@@ -745,7 +642,7 @@ module.exports = () => {
                           if (err) {
                             res.send({
                               success: false,
-                              error: err,
+                              error: 'Error on homepage.',
                             });
                           } else {
                             res.send({
@@ -784,7 +681,7 @@ module.exports = () => {
                             if (errSave) {
                               res.send({
                                 success: false,
-                                error: errSave,
+                                error: 'Error saving image.',
                               });
                             } else {
                               // Send back success
@@ -840,7 +737,7 @@ module.exports = () => {
               if (errHome) {
                 res.send({
                   success: false,
-                  error: errHome,
+                  error: 'Error remvoing content.',
                 });
               } else {
                 res.send({
@@ -849,41 +746,6 @@ module.exports = () => {
                   data: homepage.banner,
                 });
               }
-            });
-          }
-        });
-      }
-    });
-  });
-
-  // Route to filter by categories
-  router.post('/categories', (req, res) => {
-    const categories = req.body.categories;
-    Listing.find({}, (errListing, listings) => {
-      if (errListing) {
-        res.send({
-          success: false,
-          error: 'Error finding listings.',
-        });
-      } else {
-        const filteredListings = [];
-        // Loop through all listings to check if filters match
-        async.eachSeries(listings, (listing, cb) => {
-          if (_.difference(listing.categories, categories).length === 0) {
-            console.log('listing matches');
-            console.log(listing);
-            filteredListings.push(listing);
-            cb();
-          } else {
-            console.log('listing doesnt match filters');
-            console.log(listing);
-            cb();
-          }
-        }, (asyncErr) => {
-          if (asyncErr) {
-            res.send({
-              success: false,
-              error: 'Async error.',
             });
           }
         });

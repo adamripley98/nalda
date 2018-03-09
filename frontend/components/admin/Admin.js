@@ -179,7 +179,7 @@ class Admin extends Component {
         bannerContentId,
         bannerImageToAdd,
       })
-      .then(resp => {
+      .then((resp) => {
         if (!resp.data.success) {
           this.setState({
             error: resp.data.error,
