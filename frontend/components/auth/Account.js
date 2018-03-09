@@ -33,23 +33,18 @@ class Account extends Component {
       email: '',
       type: '',
       bio: '',
-      profilePicture: {},
+      profilePicture: '',
       profilePictureChanged: false,
       accountVerified: false,
       error: '',
       success: '',
       info: '',
-      pending: true,
+      loading: true,
+      pending: false,
+      hasChanged: false,
     };
 
     // Bind this to helper methods
-    this.handleAdminClick = this.handleAdminClick.bind(this);
-    this.handleChangeName = this.handleChangeName.bind(this);
-    this.handleNameClick = this.handleNameClick.bind(this);
-    this.handleChangeBio = this.handleChangeBio.bind(this);
-    this.handleBioClick = this.handleBioClick.bind(this);
-    this.handleLocationClick = this.handleLocationClick.bind(this);
-    this.handleProfilePictureClick = this.handleProfilePictureClick.bind(this);
     this.handleVerifyEmail = this.handleVerifyEmail.bind(this);
     this.onDrop = this.onDrop.bind(this);
   }
@@ -78,7 +73,7 @@ class Account extends Component {
           profilePicture: resp.data.data.profilePicture,
           accountVerified: resp.data.data.accountVerified,
           error: "",
-          pending: false
+          pending: false,
         });
       } else {
         this.setState({
@@ -86,7 +81,7 @@ class Account extends Component {
           pending: false,
         });
       }
-    }).catch((err) => {
+    }).catch(err => {
       this.setState({
         pending: false,
         error: err,
@@ -98,18 +93,7 @@ class Account extends Component {
    * When the component updates
    */
   componentDidUpdate() {
-    if (this.state.editName) {
-      // Focus on the name input upon clicking edit
-      this.nameInput.focus();
-    } else if (this.state.editBio) {
-      // Focus on the bio text area upon clicking edit
-      this.bioInput.focus();
-    } else if (this.state.editLocation) {
-      // Focus on the location text area upon clicking edit
-      this.locationInput.focus();
-    }
-
-    // Isolate location
+    // Isolate location and add google maps autocomplete on it
     const location = document.getElementById('location');
     if (location) {
       // Autocomplete the user's city
@@ -120,34 +104,34 @@ class Account extends Component {
       new google.maps.places.Autocomplete(location, options);
     }
 
-    // Autosize textareas
+    // Autosize textareas (for example, the bio textarea)
     autosize(document.querySelectorAll('textarea'));
   }
-
 
   /**
    * Handle a user wanting to verify their email
    */
   handleVerifyEmail() {
+    // Verify a user's email by sending them a verification link
     axios.get('/api/verify')
-    .then((resp) => {
-      if (resp.data.success) {
+      .then((resp) => {
+        if (resp.data.success) {
+          this.setState({
+            info: 'Please check your email for a verification link.',
+          });
+        } else {
+          // Display error
+          this.setState({
+            error: resp.data.error,
+          });
+        }
+      })
+      // Display error
+      .catch((err) => {
         this.setState({
-          info: 'Please check your email for a verification link.',
+          error: err,
         });
-      } else {
-        // Display error
-        this.setState({
-          error: resp.data.error,
-        });
-      }
-    })
-    // Display error
-    .catch((err) => {
-      this.setState({
-        error: err,
       });
-    });
   }
   /**
    * Handle a change to the name state
@@ -514,7 +498,7 @@ class Account extends Component {
               </h4>
               <ErrorMessage error={ this.state.error } />
               {
-                (!this.state.pending && !this.state.accountVerified) ? (
+                (!this.state.loading && !this.state.accountVerified) ? (
                   <div className="alert alert-warning marg-bot-1">
                     {this.state.info ? this.state.info : (
                       <span>
@@ -531,7 +515,7 @@ class Account extends Component {
                   </div>
                 ) : null
               }
-              { this.state.pending ? <Loading /> : this.renderInfo() }
+              { this.state.loading ? <Loading /> : this.renderInfo() }
             </div>
           </div>
         </div>
@@ -540,6 +524,7 @@ class Account extends Component {
   }
 }
 
+// Prop validations
 Account.propTypes = {
   userId: PropTypes.string,
   changeName: PropTypes.func,
@@ -570,8 +555,8 @@ const mapDispatchToProps = (dispatch) => {
 
 // Redux config
 Account = connect(
-    mapStateToProps,
-    mapDispatchToProps
+  mapStateToProps,
+  mapDispatchToProps,
 )(Account);
 
 export default Account;
