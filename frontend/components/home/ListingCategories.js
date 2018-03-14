@@ -13,6 +13,7 @@ class ListingCategories extends Component {
   render() {
     return (
       <div className="container">
+        <div className="line" />
         <div className="inline-header-link">
           <h4 className="marg-bot-1 dark-gray-text">
             Categories

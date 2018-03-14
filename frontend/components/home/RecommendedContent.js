@@ -14,6 +14,7 @@ class Recommended extends Component {
     if (!this.props.content || !this.props.content.length) return null;
     return (
       <div className="container">
+        <div className="line" />
         <div className="inline-header-link">
           <h4 className="marg-bot-1 dark-gray-text">Recommended for you</h4>
           <Link to="/listings">View all</Link>

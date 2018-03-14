@@ -44,7 +44,7 @@ class Home extends React.Component {
     }
 
     // Pull all articles, listings, and videos from the database
-    axios.get('/api/home/testing')
+    axios.get('/api/home/')
       .then(resp => {
         if (resp.data.success) {
           this.setState({
@@ -86,9 +86,9 @@ class Home extends React.Component {
           <div className="space-3"/>
           <ErrorMessage error={this.state.error} />
           <RecommendedContent content={this.state.recommended}/>
-          <ListingCategories />
           <FromTheEditors content={this.state.fromTheEditors}/>
           <NaldaVideo content={this.state.naldaVideos} />
+          <ListingCategories />
         </div>
       </div>
     );
