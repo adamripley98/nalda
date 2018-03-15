@@ -41,6 +41,7 @@ module.exports = () => {
     // Helper function to avoid repeated code
     const pullData = (arr, callback) => {
       const returnArr = [];
+
       // Loop through array and pull pertinent data
       async.eachSeries(arr, (item, cb) => {
         let Model = '';
@@ -58,7 +59,6 @@ module.exports = () => {
               success: false,
               error: 'Homepage content not found',
             });
-            return;
           } else if (!content) {
             callback({
               success: false,
@@ -118,6 +118,7 @@ module.exports = () => {
             error: '',
             returnArr,
           });
+          return;
         }
       });
     };

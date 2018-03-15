@@ -176,14 +176,7 @@ class Listings extends React.Component {
     // If listings were pulled from the database
     if (this.state.listings && this.state.listings.length) {
       return this.state.listings.map(listing => (
-        <Preview
-          _id={ listing._id }
-          title={ listing.title }
-          subtitle={ listing.description }
-          image={ listing.image }
-          key={ listing._id }
-          isListing
-        />
+        <Preview content={listing} />
       ));
     }
 
