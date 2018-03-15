@@ -28,7 +28,8 @@ class Admin extends Component {
     this.state = {
       email: "",
       error: "",
-      success: "",
+      manageHomepageSuccess: '',
+      manageAdminSuccess: '',
       bannerContentId: '',
       bannerImageToAdd: '',
       bannerImagePreview: '',
@@ -195,7 +196,7 @@ class Admin extends Component {
           // Set the state
           this.setState({
             error: '',
-            success: 'Banner content updated.',
+            manageHomepageSuccess: 'Banner content updated.',
             banner: resp.data.data,
             bannerContentId: '',
             bannerImageToAdd: '',
@@ -207,7 +208,7 @@ class Admin extends Component {
       .catch((err) => {
         this.setState({
           error: err,
-          success: '',
+          manageHomepageSuccess: '',
           bannerContentId: '',
           bannerImageToAdd: '',
         });
@@ -262,7 +263,7 @@ class Admin extends Component {
 
   // Helper method to remove an item from the from the editors section
   onSubmitRemoveFromTheEditorsContent(fromTheEditorsContentId) {
-    axios.post(`/api/home/recommended/remove/${fromTheEditorsContentId}`)
+    axios.post(`/api/home/fromTheEditors/remove/${fromTheEditorsContentId}`)
     .then((resp) => {
       if (!resp.data.success) {
         this.setState({
@@ -318,7 +319,7 @@ class Admin extends Component {
       if (resp.data.error) {
         this.setState({
           error: resp.data.error,
-          success: "",
+          manageAdminSuccess: "",
         });
       } else {
         // Make copies of existing user types
@@ -333,7 +334,7 @@ class Admin extends Component {
         });
         this.setState({
           error: "",
-          success: "Successfully added new admin.",
+          manageAdminSuccess: "Successfully added new admin.",
           admins: newAdmins,
           users: newUsers,
           curators: newCurators,
@@ -343,7 +344,7 @@ class Admin extends Component {
     }).catch(err => {
       this.setState({
         error: err,
-        success: "",
+        manageAdminSuccess: "",
       });
     });
   }
@@ -361,7 +362,7 @@ class Admin extends Component {
       if (resp.data.error) {
         this.setState({
           error: resp.data.error,
-          success: "",
+          manageAdminSuccess: "",
         });
       } else {
         // Make copies of existing user types
@@ -376,7 +377,7 @@ class Admin extends Component {
         });
         this.setState({
           error: "",
-          success: "Successfully added curator.",
+          manageAdminSuccess: "Successfully added curator.",
           admins: newAdmins,
           users: newUsers,
           curators: newCurators,
@@ -386,7 +387,7 @@ class Admin extends Component {
     }).catch((err) => {
       this.setState({
         error: err,
-        success: "",
+        manageAdminSuccess: "",
       });
     });
   }
@@ -404,7 +405,7 @@ class Admin extends Component {
       if (resp.data.error) {
         this.setState({
           error: resp.data.error,
-          success: "",
+          manageAdminSuccess: "",
         });
       } else {
         const newUsers = this.state.users.slice();
@@ -417,7 +418,7 @@ class Admin extends Component {
         });
         this.setState({
           error: "",
-          success: "Successfully removed curator.",
+          manageAdminSuccess: "Successfully removed curator.",
           curators: newCurators,
           users: newUsers,
           email: '',
@@ -426,7 +427,7 @@ class Admin extends Component {
     }).catch((err) => {
       this.setState({
         error: err,
-        success: "",
+        manageAdminSuccess: "",
       });
     });
   }
@@ -442,7 +443,7 @@ class Admin extends Component {
         // TODO Show on frontend that item has been added
         this.setState({
           error: '',
-          success: 'Content added to Recommended.',
+          manageHomepageSuccess: 'Content added to Recommended.',
           recommended: resp.data.data,
           recommendedContentId: '',
         });
@@ -471,7 +472,7 @@ class Admin extends Component {
         // TODO Show on frontend that item has been added
         this.setState({
           error: '',
-          success: 'Content added to From the Editors.',
+          manageHomepageSuccess: 'Content added to From the Editors.',
           fromTheEditors: resp.data.data,
           fromTheEditorsContentId: '',
         });
@@ -501,7 +502,7 @@ class Admin extends Component {
         // TODO Show on frontend that item has been added
         this.setState({
           error: '',
-          success: 'Content added to Nalda Videos.',
+          manageHomepageSuccess: 'Content added to Nalda Videos.',
           naldaVideos: resp.data.data,
           naldaVideosContentId: '',
         });
@@ -509,6 +510,7 @@ class Admin extends Component {
         this.setState({
           error: resp.data.error,
           naldaVideosContentId: '',
+          manageHomepageSuccess: '',
         });
       }
     })
@@ -516,6 +518,7 @@ class Admin extends Component {
       this.setState({
         error: err,
         naldaVideosContentId: '',
+        manageHomepageSuccess: '',
       });
     });
   }
@@ -847,9 +850,15 @@ class Admin extends Component {
       });
     }
 
-    // TODO SHOW THAT IMAGE WAS ADDED
     return (
       <div>
+        {
+          this.state.manageHomepageSuccess ? (
+            <div className="alert alert-success marg-bot-1">
+              { this.state.manageHomepageSuccess }
+            </div>
+          ) : null
+        }
         <h4>Banner</h4>
         <input
           type="text"
@@ -1097,15 +1106,15 @@ class Admin extends Component {
     return (
       <form>
         <h4 className="bold marg-bot-1">
-          Admin panel
+          Manage Admins
         </h4>
         <p className="marg-bot-1">
           Enter a user's email address in order to add them as an admin or as a content curator or to remove them as a content creator.
         </p>
         {
-          this.state.success ? (
+          this.state.manageAdminSuccess ? (
             <div className="alert alert-success marg-bot-1">
-              { this.state.success }
+              { this.state.manageAdminSuccess }
             </div>
           ) : null
         }

@@ -56,7 +56,7 @@ module.exports = () => {
           if (errContent) {
             callback({
               success: false,
-              error: 'Homepage content not found',
+              error: 'Homepage content not found.',
             });
             return;
           } else if (!content) {
@@ -358,7 +358,7 @@ module.exports = () => {
                 } else {
                   // Create object to pass back, of type article
                   const newFromTheEditorsContent = {
-                    contentType: article,
+                    contentType: 'article',
                     contentId,
                   };
                   // Add to from the editors
