@@ -469,7 +469,6 @@ class Admin extends Component {
     })
     .then((resp) => {
       if (resp.data.success) {
-        // TODO Show on frontend that item has been added
         this.setState({
           error: '',
           manageHomepageSuccess: 'Content added to From the Editors.',
@@ -921,7 +920,9 @@ class Admin extends Component {
     if (this.state.recommended && this.state.recommended.length) {
       recommended = this.state.recommended.map((item, i) => (
         <tr key={item.contentId + "recommended"}>
-          <th>{i + 1}</th>
+          {console.log(item)}
+          <th scope="row">{i + 1}</th>
+          <td>{item.title}</td>
           <td>{item.contentId}</td>
           <td onClick={() => this.onSubmitRemoveRecommendedContent(item.contentId)}>
             <i className="fa fa-close" aria-hidden="true" />
@@ -932,7 +933,8 @@ class Admin extends Component {
     if (this.state.fromTheEditors && this.state.fromTheEditors.length) {
       fromTheEditors = this.state.fromTheEditors.map((item, i) => (
         <tr key={item.contentId + "fromTheEditors"}>
-          <th>{i + 1}</th>
+          <th scope="row">{i + 1}</th>
+          <td>{item.title}</td>
           <td>{item.contentId}</td>
           <td onClick={() => this.onSubmitRemoveFromTheEditorsContent(item.contentId)}>
             <i className="fa fa-close" aria-hidden="true" />
@@ -943,7 +945,8 @@ class Admin extends Component {
     if (this.state.naldaVideos && this.state.naldaVideos.length) {
       naldaVideos = this.state.naldaVideos.map((item, i) => (
         <tr key={item.contentId + "naldaVideos"}>
-          <th>{i + 1}</th>
+          <th scope="row">{i + 1}</th>
+          <td>{item.title}</td>
           <td>{item.contentId}</td>
           <td onClick={() => this.onSubmitRemoveNaldaVideosContent(item.contentId)}>
             <i className="fa fa-close" aria-hidden="true" />
@@ -991,6 +994,7 @@ class Admin extends Component {
           <thead>
             <tr>
               <th scope="col">#</th>
+              <th scope="col">Name</th>
               <th scope="col">Content ID</th>
               <th />
             </tr>
@@ -1040,6 +1044,7 @@ class Admin extends Component {
           <thead>
             <tr>
               <th scope="col">#</th>
+              <th scope="col">Title</th>
               <th scope="col">Content ID</th>
               <th />
             </tr>
@@ -1089,6 +1094,7 @@ class Admin extends Component {
           <thead>
             <tr>
               <th scope="col">#</th>
+              <th scope="col">Title</th>
               <th scope="col">Content ID</th>
               <th />
             </tr>

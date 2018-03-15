@@ -44,10 +44,15 @@ DELETE '/api/videos/:id'       // Delete a specific article
 # Feature tracking
 
 ## TODO ASAP
-- [ ] Finish homepage
-- [ ] Finish filter by category
-- [ ] Finish adding additional amenities backend
-- [ ] Additional amenities edit listing form
+- [X] Finish homepage
+- [X] Finish filter by category
+- [X] Finish adding additional amenities backend
+- [X] Additional amenities edit listing form
+- [ ] Deleting items that are in homepage should remove them from homepage
+- [X] Make admin panel more intuitive
+- [ ] Fix analytics
+- [X] Fix user profile error
+- [X] Make tags display nicer
 
 ## Cam
 - [ ] Make homepage view
