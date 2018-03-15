@@ -58,10 +58,6 @@ module.exports = () => {
         // Find given content
         Model.findById(item.contentId, (errContent, content) => {
           if (errContent) {
-            // ripp
-            console.log("ERROR");
-            console.log(errContent);
-            // ripp
             callback({
               success: false,
               error: 'There was an error fetching homepage content',
@@ -109,6 +105,8 @@ module.exports = () => {
                 updatedAt: content.updatedAt,
               };
             }
+
+            // Add the new content to the array and continue looping
             returnArr.push(newContent);
             cb();
           }
