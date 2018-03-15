@@ -637,7 +637,8 @@ class Listing extends React.Component {
             <Tags title={this.state.title} description={this.state.naldaFavorite}/>
 
             <div className="parallax-wrapper">
-              <img src={ this.state.image } alt={ this.state.title } className="img-fluid" id="parallax" />
+              {/* <img src={ this.state.image } alt={ this.state.title } className="img-fluid" id="parallax" /> */}
+              <div className="background-image img" style={{backgroundImage: `url(${this.state.image})`}} id="parallax" />
             </div>
 
             { this.state.redirectToHome && <Redirect to="/"/> }

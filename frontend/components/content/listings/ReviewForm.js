@@ -139,7 +139,7 @@ class ReviewForm extends React.Component {
     // to log in (or create an account).
     if (!this.props.userId) {
       return (
-        <Blurb message="You must be logged in to leave a review." />
+        <Blurb message="You must be logged in to leave a review." margBot />
       );
     }
 
