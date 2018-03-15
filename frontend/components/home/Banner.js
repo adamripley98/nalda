@@ -73,7 +73,7 @@ class Banner extends Component {
           else bannerClass = "offLeft";
           if (bannerClass === "active") {
             return (
-              <Link to={`/${banner.contentType}s/${banner.contentId}`}
+              <Link to={banner.isEmpty ? "/" : `/${banner.contentType}s/${banner.contentId}`}
                 key={index}
                 className={`banner-item background-image ${bannerClass}`}
                 style={{backgroundImage: `url(${banner.contentImage})`}}
