@@ -92,7 +92,7 @@ class Preview extends Component {
       // Render a preview with the specific props
       return (
         <Preview
-          _id={this.props.content.contentId}
+          _id={this.props.content.contentId ? this.props.content.contentId : this.props.content._id}
           key={this.props.content.contentId}
           title={this.props.content.title}
           categories={this.props.content.categories}

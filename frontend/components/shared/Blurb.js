@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 /**
  * Render a card with a simple message in gray text
  */
-const Blurb = ({ message }) => (
-  <div className="card pad-1 border gray-text">
+const Blurb = ({ message, margBot }) => (
+  <div className={margBot ? "card pad-1 border gray-text marg-bot-1" : "card pad-1 border gray-text"}>
     { message }
   </div>
 );
@@ -13,6 +13,7 @@ const Blurb = ({ message }) => (
 // Prop validations
 Blurb.propTypes = {
   message: PropTypes.string,
+  margBot: PropTypes.bool,
 };
 
 export default Blurb;
