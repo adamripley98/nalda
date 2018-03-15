@@ -53,10 +53,10 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [ ] Make homepage view
   - [ ] Get categories for listings
   - [x] Banner on top (probably carousal), (banner is stored as array in this.state.banner)
-  - [ ] Recommended section style (this.state.recommended array)
-  - [ ] Editors choice section style (this.state.fromTheEditors array)
-  - [ ] Style categories (this.state.categories array)
-  - [ ] Style video section (this.state.naldaVideos array)
+  - [ ] Recommended section style (`this.state.recommended` array)
+  - [ ] Editors choice section style (`this.state.fromTheEditors` array)
+  - [ ] Style categories (`this.state.categories` array)
+  - [ ] Style video section (`this.state.naldaVideos` array)
 - [ ] Split admin panel into tabs
   - [X] Admins
   - [X] Curators
