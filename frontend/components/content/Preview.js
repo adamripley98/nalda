@@ -64,12 +64,15 @@ class Preview extends Component {
 
   getCategories() {
     // If there are no categories, return null
-    if (!this.props.categories || !this.props.categories.length) return null;
+    if (!this.props.categories) return null;
+    const keys = Object.keys(this.props.categories);
 
     // If there are categories to return
     return (
       <div className="categories">
-        {this.props.categories.map(category => <span className="category">{category}</span>)}
+        {keys.map(key => (
+          this.props.categories[key] ? <span className="category" key={key}>{key}</span> : null
+        ))}
       </div>
     );
   }
@@ -163,7 +166,7 @@ Preview.propTypes = {
   contentType: PropTypes.string,
   rating: PropTypes.number,
   location: PropTypes.string,
-  categories: PropTypes.array,
+  categories: PropTypes.object,
 };
 
 export default Preview;

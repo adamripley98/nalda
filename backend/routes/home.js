@@ -38,13 +38,15 @@ module.exports = () => {
    * Get content for the homepage
    */
   router.get('/', (req, res) => {
-    // Helper function to avoid repeated code
+    // Helper function to pull data for each of the different content types
     const pullData = (arr, callback) => {
+      // Array of content to be returned
       const returnArr = [];
 
       // Loop through array and pull pertinent data
       async.eachSeries(arr, (item, cb) => {
-        let Model = '';
+        // Find the model for pulling data based on the content type
+        let Model = null;
         if (item.contentType === 'article') {
           Model = Article;
         } else if (item.contentType === 'listing') {
@@ -52,12 +54,17 @@ module.exports = () => {
         } else {
           Model = Video;
         }
+
         // Find given content
         Model.findById(item.contentId, (errContent, content) => {
           if (errContent) {
+            // ripp
+            console.log("ERROR");
+            console.log(errContent);
+            // ripp
             callback({
               success: false,
-              error: 'Homepage content not found',
+              error: 'There was an error fetching homepage content',
             });
           } else if (!content) {
             callback({
