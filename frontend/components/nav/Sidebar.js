@@ -126,10 +126,13 @@ class Sidebar extends Component {
                   </Link>
 
                   {/* Link to the user's profile page */}
-                  <Link onClick={this.toggleMenu} to={`/users/${this.props.userId}`} className="link">
-                    Profile
-                  </Link>
-
+                  {
+                    (this.props.userType === 'admin' || this.props.userType === 'curator') && (
+                      <Link onClick={this.toggleMenu} to={`/users/${this.props.userId}`} className="link">
+                        Profile
+                      </Link>
+                    )
+                  }
                   { /* Render create link only if admin or curator */ }
                   {
                     (this.props.userType === 'admin' || this.props.userType === 'curator') && (

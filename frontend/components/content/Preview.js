@@ -2,10 +2,11 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-// import moment from 'moment';
 
 // Import components
 import Stars from './listings/Stars';
+import categoryMap from '../json/categoryMap';
+
 
 /**
  * Renders an error message to the user
@@ -71,7 +72,7 @@ class Preview extends Component {
     return (
       <div className="categories">
         {keys.map(key => (
-          this.props.categories[key] ? <span className="category" key={key}>{key}</span> : null
+          this.props.categories[key] ? <span className="category" key={key}>{categoryMap[key]}</span> : null
         ))}
       </div>
     );

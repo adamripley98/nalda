@@ -851,7 +851,7 @@ class EditListingForm extends React.Component {
                   />
 
                   <label>
-                    categories
+                    Categories
                   </label>
                   <div className="categories-form marg-bot-1">
                     {/* Begin first row of categories */}
