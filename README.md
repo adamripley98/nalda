@@ -50,8 +50,8 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [X] Additional amenities edit listing form
 - [X] Deleting items that are in homepage should remove them from homepage
 - [X] Make admin panel more intuitive
-- [ ] Fix analytics
-- [ ] Pass title to admin panel
+- [X] Fix analytics
+- [X] Pass title to admin panel
 - [X] Fix user profile error
 - [X] Make tags display nicer
 
