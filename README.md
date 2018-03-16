@@ -153,7 +153,6 @@ DELETE '/api/videos/:id'       // Delete a specific article
 - [ ] Clear hashtag from url after google login
 - [X] Styling on the emails sent by Nalda: Welcome, reset, and verify.
 
-
 ## Backend
 - [ ] Sort reviews functionality (time, rating)
 - [ ] Technical errors should not be displayed to frontend, should be vague.
