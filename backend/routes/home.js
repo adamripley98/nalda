@@ -108,9 +108,9 @@ module.exports = () => {
         });
       }, (asyncErr) => {
         if (asyncErr) {
-          res.send({
+          callback({
             success: false,
-            error: 'Error loading homepage.',
+            error: 'Error loading homepage.'
           });
         } else {
           callback({
