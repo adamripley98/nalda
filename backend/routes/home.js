@@ -62,12 +62,7 @@ module.exports = () => {
               success: false,
               error: 'There was an error fetching homepage content',
             });
-          } else if (!content) {
-            callback({
-              success: false,
-              error: 'There was an error fetching homepage content',
-            });
-          } else {
+          } else if (content) {
             let newContent = {};
             if (item.contentType === 'article') {
               newContent = {
@@ -113,9 +108,9 @@ module.exports = () => {
         });
       }, (asyncErr) => {
         if (asyncErr) {
-          res.send({
+          callback({
             success: false,
-            error: 'Error loading homepage.',
+            error: 'Error loading homepage.'
           });
         } else {
           callback({

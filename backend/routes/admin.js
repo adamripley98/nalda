@@ -7,6 +7,7 @@
 // Import frameworks
 const express = require('express');
 const router = express.Router();
+const async = require('async');
 
 // Import database models
 const User = require('../models/user');
@@ -24,6 +25,58 @@ module.exports = () => {
    * Route to pull data to admin panel
    */
   router.get('/admin', (req, res) => {
+    // Helper function to pull data for each of the different content types
+    const pullData = (arr, callback) => {
+      // Array of content to be returned
+      const returnArr = [];
+
+      // Loop through array and pull pertinent data
+      async.eachSeries(arr, (item, cb) => {
+        // Find the model for pulling data based on the content type
+        let Model = null;
+        if (item.contentType === 'article') {
+          Model = Article;
+        } else if (item.contentType === 'listing') {
+          Model = Listing;
+        } else {
+          Model = Video;
+        }
+
+        // Find given content
+        Model.findById(item.contentId, (errContent, content) => {
+          if (errContent) {
+            callback({
+              success: false,
+              error: 'There was an error fetching homepage content',
+            });
+          } else if (content) {
+            const newContent = {
+              contentType: item.contentType,
+              contentId: item.contentId,
+              title: content.title,
+            };
+            // Add the new content to the array and continue looping
+            returnArr.push(newContent);
+            cb();
+          }
+        });
+      }, (asyncErr) => {
+        if (asyncErr) {
+          res.send({
+            success: false,
+            error: 'Error loading admin panel.',
+          });
+        } else {
+          callback({
+            success: true,
+            error: '',
+            returnArr,
+          });
+          return;
+        }
+      });
+    };
+
     // Check to make sure admin is logged in
     AdminCheck(req, (authRes) => {
       // Return any authentication errors
@@ -73,25 +126,65 @@ module.exports = () => {
                           users.push({name: user.name, username: user.username, userId: user._id});
                           // Increment total users
                           userData.totalUsers++;
+                          const weekAgo = new Date();
+                          weekAgo.setDate(weekAgo.getDate() - 7);
                           // Count number of users who registered this week
-                          if (user._id.getTimestamp() < new Date() - 7) {
+                          if (user._id.getTimestamp().getTime() > weekAgo.getTime()) {
                             userData.weeklyRegisters++;
                           }
                         }
                       });
-                      // Send back information
-                      res.send({
-                        success: true,
-                        error: '',
-                        data: {
-                          curators,
-                          admins,
-                          users,
-                          homepageContent: homepageContent[0],
-                          userData,
-                          articles,
-                          listings,
-                          videos,
+                      const homepage = homepageContent[0];
+                      pullData(homepage.fromTheEditors, (editorsResp) => {
+                        if (!editorsResp.success) {
+                          res.send({
+                            success: false,
+                            error: editorsResp.error,
+                          });
+                        } else {
+                          const fromTheEditors = editorsResp.returnArr;
+                          pullData(homepage.naldaVideos, (videosResp) => {
+                            if (!videosResp.success) {
+                              res.send({
+                                success: false,
+                                error: videosResp.error,
+                              });
+                            } else {
+                              const naldaVideos = videosResp.returnArr;
+                              pullData(homepage.recommended, (recResp) => {
+                                if (!recResp.success) {
+                                  res.send({
+                                    success: false,
+                                    error: recResp.error,
+                                  });
+                                } else {
+                                  const recommended = recResp.returnArr;
+                                  const home = {
+                                    banner: homepage.banner,
+                                    naldaVideos,
+                                    fromTheEditors,
+                                    recommended,
+                                    categories: homepage.categories,
+                                  };
+                                  // Send back information
+                                  res.send({
+                                    success: true,
+                                    error: '',
+                                    data: {
+                                      curators,
+                                      admins,
+                                      users,
+                                      homepageContent: home,
+                                      userData,
+                                      articles,
+                                      listings,
+                                      videos,
+                                    }
+                                  });
+                                }
+                              });
+                            }
+                          });
                         }
                       });
                     }

@@ -44,20 +44,26 @@ DELETE '/api/videos/:id'       // Delete a specific article
 # Feature tracking
 
 ## TODO ASAP
-- [ ] Finish homepage
-- [ ] Finish filter by category
-- [ ] Finish adding additional amenities backend
-- [ ] Additional amenities edit listing form
+- [X] Finish homepage
+- [X] Finish filter by category
+- [X] Finish adding additional amenities backend
+- [X] Additional amenities edit listing form
+- [X] Deleting items that are in homepage should remove them from homepage
+- [X] Make admin panel more intuitive
+- [X] Fix analytics
+- [X] Pass title to admin panel
+- [X] Fix user profile error
+- [X] Make tags display nicer
 
 ## Cam
-- [ ] Make homepage view
-  - [ ] Get categories for listings
+- [X] Make homepage view
+  - [X] Get categories for listings
   - [x] Banner on top (probably carousal), (banner is stored as array in this.state.banner)
-  - [ ] Recommended section style (`this.state.recommended` array)
-  - [ ] Editors choice section style (`this.state.fromTheEditors` array)
-  - [ ] Style categories (`this.state.categories` array)
-  - [ ] Style video section (`this.state.naldaVideos` array)
-- [ ] Split admin panel into tabs
+  - [X] Recommended section style (`this.state.recommended` array)
+  - [X] Editors choice section style (`this.state.fromTheEditors` array)
+  - [X] Style categories (`this.state.categories` array)
+  - [X] Style video section (`this.state.naldaVideos` array)
+- [X] Split admin panel into tabs
   - [X] Admins
   - [X] Curators
   - [X] Users
@@ -66,7 +72,7 @@ DELETE '/api/videos/:id'       // Delete a specific article
   - [X] Analytics
 - [ ] Add icons for deleting content, users, adding as admin/curator
 - [X] Style image previews for banner in `Admin.j`
-- [ ] Adding amenities to `ListingForm.js`
+- [X] Adding amenities to `ListingForm.js`
 
 ## By 2/17
 - [X] Image upload
@@ -164,11 +170,11 @@ DELETE '/api/videos/:id'       // Delete a specific article
   - [ ] Location
 - [ ] Filter listings by amenities
 - [ ] Give user model a "private" field (object containing info like password, email, etc) & have API not return it.
-- [ ] Extra security for auth routes: userId pulled from backend
+- [X] Extra security for auth routes: userId pulled from backend
 - [ ] Fix issues with reviews and content displaying not chronologically
-- [ ] Location for google and facebook oAuth, get rid of dummy location data
+- [X] Location for google and facebook oAuth, get rid of dummy location data
 - [ ] Failure redirects for resetting password
-- [ ] Have listing tag clicks lead to a page that displays all listings of that tag
+- [X] Have listing tag clicks lead to a page that displays all listings of that tag
 - [ ] Make sure file uploads are pictures and are appropriate sizes
 
 # TODO from Feb 11 meeting

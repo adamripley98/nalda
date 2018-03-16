@@ -33,7 +33,6 @@ const s3bucket = new AWS.S3({
 module.exports = () => {
   /**
    * Update a user's profile information
-   * TODO integrate profile picture updates
    */
   router.post('/edit', (req, res) => {
     // Check to make sure poster is logged in
@@ -103,7 +102,6 @@ module.exports = () => {
                 }
               });
             } else {
-              // TODO
               // Convert profile picture to a form that s3 can display
               const profilePictureConverted = new Buffer(profilePicture.replace(/^data:image\/\w+;base64,/, ""), 'base64');
 
