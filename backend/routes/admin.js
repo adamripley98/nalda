@@ -115,6 +115,7 @@ module.exports = () => {
                         totalUsers: 0,
                         weeklyRegisters: 0,
                       };
+
                       // Display pertinent information
                       profiles.forEach((user) => {
                         if (user.userType === 'curator') {
