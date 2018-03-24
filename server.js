@@ -80,6 +80,12 @@ if (envError) {
 // Connecting to mongo
 const options = {
   useMongoClient: true,
+  server: {
+    // sets how many times to try reconnecting
+    reconnectTries: Number.MAX_VALUE,
+    // sets the delay between every retry (milliseconds)
+    reconnectInterval: 1000,
+  },
 };
 mongoose.connect(MONGODB_URI, options);
 
