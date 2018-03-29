@@ -210,7 +210,6 @@ class Account extends Component {
     if (acceptedFiles && acceptedFiles.length) {
       // Read only the first file passed in
       const profilePicture = acceptedFiles[0];
-
       const reader = new FileReader();
 
       // Convert from blob to a proper file object that can be passed to server

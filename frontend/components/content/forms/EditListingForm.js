@@ -556,9 +556,9 @@ class EditListingForm extends React.Component {
         pendingSubmit: false,
       });
       return false;
-    } else if (this.state.title.length < 4 || this.state.title.length > 100) {
+    } else if (this.state.title.length < 2 || this.state.title.length > 100) {
       this.setState({
-        error: "Title must be between 4 and 100 characters long.",
+        error: "Title must be between 2 and 100 characters long.",
         pendingSubmit: false,
       });
       return false;
