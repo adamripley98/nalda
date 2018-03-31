@@ -1,139 +1,295 @@
-// /**
-//  * Styles for the footer at the bottom of every page
-//  */
-// footer {
-//   .footer-top {
-//     display: flex;
-//     padding: 1rem 1rem 2rem 1rem;
-//     border-top: 1px solid $border;
-//     background: white;
-//     color: $gray;
-//
-//     /**
-//      * Nalda logo in the footer
-//      */
-//     .logo {
-//       color: black !important;
-//       font-weight: bold;
-//       font-size: 1.4rem;
-//       display: inline-block;
-//       width: auto;
-//       margin-right: 2rem;
-//
-//       img {
-//         width: 2rem;
-//         height: 2rem;
-//         margin-right: 0.6rem;
-//       }
-//     }
-//
-//     /**
-//      * All rights reserved
-//      */
-//     .credits {
-//       margin-top: 0.4rem;
-//       display: inline-block;
-//       width: auto;
-//     }
-//
-//     /**
-//      * Links to other pages on the site
-//      * On larger screens display left-justified
-//      */
-//     .links {
-//       margin-top: 0.4rem;
-//       flex: 1;
-//       text-align: right;
-//
-//       a {
-//         text-align: right;
-//         display: inline-block;
-//         width: auto;
-//         margin-left: 1rem;
-//         color: $gray;
-//
-//         &:hover,
-//         &:focus,
-//         &:active {
-//           color: $dark-gray;
-//         }
-//       }
-//     }
-//   }
-//
-//   /**
-//    * Credit to the developers at the very bottom of the footer
-//    */
-//   .footer-bottom {
-//     padding: 0rem 1rem;
-//     color: $gray;
-//     font-size: 0.8rem;
-//     margin-bottom: 1rem;
-//
-//     a {
-//       color: $gray;
-//
-//       &:hover,
-//       &:active,
-//       &:focus {
-//         color: $dark-gray;
-//       }
-//     }
-//   }
-// }
-//
-// /**
-//  * Adjust the footer to smaller screen sizes by making the smaller sections
-//  * each take up the full width of the screen
-//  */
-// @media screen and (max-width: 1016px) {
-//   footer .footer-top {
-//     display: block;
-//
-//     .credits {
-//       margin-top: 1rem;
-//       width: 100%;
-//     }
-//
-//     .links {
-//       margin-top: 1rem;
-//       width: 100%;
-//       text-align: left;
-//
-//       a {
-//         display: block;
-//         width: 100%;
-//         text-align: left;
-//         margin-bottom: 0.2rem;
-//         margin-left: 0rem;
-//         margin-right: auto;
-//       }
-//     }
-//   }
-// }
-//
-// @media screen and (max-device-width: 1016px) {
-//   footer .footer-top {
-//     display: block;
-//
-//     .credits {
-//       margin-top: 1rem;
-//       width: 100%;
-//     }
-//
-//     .links {
-//       margin-top: 1rem;
-//       width: 100%;
-//       text-align: left;
-//
-//       a {
-//         display: block;
-//         width: 100%;
-//         text-align: left;
-//         margin-bottom: 0.2rem;
-//         margin-left: 0rem;
-//         margin-right: auto;
-//       }
-//     }
-//   }
-// }
+/*
+Theme Name: Edward Kim
+Theme URI: http://edwardkim.co/
+Description: Personal Wordpress theme.
+Version: 2.1
+Author: Edward Kim
+Author URI: http://edwardkim.co/
+Copyright © 2017 Edward Kim. All rights reserved.
+*/
+
+/* =============================================
+S06 Footer
+============================================= */
+
+#nalda-footer {
+	width: 100%;
+	background: #004976;
+	z-index: 1;
+	overflow: auto;
+	padding-top: 40px;
+	padding-bottom: 40px;
+	min-height: 130px;
+
+  ul, nav {
+    list-style: none !important;
+    padding-left: 0;
+  }
+}
+
+#nalda-footer .section-content {
+	padding: 20px 0;
+}
+
+.nalda-logo-container {
+	width: 100px;
+	height: 26px;
+	display: block;
+	margin: 0 0 30px 0;
+}
+
+.nalda-logo {
+	width: 100px;
+	height: 26px;
+	background-size: 100px 26px;
+	background-image: url('https://s3.amazonaws.com/nalda/footer-logo.svg');
+  margin-right: 1rem;
+	background-position: center center;
+	opacity: 1;
+	transition: opacity 0.2s ease-in;
+}
+
+.nalda-logo:hover {
+	opacity: 0.85;
+}
+
+.footer-menus {
+	width: 100%;
+}
+
+.footer-menu-single {
+	width: 100%;
+}
+
+.footer-flex {
+	display: flex;
+	justify-content: flex-start;
+	flex-wrap: wrap;
+	align-items: flex-start;
+}
+
+.footer-menu-heading {
+	font-size: 18px;
+	font-weight: 700;
+	color: #fff;
+	margin-bottom: 0em;
+}
+
+.footer-menu-list li {
+	margin-bottom: 0;
+}
+
+.footer-menu-list li a {
+	color: #afdcf8;
+	font-size: 16px;
+}
+
+.footer-menu-list li a:hover {
+	color: #d6dde2;
+}
+
+.footer-menu-single {
+	display: inline-block;
+	vertical-align: top;
+	margin-bottom: 3em;
+}
+
+.footer-legal-content {
+	width: 100%;
+	display: block;
+}
+
+.footer-social-links {
+	width: 100%;
+	display: block;
+	margin-top: 30px;
+	vertical-align: bottom;
+}
+
+.footer-nav-item {
+	list-style-type: none;
+	display: block;
+	padding: 0 20px 0 0;
+}
+
+.footer-nav-item + .footer-nav-item {
+  margin: 0 0 0.3em 0;
+}
+
+.footer-nav-item a {
+	color: #fff;
+	font-weight: 700;
+	font-size: 18px;
+}
+
+.footer-nav-item a:hover {
+	color: #d6dde2;
+}
+
+.gf-social-item {
+	display: inline-block;
+	padding: 0 30px 0 0;
+	margin: 0 0 0.3em 0;
+}
+
+.gf-social-item a {
+	color: #afdcf8;
+}
+
+.gf-social-item a:hover {
+	color: #fff;
+}
+
+.legal-copy {
+	font-size: 14px;
+	color: #afdcf8;
+	margin: 20px 0 0 0;
+}
+
+@media only screen and (max-width: 499px) {
+	.footer-menu-single {
+		border-top: 1px solid #3377a1;
+		padding: 10px 0;
+		margin-bottom: 10px;
+		height: 40px;
+		overflow: hidden;
+	}
+
+	.footer-menu-single.expanded {
+		height: auto;
+	}
+
+	.footer-expand-icon {
+		position: absolute;
+		right: 1rem;
+		background: url('https://s3.amazonaws.com/nalda/gf-expand-toggle.svg');
+		background-size: 15px 15px;
+		height: 15px;
+		width: 15px;
+    margin-top: -2rem;
+		transition: transform 0.1s ease-in;
+	}
+
+	.footer-menu-single.expanded .footer-expand-icon {
+		transform: rotate(45deg);
+	}
+
+	.footer-menu-heading {
+		margin-bottom: 0.5em;
+	}
+}
+
+@media only screen and (min-width: 500px) {
+	.footer-menu-single {
+		width: 50%;
+	}
+}
+
+@media only screen and (max-width: 767px) {
+	.footer-nav {
+		margin-top: 40px;
+	}
+
+	.footer-nav-item a {
+		color: #afdcf8;
+		font-weight: 400;
+		font-size: 16px;
+	}
+}
+
+@media only screen and (min-width: 768px) {
+	.footer-navigation {
+		display: flex;
+		justify-content: flex-start;
+		flex-wrap: wrap;
+		align-items: flex-start;
+	}
+
+	.nalda-logo-container {
+		width: 150px;
+		height: 39px;
+    margin-right: 1rem;
+		margin-bottom: 100px;
+		display: inline-block;
+    flex: 1;
+	}
+
+	.nalda-logo {
+		width: 150px;
+		height: 39px;
+		background-size: 150px 39px;
+	}
+
+	.footer-menus {
+		display: inline-block;
+		width: calc(100% - 250px);
+		left: 100px;
+		margin-bottom: 30px;
+	}
+
+	.footer-menu-list li a {
+		font-size: 18px;
+	}
+
+	.footer-legal-content {
+		width: calc(100% - 300px);
+		display: inline-block;
+	}
+
+	.footer-nav-item {
+		display: inline-block;
+	}
+
+	.footer-social-links {
+		width: 300px;
+		display: inline-block;
+		vertical-align: bottom;
+		margin-top: 10px;
+	}
+
+	.footer-social-icons {
+		right: 0;
+		text-align: right;
+	}
+
+	.gf-social-item {
+		display: inline-block;
+		padding: 0 0 0 30px;
+		margin: 0 0 0.3em 0;
+	}
+}
+
+@media only screen and (min-width: 860px) {
+	.footer-menu-single {
+		width: 33%;
+	}
+
+	.legal-copy {
+		font-size: 16px;
+		margin: 0;
+	}
+}
+
+@media only screen and (min-width: 1069px) {
+	#nalda-footer {
+		padding: 60px 0;
+	}
+
+	.footer-menu-single {
+		width: 25%;
+	}
+
+	.footer-menus {
+		width: calc(100% - 300px);
+		left: 150px;
+		margin-bottom: 30px;
+	}
+}
+
+@media only screen and (min-width: 1280px) {
+	.footer-menus {
+		width: calc(100% - 350px);
+		left: 200px;
+		margin-bottom: 30px;
+	}
+}
