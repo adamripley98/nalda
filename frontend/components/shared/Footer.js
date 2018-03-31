@@ -6,6 +6,15 @@ import { Link } from 'react-router-dom';
  * Renders the footer at the bottom of the screen on all pages.
  */
 class Footer extends React.Component {
+  componentDidMount() {
+    const expandables = document.querySelectorAll(".expandable-toggle");
+    expandables.forEach(expandable => {
+      expandable.addEventListener('click', () => {
+        expandable.parentNode.classList.toggle("expanded");
+      });
+    });
+  }
+
   renderFooterLegal() {
     return (
       <div className="container">

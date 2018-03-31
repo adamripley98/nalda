@@ -161,12 +161,12 @@ S06 Footer
 
 	.footer-expand-icon {
 		position: absolute;
-		right: 0;
-		top: 5px;
+		right: 1rem;
 		background: url('https://s3.amazonaws.com/nalda/gf-expand-toggle.svg');
 		background-size: 15px 15px;
 		height: 15px;
 		width: 15px;
+    margin-top: -2rem;
 		transition: transform 0.1s ease-in;
 	}
 
