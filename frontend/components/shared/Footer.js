@@ -8,54 +8,56 @@ import { Link } from 'react-router-dom';
 class Footer extends React.Component {
   renderFooterLegal() {
     return (
-      <div className="footer-legal">
-        <div className="footer-flex">
-          <div className="footer-legal-content">
-            <ul className="footer-nav">
-              <li className="footer-nav-item">
-                <Link to="/">About Nalda</Link>
-              </li>
-              <li className="footer-nav-item">
-                <Link to="/">Contact Us</Link>
-              </li>
-              <li className="footer-nav-item">
-                <Link to="/">Credits</Link>
-              </li>
-              <li className="footer-nav-item">
-                <Link to="/">Terms of Use</Link>
-              </li>
-              <li className="footer-nav-item">
-                <Link to="/">Privacy Policy</Link>
-              </li>
-            </ul>
-            <p className="legal-copy">
-              Copyright &copy; 2018 Nalda. All rights reserved.
-            </p>
-          </div>
+      <div className="container">
+        <div className="footer-legal">
+          <div className="footer-flex">
+            <div className="footer-legal-content">
+              <ul className="footer-nav">
+                <li className="footer-nav-item">
+                  <Link to="/">About Nalda</Link>
+                </li>
+                <li className="footer-nav-item">
+                  <Link to="/">Contact Us</Link>
+                </li>
+                <li className="footer-nav-item">
+                  <Link to="/">Credits</Link>
+                </li>
+                <li className="footer-nav-item">
+                  <Link to="/">Terms of Use</Link>
+                </li>
+                <li className="footer-nav-item">
+                  <Link to="/">Privacy Policy</Link>
+                </li>
+              </ul>
+              <p className="legal-copy">
+                Copyright &copy; 2018 Nalda. All rights reserved.
+              </p>
+            </div>
 
-          <div className="footer-social-links">
-            <ul className="footer-social-icons">
-              <li className="gf-social-item">
-                <Link to="http://facebook.com/edwardkim.co" target="_blank" className="gf-facebook">
-                  <i className="fa fa-facebook fa-lg" />
-                </Link>
-              </li>
-              <li className="gf-social-item">
-                <Link to="http://twitter.com/imedwardkim" target="_blank" className="gf-twitter">
-                  <i className="fa fa-twitter fa-lg" />
-                </Link>
-              </li>
-              <li className="gf-social-item">
-                <Link to="http://instagram.com/imedwardkim" target="_blank" className="gf-instagram">
-                  <i className="fa fa-instagram fa-lg" />
-                </Link>
-              </li>
-              <li className="gf-social-item">
-                <Link to="http://instagram.com/imedwardkim" target="_blank" className="gf-youtube">
-                  <i className="fa fa-youtube-play fa-lg" />
-                </Link>
-              </li>
-            </ul>
+            <div className="footer-social-links">
+              <ul className="footer-social-icons">
+                <li className="gf-social-item">
+                  <Link to="http://facebook.com/edwardkim.co" target="_blank" className="gf-facebook">
+                    <i className="fa fa-facebook fa-lg" />
+                  </Link>
+                </li>
+                <li className="gf-social-item">
+                  <Link to="http://twitter.com/imedwardkim" target="_blank" className="gf-twitter">
+                    <i className="fa fa-twitter fa-lg" />
+                  </Link>
+                </li>
+                <li className="gf-social-item">
+                  <Link to="http://instagram.com/imedwardkim" target="_blank" className="gf-instagram">
+                    <i className="fa fa-instagram fa-lg" />
+                  </Link>
+                </li>
+                <li className="gf-social-item">
+                  <Link to="http://instagram.com/imedwardkim" target="_blank" className="gf-youtube">
+                    <i className="fa fa-youtube-play fa-lg" />
+                  </Link>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -64,7 +66,7 @@ class Footer extends React.Component {
 
   renderFooterContent() {
     return (
-      <div className="footer-content">
+      <div className="container">
         <div className="footer-navigation">
           <div className="nalda-logo-container">
             <Link to="/">

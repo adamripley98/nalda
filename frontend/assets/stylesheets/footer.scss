@@ -1,139 +1,139 @@
-/**
- * Styles for the footer at the bottom of every page
- */
-footer {
-  .footer-top {
-    display: flex;
-    padding: 1rem 1rem 2rem 1rem;
-    border-top: 1px solid $border;
-    background: white;
-    color: $gray;
-
-    /**
-     * Nalda logo in the footer
-     */
-    .logo {
-      color: black !important;
-      font-weight: bold;
-      font-size: 1.4rem;
-      display: inline-block;
-      width: auto;
-      margin-right: 2rem;
-
-      img {
-        width: 2rem;
-        height: 2rem;
-        margin-right: 0.6rem;
-      }
-    }
-
-    /**
-     * All rights reserved
-     */
-    .credits {
-      margin-top: 0.4rem;
-      display: inline-block;
-      width: auto;
-    }
-
-    /**
-     * Links to other pages on the site
-     * On larger screens display left-justified
-     */
-    .links {
-      margin-top: 0.4rem;
-      flex: 1;
-      text-align: right;
-
-      a {
-        text-align: right;
-        display: inline-block;
-        width: auto;
-        margin-left: 1rem;
-        color: $gray;
-
-        &:hover,
-        &:focus,
-        &:active {
-          color: $dark-gray;
-        }
-      }
-    }
-  }
-
-  /**
-   * Credit to the developers at the very bottom of the footer
-   */
-  .footer-bottom {
-    padding: 0rem 1rem;
-    color: $gray;
-    font-size: 0.8rem;
-    margin-bottom: 1rem;
-
-    a {
-      color: $gray;
-
-      &:hover,
-      &:active,
-      &:focus {
-        color: $dark-gray;
-      }
-    }
-  }
-}
-
-/**
- * Adjust the footer to smaller screen sizes by making the smaller sections
- * each take up the full width of the screen
- */
-@media screen and (max-width: 1016px) {
-  footer .footer-top {
-    display: block;
-
-    .credits {
-      margin-top: 1rem;
-      width: 100%;
-    }
-
-    .links {
-      margin-top: 1rem;
-      width: 100%;
-      text-align: left;
-
-      a {
-        display: block;
-        width: 100%;
-        text-align: left;
-        margin-bottom: 0.2rem;
-        margin-left: 0rem;
-        margin-right: auto;
-      }
-    }
-  }
-}
-
-@media screen and (max-device-width: 1016px) {
-  footer .footer-top {
-    display: block;
-
-    .credits {
-      margin-top: 1rem;
-      width: 100%;
-    }
-
-    .links {
-      margin-top: 1rem;
-      width: 100%;
-      text-align: left;
-
-      a {
-        display: block;
-        width: 100%;
-        text-align: left;
-        margin-bottom: 0.2rem;
-        margin-left: 0rem;
-        margin-right: auto;
-      }
-    }
-  }
-}
+// /**
+//  * Styles for the footer at the bottom of every page
+//  */
+// footer {
+//   .footer-top {
+//     display: flex;
+//     padding: 1rem 1rem 2rem 1rem;
+//     border-top: 1px solid $border;
+//     background: white;
+//     color: $gray;
+//
+//     /**
+//      * Nalda logo in the footer
+//      */
+//     .logo {
+//       color: black !important;
+//       font-weight: bold;
+//       font-size: 1.4rem;
+//       display: inline-block;
+//       width: auto;
+//       margin-right: 2rem;
+//
+//       img {
+//         width: 2rem;
+//         height: 2rem;
+//         margin-right: 0.6rem;
+//       }
+//     }
+//
+//     /**
+//      * All rights reserved
+//      */
+//     .credits {
+//       margin-top: 0.4rem;
+//       display: inline-block;
+//       width: auto;
+//     }
+//
+//     /**
+//      * Links to other pages on the site
+//      * On larger screens display left-justified
+//      */
+//     .links {
+//       margin-top: 0.4rem;
+//       flex: 1;
+//       text-align: right;
+//
+//       a {
+//         text-align: right;
+//         display: inline-block;
+//         width: auto;
+//         margin-left: 1rem;
+//         color: $gray;
+//
+//         &:hover,
+//         &:focus,
+//         &:active {
+//           color: $dark-gray;
+//         }
+//       }
+//     }
+//   }
+//
+//   /**
+//    * Credit to the developers at the very bottom of the footer
+//    */
+//   .footer-bottom {
+//     padding: 0rem 1rem;
+//     color: $gray;
+//     font-size: 0.8rem;
+//     margin-bottom: 1rem;
+//
+//     a {
+//       color: $gray;
+//
+//       &:hover,
+//       &:active,
+//       &:focus {
+//         color: $dark-gray;
+//       }
+//     }
+//   }
+// }
+//
+// /**
+//  * Adjust the footer to smaller screen sizes by making the smaller sections
+//  * each take up the full width of the screen
+//  */
+// @media screen and (max-width: 1016px) {
+//   footer .footer-top {
+//     display: block;
+//
+//     .credits {
+//       margin-top: 1rem;
+//       width: 100%;
+//     }
+//
+//     .links {
+//       margin-top: 1rem;
+//       width: 100%;
+//       text-align: left;
+//
+//       a {
+//         display: block;
+//         width: 100%;
+//         text-align: left;
+//         margin-bottom: 0.2rem;
+//         margin-left: 0rem;
+//         margin-right: auto;
+//       }
+//     }
+//   }
+// }
+//
+// @media screen and (max-device-width: 1016px) {
+//   footer .footer-top {
+//     display: block;
+//
+//     .credits {
+//       margin-top: 1rem;
+//       width: 100%;
+//     }
+//
+//     .links {
+//       margin-top: 1rem;
+//       width: 100%;
+//       text-align: left;
+//
+//       a {
+//         display: block;
+//         width: 100%;
+//         text-align: left;
+//         margin-bottom: 0.2rem;
+//         margin-left: 0rem;
+//         margin-right: auto;
+//       }
+//     }
+//   }
+// }
