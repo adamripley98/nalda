@@ -14,9 +14,9 @@ export default {
   formals: "Formals",
   birthdays: "Birthdays",
   treatYourself: "Treat yourself",
-  adulting: "Adulting",
+  adulting: "#Adulting",
   feelingLazy: "Feeling lazy",
   holeInTheWall: "Hole in the wall",
-  showoffToYourFriends: "Show off to your friends",
-  forTheGram: "For the gram",
+  showoffToYourFriends: "Showing off",
+  forTheGram: "#forTheGram",
 };
