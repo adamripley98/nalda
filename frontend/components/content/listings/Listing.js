@@ -98,7 +98,6 @@ class Listing extends React.Component {
     axios.get(`/api/listings/${id}`)
       .then(res => {
         if (res.data.success) {
-          console.log('can they modify??', res.data.canModify);
           // Set the state
           this.setState({
             error: "",
@@ -113,7 +112,7 @@ class Listing extends React.Component {
 
           // If there is a location
           if (res.data.data.location.lng && res.data.data.location.lat) {
-            $(document).ready(function() {
+            $(document).ready(() => {
               var map = new google.maps.Map(document.getElementById('map'), {
                 zoom: 17,
                 center: res.data.data.location,

@@ -108,7 +108,7 @@ module.exports = () => {
 
               // Resize to be appropriate size
               sharp(profilePictureConverted)
-              .resize(240, 240)
+              .resize(240, null)
               .toBuffer()
               .then( resized => {
                 // Create bucket
