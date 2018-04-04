@@ -556,9 +556,9 @@ class EditListingForm extends React.Component {
         pendingSubmit: false,
       });
       return false;
-    } else if (this.state.title.length < 4 || this.state.title.length > 100) {
+    } else if (this.state.title.length < 2 || this.state.title.length > 100) {
       this.setState({
-        error: "Title must be between 4 and 100 characters long.",
+        error: "Title must be between 2 and 100 characters long.",
         pendingSubmit: false,
       });
       return false;
@@ -701,11 +701,13 @@ class EditListingForm extends React.Component {
                       type="time"
                       onChange={(e) => { this.handleChangeHours(e, "start", "monday");}}
                       className="form-control"
+                      value={this.state.hours.monday.start}
                     />
                     <input
                       type="time"
                       onChange={(e) => { this.handleChangeHours(e, "finish", "monday");}}
                       className="form-control"
+                      value={this.state.hours.monday.finish}
                     />
                   </div>
                   <div className="time-select">
@@ -716,11 +718,13 @@ class EditListingForm extends React.Component {
                     type="time"
                     onChange={(e) => { this.handleChangeHours(e, "start", "tuesday");}}
                     className="form-control"
+                    value={this.state.hours.tuesday.start}
                   />
                     <input
                     type="time"
                     onChange={(e) => { this.handleChangeHours(e, "finish", "tuesday");}}
                     className="form-control"
+                    value={this.state.hours.tuesday.finish}
                   />
                   </div>
                   <div className="time-select">
@@ -731,11 +735,13 @@ class EditListingForm extends React.Component {
                       type="time"
                       onChange={(e) => { this.handleChangeHours(e, "start", "wednesday");}}
                       className="form-control"
+                      value={this.state.hours.wednesday.start}
                     />
                     <input
                       type="time"
                       onChange={(e) => { this.handleChangeHours(e, "finish", "wednesday");}}
                       className="form-control"
+                      value={this.state.hours.wednesday.finish}
                     />
                   </div>
                   <div className="time-select">
@@ -746,11 +752,13 @@ class EditListingForm extends React.Component {
                       type="time"
                       onChange={(e) => { this.handleChangeHours(e, "start", "thursday");}}
                       className="form-control"
+                      value={this.state.hours.thursday.start}
                     />
                     <input
                       type="time"
                       onChange={(e) => { this.handleChangeHours(e, "finish", "thursday");}}
                       className="form-control"
+                      value={this.state.hours.thursday.finish}
                     />
                   </div>
                   <div className="time-select">
@@ -761,11 +769,13 @@ class EditListingForm extends React.Component {
                       type="time"
                       onChange={(e) => { this.handleChangeHours(e, "start", "friday");}}
                       className="form-control"
+                      value={this.state.hours.friday.start}
                     />
                     <input
                       type="time"
                       onChange={(e) => { this.handleChangeHours(e, "finish", "friday");}}
                       className="form-control"
+                      value={this.state.hours.friday.finish}
                     />
                   </div>
                   <div className="time-select">
@@ -776,11 +786,13 @@ class EditListingForm extends React.Component {
                       type="time"
                       onChange={(e) => { this.handleChangeHours(e, "start", "saturday");}}
                       className="form-control"
+                      value={this.state.hours.saturday.start}
                     />
                     <input
                       type="time"
                       onChange={(e) => { this.handleChangeHours(e, "finish", "saturday");}}
                       className="form-control"
+                      value={this.state.hours.saturday.finish}
                     />
                   </div>
                   <div className="time-select marg-bot-1">
@@ -791,11 +803,13 @@ class EditListingForm extends React.Component {
                       type="time"
                       onChange={(e) => { this.handleChangeHours(e, "start", "sunday");}}
                       className="form-control"
+                      value={this.state.hours.sunday.start}
                     />
                     <input
                       type="time"
                       onChange={(e) => { this.handleChangeHours(e, "finish", "sunday");}}
                       className="form-control"
+                      value={this.state.hours.sunday.finish}
                     />
                   </div>
                   <div className="row">
@@ -1109,7 +1123,6 @@ class EditListingForm extends React.Component {
                       !this.state.pendingSubmit && (
                         this.state.title &&
                         this.state.description &&
-                        this.state.website &&
                         this.state.image &&
                         this.state.price &&
                         document.getElementById("location") &&

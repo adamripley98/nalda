@@ -18,7 +18,6 @@ const Homepage = require('../models/homepage');
 
 // Import helper methods
 const {CuratorOrAdminCheck} = require('../helperMethods/authChecking');
-const {AuthorOrAdminCheck} = require('../helperMethods/authChecking');
 
 // Isolate environmental variables
 const AWS_BUCKET_NAME = process.env.AWS_BUCKET_NAME;
@@ -105,7 +104,7 @@ module.exports = () => {
             User.findById(userId, (errUser, user) => {
               if (user) {
                 // Check if given user is either an admin or the curator of the listing
-                if (user.userType === 'admin' || user._id === listing.author) {
+                if (user.userType === 'admin' || user.userType === 'curator') {
                   canModify = true;
                 }
               }
@@ -211,7 +210,7 @@ module.exports = () => {
     const listingId = req.params.id;
 
     // Check to make sure user is an admin or the author
-    AuthorOrAdminCheck(req, listingId, Listing, (authRes) => {
+    CuratorOrAdminCheck(req, listingId, Listing, (authRes) => {
         // Auth error
       if (!authRes.success) {
         res.send({
@@ -249,8 +248,6 @@ module.exports = () => {
           error = "Image must be populated.";
         } else if (!price) {
           error = "Price must be populated.";
-        } else if (!website) {
-          error = "Website must be populated.";
         } else if (!hours) {
           error = "Hours must be populated.";
         } else if (amenities.length > 10) {
@@ -505,7 +502,7 @@ module.exports = () => {
     const listingId = req.params.id;
 
     // Check to make sure user is an admin or the author
-    AuthorOrAdminCheck(req, listingId, Listing, (authRes) => {
+    CuratorOrAdminCheck(req, listingId, Listing, (authRes) => {
         // Auth error
       if (!authRes.success) {
         res.send({
@@ -618,8 +615,6 @@ module.exports = () => {
           error = "Maximum of 6 images.";
         } else if (!price) {
           error = "Price must be populated.";
-        } else if (!website) {
-          error = "Website must be populated.";
         } else if (amenities.length > 10) {
           error = "Only 10 amenities allowed";
         } else if (!location.name) {
