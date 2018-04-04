@@ -1123,7 +1123,6 @@ class EditListingForm extends React.Component {
                       !this.state.pendingSubmit && (
                         this.state.title &&
                         this.state.description &&
-                        this.state.website &&
                         this.state.image &&
                         this.state.price &&
                         document.getElementById("location") &&

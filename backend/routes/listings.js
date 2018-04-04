@@ -248,8 +248,6 @@ module.exports = () => {
           error = "Image must be populated.";
         } else if (!price) {
           error = "Price must be populated.";
-        } else if (!website) {
-          error = "Website must be populated.";
         } else if (!hours) {
           error = "Hours must be populated.";
         } else if (amenities.length > 10) {
@@ -617,8 +615,6 @@ module.exports = () => {
           error = "Maximum of 6 images.";
         } else if (!price) {
           error = "Price must be populated.";
-        } else if (!website) {
-          error = "Website must be populated.";
         } else if (amenities.length > 10) {
           error = "Only 10 amenities allowed";
         } else if (!location.name) {
