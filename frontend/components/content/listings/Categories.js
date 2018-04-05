@@ -184,7 +184,7 @@ class Categories extends React.Component {
           _id={ listing._id }
           title={ listing.title }
           subtitle={ listing.description }
-          image={ listing.image }
+          image={ listing.previewImage ? listing.previewImage : listing.image }
           key={ listing._id }
           isListing
         />

@@ -87,7 +87,7 @@ class Preview extends Component {
         const videoId = this.props.content.url.substring(this.props.content.url.indexOf("v=") + 2);
         image = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
       } else {
-        image = this.props.content.image;
+        image = this.props.content.previewImage ? this.props.content.previewImage : this.props.content.image;
       }
 
       // Render a preview with the specific props
@@ -137,14 +137,6 @@ class Preview extends Component {
             {this.getCategories()}
             {this.props.rating && <Stars rating={this.props.rating} />}
             {this.getSubtitle()}
-
-            {/*
-              this.props.timestamp && (
-                <p className="gray-text marg-bot-0 marg-top-05 right italic">
-                  { moment(new Date(Number(this.props.timestamp))).fromNow(true) }
-                </p>
-              )
-            */}
           </div>
         </Link>
       </div>

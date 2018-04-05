@@ -24,7 +24,7 @@ class FromTheEditors extends Component {
               <ArticlePreview
                 title={c.title}
                 subtitle={c.subtitle}
-                image={c.image}
+                image={c.previewImage ? c.previewImage : c.image}
                 contentId={c.contentId}
                 key={`content-${c.contentId}`}
               />
