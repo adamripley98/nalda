@@ -17,6 +17,7 @@ const listingSchema = new Schema({
     lng: Number,
   },
   image: String,
+  imagePreview: String,
   images: [],
   rating: Number,
   hours: {},
