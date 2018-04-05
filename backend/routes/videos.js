@@ -123,7 +123,7 @@ module.exports = () => {
     const videoId = req.params.id;
 
     // Check to make sure user is an admin or the author
-    CuratorOrAdminCheck(req, videoId, Video, (authRes) => {
+    CuratorOrAdminCheck(req, (authRes) => {
       // Return any authentication errors
       if (!authRes.success) {
         res.send({
@@ -196,7 +196,7 @@ module.exports = () => {
     const videoId = req.params.id;
 
     // Check to make sure user is an admin or the author
-    CuratorOrAdminCheck(req, videoId, Video, (authRes) => {
+    CuratorOrAdminCheck(req, (authRes) => {
       // Auth error checking
       if (!authRes.success) {
         res.send({

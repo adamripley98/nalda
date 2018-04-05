@@ -304,7 +304,7 @@ module.exports = () => {
     const articleId = req.params.id;
 
     // Check to make sure user is an admin or the author
-    CuratorOrAdminCheck(req, articleId, Article, (authRes) => {
+    CuratorOrAdminCheck(req, (authRes) => {
       // Return any authentication errors
       if (!authRes.success) {
         res.send({
@@ -718,7 +718,7 @@ module.exports = () => {
     const articleId = req.params.id;
 
     // Check to make sure user is an admin or the author
-    CuratorOrAdminCheck(req, articleId, Article, (authRes) => {
+    CuratorOrAdminCheck(req, (authRes) => {
       // Return any authentication errors
       if (!authRes.success) {
         res.send({

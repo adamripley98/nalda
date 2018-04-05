@@ -210,7 +210,7 @@ module.exports = () => {
     const listingId = req.params.id;
 
     // Check to make sure user is an admin or the author
-    CuratorOrAdminCheck(req, listingId, Listing, (authRes) => {
+    CuratorOrAdminCheck(req, (authRes) => {
         // Auth error
       if (!authRes.success) {
         res.send({
@@ -502,7 +502,7 @@ module.exports = () => {
     const listingId = req.params.id;
 
     // Check to make sure user is an admin or the author
-    CuratorOrAdminCheck(req, listingId, Listing, (authRes) => {
+    CuratorOrAdminCheck(req, (authRes) => {
         // Auth error
       if (!authRes.success) {
         res.send({

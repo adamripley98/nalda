@@ -920,7 +920,6 @@ class Admin extends Component {
     if (this.state.recommended && this.state.recommended.length) {
       recommended = this.state.recommended.map((item, i) => (
         <tr key={item.contentId + "recommended"}>
-          {console.log(item)}
           <th scope="row">{i + 1}</th>
           <td>{item.title}</td>
           <td>{item.contentId}</td>

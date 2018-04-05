@@ -155,8 +155,7 @@ module.exports = () => {
                   });
                 });
               })
-              .catch( resizeErr => {
-                console.log('resize err', resizeErr);
+              .catch(() => {
                 res.send({
                   success: false,
                   error: 'Error changing profile picture.',
