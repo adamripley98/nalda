@@ -98,6 +98,7 @@ class Listing extends React.Component {
     axios.get(`/api/listings/${id}`)
       .then(res => {
         if (res.data.success) {
+          console.log('can they modify??', res.data.canModify);
           // Set the state
           this.setState({
             error: "",
@@ -504,7 +505,11 @@ class Listing extends React.Component {
   areHours() {
     // Check to see if any hour is populated
     const keys = Object.keys(this.state.hours);
-    const reducer = (acc, curr) => (acc ? true : !!(curr.start && curr.finish));
+    const reducer = (acc, curr) => {
+      if (acc) return true;
+      const dayObj = this.state.hours[curr];
+      return !!(dayObj.start && dayObj.finish);
+    };
     return keys.reduce(reducer, false);
   }
 
@@ -512,6 +517,7 @@ class Listing extends React.Component {
   renderHours() {
     // Isolate variable
     const hours = this.state.hours;
+
     // If hours are entered, display them
     if (this.areHours()) {
       return (
@@ -519,7 +525,7 @@ class Listing extends React.Component {
         <table className="table">
           <tbody>
             {
-              (hours.monday.start && hours.monday.finish) && (
+              (hours.monday.start && hours.monday.finish) ? (
                 <tr>
                   <td>
                     Monday
@@ -528,10 +534,10 @@ class Listing extends React.Component {
                     {this.formatHours(hours.monday.start)} - {this.formatHours(hours.monday.finish)}
                   </td>
                 </tr>
-              )
+              ) : null
             }
             {
-              (hours.tuesday.start && hours.tuesday.finish) && (
+              (hours.tuesday.start && hours.tuesday.finish) ? (
                 <tr>
                   <td>
                     Tuesday
@@ -540,10 +546,10 @@ class Listing extends React.Component {
                     {this.formatHours(hours.tuesday.start)} - {this.formatHours(hours.tuesday.finish)}
                   </td>
                 </tr>
-              )
+              ) : null
             }
             {
-              (hours.wednesday.start && hours.wednesday.finish) && (
+              (hours.wednesday.start && hours.wednesday.finish) ? (
                 <tr>
                   <td>
                     Wednesday
@@ -552,10 +558,10 @@ class Listing extends React.Component {
                     {this.formatHours(hours.wednesday.start)} - {this.formatHours(hours.wednesday.finish)}
                   </td>
                 </tr>
-              )
+              ) : null
             }
             {
-              (hours.thursday.start && hours.thursday.finish) && (
+              (hours.thursday.start && hours.thursday.finish) ? (
                 <tr>
                   <td>
                     Thursday
@@ -564,10 +570,10 @@ class Listing extends React.Component {
                     {this.formatHours(hours.thursday.start)} - {this.formatHours(hours.thursday.finish)}
                   </td>
                 </tr>
-              )
+              ) : null
             }
             {
-              (hours.friday.start && hours.friday.finish) && (
+              (hours.friday.start && hours.friday.finish) ? (
                 <tr>
                   <td>
                     Friday
@@ -576,10 +582,10 @@ class Listing extends React.Component {
                     {this.formatHours(hours.friday.start)} - {this.formatHours(hours.friday.finish)}
                   </td>
                 </tr>
-              )
+              ) : null
             }
             {
-              (hours.saturday.start && hours.saturday.finish) && (
+              (hours.saturday.start && hours.saturday.finish) ? (
                 <tr>
                   <td>
                     Saturday
@@ -588,10 +594,10 @@ class Listing extends React.Component {
                     {this.formatHours(hours.saturday.start)} - {this.formatHours(hours.saturday.finish)}
                   </td>
                 </tr>
-              )
+              ) : null
             }
             {
-              (hours.sunday.start && hours.sunday.finish) && (
+              (hours.sunday.start && hours.sunday.finish) ? (
                 <tr>
                   <td>
                     Sunday
@@ -600,7 +606,7 @@ class Listing extends React.Component {
                     {this.formatHours(hours.sunday.start)} - {this.formatHours(hours.sunday.finish)}
                   </td>
                 </tr>
-              )
+              ) : null
             }
           </tbody>
         </table>

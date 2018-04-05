@@ -191,76 +191,9 @@ const ReviewCheck = (req, reviewId, listingId, cb) => {
   });
 };
 
-// Helper method to check if a user is an admin or author of a document
-const AuthorOrAdminCheck = (req, docId, Document, cb) => {
-  // Pull userId from the backend
-  let userId = '';
-  if (req.session.passport) {
-    userId = req.session.passport.user;
-  }
-  // Find the given document in Mongo
-  Document.findById(docId, (errDoc, doc) => {
-    // Error finding document
-    if (errDoc) {
-      cb({
-        success: false,
-        error: errDoc.message,
-      });
-      return;
-    // Cannot find document
-    } else if (!doc) {
-      cb({
-        success: false,
-        error: 'No document found.',
-      });
-      return;
-    }
-    // Check to make sure user is logged in on backend
-    if (!userId) {
-      cb({
-        success: false,
-        error: 'You must be logged in.',
-      });
-      return;
-    }
-    // Find user to check if they are author or admin
-    User.findById(userId, (errUser, user) => {
-      // Error finding user
-      if (errUser) {
-        cb({
-          success: false,
-          error: errUser.message,
-        });
-        return;
-      // Cannot find user
-      } else if (!user) {
-        cb({
-          success: false,
-          error: 'You must be logged in.',
-        });
-        return;
-      // User is not author or admin
-      } else if (user.userType !== 'admin' && user._id !== doc.author) {
-        cb({
-          success: false,
-          error: 'You do not have the right privileges.',
-        });
-        return;
-      }
-      // User has privilege to do this, return document
-      cb({
-        success: true,
-        doc,
-      });
-      return;
-    });
-  });
-};
-
 module.exports = {
   CuratorOrAdminCheck,
   AdminCheck,
   UserCheck,
-  AuthorOrAdminCheck,
   ReviewCheck,
 };

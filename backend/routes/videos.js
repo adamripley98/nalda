@@ -15,8 +15,6 @@ const Homepage = require('../models/homepage');
 
 // Import helper methods
 const {CuratorOrAdminCheck} = require('../helperMethods/authChecking');
-const {AuthorOrAdminCheck} = require('../helperMethods/authChecking');
-
 
 // Export the following methods for routing
 module.exports = () => {
@@ -91,7 +89,7 @@ module.exports = () => {
             User.findById(userId, (errUser, user) => {
               if (user) {
                 // Check if given user is either an admin or the curator of the video
-                if (user.userType === 'admin' || user._id === video.author) {
+                if (user.userType === 'admin' || user.userType === 'curator') {
                   canModify = true;
                 }
               }
@@ -125,7 +123,7 @@ module.exports = () => {
     const videoId = req.params.id;
 
     // Check to make sure user is an admin or the author
-    AuthorOrAdminCheck(req, videoId, Video, (authRes) => {
+    CuratorOrAdminCheck(req, videoId, Video, (authRes) => {
       // Return any authentication errors
       if (!authRes.success) {
         res.send({
@@ -198,7 +196,7 @@ module.exports = () => {
     const videoId = req.params.id;
 
     // Check to make sure user is an admin or the author
-    AuthorOrAdminCheck(req, videoId, Video, (authRes) => {
+    CuratorOrAdminCheck(req, videoId, Video, (authRes) => {
       // Auth error checking
       if (!authRes.success) {
         res.send({
