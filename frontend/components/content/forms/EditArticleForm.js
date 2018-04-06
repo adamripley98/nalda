@@ -101,6 +101,11 @@ class EditArticleForm extends React.Component {
 
       // Update the location field
       document.getElementById('location').value = this.state.location.name;
+
+      // Toggle tooltips
+      $(() => {
+        $('[data-toggle="tooltip"]').tooltip();
+      });
     }
 
     // Autosize textarea components
@@ -529,21 +534,34 @@ class EditArticleForm extends React.Component {
                       <i
                         className="fa fa-align-justify"
                         aria-hidden="true"
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title="New paragraph"
                         onClick={ () => this.addNewComponent("text") }
                       />
                       <i
                         className="fa fa-picture-o"
                         aria-hidden="true"
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title="Insert image"
                         onClick={ () => this.addNewComponent("image") }
                       />
                       <i
                         className="fa fa-quote-right"
                         aria-hidden="true"
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title="Insert block quote"
                         onClick={ () => this.addNewComponent("quote") }
                       />
                       <i
                         className="fa fa-i-cursor"
                         aria-hidden="true"
+                        aria-hidden="true"
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title="Insert header text"
                         onClick={ () => this.addNewComponent("header") }
                       />
                     </div>

@@ -66,7 +66,7 @@ class Modal extends Component {
   // Renders the component
   render() {
     return (
-      <div className="modal fade" id="loginModal" tabIndex="-1" role="dialog" aria-labelledby="loginModal" aria-hidden="true">
+      <div className="modal fade fade-wrapper" id="loginModal" tabIndex="-1" role="dialog" aria-labelledby="loginModal" aria-hidden="true">
         <div className="modal-dialog" role="document">
           <div className="modal-content form">
             <div className="modal-header">

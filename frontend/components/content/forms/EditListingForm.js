@@ -675,7 +675,7 @@ class EditListingForm extends React.Component {
                     name="body"
                     type="text"
                     className="form-control marg-bot-1"
-                    rows="1"
+                    rows="4"
                     value={ this.state.description }
                     onChange={ this.handleChangeDescription }
                   />
@@ -686,7 +686,7 @@ class EditListingForm extends React.Component {
                     name="body"
                     type="text"
                     className="form-control marg-bot-1"
-                    rows="1"
+                    rows="4"
                     value={ this.state.naldaFavorite }
                     onChange={ this.handleChangeNaldaFavorite }
                   />
