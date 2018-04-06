@@ -751,7 +751,7 @@ class Listing extends React.Component {
                       aria-hidden="true"
                       onClick={ this.handleClickInfoTrigger }
                     />
-                    <h2>
+                    <h2 className="title">
                       { this.state.title }
                     </h2>
                     <p className="description">

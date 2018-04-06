@@ -199,9 +199,12 @@ class Categories extends React.Component {
   renderListings() {
     // If listings were pulled from the database
     if (this.state.listings && this.state.listings.length) {
-      return this.state.listings.map(listing => (
-        <Preview content={listing} />
-      ));
+      return this.state.listings.map(listing => {
+        listing.contentType = "listing";
+        return(
+          <Preview content={listing} key={listing._id}/>
+        );
+      });
     }
 
     // If no listings were found
