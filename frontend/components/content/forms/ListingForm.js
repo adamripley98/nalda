@@ -658,8 +658,9 @@ class ListingForm extends React.Component {
               <textarea
                 name="body"
                 type="text"
+                placeholder="What stands out..."
                 className="form-control marg-bot-1"
-                rows="1"
+                rows="4"
                 value={ this.state.description }
                 onChange={ this.handleChangeDescription }
               />
@@ -669,8 +670,9 @@ class ListingForm extends React.Component {
               <textarea
                 name="body"
                 type="text"
+                placeholder="The best dish here..."
                 className="form-control marg-bot-1"
-                rows="1"
+                rows="4"
                 value={ this.state.naldaFavorite }
                 onChange={ this.handleChangeNaldaFavorite }
               />
@@ -831,6 +833,7 @@ class ListingForm extends React.Component {
                 type="url"
                 className="form-control marg-bot-1"
                 value={ this.state.website }
+                palceholder="https://example.com"
                 onChange={ this.handleChangeWebsite }
               />
 
