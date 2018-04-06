@@ -351,28 +351,24 @@ a {
   label {
     font-weight: bold;
     color: $dark-gray;
-    margin-bottom: 0rem;
+    margin-bottom: 0.25rem;
   }
 
   // Style input fields
   .form-control {
-    border-radius: 0rem;
-    border-right: 1px solid transparent !important;
-    border-left: 1px solid transparent !important;
-    border-top: 1px solid transparent !important;
-    border-bottom: 2px solid $gray;
-    border-radius: 0px !important;
+    border-radius: 0.2rem !important;
+    border: 2px solid $gray;
     -webkit-appearance: none;
     padding-top: 0.25rem;
     padding-bottom: 0.25rem;
 
     &:hover {
-      border-bottom: 2px solid $dark-gray;
+      border: 2px solid $dark-gray;
     }
 
     &:focus,
     &:active {
-      border-bottom: 2px solid $primary;
+      border: 2px solid $primary;
     }
   }
 
@@ -428,15 +424,15 @@ a {
 // NOTE most all inputs and textareas are given this class per defauly Bootstrap
 // formatting. Here, we give some styling on top of that.
 .form-control {
-  border: 1px solid $border;
+  border: 2px solid $border;
 
   &:hover {
-    border: 1px solid $gray;
+    border: 2px solid $gray;
   }
 
   &:active,
   &:focus {
-    border: 1px solid $primary;
+    border: 2px solid $primary;
   }
 }
 
@@ -523,6 +519,7 @@ a {
 // The format is: label, time select 1, time select 2
 .time-select {
   display: flex;
+  margin-bottom: 0.25rem;
 
   p {
     display: inline-block;

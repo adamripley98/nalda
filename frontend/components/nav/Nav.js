@@ -85,7 +85,7 @@ class Nav extends Component {
                   {
                     this.props.name ? (
                       <p>
-                        Hi,
+                        Hi,&nbsp;
                         <Link to="/account">
                           {
                             this.props.name.indexOf(' ' > -1) ? this.props.name.substring(0, this.props.name.indexOf(' ')) : this.props.name

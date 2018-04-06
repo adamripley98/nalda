@@ -334,7 +334,7 @@ class ArticleForm extends React.Component {
                 name="title"
                 type="text"
                 id="title"
-                placeholder="Title"
+                placeholder="Article title"
                 className="form-control marg-bot-05 special"
                 value={ this.state.title }
                 onChange={ this.handleChangeTitle }
