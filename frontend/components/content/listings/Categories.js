@@ -35,13 +35,33 @@ class Categories extends React.Component {
     this.sortByRating = this.sortByRating.bind(this);
     this.sortByTitle = this.sortByTitle.bind(this);
     this.sortByPrice = this.sortByPrice.bind(this);
+    this.pullData = this.pullData.bind(this);
   }
 
   /**
    * Load listings from Mongo once the component mounts
    */
   componentDidMount() {
+    this.pullData();
+  }
+
+  /**
+   * NOTE this method is triggered when the URL changes
+   */
+  componentDidUpdate(prevProps) {
+    // If we are considering a new category
+    if (this.props.match.params.categoryName !== prevProps.match.params.categoryName) {
+      this.pullData();
+    }
+  }
+
+  /**
+   * Pull relevant listings
+   */
+  pullData() {
+    this.setState({pending: true});
     window.scrollTo(0, 0);
+
     // Isolate token from URL
     const categoryName = this.props.match.params.categoryName;
 
@@ -180,14 +200,7 @@ class Categories extends React.Component {
     // If listings were pulled from the database
     if (this.state.listings && this.state.listings.length) {
       return this.state.listings.map(listing => (
-        <Preview
-          _id={ listing._id }
-          title={ listing.title }
-          subtitle={ listing.description }
-          image={ listing.image }
-          key={ listing._id }
-          isListing
-        />
+        <Preview content={listing} />
       ));
     }
 
@@ -208,7 +221,7 @@ class Categories extends React.Component {
         <Tags title="Categories" description="View all listings with a given category" />
         <div className="space-1"/>
         <h3 className="title section-title">
-          {categoryMap[this.state.categoryName]} Listings
+          Listings tagged with "{categoryMap[this.state.categoryName]}"
         </h3>
         {
           (this.state.listings && this.state.listings.length > 1) ? (
