@@ -98,7 +98,6 @@ class Listing extends React.Component {
     axios.get(`/api/listings/${id}`)
       .then(res => {
         if (res.data.success) {
-          console.log('can they modify??', res.data.canModify);
           // Set the state
           this.setState({
             error: "",
@@ -759,17 +758,14 @@ class Listing extends React.Component {
                     </p>
                     {
                       this.state.website && (
-                        <Link to={ this.state.website } className="website">
+                        <a
+                          href={ this.state.website }
+                          className="website"
+                          target="_blank">
                           <i className="fa fa-globe" aria-hidden="true" />
                           &nbsp;
-                          {
-                            this.state.website.length > 18 ? (
-                              this.state.website.substring(0, 18) + "..."
-                            ) : (
-                              this.state.website
-                            )
-                          }
-                        </Link>
+                          Visit website
+                        </a>
                       )
                     }
                     {
