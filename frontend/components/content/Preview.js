@@ -121,41 +121,30 @@ class Preview extends Component {
 
     // Return the content preview
     return (
-      <div className={this.props.isThin ? "col-12 col-md-6" : "col-6 col-xl-3"} key={this.props._id}>
-        <Link to={ `/${this.getType()}/${this.props._id}` }>
-          <div className="content-preview">
-            <div
-              className="background-image"
-              style={{ backgroundImage: `url(${this.props.image})`}}
-            >
-              { (this.props.isVideo || this.props.contentType === "video") && (
-                <div className="image-wrapper">
-                  <img
-                    alt="Play video"
-                    src="https://s3.amazonaws.com/nalda/play.svg"
-                    className="img-fluid"
-                  />
-                </div>
-              )}
-            </div>
-
-            {this.getLocation()}
-            <h2 className="title">{this.props.title}</h2>
-            {this.getCategories()}
-            {this.props.rating && <Stars rating={this.props.rating} />}
-            {this.getSubtitle()}
-
-            {/*
-              // Render the timestamp
-              this.props.timestamp && (
-                <p className="gray-text marg-bot-0 marg-top-05 right italic">
-                  { moment(new Date(Number(this.props.timestamp))).fromNow(true) }
-                </p>
-              )
-            */}
+      <Link to={ `/${this.getType()}/${this.props._id}` } className="content-preview-wrapper">
+        <div className="content-preview">
+          <div
+            className="background-image"
+            style={{ backgroundImage: `url(${this.props.image})`}}
+          >
+            { (this.props.isVideo || this.props.contentType === "video") && (
+              <div className="image-wrapper">
+                <img
+                  alt="Play video"
+                  src="https://s3.amazonaws.com/nalda/play.svg"
+                  className="img-fluid"
+                />
+              </div>
+            )}
           </div>
-        </Link>
-      </div>
+
+          {this.getLocation()}
+          <h2 className="title">{this.props.title}</h2>
+          {this.getCategories()}
+          {this.props.rating && <Stars rating={this.props.rating} />}
+          {this.getSubtitle()}
+        </div>
+      </Link>
     );
   }
 }

@@ -22,6 +22,12 @@
  */
 
 // Overwriting the default container
+.container {
+	width: calc(100% - 48px);
+	margin: 0 auto;
+	padding: 0;
+}
+
 @media only screen and (min-width: 768px) {
 	.container {
 		width: calc(100% - 72px);
@@ -46,7 +52,6 @@
 // General styling for images
 img.img {
   margin-bottom: 1rem;
-  border-radius: 0.4rem;
 }
 
 // Setting the fonts for the application
@@ -452,18 +457,24 @@ a {
 }
 
 // Styling preview for all forms of content (videos, articles, and listings)
+.content-preview-wrapper {
+	width: 50%;
+	display: block;
+	margin-bottom: 1rem;
+}
+
 .content-preview {
   color: black;
-  margin-bottom: 1rem;
+	width: calc(100% - 10px);
+	margin: 0 auto;
 
   .background-image {
-    border-radius: 0.4rem;
     margin-bottom: 0.5rem;
-    height: 10rem;
     width: 100%;
+		padding-top: 65%;
 
     .image-wrapper {
-      height: 10rem;
+      height: 65%;
       padding: 3rem 0rem;
       display: block;
 
@@ -672,7 +683,6 @@ a {
   width: 100%;
   height: 20rem;
   background: $gray;
-  border-radius: 0.4rem;
 }
 
 /**

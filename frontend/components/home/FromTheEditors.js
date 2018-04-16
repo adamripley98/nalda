@@ -1,7 +1,6 @@
 // Import frameworks
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Link} from 'react-router-dom';
 
 // Import components
 import ArticlePreview from '../content/articles/ArticlePreview';
@@ -13,12 +12,14 @@ class FromTheEditors extends Component {
   render() {
     if (!this.props.content || !this.props.content.length) return null;
     return (
-      <div className="container">
-        <div className="inline-header-link">
-          <h4 className="marg-bot-1 dark-gray-text">From the Editors</h4>
-          <Link to="/articles">View all</Link>
-        </div>
-        <div className="row">
+      <div className="home-section">
+        <h2 className="home-section-title">
+          From the Editors
+        </h2>
+        <p className="home-section-subtitle">
+          Try some of these Nalda's favorites and make it your own.
+        </p>
+        <div>
           {
             this.props.content.map(c => (
               <ArticlePreview

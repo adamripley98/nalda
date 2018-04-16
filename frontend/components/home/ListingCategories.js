@@ -13,7 +13,7 @@ class ListingCategories extends Component {
   render() {
     return (
       <div className="home-section">
-        <h2 className="marg-bot-1 home-section-title">
+        <h2 className="home-section-title">
           What are you looking for?
         </h2>
         <p className="home-section-subtitle">
@@ -31,7 +31,6 @@ class ListingCategories extends Component {
             ))
           }
         </ul>
-        <div className="line" />
       </div>
     );
   }
