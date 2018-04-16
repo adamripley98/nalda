@@ -8,7 +8,6 @@ import uuid from 'uuid-v4';
 import async from 'async';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-const pica = require('pica')();
 
 // Import components
 import ErrorMessage from '../../shared/ErrorMessage';
