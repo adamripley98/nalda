@@ -459,8 +459,9 @@ a {
 // Styling preview for all forms of content (videos, articles, and listings)
 .content-preview-wrapper {
 	width: 50%;
-	display: block;
-	margin-bottom: 1rem;
+	display: inline-block;
+	clear: none;
+	margin: 0rem 0rem 1rem 0rem;
 }
 
 .content-preview {
