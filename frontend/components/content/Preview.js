@@ -12,6 +12,7 @@ import categoryMap from '../json/categoryMap';
  * Renders an error message to the user
  */
 class Preview extends Component {
+  // Constructor method
   constructor(props) {
     super(props);
 
@@ -22,6 +23,8 @@ class Preview extends Component {
     this.getCategories = this.getCategories.bind(this);
   }
 
+  // Return the subtitle of the content
+  // This is dependent on the content type and the length of the subtitle
   getSubtitle() {
     if (this.props.isListing || this.props.contentType === "listing") return null;
 
@@ -35,6 +38,7 @@ class Preview extends Component {
     );
   }
 
+  // Get the type of the content as based on the props
   getType() {
     // Find the type of the content
     if (this.props.isArticle || this.props.contentType === "article") {
@@ -49,6 +53,7 @@ class Preview extends Component {
     return "";
   }
 
+  // Get the location of the content if a location was passed to the component
   getLocation() {
     // If there is no location, return null
     if (!this.props.location) return null;
@@ -63,6 +68,7 @@ class Preview extends Component {
     );
   }
 
+  // Get the categories of the content if there are any
   getCategories() {
     // If there are no categories, return null
     if (!this.props.categories) return null;
@@ -78,6 +84,7 @@ class Preview extends Component {
     );
   }
 
+  // Render the component
   render() {
     // If an object was passed in, recursively render the preview
     if (this.props.content) {
@@ -114,32 +121,30 @@ class Preview extends Component {
 
     // Return the content preview
     return (
-      <div className={this.props.isThin ? "col-12 col-md-6" : "col-6 col-xl-3"} key={this.props._id}>
-        <Link to={ `/${this.getType()}/${this.props._id}` }>
-          <div className="content-preview">
-            <div
-              className="background-image"
-              style={{ backgroundImage: `url(${this.props.image})`}}
-            >
-              { (this.props.isVideo || this.props.contentType === "video") && (
-                <div className="image-wrapper">
-                  <img
-                    alt="Play video"
-                    src="https://s3.amazonaws.com/nalda/play.svg"
-                    className="img-fluid"
-                  />
-                </div>
-              )}
-            </div>
-
-            {this.getLocation()}
-            <h2 className="title">{this.props.title}</h2>
-            {this.getCategories()}
-            {this.props.rating && <Stars rating={this.props.rating} />}
-            {this.getSubtitle()}
+      <Link to={ `/${this.getType()}/${this.props._id}` } className="content-preview-wrapper">
+        <div className="content-preview">
+          <div
+            className="background-image"
+            style={{ backgroundImage: `url(${this.props.image})`}}
+          >
+            { (this.props.isVideo || this.props.contentType === "video") && (
+              <div className="image-wrapper">
+                <img
+                  alt="Play video"
+                  src="https://s3.amazonaws.com/nalda/play.svg"
+                  className="img-fluid"
+                />
+              </div>
+            )}
           </div>
-        </Link>
-      </div>
+
+          {this.getLocation()}
+          <h2 className="title">{this.props.title}</h2>
+          {this.getCategories()}
+          {this.props.rating && <Stars rating={this.props.rating} />}
+          {this.getSubtitle()}
+        </div>
+      </Link>
     );
   }
 }

@@ -23,7 +23,6 @@
   // Images
   img {
     margin-bottom: 1rem;
-    border-radius: 0.4rem;
     width: 100%;
   }
 
@@ -54,8 +53,9 @@
  */
 #article-form {
   .form-control.special {
-    border-bottom: 0px solid transparent;
+    border: 0px solid transparent;
     padding: 0rem;
+    border-left: 2px solid transparent;
 
     &:active,
     &:focus,
@@ -80,7 +80,6 @@
 
   // Style images
   img {
-    border-radius: 0.4rem;
     width: 100% !important;
     margin-bottom: 0.5rem;
   }
@@ -104,40 +103,61 @@
 /**
  * Styling article previews
  */
+.article-preview-wrapper {
+  width: 100%;
+  display: block;
+}
+
+@media screen and (min-width: 720px) {
+  .article-preview-wrapper {
+    width: 50%;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .article-preview-wrapper {
+    width: 33.3333%;
+  }
+}
+
+@media screen and (min-width: 1500px) {
+  .article-preview-wrapper {
+    width: 25%;
+  }
+}
+
 .article-preview {
   height: 60vh;
   overflow-y: hidden;
-  border-radius: 0.4rem;
   color: white;
-  padding: 0.5rem 0rem 0rem 0rem;
-  width: 100%;
+  width: calc(100% - 10px);
+  margin: 0 auto;
   background-color: rgba(0, 0, 0, 0.5);
   margin-bottom: 1rem;
   vertical-align: bottom;
 
-  h4, p {
-    width: 100%;
-    display: block;
-    color: white;
-    margin-bottom: 0.4rem;
-  }
-
-  p {
-    margin-bottom: 0rem;
-  }
-
   .content {
+    height: 100%;
     width: 100%;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    padding: 0rem 1rem 1rem 1rem;
+    background: rgba(0, 0, 0, 0.5);
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+    padding: 1rem;
+    vertical-align: bottom;
 
-    .shade {
-      background: rgba(0, 0, 0, 0.5);
-      background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
-      border-radius: 0rem 0rem 0.4rem 0.4rem;
-      padding: 20vh 1rem 1rem 1rem;
+    h4, p {
+      width: 100%;
+      display: block;
+      color: white;
+      margin-bottom: 0.4rem;
+    }
+
+    p {
+      margin-bottom: 0rem;
+    }
+
+    h4 {
+      font-size: 18px;
+      margin-top: auto;
     }
   }
 }

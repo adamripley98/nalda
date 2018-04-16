@@ -21,6 +21,29 @@
  * This file is what is included in every page on the application
  */
 
+// Overwriting the default container
+.container {
+	width: calc(100% - 48px);
+	margin: 0 auto;
+	padding: 0;
+}
+
+@media only screen and (min-width: 768px) {
+	.container {
+		width: calc(100% - 72px);
+		margin: 0 auto;
+    padding: 0;
+	}
+}
+
+@media only screen and (min-width: 1069px) {
+	.container {
+		width: calc(100% - 160px);
+		margin: 0 auto;
+    padding: 0;
+	}
+}
+
 // Fix z-index of google places recommendations in modals
 .pac-container {
   z-index: 10000 !important;
@@ -29,7 +52,6 @@
 // General styling for images
 img.img {
   margin-bottom: 1rem;
-  border-radius: 0.4rem;
 }
 
 // Setting the fonts for the application
@@ -329,117 +351,6 @@ a {
   margin: 1.5rem 0rem;
 }
 
-// Styling for thin forms used throughout the application
-// For example, this is used for login and register forms
-.thin-form {
-  padding: 1rem;
-  margin: 1.5rem 0rem;
-  background: white;
-  border-radius: 0.4rem;
-
-  // Make it such that you can't drag textareas to greater lengths
-  // Textareas should expand automatically due to autosize
-  textarea {
-    resize: none;
-  }
-
-  &.no-pad {
-    padding: 0rem;
-  }
-
-  // Labels above input fields
-  label {
-    font-weight: bold;
-    color: $dark-gray;
-    margin-bottom: 0rem;
-  }
-
-  // Style input fields
-  .form-control {
-    border-radius: 0rem;
-    border-right: 1px solid transparent !important;
-    border-left: 1px solid transparent !important;
-    border-top: 1px solid transparent !important;
-    border-bottom: 2px solid $gray;
-    border-radius: 0px !important;
-    -webkit-appearance: none;
-    padding-top: 0.25rem;
-    padding-bottom: 0.25rem;
-
-    &:hover {
-      border-bottom: 2px solid $dark-gray;
-    }
-
-    &:focus,
-    &:active {
-      border-bottom: 2px solid $primary;
-    }
-  }
-
-  // Style clickable icon sections in forms
-  .icons {
-    margin-top: 0.5rem;
-
-    .fa {
-      border: 1px solid $gray;
-      border-radius: 50%;
-      padding: 0.5rem;
-      width: 2.2rem;
-      font-size: 1rem;
-      color: $gray;
-      margin-right: 1rem;
-      cursor: hand;
-      cursor: pointer;
-
-      &:hover,
-      &:focus,
-      &:active {
-        border: 1px solid $dark-gray;
-        color: $dark-gray;
-      }
-    }
-  }
-
-  .component {
-    display: flex;
-
-    .form-control {
-      flex: 1;
-    }
-
-    .fa {
-      color: $gray;
-      cursor: hand;
-      cursor: pointer;
-      font-size: 1.4rem;
-      margin-left: 0.5rem;
-      margin-top: 0.4rem;
-
-      &:hover,
-      &:focus,
-      &:active {
-        color: $dark-gray;
-      }
-    }
-  }
-}
-
-// General form control styling
-// NOTE most all inputs and textareas are given this class per defauly Bootstrap
-// formatting. Here, we give some styling on top of that.
-.form-control {
-  border: 1px solid $border;
-
-  &:hover {
-    border: 1px solid $gray;
-  }
-
-  &:active,
-  &:focus {
-    border: 1px solid $primary;
-  }
-}
-
 // Style the loading circle used on a wide variety of pages when content is
 // pending arrival from the database
 .loading {
@@ -523,6 +434,7 @@ a {
 // The format is: label, time select 1, time select 2
 .time-select {
   display: flex;
+  margin-bottom: 0.25rem;
 
   p {
     display: inline-block;
@@ -545,18 +457,24 @@ a {
 }
 
 // Styling preview for all forms of content (videos, articles, and listings)
+.content-preview-wrapper {
+	width: 50%;
+	display: block;
+	margin-bottom: 1rem;
+}
+
 .content-preview {
   color: black;
-  margin-bottom: 1rem;
+	width: calc(100% - 10px);
+	margin: 0 auto;
 
   .background-image {
-    border-radius: 0.4rem;
     margin-bottom: 0.5rem;
-    height: 10rem;
     width: 100%;
+		padding-top: 65%;
 
     .image-wrapper {
-      height: 10rem;
+      height: 65%;
       padding: 3rem 0rem;
       display: block;
 
@@ -596,6 +514,24 @@ a {
     font-size: 1.2rem;
     color: $dark-gray;
   }
+}
+
+@media only screen and (min-width: 768px) {
+	.content-preview-wrapper {
+		width: 33.3333%;
+	}
+}
+
+@media only screen and (min-width: 1069px) {
+	.content-preview-wrapper {
+		width: 25%;
+	}
+}
+
+@media only screen and (min-width: 1500px) {
+	.content-preview-wrapper {
+		width: 20%;
+	}
 }
 
 // Styling the tabs at the top of content creation pages
@@ -765,7 +701,6 @@ a {
   width: 100%;
   height: 20rem;
   background: $gray;
-  border-radius: 0.4rem;
 }
 
 /**
@@ -806,7 +741,7 @@ a {
 /**
  * Style modals
  */
-.fade {
+.fade-wrapper {
   background-color: rgba(0, 0, 0, 0.3);
 
   // If the modal is a form, as is the case with login / register modal

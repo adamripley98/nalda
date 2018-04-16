@@ -86,6 +86,10 @@
     transition: all 0.2s ease;
     top: 0;
 
+    .title {
+      margin-bottom: 0.5rem !important;
+    }
+
     .info-trigger {
       position: absolute;
       right: 1rem;
@@ -93,6 +97,7 @@
       cursor: pointer;
       transition: all 0.2s ease;
       color: $gray;
+      font-size: 1.8rem;
 
       &:hover,
       &:focus,
@@ -157,6 +162,25 @@
         box-shadow: 0rem -0.1rem 0.05rem rgba(0, 0, 0, 0.05);
       }
     }
+  }
+}
+
+/**
+ * Scale down title font on smaller screens
+ */
+@media screen and (max-width: 748px) {
+  .listing #listing-preview .title {
+    font-size: 1.8rem;
+    margin-top: 0.2rem;
+    margin-bottom: 0.7rem;
+  }
+}
+
+@media screen and (max-device-width: 748px) {
+  .listing #listing-preview .title {
+    font-size: 1.8rem;
+    margin-top: 0.2rem;
+    margin-bottom: 0.7rem;
   }
 }
 

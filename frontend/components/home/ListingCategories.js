@@ -12,25 +12,25 @@ import categoryMap from '../json/categoryMap';
 class ListingCategories extends Component {
   render() {
     return (
-      <div className="container">
-        <div className="line" />
-        <div className="inline-header-link">
-          <h4 className="marg-bot-1 dark-gray-text">
-            Categories
-          </h4>
-        </div>
+      <div className="home-section">
+        <h2 className="home-section-title">
+          What are you looking for?
+        </h2>
+        <p className="home-section-subtitle">
+          See what Nalda has to offer.
+        </p>
         <ul className="home-categories">
           {
             Object.keys(categoryMap).map(key => (
               <li className="category" key={key}>
                 <Link to={`/listings/categories/${key}`}>
-                  {categoryMap[key]}
+                  <div className="img" />
+                  <span>{categoryMap[key]}</span>
                 </Link>
               </li>
             ))
           }
         </ul>
-        <div className="line" />
       </div>
     );
   }

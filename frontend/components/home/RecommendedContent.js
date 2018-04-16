@@ -1,6 +1,5 @@
 // Import frameworks
 import React, {Component} from 'react';
-import {Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 // Import components
@@ -13,20 +12,20 @@ class Recommended extends Component {
   render() {
     if (!this.props.content || !this.props.content.length) return null;
     return (
-      <div className="container">
-        <div className="line" />
-        <div className="inline-header-link">
-          <h4 className="marg-bot-1 dark-gray-text">Recommended for you</h4>
-          <Link to="/listings">View all</Link>
-        </div>
-        <div className="row">
+      <div className="home-section">
+        <h2 className="home-section-title">
+          Recommended for you
+        </h2>
+        <p className="home-section-subtitle">
+          Try some of these Nalda's favorites and make it your own.
+        </p>
+        <div>
           {
             this.props.content.map(c => (
               <Preview content={c} key={`content-${c.contentId}`} />
             ))
           }
         </div>
-        <div className="line" />
       </div>
     );
   }

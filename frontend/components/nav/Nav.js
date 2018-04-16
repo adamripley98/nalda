@@ -82,9 +82,18 @@ class Nav extends Component {
                   }
                 </div>
                 <div className="name">
-                  <p>
-                    Hi, <Link to="/account">{this.props.name.split(' ').length ? this.props.name.split(' ')[0] : this.props.name }</Link>
-                  </p>
+                  {
+                    this.props.name ? (
+                      <p>
+                        Hi,&nbsp;
+                        <Link to="/account">
+                          {
+                            this.props.name.indexOf(' ' > -1) ? this.props.name.substring(0, this.props.name.indexOf(' ')) : this.props.name
+                          }
+                        </Link>
+                      </p>
+                    ) : (<p />)
+                  }
                 </div>
               </div>
               <div className="user-img" style={{ backgroundImage: `url(${this.props.profilePicture})` }}/>

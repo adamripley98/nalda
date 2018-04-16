@@ -8,18 +8,14 @@ import {Link} from 'react-router-dom';
  */
 const ArticlePreview = ({ image, title, subtitle, contentId }) => {
   return (
-    <div className="col-6 col-xl-4">
-      <Link to={`/articles/${contentId}`}>
-        <div className="article-preview background-image" style={{backgroundImage: `url(${image})`}}>
-          <div className="content">
-            <div className="shade">
-              <h4>{title}</h4>
-              <p>{subtitle}</p>
-            </div>
-          </div>
+    <Link to={`/articles/${contentId}`} className="article-preview-wrapper">
+      <div className="article-preview background-image" style={{backgroundImage: `url(${image})`}}>
+        <div className="content">
+          <h4>{title}</h4>
+          <p>{subtitle}</p>
         </div>
-      </Link>
-    </div>
+      </div>
+    </Link>
   );
 };
 

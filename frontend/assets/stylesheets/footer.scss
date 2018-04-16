@@ -1,20 +1,6 @@
-/*
-Theme Name: Edward Kim
-Theme URI: http://edwardkim.co/
-Description: Personal Wordpress theme.
-Version: 2.1
-Author: Edward Kim
-Author URI: http://edwardkim.co/
-Copyright © 2017 Edward Kim. All rights reserved.
-*/
-
-/* =============================================
-S06 Footer
-============================================= */
-
 #nalda-footer {
 	width: 100%;
-	background: #004976;
+	background: $secondary;
 	z-index: 1;
 	overflow: auto;
 	padding-top: 40px;
@@ -25,10 +11,10 @@ S06 Footer
     list-style: none !important;
     padding-left: 0;
   }
-}
 
-#nalda-footer .section-content {
-	padding: 20px 0;
+  .section-content {
+  	padding: 20px 0;
+  }
 }
 
 .nalda-logo-container {
@@ -47,10 +33,10 @@ S06 Footer
 	background-position: center center;
 	opacity: 1;
 	transition: opacity 0.2s ease-in;
-}
 
-.nalda-logo:hover {
-	opacity: 0.85;
+  &:hover {
+  	opacity: 0.85;
+  }
 }
 
 .footer-menus {
@@ -77,15 +63,15 @@ S06 Footer
 
 .footer-menu-list li {
 	margin-bottom: 0;
-}
 
-.footer-menu-list li a {
-	color: #afdcf8;
-	font-size: 16px;
-}
+  a {
+  	color: $light-primary;
+  	font-size: 16px;
 
-.footer-menu-list li a:hover {
-	color: #d6dde2;
+    &:hover {
+    	color: $lighter-primary;
+    }
+  }
 }
 
 .footer-menu-single {
@@ -110,45 +96,45 @@ S06 Footer
 	list-style-type: none;
 	display: block;
 	padding: 0 20px 0 0;
+
+  a {
+  	color: #fff;
+  	font-weight: 700;
+  	font-size: 18px;
+
+    &:hover {
+    	color: $lighter-primary;
+    }
+  }
 }
 
 .footer-nav-item + .footer-nav-item {
   margin: 0 0 0.3em 0;
 }
 
-.footer-nav-item a {
-	color: #fff;
-	font-weight: 700;
-	font-size: 18px;
-}
-
-.footer-nav-item a:hover {
-	color: #d6dde2;
-}
-
 .gf-social-item {
 	display: inline-block;
 	padding: 0 30px 0 0;
 	margin: 0 0 0.3em 0;
-}
 
-.gf-social-item a {
-	color: #afdcf8;
-}
+  a {
+  	color: $light-primary;
 
-.gf-social-item a:hover {
-	color: #fff;
+    &:hover {
+    	color: #fff;
+    }
+  }
 }
 
 .legal-copy {
 	font-size: 14px;
-	color: #afdcf8;
+	color: $light-primary;
 	margin: 20px 0 0 0;
 }
 
 @media only screen and (max-width: 499px) {
 	.footer-menu-single {
-		border-top: 1px solid #3377a1;
+		border-top: 1px solid $alternate-light-primary;
 		padding: 10px 0;
 		margin-bottom: 10px;
 		height: 40px;
@@ -191,7 +177,7 @@ S06 Footer
 	}
 
 	.footer-nav-item a {
-		color: #afdcf8;
+		color: $light-primary;
 		font-weight: 400;
 		font-size: 16px;
 	}

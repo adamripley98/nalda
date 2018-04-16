@@ -750,7 +750,7 @@ class Listing extends React.Component {
                       aria-hidden="true"
                       onClick={ this.handleClickInfoTrigger }
                     />
-                    <h2>
+                    <h2 className="title">
                       { this.state.title }
                     </h2>
                     <p className="description">
@@ -758,17 +758,14 @@ class Listing extends React.Component {
                     </p>
                     {
                       this.state.website && (
-                        <Link to={ this.state.website } className="website">
+                        <a
+                          href={ this.state.website }
+                          className="website"
+                          target="_blank">
                           <i className="fa fa-globe" aria-hidden="true" />
                           &nbsp;
-                          {
-                            this.state.website.length > 18 ? (
-                              this.state.website.substring(0, 18) + "..."
-                            ) : (
-                              this.state.website
-                            )
-                          }
-                        </Link>
+                          Visit website
+                        </a>
                       )
                     }
                     {

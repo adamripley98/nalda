@@ -67,6 +67,11 @@ class ArticleForm extends React.Component {
       componentRestrictions: {country: 'us'},
     };
     new google.maps.places.Autocomplete(location, options);
+
+    // Add tooltips
+    $(() => {
+      $('[data-toggle="tooltip"]').tooltip();
+    });
   }
 
   /**
@@ -334,7 +339,7 @@ class ArticleForm extends React.Component {
                 name="title"
                 type="text"
                 id="title"
-                placeholder="Title"
+                placeholder="Article title"
                 className="form-control marg-bot-05 special"
                 value={ this.state.title }
                 onChange={ this.handleChangeTitle }
@@ -489,21 +494,33 @@ class ArticleForm extends React.Component {
                 <i
                   className="fa fa-align-justify fa-fw"
                   aria-hidden="true"
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  title="New paragraph"
                   onClick={ () => this.addNewComponent("text") }
                 />
                 <i
                   className="fa fa-picture-o fa-fw"
                   aria-hidden="true"
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  title="Insert image"
                   onClick={ () => this.addNewComponent("image") }
                 />
                 <i
                   className="fa fa-quote-right fa-fw"
                   aria-hidden="true"
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  title="Insert block quote"
                   onClick={ () => this.addNewComponent("quote") }
                 />
                 <i
                   className="fa fa-i-cursor fa-fw"
                   aria-hidden="true"
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  title="Insert header text"
                   onClick={ () => this.addNewComponent("header") }
                 />
               </div>
