@@ -89,6 +89,7 @@ class Home extends React.Component {
           <RecommendedContent content={this.state.recommended}/>
           <FromTheEditors content={this.state.fromTheEditors}/>
           <NaldaVideo content={this.state.naldaVideos} />
+          <div className="space-2 hidden-md-down" />
         </div>
       </div>
     );

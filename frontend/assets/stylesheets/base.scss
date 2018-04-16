@@ -516,6 +516,24 @@ a {
   }
 }
 
+@media only screen and (min-width: 768px) {
+	.content-preview-wrapper {
+		width: 33.3333%;
+	}
+}
+
+@media only screen and (min-width: 1069px) {
+	.content-preview-wrapper {
+		width: 25%;
+	}
+}
+
+@media only screen and (min-width: 1500px) {
+	.content-preview-wrapper {
+		width: 20%;
+	}
+}
+
 // Styling the tabs at the top of content creation pages
 // ListingForm
 // ArticleForm

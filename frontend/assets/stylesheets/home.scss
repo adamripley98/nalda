@@ -19,6 +19,13 @@
   }
 }
 
+@media only screen and (min-width: 768px) {
+  .home-section .home-section-title {
+    font-size: 32px;
+    letter-spacing: -1px;
+  }
+}
+
 // Styling categories
 .home-categories {
   padding-left: 0;

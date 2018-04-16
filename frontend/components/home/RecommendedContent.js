@@ -26,7 +26,6 @@ class Recommended extends Component {
             ))
           }
         </div>
-        <div className="line" />
       </div>
     );
   }
