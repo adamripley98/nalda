@@ -8,6 +8,7 @@ import uuid from 'uuid-v4';
 import async from 'async';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
+const pica = require('pica')();
 
 // Import components
 import ErrorMessage from '../../shared/ErrorMessage';
@@ -353,12 +354,37 @@ class ListingForm extends React.Component {
         // Convert from blob to a proper file object that can be passed to server
         reader.onload = (upload) => {
           // Set images to state
-          this.setState({
-            image: upload.target.result,
-            imagePreview: image.preview,
-            imageName: image.name,
-            error: '',
-          });
+          // Resize & convert to blob
+          const canvas = document.createElement('canvas');
+          var ctx = canvas.getContext("2d");
+          var img = new Image();
+          img.onload = () => {
+            // set size proportional to image
+            canvas.height = canvas.width * (img.height / img.width);
+
+            // step 1 - resize to 50%
+            const oc = document.createElement('canvas');
+            const octx = oc.getContext('2d');
+
+            oc.width = img.width * 0.15;
+            oc.height = img.height * 0.15;
+            octx.drawImage(img, 0, 0, oc.width, oc.height);
+
+            // step 2
+            octx.drawImage(oc, 0, 0, oc.width * 0.15, oc.height * 0.15);
+
+            // step 3, resize to final size
+            ctx.drawImage(oc, 0, 0, oc.width * 0.15, oc.height * 0.15,
+            0, 0, canvas.width, canvas.height);
+            console.log('img', img);
+            this.setState({
+              image: img.src,
+              imagePreview: image.preview,
+              imageName: image.name,
+              error: '',
+            });
+          };
+          img.src = upload.target.result;
         };
         // File reader set up
         reader.onabort = () => this.setState({error: "File read aborted."});
