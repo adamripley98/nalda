@@ -131,54 +131,56 @@ module.exports = () => {
           error: authRes.error,
         });
       } else {
-        // User CAN delete videos, remove from mongo
-        authRes.doc.remove((errRemove) => {
-          if (errRemove) {
-            res.send({
-              success: false,
-              error: 'Error deleting video.',
-            });
-          // Send back success
-          } else {
-            Homepage.find({}, (errHome, homepage) => {
-              if (errHome) {
-                res.send({
-                  success: false,
-                  error: 'Error deleting video.',
-                });
-              } else {
-                const home = homepage[0];
-                const videos = home.naldaVideos;
-                const banner = home.banner;
-                // Delete video from homepage
-                for (var i = 0; i < videos.length; i++) {
-                  if (videos[i].contentId === videoId) {
-                    videos.splice(i, 1);
-                    break;
+        Video.findById(videoId, (vidErr, video) => {
+          // User CAN delete videos, remove from mongo
+          video.remove((errRemove) => {
+            if (errRemove) {
+              res.send({
+                success: false,
+                error: 'Error deleting video.',
+              });
+            // Send back success
+            } else {
+              Homepage.find({}, (errHome, homepage) => {
+                if (errHome) {
+                  res.send({
+                    success: false,
+                    error: 'Error deleting video.',
+                  });
+                } else {
+                  const home = homepage[0];
+                  const videos = home.naldaVideos;
+                  const banner = home.banner;
+                  // Delete video from homepage
+                  for (var i = 0; i < videos.length; i++) {
+                    if (videos[i].contentId === videoId) {
+                      videos.splice(i, 1);
+                      break;
+                    }
                   }
+                  for (var j = 0; j < banner.length; j++) {
+                    if (banner[j].contentId === videoId) {
+                      banner.splice(j, 1);
+                      break;
+                    }
+                  }
+                  home.save((errSave) => {
+                    if (errSave) {
+                      res.send({
+                        success: false,
+                        error: 'Error deleting video.',
+                      });
+                    } else {
+                      res.send({
+                        success: true,
+                        error: '',
+                      });
+                    }
+                  });
                 }
-                for (var j = 0; j < banner.length; j++) {
-                  if (banner[j].contentId === videoId) {
-                    banner.splice(j, 1);
-                    break;
-                  }
-                }
-                home.save((errSave) => {
-                  if (errSave) {
-                    res.send({
-                      success: false,
-                      error: 'Error deleting video.',
-                    });
-                  } else {
-                    res.send({
-                      success: true,
-                      error: '',
-                    });
-                  }
-                });
-              }
-            });
-          }
+              });
+            }
+          });
         });
       }
     });

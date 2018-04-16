@@ -726,54 +726,56 @@ module.exports = () => {
           error: authRes.error,
         });
       } else {
-        // User CAN delete articles, remove from mongo
-        authRes.doc.remove((errRemove) => {
-          if (errRemove) {
-            res.send({
-              success: false,
-              error: "Error deleting article.",
-            });
-          // Send back success
-          } else {
-            Homepage.find({}, (errHome, homepage) => {
-              if (errHome) {
-                res.send({
-                  success: false,
-                  error: 'Error deleting article.',
-                });
-              } else {
-                const home = homepage[0];
-                const fromTheEditors = home.fromTheEditors;
-                const banner = home.banner;
-                // Delete listing from homepage
-                for (var i = 0; i < fromTheEditors.length; i++) {
-                  if (fromTheEditors[i].contentId === articleId) {
-                    fromTheEditors.splice(i, 1);
-                    break;
+        Article.findById(articleId, (artErr, article) => {
+          // User CAN delete articles, remove from mongo
+          article.remove((errRemove) => {
+            if (errRemove) {
+              res.send({
+                success: false,
+                error: "Error deleting article.",
+              });
+            // Send back success
+            } else {
+              Homepage.find({}, (errHome, homepage) => {
+                if (errHome) {
+                  res.send({
+                    success: false,
+                    error: 'Error deleting article.',
+                  });
+                } else {
+                  const home = homepage[0];
+                  const fromTheEditors = home.fromTheEditors;
+                  const banner = home.banner;
+                  // Delete listing from homepage
+                  for (var i = 0; i < fromTheEditors.length; i++) {
+                    if (fromTheEditors[i].contentId === articleId) {
+                      fromTheEditors.splice(i, 1);
+                      break;
+                    }
                   }
+                  for (var j = 0; j < banner.length; j++) {
+                    if (banner[j].contentId === articleId) {
+                      banner.splice(j, 1);
+                      break;
+                    }
+                  }
+                  home.save((errSave) => {
+                    if (errSave) {
+                      res.send({
+                        success: false,
+                        error: 'Error deleting article.',
+                      });
+                    } else {
+                      res.send({
+                        success: true,
+                        error: '',
+                      });
+                    }
+                  });
                 }
-                for (var j = 0; j < banner.length; j++) {
-                  if (banner[j].contentId === articleId) {
-                    banner.splice(j, 1);
-                    break;
-                  }
-                }
-                home.save((errSave) => {
-                  if (errSave) {
-                    res.send({
-                      success: false,
-                      error: 'Error deleting article.',
-                    });
-                  } else {
-                    res.send({
-                      success: true,
-                      error: '',
-                    });
-                  }
-                });
-              }
-            });
-          }
+              });
+            }
+          });
         });
       }
     });
