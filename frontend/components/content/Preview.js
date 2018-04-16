@@ -16,7 +16,7 @@ class Preview extends Component {
   constructor(props) {
     super(props);
 
-    // Bind this to helper methods
+    // Bind this to helper method
     this.getType = this.getType.bind(this);
     this.getSubtitle = this.getSubtitle.bind(this);
     this.getLocation = this.getLocation.bind(this);
