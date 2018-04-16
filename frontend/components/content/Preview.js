@@ -12,6 +12,7 @@ import categoryMap from '../json/categoryMap';
  * Renders an error message to the user
  */
 class Preview extends Component {
+  // Constructor method
   constructor(props) {
     super(props);
 
@@ -22,6 +23,8 @@ class Preview extends Component {
     this.getCategories = this.getCategories.bind(this);
   }
 
+  // Return the subtitle of the content
+  // This is dependent on the content type and the length of the subtitle
   getSubtitle() {
     if (this.props.isListing || this.props.contentType === "listing") return null;
 
@@ -35,6 +38,7 @@ class Preview extends Component {
     );
   }
 
+  // Get the type of the content as based on the props
   getType() {
     // Find the type of the content
     if (this.props.isArticle || this.props.contentType === "article") {
@@ -49,6 +53,7 @@ class Preview extends Component {
     return "";
   }
 
+  // Get the location of the content if a location was passed to the component
   getLocation() {
     // If there is no location, return null
     if (!this.props.location) return null;
@@ -63,6 +68,7 @@ class Preview extends Component {
     );
   }
 
+  // Get the categories of the content if there are any
   getCategories() {
     // If there are no categories, return null
     if (!this.props.categories) return null;
@@ -78,6 +84,7 @@ class Preview extends Component {
     );
   }
 
+  // Render the component
   render() {
     // If an object was passed in, recursively render the preview
     if (this.props.content) {
@@ -139,6 +146,7 @@ class Preview extends Component {
             {this.getSubtitle()}
 
             {/*
+              // Render the timestamp
               this.props.timestamp && (
                 <p className="gray-text marg-bot-0 marg-top-05 right italic">
                   { moment(new Date(Number(this.props.timestamp))).fromNow(true) }
