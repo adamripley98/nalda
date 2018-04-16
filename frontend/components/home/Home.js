@@ -85,10 +85,10 @@ class Home extends React.Component {
         <div className="container">
           <div className="space-3"/>
           <ErrorMessage error={this.state.error} />
+          <ListingCategories />
           <RecommendedContent content={this.state.recommended}/>
           <FromTheEditors content={this.state.fromTheEditors}/>
           <NaldaVideo content={this.state.naldaVideos} />
-          <ListingCategories />
         </div>
       </div>
     );
