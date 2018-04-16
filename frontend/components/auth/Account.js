@@ -159,52 +159,6 @@ class Account extends Component {
     });
   }
 
-  // /**
-  //  * Handle click to edit profile picture
-  //  */
-  // handleProfilePictureClick() {
-  //   if (this.state.editProfilePicture) {
-  //     // Isolate variables
-  //     const profilePictureChanged = this.state.profilePictureChanged;
-  //
-  //     // Error checking
-  //     if (!this.state.profilePicture) {
-  //       this.setState({
-  //         error: 'Profile picture cannot be empty',
-  //       });
-  //     } else if (profilePictureChanged) {
-  //       // Post to backend to change profile picture
-  //       axios.post('/api/users/profilePicture', {
-  //         userId: this.props.userId,
-  //         profilePicture: this.state.profilePicture,
-  //       })
-  //       .then((resp) => {
-  //         if (!resp.data.success) {
-  //           this.setState({
-  //             error: resp.data.error,
-  //           });
-  //         } else {
-  //           // Dispatch redux action to change profile picture
-  //           this.setState({
-  //             error: '',
-  //             profilePictureChanged: false,
-  //           });
-  //           this.props.changeProfilePic(profilePicture);
-  //         }
-  //       })
-  //       .catch((err) => {
-  //         this.setState({
-  //           error: err,
-  //         });
-  //       });
-  //     }
-  //   }
-  //   // Update the state
-  //   this.setState({
-  //     editProfilePicture: !this.state.editProfilePicture,
-  //   });
-  // }
-
   // Helper method that is fired when a profile picture is added
   onDrop(acceptedFiles, rejectedFiles) {
     if (acceptedFiles && acceptedFiles.length) {

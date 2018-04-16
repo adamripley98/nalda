@@ -7,7 +7,7 @@ import { Redirect } from 'react-router-dom';
 /**
  * Component to ensure that an admin is logged in before creating new content or changing user privileges
  */
-export default function(ComponentToRender) {
+export default (ComponentToRender) => {
   class RequireAdmin extends Component {
     render() {
       // Renders component if user is logged in, returns to /login if not.
@@ -36,4 +36,4 @@ export default function(ComponentToRender) {
   };
 
   return connect(mapStateToProps)(RequireAdmin);
-}
+};

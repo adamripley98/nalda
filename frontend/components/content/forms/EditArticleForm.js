@@ -449,7 +449,7 @@ class EditArticleForm extends React.Component {
                               )
                             }
                             {
-                              (component.componentType === "image" && this.state.body[index].body && this.state.body[index].body.indexOf("naldacampus" !== -1)) && (
+                              (component.componentType === "image" && this.state.body[index].body && this.state.body[index].body.indexOf("naldacampus") !== -1) && (
                                 <img
                                   src={ this.state.body[index].body }
                                   alt={ this.state.title }
@@ -480,7 +480,7 @@ class EditArticleForm extends React.Component {
                                           className="fa fa-trash-o"
                                           aria-hidden="true"
                                           onClick={() => {
-                                            const bodyObj = this.state.body;
+                                            const bodyObj = this.state.body.slice();
                                             bodyObj.splice(index, 1);
                                             this.setState({
                                               body: bodyObj,

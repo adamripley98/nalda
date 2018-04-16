@@ -112,7 +112,7 @@ class Listing extends React.Component {
 
           // If there is a location
           if (res.data.data.location.lng && res.data.data.location.lat) {
-            $(document).ready(function() {
+            $(document).ready(() => {
               var map = new google.maps.Map(document.getElementById('map'), {
                 zoom: 17,
                 center: res.data.data.location,

@@ -6,7 +6,7 @@ import { Redirect } from 'react-router-dom';
 /**
  * Component to ensure that a user is logged in before seeing content
  */
-export default function(ComponentToRender) {
+export default (ComponentToRender) => {
   class RequireLogin extends Component {
     render() {
       // Renders component if user is logged in, returns to /login if not.
@@ -33,4 +33,4 @@ export default function(ComponentToRender) {
   };
 
   return connect(mapStateToProps)(RequireLogin);
-}
+};

@@ -16,7 +16,7 @@ class Preview extends Component {
   constructor(props) {
     super(props);
 
-    // Bind this to helper methods
+    // Bind this to helper method
     this.getType = this.getType.bind(this);
     this.getSubtitle = this.getSubtitle.bind(this);
     this.getLocation = this.getLocation.bind(this);
@@ -94,7 +94,7 @@ class Preview extends Component {
         const videoId = this.props.content.url.substring(this.props.content.url.indexOf("v=") + 2);
         image = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
       } else {
-        image = this.props.content.image;
+        image = this.props.content.previewImage ? this.props.content.previewImage : this.props.content.image;
       }
 
       // Render a preview with the specific props
