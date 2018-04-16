@@ -653,8 +653,8 @@ module.exports = () => {
           error = "Nalda's Favorite must be populated.";
         } else if (!image) {
           error = "Hero image must be populated.";
-        } else if (images && images.length > 6) {
-          error = "Maximum of 6 images.";
+        } else if (images && images.length > 10) {
+          error = "Maximum of 10 images.";
         } else if (!price) {
           error = "Price must be populated.";
         } else if (amenities.length > 10) {

@@ -354,37 +354,12 @@ class ListingForm extends React.Component {
         // Convert from blob to a proper file object that can be passed to server
         reader.onload = (upload) => {
           // Set images to state
-          // Resize & convert to blob
-          const canvas = document.createElement('canvas');
-          var ctx = canvas.getContext("2d");
-          var img = new Image();
-          img.onload = () => {
-            // set size proportional to image
-            canvas.height = canvas.width * (img.height / img.width);
-
-            // step 1 - resize to 50%
-            const oc = document.createElement('canvas');
-            const octx = oc.getContext('2d');
-
-            oc.width = img.width * 0.15;
-            oc.height = img.height * 0.15;
-            octx.drawImage(img, 0, 0, oc.width, oc.height);
-
-            // step 2
-            octx.drawImage(oc, 0, 0, oc.width * 0.15, oc.height * 0.15);
-
-            // step 3, resize to final size
-            ctx.drawImage(oc, 0, 0, oc.width * 0.15, oc.height * 0.15,
-            0, 0, canvas.width, canvas.height);
-            console.log('img', img);
-            this.setState({
-              image: img.src,
-              imagePreview: image.preview,
-              imageName: image.name,
-              error: '',
-            });
-          };
-          img.src = upload.target.result;
+          this.setState({
+            image: upload.target.result,
+            imagePreview: image.preview,
+            imageName: image.name,
+            error: '',
+          });
         };
         // File reader set up
         reader.onabort = () => this.setState({error: "File read aborted."});
@@ -392,12 +367,12 @@ class ListingForm extends React.Component {
         reader.readAsDataURL(image);
       } else {
         // Ensure no more than 6 were uploaded
-        if (acceptedFiles.length + this.state.images.length > 6) {
+        if (acceptedFiles.length + this.state.images.length > 10) {
           this.setState({
-            error: 'You may only upload 6 images.',
+            error: 'You may only upload 10 images.',
           });
-          // Shorten acceptedFiles to 6
-          acceptedFiles.splice(6 - this.state.images.length);
+          // Shorten acceptedFiles to 10
+          acceptedFiles.splice(10 - this.state.images.length);
         }
 
         // Make a copy of the images in state
@@ -408,7 +383,31 @@ class ListingForm extends React.Component {
           const reader = new FileReader();
           // Convert from blob to a proper file object that can be passed to server
           reader.onload = (upload) => {
-            images.push(upload.target.result);
+            const image = new Image();
+            image.onload = () => {
+              // Resize image before passing to backend
+              const canvas = document.createElement('canvas');
+              const maxSize = 800;
+              let width = image.width;
+              let height = image.height;
+              if (width > height) {
+                if (width > maxSize) {
+                  height *= maxSize / width;
+                  width = maxSize;
+                }
+              } else {
+                if (height > maxSize) {
+                  width *= maxSize / height;
+                  height = maxSize;
+                }
+              }
+              canvas.width = width;
+              canvas.height = height;
+              canvas.getContext('2d').drawImage(image, 0, 0, width, height);
+              const dataUrl = canvas.toDataURL('image/jpeg');
+              images.push(dataUrl);
+            };
+            image.src = upload.target.result;
             cb();
           };
           // File reader set up
