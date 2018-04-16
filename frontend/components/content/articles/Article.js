@@ -56,7 +56,6 @@ class Article extends React.Component {
     axios.get(`/api/articles/${id}`)
       .then(res => {
         if (res.data.success) {
-          console.log('can they modify??', res.data.canModify);
           this.setState({
             error: "",
             ...res.data.data,

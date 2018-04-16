@@ -8,6 +8,7 @@ import uuid from 'uuid-v4';
 import async from 'async';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
+const pica = require('pica')();
 
 // Import components
 import ErrorMessage from '../../shared/ErrorMessage';
@@ -366,12 +367,12 @@ class ListingForm extends React.Component {
         reader.readAsDataURL(image);
       } else {
         // Ensure no more than 6 were uploaded
-        if (acceptedFiles.length + this.state.images.length > 6) {
+        if (acceptedFiles.length + this.state.images.length > 10) {
           this.setState({
-            error: 'You may only upload 6 images.',
+            error: 'You may only upload 10 images.',
           });
-          // Shorten acceptedFiles to 6
-          acceptedFiles.splice(6 - this.state.images.length);
+          // Shorten acceptedFiles to 10
+          acceptedFiles.splice(10 - this.state.images.length);
         }
 
         // Make a copy of the images in state
@@ -382,7 +383,31 @@ class ListingForm extends React.Component {
           const reader = new FileReader();
           // Convert from blob to a proper file object that can be passed to server
           reader.onload = (upload) => {
-            images.push(upload.target.result);
+            const image = new Image();
+            image.onload = () => {
+              // Resize image before passing to backend
+              const canvas = document.createElement('canvas');
+              const maxSize = 800;
+              let width = image.width;
+              let height = image.height;
+              if (width > height) {
+                if (width > maxSize) {
+                  height *= maxSize / width;
+                  width = maxSize;
+                }
+              } else {
+                if (height > maxSize) {
+                  width *= maxSize / height;
+                  height = maxSize;
+                }
+              }
+              canvas.width = width;
+              canvas.height = height;
+              canvas.getContext('2d').drawImage(image, 0, 0, width, height);
+              const dataUrl = canvas.toDataURL('image/jpeg');
+              images.push(dataUrl);
+            };
+            image.src = upload.target.result;
             cb();
           };
           // File reader set up

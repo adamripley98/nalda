@@ -7,7 +7,7 @@ import { Redirect } from 'react-router-dom';
 /**
  * Component to ensure that a curator is logged in before creating new content
  */
-export default function(ComponentToRender) {
+export default (ComponentToRender) => {
   class RequireCurator extends Component {
 
     render() {
@@ -37,4 +37,4 @@ export default function(ComponentToRender) {
   };
 
   return connect(mapStateToProps)(RequireCurator);
-}
+};

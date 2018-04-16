@@ -10,6 +10,7 @@ const router = express.Router();
 const AWS = require('aws-sdk');
 const uuid = require('uuid-v4');
 const async = require('async');
+const sharp = require('sharp');
 
 // Import database models
 const Article = require('../models/article');
@@ -603,100 +604,113 @@ module.exports = () => {
             } else {
               // Convert article picture to a form that s3 can display
               const imageConverted = new Buffer(contentImage.replace(/^data:image\/\w+;base64,/, ""), 'base64');
-              // Create bucket
-              s3bucket.createBucket(() => {
-                var params = {
-                  Bucket: AWS_BUCKET_NAME,
-                  Key: `bannerpictures/${uuid()}`,
-                  ContentType: 'image/jpeg',
-                  Body: imageConverted,
-                  ContentEncoding: 'base64',
-                  ACL: 'public-read',
-                };
-                // Upload photo
-                s3bucket.upload(params, (errUpload, data) => {
-                  if (errUpload) {
-                    res.send({
-                      success: false,
-                      error: 'Error uploading profile picture.',
-                    });
-                  } else {
-                    // Find homepage
-                    Homepage.find({}, (errHomepage, home) => {
-                      if (errHomepage) {
-                        res.send({
-                          success: false,
-                          error: 'Error finding homepage.',
-                        });
-                      // NOTE this is only to declare a homepage in the database for the first time
-                      } else if (!home.length) {
-                        // Create new homepage
-                        const newHomepage = new Homepage({
-                          banner: [],
-                          naldaVideos: [],
-                          categories: [],
-                          recommended: [],
-                          fromTheEditors: [],
-                        });
-                        // save new homepage in mongo
-                        newHomepage.save((err) => {
-                          if (err) {
-                            res.send({
-                              success: false,
-                              error: 'Error on homepage.',
-                            });
-                          } else {
-                            res.send({
-                              success: false,
-                              error: 'You just created the first instance of a homepage, try adding a banner again.',
-                            });
-                          }
-                        });
-                      } else {
-                        const homepage = home[0];
-                        const banner = homepage.banner.slice();
-                        // Error check for duplicate content in banner
-                        let duplicate = false;
-                        banner.forEach((item) => {
-                          if (item.contentId === contentId) {
-                            duplicate = true;
-                          }
-                        });
-                        if (duplicate) {
+
+              // Resize to be appropriate size
+              sharp(imageConverted)
+              .resize(1920, null)
+              .toBuffer()
+              .then( resized => {
+                // Create bucket
+                s3bucket.createBucket(() => {
+                  var params = {
+                    Bucket: AWS_BUCKET_NAME,
+                    Key: `bannerpictures/${uuid()}`,
+                    ContentType: 'image/jpeg',
+                    Body: resized,
+                    ContentEncoding: 'base64',
+                    ACL: 'public-read',
+                  };
+                  // Upload photo
+                  s3bucket.upload(params, (errUpload, data) => {
+                    if (errUpload) {
+                      res.send({
+                        success: false,
+                        error: 'Error uploading profile picture.',
+                      });
+                    } else {
+                      // Find homepage
+                      Homepage.find({}, (errHomepage, home) => {
+                        if (errHomepage) {
                           res.send({
                             success: false,
-                            error: 'This content is already in the banner.',
+                            error: 'Error finding homepage.',
                           });
-                        } else {
-                          // Create object to pass back, of type article or listing
-                          const newBannerContent = {
-                            contentType: article ? "article" : "listing",
-                            contentId,
-                            contentImage: data.Location,
-                          };
-                          // Add to banner
-                          banner.push(newBannerContent);
-                          homepage.banner = banner;
-                          // Save new banner to mongo
-                          homepage.save((errSave) => {
-                            if (errSave) {
+                        // NOTE this is only to declare a homepage in the database for the first time
+                        } else if (!home.length) {
+                          // Create new homepage
+                          const newHomepage = new Homepage({
+                            banner: [],
+                            naldaVideos: [],
+                            categories: [],
+                            recommended: [],
+                            fromTheEditors: [],
+                          });
+                          // save new homepage in mongo
+                          newHomepage.save((err) => {
+                            if (err) {
                               res.send({
                                 success: false,
-                                error: 'Error saving image.',
+                                error: 'Error on homepage.',
                               });
                             } else {
-                              // Send back success
                               res.send({
-                                success: true,
-                                error: '',
-                                data: homepage.banner,
+                                success: false,
+                                error: 'You just created the first instance of a homepage, try adding a banner again.',
                               });
                             }
                           });
+                        } else {
+                          const homepage = home[0];
+                          const banner = homepage.banner.slice();
+                          // Error check for duplicate content in banner
+                          let duplicate = false;
+                          banner.forEach((item) => {
+                            if (item.contentId === contentId) {
+                              duplicate = true;
+                            }
+                          });
+                          if (duplicate) {
+                            res.send({
+                              success: false,
+                              error: 'This content is already in the banner.',
+                            });
+                          } else {
+                            // Create object to pass back, of type article or listing
+                            const newBannerContent = {
+                              contentType: article ? "article" : "listing",
+                              contentId,
+                              contentImage: data.Location,
+                            };
+                            // Add to banner
+                            banner.push(newBannerContent);
+                            homepage.banner = banner;
+                            // Save new banner to mongo
+                            homepage.save((errSave) => {
+                              if (errSave) {
+                                res.send({
+                                  success: false,
+                                  error: 'Error saving image.',
+                                });
+                              } else {
+                                // Send back success
+                                res.send({
+                                  success: true,
+                                  error: '',
+                                  data: homepage.banner,
+                                });
+                              }
+                            });
+                          }
                         }
-                      }
-                    });
-                  }
+                      });
+                    }
+                  });
+                });
+              })
+              .catch(() => {
+                res.send({
+                  success: false,
+                  error: 'Image upload error.',
                 });
               });
             }

@@ -7,6 +7,7 @@ const articleSchema = new Schema({
   title: String,
   subtitle: String,
   image: String,
+  imagePreview: String,
   body: [
     {
       componentType: String,
