@@ -14,6 +14,8 @@ import Blurb from '../shared/Blurb';
 import Sidebar from './Sidebar';
 import ListAdmins from './tables/ListAdmins';
 import ListListings from './tables/ListListings';
+import ListArticles from './tables/ListArticles';
+import ListVideos from './tables/ListVideos';
 
 // Import actions
 import {notifyMessage} from '../../actions/notification';
@@ -70,8 +72,6 @@ class Admin extends Component {
     this.displayCurators = this.displayCurators.bind(this);
     this.displayUsers = this.displayUsers.bind(this);
     this.displayUserData = this.displayUserData.bind(this);
-    this.displayArticles = this.displayArticles.bind(this);
-    this.displayVideos = this.displayVideos.bind(this);
     this.displayBanner = this.displayBanner.bind(this);
     this.sidebarCallback = this.sidebarCallback.bind(this);
     this.displayAdminForm = this.displayAdminForm.bind(this);
@@ -622,96 +622,6 @@ class Admin extends Component {
     );
   }
 
-  // Helper method to display list of articles
-  displayArticles() {
-    if (this.state.articles && this.state.articles.length) {
-      const articles = this.state.articles.map((article, i) => (
-        <tr key={ article._id }>
-          <th scope="row">
-            {i + 1}
-          </th>
-          <td>
-            <Link to={`/articles/${article._id}`}>
-              { article.title }
-            </Link>
-          </td>
-          <td>
-            {
-              article._id
-            }
-          </td>
-        </tr>
-      ));
-
-      return (
-        <div>
-          <h4 className="bold">
-            Articles
-          </h4>
-          <table className="table">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Title</th>
-                <th scope="col">Article ID</th>
-              </tr>
-            </thead>
-            <tbody>
-              { articles }
-            </tbody>
-          </table>
-        </div>
-      );
-    }
-    return (
-      <Blurb message="There are no articles to display." />
-    );
-  }
-
-  // Helper method to display list of videos
-  displayVideos() {
-    if (this.state.videos && this.state.videos.length) {
-      const videos = this.state.videos.map((video, i) => (
-        <tr key={video._id}>
-          <th scope="row">
-            {i + 1}
-          </th>
-          <td>
-            <Link to={`/videos/${video._id}`}>
-              {video.title}
-            </Link>
-          </td>
-          <td>
-            {video._id}
-          </td>
-        </tr>
-      ));
-
-      return (
-        <div>
-          <h4 className="bold">
-            Videos
-          </h4>
-          <table className="table">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Title</th>
-                <th scope="col">Video ID</th>
-              </tr>
-            </thead>
-            <tbody>
-              { videos }
-            </tbody>
-          </table>
-        </div>
-      );
-    }
-    return (
-      <Blurb message="There are no videos to display" />
-    );
-  }
-
   // Helper method for image uploads
   onDrop(acceptedFiles, rejectedFiles) {
     // Ensure at leat one valid image was uploaded
@@ -1118,8 +1028,12 @@ class Admin extends Component {
               {this.state.to === "listings" && (
                 <ListListings listings={this.state.listings} />
               )}
-              { this.state.to === "articles" && this.displayArticles() }
-              { this.state.to === "videos" && this.displayVideos() }
+              {this.state.to === "articles" && (
+                <ListArticles articles={this.state.articles} />
+              )}
+              {this.state.to === "videos" && (
+                <ListVideos videos={this.state.videos} />
+              )}
               { this.state.to === "homepage" && (
                 <div>
                   {this.displayBanner()}
