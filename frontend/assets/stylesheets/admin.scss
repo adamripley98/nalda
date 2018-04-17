@@ -34,7 +34,13 @@
   border: 1px solid $border;
 
   thead {
-    background: $lighter-gray;
+    background: darken($lighter-gray, 1.5%);
+  }
+
+  tbody {
+    tr:nth-child(even) {
+      background: lighten($lighter-gray, 1%);
+    }
   }
 
   .fa-close {

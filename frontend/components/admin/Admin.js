@@ -16,6 +16,8 @@ import ListAdmins from './tables/ListAdmins';
 import ListListings from './tables/ListListings';
 import ListArticles from './tables/ListArticles';
 import ListVideos from './tables/ListVideos';
+import ListUsers from './tables/ListUsers';
+import ListCurators from './tables/ListCurators';
 
 // Import actions
 import {notifyMessage} from '../../actions/notification';
@@ -69,8 +71,6 @@ class Admin extends Component {
     this.onSubmitRemoveFromTheEditorsContent = this.onSubmitRemoveFromTheEditorsContent.bind(this);
     this.onSubmitChangeFromTheEditors = this.onSubmitChangeFromTheEditors.bind(this);
     this.onSubmitChangeNaldaVideos = this.onSubmitChangeNaldaVideos.bind(this);
-    this.displayCurators = this.displayCurators.bind(this);
-    this.displayUsers = this.displayUsers.bind(this);
     this.displayUserData = this.displayUserData.bind(this);
     this.displayBanner = this.displayBanner.bind(this);
     this.sidebarCallback = this.sidebarCallback.bind(this);
@@ -522,92 +522,6 @@ class Admin extends Component {
     });
   }
 
-  // Helper method to display all curators
-  displayCurators() {
-    if (this.state.curators && this.state.curators.length) {
-      const curators = this.state.curators.map((curator, i) => (
-        <tr key={ curator.userId }>
-          <th scope="row">
-            {i + 1}
-          </th>
-          <td>
-            <Link to={`/users/${curator.userId}`}>
-              {curator.name}
-            </Link>
-          </td>
-          <td>
-            <a href={`mailto:${curator.username}`}>{ curator.username }</a>
-          </td>
-        </tr>
-      ));
-
-      return (
-        <div>
-          <h4 className="bold">
-            Curators
-          </h4>
-          <table className="table">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">Email</th>
-              </tr>
-            </thead>
-            <tbody>
-              { curators }
-            </tbody>
-          </table>
-        </div>
-      );
-    }
-    return (
-      <Blurb message="There are no curators to display." />
-    );
-  }
-
-  // Helper method to display all users
-  displayUsers() {
-    if (this.state.users && this.state.users.length) {
-      const users = this.state.users.map((user, i) => (
-        <tr key={ user.userId }>
-          <th scope="row">
-            {i + 1}
-          </th>
-          <td>
-              { user.name }
-          </td>
-          <td>
-            <a href={`mailto:${user.username}`}>{ user.username }</a>
-          </td>
-        </tr>
-      ));
-
-      return (
-        <div>
-          <h4 className="bold">
-            Users
-          </h4>
-          <table className="table">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">Email</th>
-              </tr>
-            </thead>
-            <tbody>
-              { users }
-            </tbody>
-          </table>
-        </div>
-      );
-    }
-    return (
-      <Blurb message="There are no users to display." />
-    );
-  }
-
   displayUserData() {
     return (
       <div className="tags big">
@@ -1022,8 +936,12 @@ class Admin extends Component {
               {this.state.to === "admins" && (
                 <ListAdmins admins={this.state.admins} />
               )}
-              { this.state.to === "curators" && this.displayCurators() }
-              { this.state.to === "users" && this.displayUsers() }
+              {this.state.to === "curators" && (
+                <ListCurators curators={this.state.curators} />
+              )}
+              {this.state.to === "users" && (
+                <ListUsers users={this.state.users} />
+              )}
               { this.state.to === "manage-admins" && this.displayAdminForm() }
               {this.state.to === "listings" && (
                 <ListListings listings={this.state.listings} />
