@@ -31,6 +31,7 @@
     "cookie-parser": "^1.4.3",
     "css-loader": "^0.28.0",
     "enzyme": "^2.8.1",
+    "exif-js": "^2.3.0",
     "expect": "^1.20.2",
     "express": "^4.15.2",
     "express-session": "^1.15.6",
