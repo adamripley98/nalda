@@ -8,7 +8,7 @@ import uuid from 'uuid-v4';
 import async from 'async';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-const EXIF = require('exif-js');
+import EXIF from 'exif-js';
 
 // Import components
 import ErrorMessage from '../../shared/ErrorMessage';
@@ -346,34 +346,6 @@ class ListingForm extends React.Component {
     return null;
   }
 
-  //
-  // myDropzone.on('addedfile', function (file) {
-  //     var reader = new FileReader();
-  //     reader.onload = (function () {
-  //         return (function (e) {
-  //             var image = new Image();
-  //             image.onload = function () {
-  //                 (function (file, uri) {
-  //                     EXIF.getData(file, function () {
-  //                         var imgToSend = processImg(
-  //                         uri,
-  //                         trgHeight, trgWidth,
-  //                         this.width, this.height,
-  //                         EXIF.getTag(file, 'Orientation'));
-  //
-  //                         console.log(imgToSend);
-  //
-  //                         // Promise
-  //                         //    .resolve($.post('http://example.com', {img: imgToSend}))
-  //                         //    .then(console.log('Image was sent !'));
-  //                     });
-  //                 })(file, e.target.result);
-  //             };
-  //             image.src = e.target.result;
-  //         })
-  //     })(file);
-  //     reader.readAsDataURL(file);
-  // });
   // Helper method to rotate image
   processImg(image, trgHeight, trgWidth, srcWidth, srcHeight, orientation) {
     var canvas = document.createElement('canvas');
