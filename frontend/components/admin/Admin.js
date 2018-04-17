@@ -12,6 +12,7 @@ import ErrorMessage from '../shared/ErrorMessage';
 import Loading from '../shared/Loading';
 import Blurb from '../shared/Blurb';
 import Sidebar from './Sidebar';
+import ListAdmins from './tables/ListAdmins';
 
 // Import actions
 import {notifyMessage} from '../../actions/notification';
@@ -66,7 +67,6 @@ class Admin extends Component {
     this.onSubmitChangeFromTheEditors = this.onSubmitChangeFromTheEditors.bind(this);
     this.onSubmitChangeNaldaVideos = this.onSubmitChangeNaldaVideos.bind(this);
     this.displayCurators = this.displayCurators.bind(this);
-    this.displayAdmins = this.displayAdmins.bind(this);
     this.displayUsers = this.displayUsers.bind(this);
     this.displayUserData = this.displayUserData.bind(this);
     this.displayArticles = this.displayArticles.bind(this);
@@ -563,50 +563,6 @@ class Admin extends Component {
     }
     return (
       <Blurb message="There are no curators to display." />
-    );
-  }
-
-  // Helper method to display all admins
-  displayAdmins() {
-    if (this.state.admins && this.state.admins.length) {
-      const admins = this.state.admins.map((admin, i) => (
-        <tr key={admin.userId}>
-          <th scope="row">
-            {i + 1}
-          </th>
-          <td>
-            <Link to={`/users/${admin.userId}`}>
-              {admin.name}
-            </Link>
-          </td>
-          <td>
-            <a href={`mailto:${admin.username}`}>{admin.username }</a>
-          </td>
-        </tr>
-      ));
-
-      return (
-        <div>
-          <h4 className="bold">
-            Admins
-          </h4>
-          <table className="table">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">Email</th>
-              </tr>
-            </thead>
-            <tbody>
-              { admins }
-            </tbody>
-          </table>
-        </div>
-      );
-    }
-    return (
-      <Blurb message="There are no admins to show." />
     );
   }
 
@@ -1199,7 +1155,9 @@ class Admin extends Component {
                   { this.displayUserData() }
                 </div>
               )}
-              { this.state.to === "admins" && this.displayAdmins() }
+              {this.state.to === "admins" && (
+                <ListAdmins admins={this.state.admins} />
+              )}
               { this.state.to === "curators" && this.displayCurators() }
               { this.state.to === "users" && this.displayUsers() }
               { this.state.to === "manage-admins" && this.displayAdminForm() }
