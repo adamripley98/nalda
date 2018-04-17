@@ -8,7 +8,7 @@ import uuid from 'uuid-v4';
 import async from 'async';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-const pica = require('pica')();
+const EXIF = require('exif-js');
 
 // Import components
 import ErrorMessage from '../../shared/ErrorMessage';
@@ -134,6 +134,8 @@ class ListingForm extends React.Component {
     this.removeImage = this.removeImage.bind(this);
     this.handleChangeAdditionalAmenities = this.handleChangeAdditionalAmenities.bind(this);
     this.renderAdditionalAmenities = this.renderAdditionalAmenities.bind(this);
+    this.processImg = this.processImg.bind(this);
+    this.onDrop = this.onDrop.bind(this);
   }
 
   /**
@@ -344,6 +346,55 @@ class ListingForm extends React.Component {
     return null;
   }
 
+  //
+  // myDropzone.on('addedfile', function (file) {
+  //     var reader = new FileReader();
+  //     reader.onload = (function () {
+  //         return (function (e) {
+  //             var image = new Image();
+  //             image.onload = function () {
+  //                 (function (file, uri) {
+  //                     EXIF.getData(file, function () {
+  //                         var imgToSend = processImg(
+  //                         uri,
+  //                         trgHeight, trgWidth,
+  //                         this.width, this.height,
+  //                         EXIF.getTag(file, 'Orientation'));
+  //
+  //                         console.log(imgToSend);
+  //
+  //                         // Promise
+  //                         //    .resolve($.post('http://example.com', {img: imgToSend}))
+  //                         //    .then(console.log('Image was sent !'));
+  //                     });
+  //                 })(file, e.target.result);
+  //             };
+  //             image.src = e.target.result;
+  //         })
+  //     })(file);
+  //     reader.readAsDataURL(file);
+  // });
+  // Helper method to rotate image
+  processImg(image, trgHeight, trgWidth, srcWidth, srcHeight, orientation) {
+    var canvas = document.createElement('canvas');
+    canvas.width = trgWidth;
+    canvas.height = trgHeight;
+    var img = new Image;
+    img.src = image;
+    var ctx = canvas.getContext("2d");
+    if (orientation === 2) ctx.transform(-1, 0, 0, 1, trgWidth, 0);
+    if (orientation === 3) ctx.transform(-1, 0, 0, -1, trgWidth, trgHeight);
+    if (orientation === 4) ctx.transform(1, 0, 0, -1, 0, trgHeight);
+    if (orientation === 5) ctx.transform(0, 1, 1, 0, 0, 0);
+    if (orientation === 6) ctx.transform(0, 1, -1, 0, trgHeight, 0);
+    if (orientation === 7) ctx.transform(0, -1, -1, 0, trgHeight, trgWidth);
+    if (orientation === 8) ctx.transform(0, -1, 1, 0, 0, trgWidth);
+    ctx.drawImage(img, 0, 0, srcWidth, srcHeight, 0, 0, trgWidth, trgHeight);
+    ctx.fill();
+    return canvas.toDataURL();
+  }
+
+
   // Helper method for image uploads
   onDrop(acceptedFiles, rejectedFiles, hero) {
     // Ensure at leat one valid image was uploaded
@@ -353,13 +404,26 @@ class ListingForm extends React.Component {
         const reader = new FileReader();
         // Convert from blob to a proper file object that can be passed to server
         reader.onload = (upload) => {
-          // Set images to state
-          this.setState({
-            image: upload.target.result,
-            imagePreview: image.preview,
-            imageName: image.name,
-            error: '',
-          });
+          var img = new Image();
+          img.onload = () => {
+            ((file, uri) => {
+              EXIF.getData(file, () => {
+                var imgToSend = this.processImg(
+                uri,
+                img.height, img.width,
+                img.width, img.height,
+                EXIF.getTag(file, 'Orientation'));
+                // Set images to state
+                this.setState({
+                  image: imgToSend,
+                  imagePreview: imgToSend,
+                  imageName: image.name,
+                  error: '',
+                });
+              });
+            })(image, upload.target.result);
+          };
+          img.src = upload.target.result;
         };
         // File reader set up
         reader.onabort = () => this.setState({error: "File read aborted."});
@@ -858,7 +922,7 @@ class ListingForm extends React.Component {
                 type="url"
                 className="form-control marg-bot-1"
                 value={ this.state.website }
-                palceholder="https://example.com"
+                placeholder="https://example.com"
                 onChange={ this.handleChangeWebsite }
               />
 
