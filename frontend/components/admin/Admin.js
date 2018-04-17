@@ -13,6 +13,7 @@ import Loading from '../shared/Loading';
 import Blurb from '../shared/Blurb';
 import Sidebar from './Sidebar';
 import ListAdmins from './tables/ListAdmins';
+import ListListings from './tables/ListListings';
 
 // Import actions
 import {notifyMessage} from '../../actions/notification';
@@ -70,7 +71,6 @@ class Admin extends Component {
     this.displayUsers = this.displayUsers.bind(this);
     this.displayUserData = this.displayUserData.bind(this);
     this.displayArticles = this.displayArticles.bind(this);
-    this.displayListings = this.displayListings.bind(this);
     this.displayVideos = this.displayVideos.bind(this);
     this.displayBanner = this.displayBanner.bind(this);
     this.sidebarCallback = this.sidebarCallback.bind(this);
@@ -668,52 +668,6 @@ class Admin extends Component {
     );
   }
 
-  // Helper method to display list of listings
-  displayListings() {
-    if (this.state.listings && this.state.listings.length) {
-      const listings = this.state.listings.map((listing, i) => (
-        <tr key={ listing._id }>
-          <th scope="row">
-            {i + 1}
-          </th>
-          <td>
-            <Link to={`/listings/${listing._id}`}>
-              { listing.title }
-            </Link>
-          </td>
-          <td>
-            {
-              listing._id
-            }
-          </td>
-        </tr>
-      ));
-
-      return (
-        <div>
-          <h4 className="bold">
-            Listings
-          </h4>
-          <table className="table">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">Listing ID</th>
-              </tr>
-            </thead>
-            <tbody>
-              { listings }
-            </tbody>
-          </table>
-        </div>
-      );
-    }
-    return (
-      <Blurb message="There are no listings to display." />
-    );
-  }
-
   // Helper method to display list of videos
   displayVideos() {
     if (this.state.videos && this.state.videos.length) {
@@ -1161,7 +1115,9 @@ class Admin extends Component {
               { this.state.to === "curators" && this.displayCurators() }
               { this.state.to === "users" && this.displayUsers() }
               { this.state.to === "manage-admins" && this.displayAdminForm() }
-              { this.state.to === "listings" && this.displayListings() }
+              {this.state.to === "listings" && (
+                <ListListings listings={this.state.listings} />
+              )}
               { this.state.to === "articles" && this.displayArticles() }
               { this.state.to === "videos" && this.displayVideos() }
               { this.state.to === "homepage" && (
