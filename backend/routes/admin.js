@@ -20,15 +20,11 @@ const Homepage = require('../models/homepage');
 const {AdminCheck} = require('../helperMethods/authChecking');
 
 // Helper function to pull data for each of the different content types
-// TODO do i need to even pull Data here? Maybe only to display title?????
 const pullData = (components, callback) => {
-  console.log('enters pull data');
   // Array of content to be returned
   const returnComponents = [];
-
   // Loop through array and pull pertinent data
   async.eachSeries(components, (component, cb) => {
-    console.log('enters the async');
     // Find the model for pulling data based on the content type
     let Model = null;
     if (component.contentType === 'Articles') {
@@ -45,18 +41,11 @@ const pullData = (components, callback) => {
       async.forEach(component.content, (cont, contentCallback) => {
         Model.findById(cont.contentId, (errContent, content) => {
           if (errContent) {
-            console.log('err content', errContent);
             callback({
               success: false,
               error: 'Error fetching homepage content',
             });
           } else if (content) {
-            console.log('there is content yes', content);
-            // const newContent = {
-            //   contentType: component.contentType,
-            //   contentId: cont.contentId,
-            //   title: content.title,
-            // };
             returnContent.push({
               contentType: component.contentType,
               contentId: cont.contentId,
@@ -64,8 +53,6 @@ const pullData = (components, callback) => {
             });
             contentCallback();
           } else {
-            // TODO do i need to deal with when content doesn't exist anymore?? shouldnt crash entire app
-            console.log('errrrr content not found');
             contentCallback();
           }
         });
@@ -75,7 +62,6 @@ const pullData = (components, callback) => {
           cb();
         } else {
           component.content = returnContent;
-          // Add the new content to the array and continue looping
           returnComponents.push(component);
           cb();
         }
@@ -85,14 +71,12 @@ const pullData = (components, callback) => {
     }
   }, (asyncErr) => {
     if (asyncErr) {
-      console.log('async err');
       callback({
         success: false,
         error: 'Error loading homepage.'
       });
       return;
     }
-    console.log('no err');
     callback({
       success: true,
       error: '',
@@ -190,7 +174,6 @@ module.exports = () => {
                             error: resp.error,
                           });
                         } else {
-                          // TODO assign homepage.components to returnArr and save
                           homepage.components = resp.returnComponents;
                           homepage.save((errSave) => {
                             if (errSave) {
