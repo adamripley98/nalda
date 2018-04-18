@@ -66,7 +66,7 @@ module.exports = () => {
               });
             } else if (content) {
               let newContent = {};
-              if (component.contentType === 'article') {
+              if (component.contentType === 'Articles') {
                 newContent = {
                   contentType: component.contentType,
                   contentId: cont.contentId,
@@ -77,7 +77,7 @@ module.exports = () => {
                   updatedAt: content.updatedAt,
                   location: content.location,
                 };
-              } else if (component.contentType === 'listing') {
+              } else if (component.contentType === 'Listings') {
                 newContent = {
                   contentType: component.contentType,
                   contentId: cont.contentId,
@@ -268,20 +268,15 @@ module.exports = () => {
                     success: false,
                     error: 'Error getting admin data.',
                   });
-                } else {
-                  const homeContent = {
-                    banner: homepage.banner,
-                    components: homepage.components,
-                  };
-                  res.send({
-                    success: true,
-                    error: '',
-                    data: {
-                      banner: homepage.banner,
-                      homeContent,
-                    }
-                  });
+                  return;
                 }
+
+                res.send({
+                  success: true,
+                  error: '',
+                  banner: homepage.banner,
+                  components: homepage.components,
+                });
               });
             }
           });

@@ -6,11 +6,12 @@ import axios from 'axios';
 import Loading from '../shared/Loading';
 import ErrorMessage from '../shared/ErrorMessage';
 import Banner from './Banner';
-import NaldaVideo from './NaldaVideo';
 import ListingCategories from './ListingCategories';
-import RecommendedContent from './RecommendedContent';
 import Tags from '../shared/Tags';
-import FromTheEditors from './FromTheEditors';
+import Components from './Components';
+// import RecommendedContent from './RecommendedContent';
+// import FromTheEditors from './FromTheEditors';
+// import NaldaVideo from './NaldaVideo';
 
 /**
  * Component for the homepage of the application
@@ -27,6 +28,7 @@ class Home extends React.Component {
       pending: true,
       error: "",
       banner: [],
+      components: [],
     };
   }
 
@@ -48,7 +50,8 @@ class Home extends React.Component {
       .then(resp => {
         if (resp.data.success) {
           this.setState({
-            ...resp.data.data,
+            banner: resp.data.banner,
+            components: resp.data.components,
             pending: false,
             error: "",
           });
@@ -86,9 +89,12 @@ class Home extends React.Component {
           <div className="space-3"/>
           <ErrorMessage error={this.state.error} />
           <ListingCategories />
-          <RecommendedContent content={this.state.recommended}/>
-          <FromTheEditors content={this.state.fromTheEditors}/>
-          <NaldaVideo content={this.state.naldaVideos} />
+          <Components components={this.state.components} />
+          {/*
+            <RecommendedContent content={this.state.recommended}/>
+            <FromTheEditors content={this.state.fromTheEditors}/>
+            <NaldaVideo content={this.state.naldaVideos} />
+          */}
           <div className="space-2 hidden-md-down" />
         </div>
       </div>
