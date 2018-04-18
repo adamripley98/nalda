@@ -1,4 +1,5 @@
 // Admin panel routes
-export const adminsPath = '/admin/admins';
-export const curatorsPath = '/admin/curators';
-export const usersPath = '/admin/users';
+export const adminAdminsPath = '/admin/admins';
+export const adminCuratorsPath = '/admin/curators';
+export const adminUsersPath = '/admin/users';
+export const adminArticlesPath = '/admin/articles';

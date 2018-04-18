@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import axios from 'axios';
 import {Link} from 'react-router-dom';
 import Blurb from '../../shared/Blurb';
@@ -16,7 +15,7 @@ class ListAdmins extends Component {
   }
 
   componentDidMount() {
-    axios.get('/api/admins')
+    axios.get('/api/admin/admins')
       .then(res => {
         if (!res.data.success) {
           this.setState({
@@ -85,9 +84,5 @@ class ListAdmins extends Component {
     );
   }
 }
-
-ListAdmins.propTypes = {
-  admins: PropTypes.array,
-};
 
 export default ListAdmins;

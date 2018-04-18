@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import axios from 'axios';
 import Blurb from '../../shared/Blurb';
 import Loading from '../../shared/Loading';
@@ -15,7 +14,7 @@ class ListUsers extends Component {
   }
 
   componentDidMount() {
-    axios.get('/api/users')
+    axios.get('/api/admin/users')
       .then(res => {
         if (!res.data.success) {
           this.setState({
@@ -82,9 +81,5 @@ class ListUsers extends Component {
     );
   }
 }
-
-ListUsers.propTypes = {
-  users: PropTypes.array,
-};
 
 export default ListUsers;

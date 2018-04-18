@@ -59,12 +59,14 @@ import AdminWrapper from '../components/admin/AdminWrapper';
 import ListAdmins from '../components/admin/tables/ListAdmins';
 import ListCurators from '../components/admin/tables/ListCurators';
 import ListUsers from '../components/admin/tables/ListUsers';
+import ListArticles from '../components/admin/tables/ListArticles';
 
 // Import routes
 import {
-  adminsPath,
-  curatorsPath,
-  usersPath,
+  adminAdminsPath,
+  adminCuratorsPath,
+  adminUsersPath,
+  adminArticlesPath,
 } from '../routes';
 
 /**
@@ -161,7 +163,7 @@ class AppContainer extends Component {
                 { /* Admin routes */ }
                 <Route exact path="/admin" component={requireAdmin(Admin)}/>
                 <Route
-                  exact path={adminsPath}
+                  exact path={adminAdminsPath}
                   component={requireAdmin(() => (
                     <AdminWrapper>
                       <ListAdmins />
@@ -169,7 +171,7 @@ class AppContainer extends Component {
                   ))}
                 />
                 <Route
-                  exact path={curatorsPath}
+                  exact path={adminCuratorsPath}
                   component={requireAdmin(() => (
                     <AdminWrapper>
                       <ListCurators />
@@ -177,10 +179,18 @@ class AppContainer extends Component {
                   ))}
                 />
                 <Route
-                  exact path={curatorsPath}
+                  exact path={adminUsersPath}
                   component={requireAdmin(() => (
                     <AdminWrapper>
-                      <ListCurators />
+                      <ListUsers />
+                    </AdminWrapper>
+                  ))}
+                />
+                <Route
+                  exact path={adminArticlesPath}
+                  component={requireAdmin(() => (
+                    <AdminWrapper>
+                      <ListArticles />
                     </AdminWrapper>
                   ))}
                 />

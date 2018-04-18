@@ -936,17 +936,17 @@ class Admin extends Component {
               <ListAdmins />
             )}
             {this.state.to === "curators" && (
-              <ListCurators curators={this.state.curators} />
+              <ListCurators />
             )}
             {this.state.to === "users" && (
-              <ListUsers users={this.state.users} />
+              <ListUsers />
             )}
             { this.state.to === "manage-admins" && this.displayAdminForm() }
             {this.state.to === "listings" && (
               <ListListings listings={this.state.listings} />
             )}
             {this.state.to === "articles" && (
-              <ListArticles articles={this.state.articles} />
+              <ListArticles />
             )}
             {this.state.to === "videos" && (
               <ListVideos videos={this.state.videos} />

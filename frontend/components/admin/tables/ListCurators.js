@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import Blurb from '../../shared/Blurb';
 import {Link} from 'react-router-dom';
 import axios from 'axios';
@@ -16,7 +15,7 @@ class ListCurators extends Component {
   }
 
   componentDidMount() {
-    axios.get('/api/curators')
+    axios.get('/api/admin/curators')
       .then(res => {
         if (!res.data.success) {
           this.setState({
@@ -83,9 +82,5 @@ class ListCurators extends Component {
     );
   }
 }
-
-ListCurators.propTypes = {
-  curators: PropTypes.array,
-};
 
 export default ListCurators;

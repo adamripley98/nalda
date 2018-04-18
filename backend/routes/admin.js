@@ -22,9 +22,32 @@ const {AdminCheck} = require('../helperMethods/authChecking');
 // Export the following methods for routing
 module.exports = () => {
   /**
+   * Get a list of all articles
+   */
+  router.get('/admin/articles', (req, res) => {
+    Article.find()
+      .then(fullArticles => {
+        const articles = fullArticles.map(article => ({
+          _id: article._id,
+          title: article.title,
+        }));
+        res.send({
+          success: true,
+          articles,
+        });
+      })
+      .catch(err => {
+        res.send({
+          success: false,
+          error: err.message,
+        });
+      });
+  });
+
+  /**
    * Get a list  of all admins
    */
-  router.get('/admins', (req, res) => {
+  router.get('/admin/admins', (req, res) => {
     User.find({ userType: 'admin' })
       .then(users => {
         const admins = users.map(user => ({
@@ -48,7 +71,7 @@ module.exports = () => {
   /**
    * Get a list  of all curators
    */
-  router.get('/curators', (req, res) => {
+  router.get('/admin/curators', (req, res) => {
     User.find({ userType: 'curator' })
       .then(users => {
         const curators = users.map(user => ({
@@ -72,7 +95,7 @@ module.exports = () => {
   /**
    * Get a list of all normal users
    */
-  router.get('/users', (req, res) => {
+  router.get('/admin/users', (req, res) => {
     User.find({ userType: 'user' })
       .then(users => {
         const userObjs = users.map(user => ({
