@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import autosize from 'autosize';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 import Dropzone from 'react-dropzone';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
@@ -10,7 +9,6 @@ import {connect} from 'react-redux';
 // Import components
 import ErrorMessage from '../shared/ErrorMessage';
 import Loading from '../shared/Loading';
-import Blurb from '../shared/Blurb';
 import Sidebar from './Sidebar';
 import ListAdmins from './tables/ListAdmins';
 import ListListings from './tables/ListListings';
@@ -18,6 +16,7 @@ import ListArticles from './tables/ListArticles';
 import ListVideos from './tables/ListVideos';
 import ListUsers from './tables/ListUsers';
 import ListCurators from './tables/ListCurators';
+import NewComponent from './NewComponent';
 
 // Import actions
 import {notifyMessage} from '../../actions/notification';
@@ -956,6 +955,7 @@ class Admin extends Component {
                 <div>
                   {this.displayBanner()}
                   {this.editHomepage()}
+                  <NewComponent />
                 </div>
               )}
               <div className="space-2" />
