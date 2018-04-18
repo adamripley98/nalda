@@ -105,7 +105,10 @@
  */
 .article-preview-wrapper {
   width: 100%;
-  display: block;
+  display: inline-block;
+	clear: none;
+	margin: 0rem 0rem 1rem 0rem;
+	vertical-align: top;
 }
 
 @media screen and (min-width: 720px) {
@@ -130,7 +133,7 @@
   height: 60vh;
   overflow-y: hidden;
   color: white;
-  width: calc(100% - 10px);
+  width: calc(100% - 10px) !important;
   margin: 0 auto;
   background-color: rgba(0, 0, 0, 0.5);
   margin-bottom: 1rem;
