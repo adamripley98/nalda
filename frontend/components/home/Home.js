@@ -9,9 +9,6 @@ import Banner from './Banner';
 import ListingCategories from './ListingCategories';
 import Tags from '../shared/Tags';
 import Components from './Components';
-// import RecommendedContent from './RecommendedContent';
-// import FromTheEditors from './FromTheEditors';
-// import NaldaVideo from './NaldaVideo';
 
 /**
  * Component for the homepage of the application
@@ -38,6 +35,7 @@ class Home extends React.Component {
    */
   componentDidMount() {
     window.scrollTo(0, 0);
+
     // Janky way of dealing with Facebook Oauth url issue
     if (window.location.hash === '#_=_') {
       history.replaceState
@@ -65,7 +63,7 @@ class Home extends React.Component {
       .catch(err => {
         this.setState({
           pending: false,
-          error: err,
+          error: err.message,
         });
       });
   }
@@ -90,11 +88,6 @@ class Home extends React.Component {
           <ErrorMessage error={this.state.error} />
           <ListingCategories />
           <Components components={this.state.components} />
-          {/*
-            <RecommendedContent content={this.state.recommended}/>
-            <FromTheEditors content={this.state.fromTheEditors}/>
-            <NaldaVideo content={this.state.naldaVideos} />
-          */}
           <div className="space-2 hidden-md-down" />
         </div>
       </div>
