@@ -4,6 +4,8 @@
  * NOTE these routes serve and accept JSON-formatted data
  */
 
+// TODO Generic add component, remove component routes. Also need add and remove content from a given component
+
 // Import frameworks
 const express = require('express');
 const router = express.Router();
@@ -175,6 +177,7 @@ module.exports = () => {
       }
     });
   });
+
 
   // Route to handle adding content to homepage recommended
   router.post('/recommended/add', (req, res) => {
