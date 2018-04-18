@@ -60,6 +60,8 @@ import ListAdmins from '../components/admin/tables/ListAdmins';
 import ListCurators from '../components/admin/tables/ListCurators';
 import ListUsers from '../components/admin/tables/ListUsers';
 import ListArticles from '../components/admin/tables/ListArticles';
+import ListListings from '../components/admin/tables/ListListings';
+import ListVideos from '../components/admin/tables/ListVideos';
 
 // Import routes
 import {
@@ -67,6 +69,8 @@ import {
   adminCuratorsPath,
   adminUsersPath,
   adminArticlesPath,
+  adminListingsPath,
+  adminVideosPath,
 } from '../routes';
 
 /**
@@ -191,6 +195,22 @@ class AppContainer extends Component {
                   component={requireAdmin(() => (
                     <AdminWrapper>
                       <ListArticles />
+                    </AdminWrapper>
+                  ))}
+                />
+                <Route
+                  exact path={adminListingsPath}
+                  component={requireAdmin(() => (
+                    <AdminWrapper>
+                      <ListListings />
+                    </AdminWrapper>
+                  ))}
+                />
+                <Route
+                  exact path={adminVideosPath}
+                  component={requireAdmin(() => (
+                    <AdminWrapper>
+                      <ListVideos />
                     </AdminWrapper>
                   ))}
                 />

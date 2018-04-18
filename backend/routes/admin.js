@@ -45,6 +45,52 @@ module.exports = () => {
   });
 
   /**
+   * Get a list of all listings
+   */
+  router.get('/admin/listings', (req, res) => {
+    Listing.find()
+      .then(fullListings => {
+        const listings = fullListings.map(listing => ({
+          _id: listing._id,
+          title: listing.title,
+        }));
+        res.send({
+          success: true,
+          listings,
+        });
+      })
+      .catch(err => {
+        res.send({
+          success: false,
+          error: err.message,
+        });
+      });
+  });
+
+  /**
+   * Get a list of all videos
+   */
+  router.get('/admin/videos', (req, res) => {
+    Video.find()
+      .then(fullVideos => {
+        const videos = fullVideos.map(video => ({
+          _id: video._id,
+          title: video.title,
+        }));
+        res.send({
+          success: true,
+          videos,
+        });
+      })
+      .catch(err => {
+        res.send({
+          success: false,
+          error: err.message,
+        });
+      });
+  });
+
+  /**
    * Get a list  of all admins
    */
   router.get('/admin/admins', (req, res) => {

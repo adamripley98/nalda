@@ -5,7 +5,11 @@ import Blurb from '../../shared/Blurb';
 import Loading from '../../shared/Loading';
 import ErrorMessage from '../../shared/ErrorMessage';
 
+/**
+ * Render a table listing all articles
+ */
 class ListArticles extends Component {
+  // Constructor method
   constructor(props) {
     super(props);
     this.state = {
@@ -14,6 +18,7 @@ class ListArticles extends Component {
     };
   }
 
+  // Pull data
   componentDidMount() {
     axios.get('/api/admin/articles')
       .then(res => {
@@ -32,6 +37,7 @@ class ListArticles extends Component {
       .catch(err => this.setState({ error: err.message }));
   }
 
+  // Render the table
   render() {
     if (this.state.pending) return (<Loading />);
     if (this.state.error) return (<ErrorMessage error={this.state.error} />);
