@@ -74,6 +74,7 @@ class Admin extends Component {
     this.displayBanner = this.displayBanner.bind(this);
     this.sidebarCallback = this.sidebarCallback.bind(this);
     this.displayAdminForm = this.displayAdminForm.bind(this);
+    this.displayList = this.displayList.bind(this);
   }
 
   componentDidMount() {
@@ -99,6 +100,7 @@ class Admin extends Component {
           recommended: resp.data.data.homepageContent ? resp.data.data.homepageContent.recommended : null,
           fromTheEditors: resp.data.data.homepageContent ? resp.data.data.homepageContent.fromTheEditors : null,
           naldaVideos: resp.data.data.homepageContent ? resp.data.data.homepageContent.naldaVideos : null,
+          components: resp.data.data.homepageContent ? resp.data.data.homepageContent.components : null,
           pending: false,
           to: "",
         });
@@ -645,198 +647,104 @@ class Admin extends Component {
     );
   }
 
+  displayList(component) {
+    console.log('what is component', component);
+    if (component.content && component.content.length) {
+      const list = component.content.map((content, i) => (
+          <tr key={content.contentId}>
+               <th scope="row">{i + 1}</th>
+               <td>{content.title}</td>
+               <td>{content.contentId}</td>
+               {/* TODO new REMOVE method */}
+               <td onClick={() => this.onSubmitRemoveRecommendedContent(content.contentId)}>
+                 <i className="fa fa-close" aria-hidden="true" />
+               </td>
+            </tr>
+      ));
+      return list;
+    }
+    return null;
+  }
+
+  // Helper method to add content to a specific homepage component
+  onSubmitComponent(event, component, contentId) {
+    event.preventDefault();
+    if (contentId) {
+      console.log('what is component and contentId', component, contentId);
+      axios.post('/api/home/component/content/add', {
+        component,
+        contentId,
+      })
+      .then(resp => {
+        if (resp.data.error) {
+          this.setState({error: resp.data.error});
+        } else {
+          console.log('no err');
+          // TODO something, notify
+        }
+      })
+      .catch(error => {this.setState(error);});
+    } else {
+      this.setState({
+        error: 'Content Id must be provided.',
+      });
+    }
+  }
+
   // Helper method to edit what is seen on homepage
   editHomepage() {
-    let recommended = '';
-    let fromTheEditors = '';
-    let naldaVideos = '';
-    if (this.state.recommended && this.state.recommended.length) {
-      recommended = this.state.recommended.map((item, i) => (
-        <tr key={item.contentId + "recommended"}>
-          <th scope="row">{i + 1}</th>
-          <td>{item.title}</td>
-          <td>{item.contentId}</td>
-          <td onClick={() => this.onSubmitRemoveRecommendedContent(item.contentId)}>
-            <i className="fa fa-close" aria-hidden="true" />
-          </td>
-        </tr>
+    let components = '';
+    if (this.state.components && this.state.components.length) {
+      components = this.state.components.map((component, i) => (
+        <div>
+          <form onSubmit={(e) => this.onSubmitComponent(e, component, document.getElementById(`contentId${i}`).value)}>
+            <h4 className="bold marg-bot-1">
+              {component.title}
+            </h4>
+            <p className="marg-bot-1">
+              Enter the content Id of the {component.contentType.toLowerCase()} you would like to appear in this section of the homepage.
+            </p>
+
+            <div className="inline-field">
+              <input
+                type="text"
+                placeholder="Content ID"
+                className="form-control border"
+                id={`contentId${i}`}
+                rows="1"
+              />
+              <button
+                className="btn btn-primary cursor"
+              >
+                Add
+              </button>
+            </div>
+          </form>
+
+          <div className="space-1" />
+
+          <table className="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Content ID</th>
+                <th />
+              </tr>
+            </thead>
+            <tbody>
+              {this.displayList(component)}
+            </tbody>
+          </table>
+
+          <div className="line" />
+        </div>
       ));
+      return (
+        components
+      );
     }
-    if (this.state.fromTheEditors && this.state.fromTheEditors.length) {
-      fromTheEditors = this.state.fromTheEditors.map((item, i) => (
-        <tr key={item.contentId + "fromTheEditors"}>
-          <th scope="row">{i + 1}</th>
-          <td>{item.title}</td>
-          <td>{item.contentId}</td>
-          <td onClick={() => this.onSubmitRemoveFromTheEditorsContent(item.contentId)}>
-            <i className="fa fa-close" aria-hidden="true" />
-          </td>
-        </tr>
-      ));
-    }
-    if (this.state.naldaVideos && this.state.naldaVideos.length) {
-      naldaVideos = this.state.naldaVideos.map((item, i) => (
-        <tr key={item.contentId + "naldaVideos"}>
-          <th scope="row">{i + 1}</th>
-          <td>{item.title}</td>
-          <td>{item.contentId}</td>
-          <td onClick={() => this.onSubmitRemoveNaldaVideosContent(item.contentId)}>
-            <i className="fa fa-close" aria-hidden="true" />
-          </td>
-        </tr>
-      ));
-    }
-    return (
-      <div>
-        <form>
-          <h4 className="bold marg-bot-1">
-            Recommended
-          </h4>
-          <p className="marg-bot-1">
-            Enter the content Id of the content you would like to appear in the recommended section of the homepage.
-          </p>
-
-          <div className="inline-field">
-            <input
-              type="text"
-              placeholder="Content ID"
-              className="form-control border"
-              value={ this.state.recommendedContentId }
-              onChange={ this.handleChangeRecommended }
-              rows="1"
-            />
-            <button
-              onClick={(e) => this.onSubmitChangeRecommended(e)}
-              className={
-                this.state.recommendedContentId ? (
-                  "btn btn-primary cursor"
-                ) : (
-                  "btn btn-primary disabled"
-                )
-              }
-            >
-              Add
-            </button>
-          </div>
-        </form>
-
-        <div className="space-1" />
-
-        <table className="table">
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Name</th>
-              <th scope="col">Content ID</th>
-              <th />
-            </tr>
-          </thead>
-          <tbody>
-            {recommended}
-          </tbody>
-        </table>
-
-        <div className="line" />
-
-        <form>
-          <h4 className="bold marg-bot-1">
-            From the Editors
-          </h4>
-          <p className="marg-bot-1">
-            Enter the content Id of the content you would like to appear in the from the editors section of the homepage.
-          </p>
-
-          <div className="inline-field">
-            <input
-              type="text"
-              placeholder="Content Id"
-              className="form-control border"
-              value={ this.state.fromTheEditorsContentId }
-              onChange={ this.handleChangeFromTheEditors }
-              rows="1"
-            />
-            <button
-              onClick={(e) => this.onSubmitChangeFromTheEditors(e)}
-              className={
-                this.state.fromTheEditorsContentId ? (
-                  "btn btn-primary cursor"
-                ) : (
-                  "btn btn-primary disabled"
-                )
-              }
-            >
-              Add
-            </button>
-          </div>
-        </form>
-
-        <div className="space-1" />
-
-        <table className="table">
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Title</th>
-              <th scope="col">Content ID</th>
-              <th />
-            </tr>
-          </thead>
-          <tbody>
-            {fromTheEditors}
-          </tbody>
-        </table>
-
-        <div className="line" />
-
-        <form>
-          <h4 className="bold marg-bot-1">
-            Nalda Videos
-          </h4>
-          <p className="marg-bot-1">
-            Enter the content Id of the content you would like to appear in the Nalda videos section of the homepage.
-          </p>
-
-          <div className="inline-field">
-            <input
-              type="text"
-              placeholder="Content ID"
-              className="form-control border"
-              value={ this.state.naldaVideosContentId }
-              onChange={ this.handleChangeNaldaVideos }
-              rows="1"
-            />
-            <button
-              onClick={(e) => this.onSubmitChangeNaldaVideos(e)}
-              className={
-                this.state.naldaVideosContentId ? (
-                  "btn btn-primary cursor"
-                ) : (
-                  "btn btn-primary disabled"
-                )
-              }
-            >
-              Add
-            </button>
-          </div>
-        </form>
-
-        <div className="space-1" />
-
-        <table className="table">
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Title</th>
-              <th scope="col">Content ID</th>
-              <th />
-            </tr>
-          </thead>
-          <tbody>
-            {naldaVideos}
-          </tbody>
-        </table>
-      </div>
-    );
+    return null;
   }
 
   // Display the form to manage admins
