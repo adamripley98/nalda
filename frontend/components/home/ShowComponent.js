@@ -36,8 +36,6 @@ class ShowComponent extends Component {
   }
 
   render() {
-    console.log("PROPS");
-    console.log(this.props);
     return (
       <div className="home-section">
         <h2 className="home-section-title">
