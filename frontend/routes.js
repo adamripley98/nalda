@@ -5,3 +5,4 @@ export const adminUsersPath    = '/admin/users';
 export const adminArticlesPath = '/admin/articles';
 export const adminListingsPath = '/admin/listings';
 export const adminVideosPath   = '/admin/videos';
+export const manageAdminsPath  = '/admin/manage-admins';
