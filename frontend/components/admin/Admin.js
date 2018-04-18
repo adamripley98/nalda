@@ -933,7 +933,7 @@ class Admin extends Component {
               </div>
             )}
             {this.state.to === "admins" && (
-              <ListAdmins admins={this.state.admins} />
+              <ListAdmins />
             )}
             {this.state.to === "curators" && (
               <ListCurators curators={this.state.curators} />

@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 import {Link} from 'react-router-dom';
 import Blurb from '../../shared/Blurb';
 import Loading from '../../shared/Loading';
+import ErrorMessage from '../../shared/ErrorMessage';
 
 class ListAdmins extends Component {
   constructor(props) {
@@ -14,14 +16,34 @@ class ListAdmins extends Component {
   }
 
   componentDidMount() {
-    // TODO
+    axios.get('/api/admins')
+      .then(res => {
+        if (!res.data.success) {
+          this.setState({
+            pending: false,
+            error: res.data.error,
+          });
+          return;
+        }
+        this.setState({
+          pending: false,
+          admins: res.data.admins,
+        });
+      })
+      .catch(err => {
+        this.setState({
+          pending: false,
+          error: err.message,
+        });
+      });
   }
 
   render() {
     if (this.state.pending) return (<Loading />);
+    if (this.state.error) return (<ErrorMessage error={this.state.error} />);
     if (this.state.admins && this.state.admins.length) {
       const admins = this.state.admins.map((admin, i) => (
-        <tr key={admin.userId}>
+        <tr key={admin._id}>
           <th scope="row">
             {i + 1}
           </th>

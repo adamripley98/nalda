@@ -1,12 +1,48 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 import Blurb from '../../shared/Blurb';
+import Loading from '../../shared/Loading';
+import ErrorMessage from '../../shared/ErrorMessage';
 
 class ListUsers extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      pending: true,
+      users: [],
+    };
+  }
+
+  componentDidMount() {
+    axios.get('/api/users')
+      .then(res => {
+        if (!res.data.success) {
+          this.setState({
+            pending: false,
+            error: res.data.error,
+          });
+          return;
+        }
+        this.setState({
+          pending: false,
+          users: res.data.users,
+        });
+      })
+      .catch(err => {
+        this.setState({
+          pending: false,
+          error: err.message,
+        });
+      });
+  }
+
   render() {
-    if (this.props.users && this.props.users.length) {
-      const users = this.props.users.map((user, i) => (
-        <tr key={ user.userId }>
+    if (this.state.pending) return (<Loading />);
+    if (this.state.error) return (<ErrorMessage error={this.state.error} />);
+    if (this.state.users && this.state.users.length) {
+      const users = this.state.users.map((user, i) => (
+        <tr key={user._id}>
           <th scope="row">
             {i + 1}
           </th>
@@ -14,7 +50,9 @@ class ListUsers extends Component {
             { user.name }
           </td>
           <td>
-            <a href={`mailto:${user.username}`}>{ user.username }</a>
+            <a href={`mailto:${user.username}`}>
+              {user.username}
+            </a>
           </td>
         </tr>
       ));

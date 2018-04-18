@@ -57,6 +57,15 @@ import Profile from '../components/Profile';
 import Admin from '../components/admin/Admin';
 import AdminWrapper from '../components/admin/AdminWrapper';
 import ListAdmins from '../components/admin/tables/ListAdmins';
+import ListCurators from '../components/admin/tables/ListCurators';
+import ListUsers from '../components/admin/tables/ListUsers';
+
+// Import routes
+import {
+  adminsPath,
+  curatorsPath,
+  usersPath,
+} from '../routes';
 
 /**
  * Component to handle routing on the frontend
@@ -152,10 +161,26 @@ class AppContainer extends Component {
                 { /* Admin routes */ }
                 <Route exact path="/admin" component={requireAdmin(Admin)}/>
                 <Route
-                  exact path="/admin/admins"
+                  exact path={adminsPath}
                   component={requireAdmin(() => (
                     <AdminWrapper>
                       <ListAdmins />
+                    </AdminWrapper>
+                  ))}
+                />
+                <Route
+                  exact path={curatorsPath}
+                  component={requireAdmin(() => (
+                    <AdminWrapper>
+                      <ListCurators />
+                    </AdminWrapper>
+                  ))}
+                />
+                <Route
+                  exact path={curatorsPath}
+                  component={requireAdmin(() => (
+                    <AdminWrapper>
+                      <ListCurators />
                     </AdminWrapper>
                   ))}
                 />

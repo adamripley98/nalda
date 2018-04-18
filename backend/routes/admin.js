@@ -27,9 +27,62 @@ module.exports = () => {
   router.get('/admins', (req, res) => {
     User.find({ userType: 'admin' })
       .then(users => {
+        const admins = users.map(user => ({
+          _id: user._id,
+          name: user.name,
+          username: user.username,
+        }));
         res.send({
           success: true,
-          users,
+          admins,
+        });
+      })
+      .catch(err => {
+        res.send({
+          success: false,
+          error: err.message,
+        });
+      });
+  });
+
+  /**
+   * Get a list  of all curators
+   */
+  router.get('/curators', (req, res) => {
+    User.find({ userType: 'curator' })
+      .then(users => {
+        const curators = users.map(user => ({
+          _id: user._id,
+          name: user.name,
+          username: user.username,
+        }));
+        res.send({
+          success: true,
+          curators,
+        });
+      })
+      .catch(err => {
+        res.send({
+          success: false,
+          error: err.message,
+        });
+      });
+  });
+
+  /**
+   * Get a list of all normal users
+   */
+  router.get('/users', (req, res) => {
+    User.find({ userType: 'user' })
+      .then(users => {
+        const userObjs = users.map(user => ({
+          _id: user._id,
+          name: user.name,
+          username: user.username,
+        }));
+        res.send({
+          success: true,
+          users: userObjs,
         });
       })
       .catch(err => {
