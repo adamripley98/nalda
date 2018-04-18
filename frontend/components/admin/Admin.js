@@ -75,6 +75,7 @@ class Admin extends Component {
     this.sidebarCallback = this.sidebarCallback.bind(this);
     this.displayAdminForm = this.displayAdminForm.bind(this);
     this.displayList = this.displayList.bind(this);
+    this.pullFromBackend = this.pullFromBackend.bind(this);
   }
 
   componentDidMount() {
@@ -83,7 +84,10 @@ class Admin extends Component {
 
     // Resize textarea to fit input
     autosize(document.querySelectorAll('textarea'));
+    this.pullFromBackend();
+  }
 
+  pullFromBackend() {
     // Pull data to display on admin panel
     axios.get('/api/admin')
     .then((resp) => {
@@ -656,7 +660,7 @@ class Admin extends Component {
                <td>{content.title}</td>
                <td>{content.contentId}</td>
                {/* TODO new REMOVE method */}
-               <td onClick={() => this.onSubmitRemoveRecommendedContent(content.contentId)}>
+               <td>
                  <i className="fa fa-close" aria-hidden="true" />
                </td>
             </tr>
@@ -680,7 +684,7 @@ class Admin extends Component {
           this.setState({error: resp.data.error});
         } else {
           console.log('no err');
-          // TODO something, notify
+          this.props.notifyMessage("Successfully added content.");
         }
       })
       .catch(error => {this.setState(error);});

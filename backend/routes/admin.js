@@ -24,7 +24,7 @@ const {AdminCheck} = require('../helperMethods/authChecking');
 const pullData = (components, callback) => {
   console.log('enters pull data');
   // Array of content to be returned
-  const returnArr = [];
+  const returnComponents = [];
 
   // Loop through array and pull pertinent data
   async.eachSeries(components, (component, cb) => {
@@ -32,21 +32,17 @@ const pullData = (components, callback) => {
     // Find the model for pulling data based on the content type
     let Model = null;
     if (component.contentType === 'Articles') {
-      console.log('art');
       Model = Article;
     } else if (component.contentType === 'Listings') {
-      console.log('list');
       Model = Listing;
     } else if (component.contentType === 'Videos') {
-      console.log('vid');
       Model = Video;
-    } else {
-      console.log('lol something is seriosuly wrong');
-    }
-    console.log('what is content', component, component.content);
+    } else return;
+
+    // Find all of the content associated with the component
     if (component.content && component.content.length) {
-      component.content.forEach(cont => {
-        console.log('enters the foreach');
+      const returnContent = [];
+      async.forEach(component.content, (cont, contentCallback) => {
         Model.findById(cont.contentId, (errContent, content) => {
           if (errContent) {
             console.log('err content', errContent);
@@ -55,21 +51,34 @@ const pullData = (components, callback) => {
               error: 'Error fetching homepage content',
             });
           } else if (content) {
-            console.log('there is content yes');
-            const newContent = {
+            console.log('there is content yes', content);
+            // const newContent = {
+            //   contentType: component.contentType,
+            //   contentId: cont.contentId,
+            //   title: content.title,
+            // };
+            returnContent.push({
               contentType: component.contentType,
               contentId: cont.contentId,
               title: content.title,
-            };
-            // Add the new content to the array and continue looping
-            returnArr.push(newContent);
-            cb();
+            });
+            contentCallback();
           } else {
             // TODO do i need to deal with when content doesn't exist anymore?? shouldnt crash entire app
             console.log('errrrr content not found');
-            cb();
+            contentCallback();
           }
         });
+      }, contentAsyncErr => {
+        if (contentAsyncErr) {
+          console.log(contentAsyncErr);
+          cb();
+        } else {
+          component.content = returnContent;
+          // Add the new content to the array and continue looping
+          returnComponents.push(component);
+          cb();
+        }
       });
     } else {
       cb();
@@ -81,15 +90,14 @@ const pullData = (components, callback) => {
         success: false,
         error: 'Error loading homepage.'
       });
-    } else {
-      console.log('no err');
-      callback({
-        success: true,
-        error: '',
-        returnArr,
-      });
       return;
     }
+    console.log('no err');
+    callback({
+      success: true,
+      error: '',
+      returnComponents,
+    });
   });
 };
 
@@ -182,25 +190,34 @@ module.exports = () => {
                             error: resp.error,
                           });
                         } else {
-                          const content = resp.returnArr;
-                          const home = {
-                            banner: homepage.banner,
-                            components: homepage.components,
-                            // content,
-                          };
-                          // Send back information
-                          res.send({
-                            success: true,
-                            error: '',
-                            data: {
-                              curators,
-                              admins,
-                              users,
-                              homepageContent: home,
-                              userData,
-                              articles: articleInfo,
-                              listings: listingInfo,
-                              videos: videoInfo,
+                          // TODO assign homepage.components to returnArr and save
+                          homepage.components = resp.returnComponents;
+                          homepage.save((errSave) => {
+                            if (errSave) {
+                              res.send({
+                                success: false,
+                                error: 'Error getting admin data.',
+                              });
+                            } else {
+                              const home = {
+                                banner: homepage.banner,
+                                components: homepage.components,
+                              };
+                              // Send back information
+                              res.send({
+                                success: true,
+                                error: '',
+                                data: {
+                                  curators,
+                                  admins,
+                                  users,
+                                  homepageContent: home,
+                                  userData,
+                                  articles: articleInfo,
+                                  listings: listingInfo,
+                                  videos: videoInfo,
+                                }
+                              });
                             }
                           });
                         }
