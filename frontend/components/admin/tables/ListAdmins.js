@@ -2,11 +2,25 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
 import Blurb from '../../shared/Blurb';
+import Loading from '../../shared/Loading';
 
 class ListAdmins extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      pending: true,
+      admins: [],
+    };
+  }
+
+  componentDidMount() {
+    // TODO
+  }
+
   render() {
-    if (this.props.admins && this.props.admins.length) {
-      const admins = this.props.admins.map((admin, i) => (
+    if (this.state.pending) return (<Loading />);
+    if (this.state.admins && this.state.admins.length) {
+      const admins = this.state.admins.map((admin, i) => (
         <tr key={admin.userId}>
           <th scope="row">
             {i + 1}

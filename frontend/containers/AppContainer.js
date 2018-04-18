@@ -50,9 +50,13 @@ import Contact from '../components/Contact';
 import Credits from '../components/Credits';
 import Terms from '../components/Terms';
 import Privacy from '../components/Privacy';
-import Admin from '../components/admin/Admin';
 import NotFoundSection from '../components/NotFoundSection';
 import Profile from '../components/Profile';
+
+// Admin routes
+import Admin from '../components/admin/Admin';
+import AdminWrapper from '../components/admin/AdminWrapper';
+import ListAdmins from '../components/admin/tables/ListAdmins';
 
 /**
  * Component to handle routing on the frontend
@@ -147,6 +151,14 @@ class AppContainer extends Component {
 
                 { /* Admin routes */ }
                 <Route exact path="/admin" component={requireAdmin(Admin)}/>
+                <Route
+                  exact path="/admin/admins"
+                  component={requireAdmin(() => (
+                    <AdminWrapper>
+                      <ListAdmins />
+                    </AdminWrapper>
+                  ))}
+                />
 
                 { /* Routes for articles */ }
                 <Route exact path="/articles" component={Articles} />

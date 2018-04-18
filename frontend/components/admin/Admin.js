@@ -922,44 +922,44 @@ class Admin extends Component {
       <div className="container-fluid">
         <div className="row">
           <Sidebar cb={(to) => this.sidebarCallback(to)} />
-            <div className="col-12 col-md-8 col-lg-8 col-xl-7">
-              <div className="space-1" />
-              <ErrorMessage error={ this.state.error } />
-              { this.state.to === "" && (
-                <div>
-                  <h4>Admin panel</h4>
-                  Welcome to the admin panel; through this portion of the application you can keep track of your user base, recommended content, and created content.
-                  { this.displayUserData() }
-                </div>
-              )}
-              {this.state.to === "admins" && (
-                <ListAdmins admins={this.state.admins} />
-              )}
-              {this.state.to === "curators" && (
-                <ListCurators curators={this.state.curators} />
-              )}
-              {this.state.to === "users" && (
-                <ListUsers users={this.state.users} />
-              )}
-              { this.state.to === "manage-admins" && this.displayAdminForm() }
-              {this.state.to === "listings" && (
-                <ListListings listings={this.state.listings} />
-              )}
-              {this.state.to === "articles" && (
-                <ListArticles articles={this.state.articles} />
-              )}
-              {this.state.to === "videos" && (
-                <ListVideos videos={this.state.videos} />
-              )}
-              { this.state.to === "homepage" && (
-                <div>
-                  {this.displayBanner()}
-                  {this.editHomepage()}
-                  <NewComponent />
-                </div>
-              )}
-              <div className="space-2" />
-            </div>
+          <div className="col-12 col-md-8 col-lg-8 col-xl-7">
+            <div className="space-1" />
+            <ErrorMessage error={ this.state.error } />
+            { this.state.to === "" && (
+              <div>
+                <h4>Admin panel</h4>
+                Welcome to the admin panel; through this portion of the application you can keep track of your user base, recommended content, and created content.
+                { this.displayUserData() }
+              </div>
+            )}
+            {this.state.to === "admins" && (
+              <ListAdmins admins={this.state.admins} />
+            )}
+            {this.state.to === "curators" && (
+              <ListCurators curators={this.state.curators} />
+            )}
+            {this.state.to === "users" && (
+              <ListUsers users={this.state.users} />
+            )}
+            { this.state.to === "manage-admins" && this.displayAdminForm() }
+            {this.state.to === "listings" && (
+              <ListListings listings={this.state.listings} />
+            )}
+            {this.state.to === "articles" && (
+              <ListArticles articles={this.state.articles} />
+            )}
+            {this.state.to === "videos" && (
+              <ListVideos videos={this.state.videos} />
+            )}
+            { this.state.to === "homepage" && (
+              <div>
+                {this.displayBanner()}
+                {this.editHomepage()}
+                <NewComponent />
+              </div>
+            )}
+            <div className="space-2" />
+          </div>
         </div>
       </div>
     );

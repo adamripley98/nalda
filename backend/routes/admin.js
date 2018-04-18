@@ -22,6 +22,25 @@ const {AdminCheck} = require('../helperMethods/authChecking');
 // Export the following methods for routing
 module.exports = () => {
   /**
+   * Get a list  of all admins
+   */
+  router.get('/admins', (req, res) => {
+    User.find({ userType: 'admin' })
+      .then(users => {
+        res.send({
+          success: true,
+          users,
+        });
+      })
+      .catch(err => {
+        res.send({
+          success: false,
+          error: err.message,
+        });
+      });
+  });
+
+  /**
    * Route to pull data to admin panel
    */
   router.get('/admin', (req, res) => {
