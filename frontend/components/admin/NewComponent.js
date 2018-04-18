@@ -1,4 +1,10 @@
 import React, {Component} from 'react';
+import axios from 'axios';
+import ErrorMessage from '../shared/ErrorMessage';
+import PropTypes from 'prop-types';
+import {connect} from 'react-redux';
+// Import actions
+import {notifyMessage} from '../../actions/notification';
 
 // Form to add a new component to the homepage
 class NewComponent extends Component {
@@ -11,6 +17,7 @@ class NewComponent extends Component {
       title: "",
       subtitle: "",
       contentType: "Listings",
+      error: '',
     };
 
     // Bind this to helper methods
@@ -27,15 +34,27 @@ class NewComponent extends Component {
 
   // Handle the user submitting the form
   handleSubmit(event) {
+    console.log('submit');
     // Prevent the default form submission
     event.preventDefault();
-    console.log("SUBMITTED");
+    const {title, subtitle, contentType} = this.state;
+    if (title && subtitle && contentType) {
+      axios.post('/api/home/component/add', {title, subtitle, contentType})
+      .then(resp => {
+        if (resp.data.error) this.setState({error: resp.data.error});
+        else this.props.notifyMessage("Successfully added component.");
+      })
+      .catch(err => this.setState({error: err}));
+    } else {
+      this.setState({error: 'All fields must be populated.'});
+    }
   }
 
   // Render the component
   render() {
     return (
       <form onSubmit={this.handleSubmit}>
+        <ErrorMessage error={this.state.error} />
         <div className="line" />
         <h4 className="marg-bot-1">
           Add a new homepage component
@@ -78,10 +97,32 @@ class NewComponent extends Component {
         <input
           className="btn btn-primary marg-bot-1"
           value="Submit section"
+          type="submit"
         />
       </form>
     );
   }
 }
+// Prop validations
+NewComponent.propTypes = {
+  notifyMessage: PropTypes.func,
+};
+
+const mapStateToProps = () => {
+  return {
+  };
+};
+
+// Redux
+const mapDispatchToProps = dispatch => {
+  return {
+    notifyMessage: (message) => dispatch(notifyMessage(message)),
+  };
+};
+
+NewComponent = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(NewComponent);
 
 export default NewComponent;
