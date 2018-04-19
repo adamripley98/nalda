@@ -34,20 +34,26 @@ class NewComponent extends Component {
 
   // Handle the user submitting the form
   handleSubmit(event) {
-    console.log('submit');
     // Prevent the default form submission
     event.preventDefault();
+
+    // Pull relevant into from the state
     const {title, subtitle, contentType} = this.state;
-    if (title && subtitle && contentType) {
-      axios.post('/api/home/component/add', {title, subtitle, contentType})
+
+    // Error checking
+    if (!title || !subtitle || !contentType) {
+      this.setState({error: 'All fields must be populated.'});
+      return;
+    }
+
+    axios.post('/api/home/component/add', {title, subtitle, contentType})
       .then(resp => {
+        console.log("DATA");
+        console.log(resp.data);
         if (resp.data.error) this.setState({error: resp.data.error});
         else this.props.notifyMessage("Successfully added component.");
       })
       .catch(err => this.setState({error: err}));
-    } else {
-      this.setState({error: 'All fields must be populated.'});
-    }
   }
 
   // Render the component

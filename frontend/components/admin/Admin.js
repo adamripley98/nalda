@@ -100,11 +100,11 @@ class Admin extends Component {
           articles: resp.data.data.articles,
           listings: resp.data.data.listings,
           videos: resp.data.data.videos,
-          banner: resp.data.data.homepageContent ? resp.data.data.homepageContent.banner : null,
-          recommended: resp.data.data.homepageContent ? resp.data.data.homepageContent.recommended : null,
-          fromTheEditors: resp.data.data.homepageContent ? resp.data.data.homepageContent.fromTheEditors : null,
-          naldaVideos: resp.data.data.homepageContent ? resp.data.data.homepageContent.naldaVideos : null,
-          components: resp.data.data.homepageContent ? resp.data.data.homepageContent.components : null,
+          banner: resp.data.data.homepageContent ? resp.data.data.homepageContent.banner : [],
+          recommended: resp.data.data.homepageContent ? resp.data.data.homepageContent.recommended : [],
+          fromTheEditors: resp.data.data.homepageContent ? resp.data.data.homepageContent.fromTheEditors : [],
+          naldaVideos: resp.data.data.homepageContent ? resp.data.data.homepageContent.naldaVideos : [],
+          components: resp.data.data.homepageContent ? resp.data.data.homepageContent.components : [],
           pending: false,
           to: "",
         });
@@ -652,18 +652,17 @@ class Admin extends Component {
   }
 
   displayList(component) {
-    console.log('what is component', component);
     if (component.content && component.content.length) {
       const list = component.content.map((content, i) => (
-          <tr key={content.contentId}>
-               <th scope="row">{i + 1}</th>
-               <td>{content.title}</td>
-               <td>{content.contentId}</td>
-               {/* TODO new REMOVE method */}
-               <td>
-                 <i className="fa fa-close" aria-hidden="true" />
-               </td>
-            </tr>
+        <tr key={content.contentId}>
+          <th scope="row">{i + 1}</th>
+          <td>{content.title}</td>
+          <td>{content.contentId}</td>
+          {/* TODO new REMOVE method */}
+          <td>
+            <i className="fa fa-close" aria-hidden="true" />
+          </td>
+        </tr>
       ));
       return list;
     }
@@ -674,7 +673,6 @@ class Admin extends Component {
   onSubmitComponent(event, component, contentId) {
     event.preventDefault();
     if (contentId) {
-      console.log('what is component and contentId', component, contentId);
       axios.post('/api/home/component/content/add', {
         component,
         contentId,
@@ -700,7 +698,7 @@ class Admin extends Component {
     let components = '';
     if (this.state.components && this.state.components.length) {
       components = this.state.components.map((component, i) => (
-        <div>
+        <div key={component._id}>
           <form onSubmit={(e) => this.onSubmitComponent(e, component, document.getElementById(`contentId${i}`).value)}>
             <h4 className="bold marg-bot-1">
               {component.title}

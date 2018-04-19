@@ -904,58 +904,79 @@ module.exports = () => {
           success: false,
           error: authRes.error,
         });
-      } else {
-        const { title, subtitle, contentType } = req.body;
-        if (!title || !subtitle || !contentType) {
+        return;
+      }
+
+      const { title, subtitle, contentType } = req.body;
+      if (!title || !subtitle || !contentType) {
+        res.send({
+          success: false,
+          error: 'Form must be filled out completely.',
+        });
+        return;
+      }
+
+      // Declare new home component with no content
+      const newHomeComponent = new HomeComponent({
+        title,
+        subtitle,
+        contentType,
+        content: [],
+      });
+      // Save in mongo
+      newHomeComponent.save((err, component) => {
+        if (err) {
           res.send({
             success: false,
-            error: 'Form must be filled out completely.',
+            error: 'Error adding component.',
           });
-        } else {
-          // Declare new home component with no content
-          const newHomeComponent = new HomeComponent({
-            title,
-            subtitle,
-            contentType,
-            content: [],
-          });
-          // Save in mongo
-          newHomeComponent.save((err, component) => {
-            if (err) {
+          return;
+        }
+
+        const newComp = {
+          title,
+          subtitle,
+          contentType,
+          content: [],
+        };
+
+        // Find the homepage to add the content to
+        Homepage.find({}, (errHome, home) => {
+          if (errHome) {
+            res.send({
+              success: false,
+              error: 'Failed to save to homepage',
+            });
+            return;
+          }
+
+          // Select the first homepage
+          const homepage = home[0];
+
+          // Add this component to the homepage components
+          const components = homepage.components.slice();
+          components.push(newComp);
+          homepage.components = components;
+
+          // Save the new components to the homepage
+          homepage.save((errSave, newHomepage) => {
+            if (errSave) {
               res.send({
                 success: false,
                 error: 'Error adding component.',
               });
-            } else {
-              const newComp = {
-                title,
-                subtitle,
-                contentType,
-                content: [],
-              };
-              Homepage.find({}, (errHome, home) => {
-                const homepage = home[0];
-                const components = homepage.components.slice();
-                components.push(newComp);
-                homepage.components = components;
-                homepage.save((errSave) => {
-                  if (errSave) {
-                    res.send({
-                      success: false,
-                      error: 'Error adding component.',
-                    });
-                  } else {
-                    res.send({
-                      success: true,
-                      data: component,
-                    });
-                  }
-                });
-              });
+              return;
             }
+
+            res.send({
+              newHomepage,
+              homepage,
+              success: true,
+              data: component,
+            });
           });
-        }
-      }
+        });
+      });
     });
   });
 

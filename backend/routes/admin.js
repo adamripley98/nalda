@@ -23,6 +23,7 @@ const {AdminCheck} = require('../helperMethods/authChecking');
 const pullData = (components, callback) => {
   // Array of content to be returned
   const returnComponents = [];
+
   // Loop through array and pull pertinent data
   async.eachSeries(components, (component, cb) => {
     // Find the model for pulling data based on the content type
@@ -40,19 +41,17 @@ const pullData = (components, callback) => {
       const returnContent = [];
       async.forEach(component.content, (cont, contentCallback) => {
         Model.findById(cont.contentId, (errContent, content) => {
-          if (errContent) {
+          if (errContent || !content) {
             callback({
               success: false,
               error: 'Error fetching homepage content',
             });
-          } else if (content) {
+          } else {
             returnContent.push({
               contentType: component.contentType,
               contentId: cont.contentId,
               title: content.title,
             });
-            contentCallback();
-          } else {
             contentCallback();
           }
         });
@@ -67,6 +66,7 @@ const pullData = (components, callback) => {
         }
       });
     } else {
+      returnComponents.push(component);
       cb();
     }
   }, (asyncErr) => {
@@ -77,6 +77,7 @@ const pullData = (components, callback) => {
       });
       return;
     }
+
     callback({
       success: true,
       error: '',
@@ -96,113 +97,116 @@ module.exports = () => {
           success: false,
           error: authRes.error,
         });
-      } else {
-        // Declare arrays of data that will be passed back
-        const curators = [];
-        const admins = [];
-        const users = [];
+        return;
+      }
 
-        // Find content
-        Article.find({}, (errArticles, articles) => {
-          Listing.find({}, (errListings, listings) => {
-            Video.find({}, (errVideos, videos) => {
-              Homepage.find({}, (errHomepage, homepageContent) => {
-                // Send back any errors
-                if (errArticles || errListings || errVideos || errHomepage) {
+      // Declare arrays of data that will be passed back
+      const curators = [];
+      const admins = [];
+      const users = [];
+
+      // Find content
+      Article.find({}, (errArticles, articles) => {
+        Listing.find({}, (errListings, listings) => {
+          Video.find({}, (errVideos, videos) => {
+            Homepage.find({}, (errHomepage, homepageContent) => {
+              // Send back any errors
+              if (errArticles || errListings || errVideos || errHomepage) {
+                res.send({
+                  success: false,
+                  error: 'Error finding content.',
+                });
+                return;
+              }
+              const articleInfo = [];
+              const listingInfo = [];
+              const videoInfo = [];
+
+              // Glean the info we want from the content
+              articles.forEach(art => {
+                articleInfo.push({
+                  _id: art._id,
+                  title: art.title,
+                });
+              });
+              listings.forEach(list => {
+                listingInfo.push({
+                  _id: list._id,
+                  title: list.title,
+                });
+              });
+              videos.forEach(vid => {
+                videoInfo.push({
+                  _id: vid._id,
+                  title: vid.title,
+                });
+              });
+
+              // Find all curators and admins
+              User.find({}, (err, profiles) => {
+                if (err) {
                   res.send({
                     success: false,
                     error: 'Error finding content.',
                   });
                 } else {
-                  const articleInfo = [];
-                  const listingInfo = [];
-                  const videoInfo = [];
-                  articles.forEach(art => {
-                    articleInfo.push({
-                      _id: art._id,
-                      title: art.title,
-                    });
+                  const userData = {
+                    totalUsers: 0,
+                    weeklyRegisters: 0,
+                  };
+
+                  // Display pertinent information
+                  profiles.forEach((user) => {
+                    if (user.userType === 'curator') {
+                      curators.push({name: user.name, username: user.username, userId: user._id});
+                    } else if (user.userType === 'admin') {
+                      admins.push({name: user.name, username: user.username, userId: user._id});
+                    } else if (user.userType === 'user') {
+                      users.push({name: user.name, username: user.username, userId: user._id});
+                      // Increment total users
+                      userData.totalUsers++;
+                      const weekAgo = new Date();
+                      weekAgo.setDate(weekAgo.getDate() - 7);
+                      // Count number of users who registered this week
+                      if (user._id.getTimestamp().getTime() > weekAgo.getTime()) {
+                        userData.weeklyRegisters++;
+                      }
+                    }
                   });
-                  listings.forEach(list => {
-                    listingInfo.push({
-                      _id: list._id,
-                      title: list.title,
-                    });
-                  });
-                  videos.forEach(vid => {
-                    videoInfo.push({
-                      _id: vid._id,
-                      title: vid.title,
-                    });
-                  });
-                  // Find all curators and admins
-                  User.find({}, (err, profiles) => {
-                    if (err) {
+
+                  const homepage = homepageContent[0];
+                  pullData(homepage.components, (resp) => {
+                    if (!resp.success) {
                       res.send({
                         success: false,
-                        error: 'Error finding content.',
+                        error: resp.error,
                       });
                     } else {
-                      const userData = {
-                        totalUsers: 0,
-                        weeklyRegisters: 0,
+                      // homepage.components = resp.returnComponents;
+                      // homepage.save((errSave) => {
+                      //   if (errSave) {
+                      //     res.send({
+                      //       success: false,
+                      //       error: 'Error getting admin data.',
+                      //     });
+                      //   } else {
+                      const home = {
+                        banner: homepage.banner,
+                        components: resp.returnComponents,
                       };
-
-                      // Display pertinent information
-                      profiles.forEach((user) => {
-                        if (user.userType === 'curator') {
-                          curators.push({name: user.name, username: user.username, userId: user._id});
-                        } else if (user.userType === 'admin') {
-                          admins.push({name: user.name, username: user.username, userId: user._id});
-                        } else if (user.userType === 'user') {
-                          users.push({name: user.name, username: user.username, userId: user._id});
-                          // Increment total users
-                          userData.totalUsers++;
-                          const weekAgo = new Date();
-                          weekAgo.setDate(weekAgo.getDate() - 7);
-                          // Count number of users who registered this week
-                          if (user._id.getTimestamp().getTime() > weekAgo.getTime()) {
-                            userData.weeklyRegisters++;
-                          }
-                        }
-                      });
-                      const homepage = homepageContent[0];
-                      pullData(homepage.components, (resp) => {
-                        if (!resp.success) {
-                          res.send({
-                            success: false,
-                            error: resp.error,
-                          });
-                        } else {
-                          homepage.components = resp.returnComponents;
-                          homepage.save((errSave) => {
-                            if (errSave) {
-                              res.send({
-                                success: false,
-                                error: 'Error getting admin data.',
-                              });
-                            } else {
-                              const home = {
-                                banner: homepage.banner,
-                                components: homepage.components,
-                              };
-                              // Send back information
-                              res.send({
-                                success: true,
-                                error: '',
-                                data: {
-                                  curators,
-                                  admins,
-                                  users,
-                                  homepageContent: home,
-                                  userData,
-                                  articles: articleInfo,
-                                  listings: listingInfo,
-                                  videos: videoInfo,
-                                }
-                              });
-                            }
-                          });
+                      // Send back information
+                      res.send({
+                        success: true,
+                        error: '',
+                        data: {
+                          curators,
+                          admins,
+                          users,
+                          homepageContent: home,
+                          userData,
+                          articles: articleInfo,
+                          listings: listingInfo,
+                          videos: videoInfo,
                         }
                       });
                     }
@@ -212,7 +216,7 @@ module.exports = () => {
             });
           });
         });
-      }
+      });
     });
   });
   // /**
