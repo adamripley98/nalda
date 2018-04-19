@@ -261,18 +261,18 @@
 // Conditional rendering of different content
 @media only screen and (max-width: 767px) {
 	.grid-item-5, .grid-item-6, .grid-item-7, .grid-item-8 {
-		display: none;
+		display: none !important;
 	}
 }
 
 @media only screen and (min-width: 768px) and (max-width: 1068px) {
 	.grid-item-7, .grid-item-8 {
-		display: none;
+		display: none !important;
 	}
 }
 
 @media only screen and (min-width: 1500px) {
 	.grid-item-6, .grid-item-7, .grid-item-8 {
-		display: none;
+		display: none !important;
 	}
 }

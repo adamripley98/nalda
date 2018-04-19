@@ -8,7 +8,7 @@ class Components extends Component {
     return (
       <div>
         {this.props.components.map(component => (
-          <ShowComponent component={component} key={component._id} />
+          <ShowComponent component={component} key={`component-${component._id}`} />
         ))}
       </div>
     );
