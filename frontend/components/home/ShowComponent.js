@@ -36,6 +36,7 @@ class ShowComponent extends Component {
   }
 
   render() {
+    if (!this.props.component) return null;
     return (
       <div className="home-section">
         <h2 className="home-section-title">

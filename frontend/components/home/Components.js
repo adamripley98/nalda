@@ -4,7 +4,7 @@ import ShowComponent from './ShowComponent';
 
 class Components extends Component {
   render() {
-    if (!this.props.components || !this.props.components.length) return null;
+    if (!this.props.components || !this.props.components.length) return (<div />);
     return (
       <div>
         {this.props.components.map(component => (
