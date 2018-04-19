@@ -51,7 +51,7 @@ class Home extends React.Component {
             banner: resp.data.banner,
             components: resp.data.components,
             pending: false,
-            error: "",
+            error: '',
           });
         } else {
           this.setState({

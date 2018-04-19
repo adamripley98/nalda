@@ -249,46 +249,57 @@ module.exports = () => {
           success: false,
           error: 'Cannot return homepage.',
         });
-      } else {
-        const homepage = home[0];
-        if (homepage.components && homepage.components.length) {
-          console.log('there are components');
-          pullData(homepage.components, (resp) => {
-            console.log('a response comes back from pulldata', resp);
-            if (!resp.success) {
-              res.send({
-                success: false,
-                error: resp.error,
-              });
-            } else {
-              homepage.components = resp.returnComponents;
-              homepage.save((errSave) => {
-                if (errSave) {
-                  res.send({
-                    success: false,
-                    error: 'Error getting admin data.',
-                  });
-                  return;
-                }
+        return;
+      }
 
-                res.send({
-                  success: true,
-                  error: '',
-                  banner: homepage.banner,
-                  components: homepage.components,
-                });
+      const homepage = home[0];
+      if (homepage.components && homepage.components.length) {
+        console.log('there are components');
+        pullData(homepage.components, (resp) => {
+          console.log('a response comes back from pulldata', resp);
+          if (!resp.success) {
+            res.send({
+              success: false,
+              error: resp.error,
+            });
+          } else {
+            // homepage.components = resp.returnComponents;
+            // homepage.save((errSave) => {
+            //   if (errSave) {
+            //     res.send({
+            //       success: false,
+            //       error: 'Error getting admin data.',
+            //     });
+            //     return;
+            //   }
+
+            if (resp.returnComponents && resp.returnComponents.length) {
+              res.send({
+                success: true,
+                error: '',
+                banner: homepage.banner,
+                components: resp.returnComponents,
               });
+              return;
             }
-          });
-        } else {
-          res.send({
-            success: true,
-            error: '',
-            data: {
+
+            res.send({
+              success: true,
+              error: '',
               banner: homepage.banner,
-            },
-          });
-        }
+              components: [],
+            });
+
+            // });
+          }
+        });
+      } else {
+        res.send({
+          success: true,
+          error: '',
+          banner: homepage.banner,
+          components: [],
+        });
       }
     });
   });

@@ -14,6 +14,7 @@ class Banner extends Component {
     super(props);
 
     // Find the new banners with first and last images as dummy banners
+    if (!this.props.banners) this.props.banners = [];
     this.props.banners.push({ isEmpty: true, });
     this.props.banners.unshift({ isEmpty: true, });
 
