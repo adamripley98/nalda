@@ -43,14 +43,12 @@ class Preview extends Component {
     // Find the type of the content
     if (this.props.isArticle || this.props.contentType === "article") {
       return "articles";
-    } else if (this.props.isListing || this.props.contentType === "listing") {
-      return "listings";
     } else if (this.props.isVideo || this.props.contentType === "video") {
       return "videos";
     }
 
     // If none of the types match
-    return "";
+    return "listings";
   }
 
   // Get the location of the content if a location was passed to the component
@@ -114,6 +112,7 @@ class Preview extends Component {
           }
           rating={this.props.content.rating}
           image={image}
+          index={this.props.index}
           contentType={ this.props.content.contentType }
         />
       );
@@ -121,7 +120,9 @@ class Preview extends Component {
 
     // Return the content preview
     return (
-      <Link to={ `/${this.getType()}/${this.props._id}` } className="content-preview-wrapper">
+      <Link
+        to={ `/${this.getType()}/${this.props._id}` }
+        className={this.props.index ? `content-preview-wrapper grid-item-${this.props.index}` : 'content-preview-wrapper'}>
         <div className="content-preview">
           <div
             className="background-image"
@@ -165,6 +166,7 @@ Preview.propTypes = {
   rating: PropTypes.number,
   location: PropTypes.string,
   categories: PropTypes.object,
+  index: PropTypes.number,
 };
 
 export default Preview;

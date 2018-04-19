@@ -29,8 +29,12 @@ class ShowComponent extends Component {
     }
 
     return (
-      this.props.component.content.map(c => (
-        <Preview content={c} key={`content-${c.contentId}`} />
+      this.props.component.content.map((c, index) => (
+        <Preview
+          content={c}
+          key={`content-${c.contentId}`}
+          index={index}
+        />
       ))
     );
   }
