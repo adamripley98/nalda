@@ -11,10 +11,6 @@ const homePageSchema = new Schema({
       contentImage: String,
     }
   ],
-  // naldaVideos: [],
-  // categories: [],
-  // recommended: [],
-  // fromTheEditors: [],
   components: [
     {
       contentType: String,

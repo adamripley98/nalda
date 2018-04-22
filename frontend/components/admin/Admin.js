@@ -681,7 +681,6 @@ class Admin extends Component {
         if (resp.data.error) {
           this.setState({error: resp.data.error});
         } else {
-          console.log('no err');
           this.props.notifyMessage("Successfully added content.");
         }
       })

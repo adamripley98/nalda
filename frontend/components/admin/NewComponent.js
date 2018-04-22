@@ -48,12 +48,14 @@ class NewComponent extends Component {
 
     axios.post('/api/home/component/add', {title, subtitle, contentType})
       .then(resp => {
-        console.log("DATA");
-        console.log(resp.data);
-        if (resp.data.error) this.setState({error: resp.data.error});
-        else this.props.notifyMessage("Successfully added component.");
+        if (resp.data.error) {
+          this.setState({error: resp.data.error});
+        } else {
+          this.props.notifyMessage("Successfully added component.");
+          // TODO refresh
+        }
       })
-      .catch(err => this.setState({error: err}));
+      .catch(error => this.setState({error}));
   }
 
   // Render the component

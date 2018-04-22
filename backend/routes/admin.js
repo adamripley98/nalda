@@ -57,7 +57,6 @@ const pullData = (components, callback) => {
         });
       }, contentAsyncErr => {
         if (contentAsyncErr) {
-          console.log(contentAsyncErr);
           cb();
         } else {
           component.content = returnContent;
