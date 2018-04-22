@@ -137,27 +137,6 @@ class Admin extends Component {
     });
   }
 
-  // Handle when admin types into recommended field
-  handleChangeRecommended(event) {
-    this.setState({
-      recommendedContentId: event.target.value,
-    });
-  }
-
-  // Handle when admin types into from the editors field
-  handleChangeFromTheEditors(event) {
-    this.setState({
-      fromTheEditorsContentId: event.target.value,
-    });
-  }
-
-  // Handle when admin types into videos field
-  handleChangeNaldaVideos(event) {
-    this.setState({
-      naldaVideosContentId: event.target.value,
-    });
-  }
-
   // Handle a callback to the sidebar
   sidebarCallback(to) {
     this.setState({
@@ -234,72 +213,6 @@ class Admin extends Component {
         this.setState({
           error: '',
           banner: resp.data.data,
-        });
-      }
-    })
-    .catch((err) => {
-      this.setState({
-        error: err,
-      });
-    });
-  }
-
-  // Helper method to remove an item from recommended section
-  onSubmitRemoveRecommendedContent(recommendedContentId) {
-    axios.post(`/api/home/recommended/remove/${recommendedContentId}`)
-    .then((resp) => {
-      if (!resp.data.success) {
-        this.setState({
-          error: resp.data.error,
-        });
-      } else {
-        this.setState({
-          error: '',
-          recommended: resp.data.data,
-        });
-      }
-    })
-    .catch((err) => {
-      this.setState({
-        error: err,
-      });
-    });
-  }
-
-  // Helper method to remove an item from the from the editors section
-  onSubmitRemoveFromTheEditorsContent(fromTheEditorsContentId) {
-    axios.post(`/api/home/fromTheEditors/remove/${fromTheEditorsContentId}`)
-    .then((resp) => {
-      if (!resp.data.success) {
-        this.setState({
-          error: resp.data.error,
-        });
-      } else {
-        this.setState({
-          error: '',
-          fromTheEditors: resp.data.data,
-        });
-      }
-    })
-    .catch((err) => {
-      this.setState({
-        error: err,
-      });
-    });
-  }
-
-  // Helper method to remove an item from the nalda videos section
-  onSubmitRemoveNaldaVideosContent(naldaVideosContentId) {
-    axios.post(`/api/home/naldaVideos/remove/${naldaVideosContentId}`)
-    .then((resp) => {
-      if (!resp.data.success) {
-        this.setState({
-          error: resp.data.error,
-        });
-      } else {
-        this.setState({
-          error: '',
-          naldaVideos: resp.data.data,
         });
       }
     })
@@ -433,96 +346,6 @@ class Admin extends Component {
       this.setState({
         error: err,
         manageAdminSuccess: "",
-      });
-    });
-  }
-
-  // Helper method to handle changing recommended content on homepage
-  onSubmitChangeRecommended(event) {
-    event.preventDefault();
-    axios.post('/api/home/recommended/add', {
-      contentId: this.state.recommendedContentId,
-    })
-    .then((resp) => {
-      if (resp.data.success) {
-        // TODO Show on frontend that item has been added
-        this.setState({
-          error: '',
-          manageHomepageSuccess: 'Content added to Recommended.',
-          recommended: resp.data.data,
-          recommendedContentId: '',
-        });
-      } else {
-        this.setState({
-          error: resp.data.error,
-          recommendedContentId: '',
-        });
-      }
-    })
-    .catch((err) => {
-      this.setState({
-        error: err,
-      });
-    });
-  }
-
-  // Helper method to handle changing from the editors content on homepage
-  onSubmitChangeFromTheEditors(event) {
-    event.preventDefault();
-    axios.post('/api/home/fromTheEditors/add', {
-      contentId: this.state.fromTheEditorsContentId,
-    })
-    .then((resp) => {
-      if (resp.data.success) {
-        this.setState({
-          error: '',
-          manageHomepageSuccess: 'Content added to From the Editors.',
-          fromTheEditors: resp.data.data,
-          fromTheEditorsContentId: '',
-        });
-      } else {
-        this.setState({
-          error: resp.data.error,
-          fromTheEditorsContentId: '',
-        });
-      }
-    })
-    .catch((err) => {
-      this.setState({
-        error: err,
-        fromTheEditorsContentId: '',
-      });
-    });
-  }
-
-  // Helper method to handle changing videos content on homepage
-  onSubmitChangeNaldaVideos(event) {
-    event.preventDefault();
-    axios.post('/api/home/naldaVideos/add', {
-      contentId: this.state.naldaVideosContentId,
-    })
-    .then((resp) => {
-      if (resp.data.success) {
-        // TODO Show on frontend that item has been added
-        this.setState({
-          error: '',
-          manageHomepageSuccess: 'Content added to Nalda Videos.',
-          naldaVideos: resp.data.data,
-          naldaVideosContentId: '',
-        });
-      } else {
-        this.setState({
-          error: resp.data.error,
-          naldaVideosContentId: '',
-          manageHomepageSuccess: '',
-        });
-      }
-    })
-    .catch((err) => {
-      this.setState({
-        error: err,
-        naldaVideosContentId: '',
-        manageHomepageSuccess: '',
       });
     });
   }
@@ -691,7 +514,6 @@ class Admin extends Component {
       });
     }
   }
-
   // Helper method to edit what is seen on homepage
   editHomepage() {
     let components = '';

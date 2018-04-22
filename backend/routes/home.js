@@ -615,23 +615,43 @@ module.exports = () => {
           error: authRes.error,
         });
       } else {
-        HomeComponent.findById(componentId, (err, component) => {
-          if (err) {
+        Homepage.find({}, (errHomepage, home) => {
+          if (errHomepage) {
             res.send({
               success: false,
-              error: 'Error deleting component.',
+              error: 'Error removing component.',
             });
           } else {
-            component.remove((errRemove) => {
-              if (errRemove) {
+            const homepage = home[0];
+            const components = homepage.components.slice();
+            components.forEach((component, i) => {
+              console.log('comp id', component._id, componentId);
+              if (component._id === componentId) {
+                console.log('wow same');
+                // TODO remove dude
+              } else {
+                console.log('not same');
+              }
+            });
+            HomeComponent.findById(componentId, (err, component) => {
+              if (err) {
                 res.send({
                   success: false,
-                  error: 'Error deleting component',
+                  error: 'Error deleting component.',
                 });
               } else {
-                res.send({
-                  success: true,
-                  error: '',
+                component.remove((errRemove) => {
+                  if (errRemove) {
+                    res.send({
+                      success: false,
+                      error: 'Error deleting component',
+                    });
+                  } else {
+                    res.send({
+                      success: true,
+                      error: '',
+                    });
+                  }
                 });
               }
             });
