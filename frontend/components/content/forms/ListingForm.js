@@ -366,6 +366,22 @@ class ListingForm extends React.Component {
     return canvas.toDataURL();
   }
 
+  // Helper method to resize with correct proportions
+  getTargetSize(img, maxSize) {
+    const targetSize = {};
+    if (img.width > img.height) {
+      if (img.width > maxSize) {
+        targetSize.height = img.height * maxSize / img.width;
+        targetSize.width = maxSize;
+      }
+    } else {
+      if (img.height > maxSize) {
+        targetSize.width = img.width * maxSize / img.height;
+        targetSize.height = maxSize;
+      }
+    }
+    return targetSize;
+  }
 
   // Helper method for image uploads
   onDrop(acceptedFiles, rejectedFiles, hero) {
@@ -379,12 +395,9 @@ class ListingForm extends React.Component {
           var img = new Image();
           img.onload = () => {
             ((file, uri) => {
+              const targetSize = this.getTargetSize(img, 1200);
               EXIF.getData(file, () => {
-                var imgToSend = this.processImg(
-                uri,
-                img.height, img.width,
-                img.width, img.height,
-                EXIF.getTag(file, 'Orientation'));
+                const imgToSend = this.processImg(uri, targetSize.height, targetSize.width, img.width, img.height, EXIF.getTag(file, 'Orientation'));
                 // Set images to state
                 this.setState({
                   image: imgToSend,
@@ -419,31 +432,18 @@ class ListingForm extends React.Component {
           const reader = new FileReader();
           // Convert from blob to a proper file object that can be passed to server
           reader.onload = (upload) => {
-            const image = new Image();
-            image.onload = () => {
-              // Resize image before passing to backend
-              const canvas = document.createElement('canvas');
-              const maxSize = 800;
-              let width = image.width;
-              let height = image.height;
-              if (width > height) {
-                if (width > maxSize) {
-                  height *= maxSize / width;
-                  width = maxSize;
-                }
-              } else {
-                if (height > maxSize) {
-                  width *= maxSize / height;
-                  height = maxSize;
-                }
-              }
-              canvas.width = width;
-              canvas.height = height;
-              canvas.getContext('2d').drawImage(image, 0, 0, width, height);
-              const dataUrl = canvas.toDataURL('image/jpeg');
-              images.push(dataUrl);
+            var img = new Image();
+            img.onload = () => {
+              ((file, uri) => {
+                const targetSize = this.getTargetSize(img, 750);
+                EXIF.getData(file, () => {
+                  const imgToSend = this.processImg(uri, targetSize.height, targetSize.width, img.width, img.height, EXIF.getTag(file, 'Orientation'));
+                  images.push(imgToSend);
+                  this.setState(images);
+                });
+              })(pic, upload.target.result);
             };
-            image.src = upload.target.result;
+            img.src = upload.target.result;
             cb();
           };
           // File reader set up
@@ -466,6 +466,7 @@ class ListingForm extends React.Component {
             return;
           }
           // Set images to state
+          console.log('what is images', images);
           this.setState({
             images,
           });

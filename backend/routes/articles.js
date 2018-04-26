@@ -744,21 +744,27 @@ module.exports = () => {
                   });
                 } else {
                   const home = homepage[0];
-                  const fromTheEditors = home.fromTheEditors;
-                  const banner = home.banner;
-                  // Delete listing from homepage
-                  for (var i = 0; i < fromTheEditors.length; i++) {
-                    if (fromTheEditors[i].contentId === articleId) {
-                      fromTheEditors.splice(i, 1);
-                      break;
-                    }
-                  }
+                  const banner = home.banner.slice();
+                  // Remove content from banner
                   for (var j = 0; j < banner.length; j++) {
                     if (banner[j].contentId === articleId) {
                       banner.splice(j, 1);
                       break;
                     }
                   }
+                  // Delete component from homepage
+                  const components = home.components.slice();
+                  components.forEach((comp, i) => {
+                    comp.content.forEach((content, k) => {
+                      if (content.contentId === articleId) {
+                        components[i].content.splice(k, 1);
+                      }
+                    });
+                  });
+                  // Save changes
+                  home.banner = banner;
+                  home.components = components;
+
                   home.save((errSave) => {
                     if (errSave) {
                       res.send({

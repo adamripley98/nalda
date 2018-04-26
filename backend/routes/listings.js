@@ -570,21 +570,27 @@ module.exports = () => {
                   });
                 } else {
                   const home = homepage[0];
-                  const recommended = home.recommended;
-                  const banner = home.banner;
-                  // Delete listing from homepage
-                  for (var i = 0; i < recommended.length; i++) {
-                    if (recommended[i].contentId === listingId) {
-                      recommended.splice(i, 1);
-                      break;
-                    }
-                  }
+                  const banner = home.banner.slice();
+                  // Remove content from banner
                   for (var j = 0; j < banner.length; j++) {
                     if (banner[j].contentId === listingId) {
                       banner.splice(j, 1);
                       break;
                     }
                   }
+                  // Delete component from homepage
+                  const components = home.components.slice();
+                  components.forEach((comp, i) => {
+                    comp.content.forEach((content, k) => {
+                      if (content.contentId === listingId) {
+                        components[i].content.splice(k, 1);
+                      }
+                    });
+                  });
+                  // Save changes
+                  home.banner = banner;
+                  home.components = components;
+
                   home.save((errSave) => {
                     if (errSave) {
                       res.send({
