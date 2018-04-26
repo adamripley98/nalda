@@ -523,6 +523,7 @@ class Admin extends Component {
           this.setState({error: resp.data.error});
         } else {
           console.log('sucess', resp.data);
+          // TODO refresh
           this.setState({
             error: '',
           });
@@ -545,6 +546,7 @@ class Admin extends Component {
           this.setState({error: resp.data.error});
         } else {
           console.log('success remove!', resp.data);
+          //  TODO refresh
           this.setState({
             error: '',
           });
