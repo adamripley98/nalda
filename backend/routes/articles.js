@@ -372,7 +372,7 @@ module.exports = () => {
           });
         } else {
           // Update image
-          if (image.indexOf('naldacampus.s3.amazonaws') === -1) {
+          if (image.indexOf('s3.amazonaws') === -1) {
             // Convert article picture to a form that s3 can display
             const imageConverted = new Buffer(image.replace(/^data:image\/\w+;base64,/, ""), 'base64');
             const folderId = uuid();
@@ -537,7 +537,7 @@ module.exports = () => {
             async.eachSeries(body, (comp, cb) => {
               if (comp.componentType === 'image') {
                 // Need to story body image in aws
-                if (comp.body.indexOf('naldacampus.s3.amazonaws') === -1) {
+                if (comp.body.indexOf('s3.amazonaws') === -1) {
                   const articlePictureConverted = new Buffer(comp.body.replace(/^data:image\/\w+;base64,/, ""), 'base64');
                   sharp(articlePictureConverted)
                   .resize(600, null)

@@ -147,7 +147,6 @@ class EditListingForm extends React.Component {
           if (additionalAmenities && additionalAmenities.length) {
             additionalAmenitiesString = additionalAmenities.join(", ");
           }
-
           // If there was no error
           this.setState({
             pending: false,
@@ -665,6 +664,11 @@ class EditListingForm extends React.Component {
                   <label>
                     Hero Image (url to an image)
                   </label>
+                  {
+                    this.state.imagePreview && (
+                      <img src={ this.state.imagePreview } alt={ this.state.title } className="img-fluid img" />
+                    )
+                  }
                   <Dropzone
                     onDrop={(acceptedFiles, rejectedFiles) => this.onDrop(acceptedFiles, rejectedFiles, "hero")}
                     accept="image/*"

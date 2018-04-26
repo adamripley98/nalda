@@ -267,7 +267,7 @@ module.exports = () => {
           const newImages = [];
           const folderId = uuid();
           // If main image was a newly uploaded image
-          if (image.indexOf('naldacampus.s3.amazonaws') === -1) {
+          if (image.indexOf('s3.amazonaws') === -1) {
             // Convert article picture to a form that s3 can display
             const imageConverted = new Buffer(image.replace(/^data:image\/\w+;base64,/, ""), 'base64');
             // Resize image before storage
@@ -317,7 +317,7 @@ module.exports = () => {
                           } else {
                             async.eachSeries(images, (img, cb) => {
                               // New image is actually new
-                              if (img.indexOf('naldacampus.s3.amazonaws') === -1) {
+                              if (img.indexOf('s3.amazonaws') === -1) {
                                 const listingPictureConverted = new Buffer(img.replace(/^data:image\/\w+;base64,/, ""), 'base64');
                                 sharp(listingPictureConverted)
                                 .resize(800, null)
@@ -428,7 +428,7 @@ module.exports = () => {
           } else {
             async.eachSeries(images, (img, cb) => {
               // If img is a new image
-              if (img.indexOf('naldacampus.s3.amazonaws') === -1) {
+              if (img.indexOf('s3.amazonaws') === -1) {
                 // Convert to storable form
                 const listingPictureConverted = new Buffer(img.replace(/^data:image\/\w+;base64,/, ""), 'base64');
                 // Resize image

@@ -468,7 +468,6 @@ module.exports = () => {
             let hasChanged = false;
             components.forEach((component, i) => {
               if (component._id.toString() === componentId) {
-                console.log('wow same');
                 const newComponents = homepage.components.slice();
                 newComponents.splice(i, 1);
                 homepage.components = newComponents;

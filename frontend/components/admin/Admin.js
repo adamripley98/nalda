@@ -513,7 +513,6 @@ class Admin extends Component {
   // Helper method to remove a piece of content from a component
   onRemoveContent(component, contentId) {
     if (component && contentId) {
-      console.log('component', component);
       axios.post('/api/home/component/content/remove', {
         componentId: component._id,
         contentId,
