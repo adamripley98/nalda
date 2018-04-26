@@ -15,6 +15,9 @@ import ErrorMessage from '../../shared/ErrorMessage';
 import Medium from '../../shared/Medium';
 import Tags from '../../shared/Tags';
 
+// Import helper functions
+import {processImg, getTargetSize} from '../../../helperMethods/imageUploading';
+
 // Import actions
 import {notifyMessage} from '../../../actions/notification';
 
@@ -134,7 +137,6 @@ class ListingForm extends React.Component {
     this.removeImage = this.removeImage.bind(this);
     this.handleChangeAdditionalAmenities = this.handleChangeAdditionalAmenities.bind(this);
     this.renderAdditionalAmenities = this.renderAdditionalAmenities.bind(this);
-    this.processImg = this.processImg.bind(this);
     this.onDrop = this.onDrop.bind(this);
   }
 
@@ -346,43 +348,6 @@ class ListingForm extends React.Component {
     return null;
   }
 
-  // Helper method to rotate image
-  processImg(image, trgHeight, trgWidth, srcWidth, srcHeight, orientation) {
-    var canvas = document.createElement('canvas');
-    canvas.width = trgWidth;
-    canvas.height = trgHeight;
-    var img = new Image;
-    img.src = image;
-    var ctx = canvas.getContext("2d");
-    if (orientation === 2) ctx.transform(-1, 0, 0, 1, trgWidth, 0);
-    if (orientation === 3) ctx.transform(-1, 0, 0, -1, trgWidth, trgHeight);
-    if (orientation === 4) ctx.transform(1, 0, 0, -1, 0, trgHeight);
-    if (orientation === 5) ctx.transform(0, 1, 1, 0, 0, 0);
-    if (orientation === 6) ctx.transform(0, 1, -1, 0, trgHeight, 0);
-    if (orientation === 7) ctx.transform(0, -1, -1, 0, trgHeight, trgWidth);
-    if (orientation === 8) ctx.transform(0, -1, 1, 0, 0, trgWidth);
-    ctx.drawImage(img, 0, 0, srcWidth, srcHeight, 0, 0, trgWidth, trgHeight);
-    ctx.fill();
-    return canvas.toDataURL();
-  }
-
-  // Helper method to resize with correct proportions
-  getTargetSize(img, maxSize) {
-    const targetSize = {};
-    if (img.width > img.height) {
-      if (img.width > maxSize) {
-        targetSize.height = img.height * maxSize / img.width;
-        targetSize.width = maxSize;
-      }
-    } else {
-      if (img.height > maxSize) {
-        targetSize.width = img.width * maxSize / img.height;
-        targetSize.height = maxSize;
-      }
-    }
-    return targetSize;
-  }
-
   // Helper method for image uploads
   onDrop(acceptedFiles, rejectedFiles, hero) {
     // Ensure at leat one valid image was uploaded
@@ -395,9 +360,9 @@ class ListingForm extends React.Component {
           var img = new Image();
           img.onload = () => {
             ((file, uri) => {
-              const targetSize = this.getTargetSize(img, 1200);
+              const targetSize = getTargetSize(img, 1200);
               EXIF.getData(file, () => {
-                const imgToSend = this.processImg(uri, targetSize.height, targetSize.width, img.width, img.height, EXIF.getTag(file, 'Orientation'));
+                const imgToSend = processImg(uri, targetSize.height, targetSize.width, img.width, img.height, EXIF.getTag(file, 'Orientation'));
                 // Set images to state
                 this.setState({
                   image: imgToSend,
@@ -435,9 +400,9 @@ class ListingForm extends React.Component {
             var img = new Image();
             img.onload = () => {
               ((file, uri) => {
-                const targetSize = this.getTargetSize(img, 750);
+                const targetSize = getTargetSize(img, 750);
                 EXIF.getData(file, () => {
-                  const imgToSend = this.processImg(uri, targetSize.height, targetSize.width, img.width, img.height, EXIF.getTag(file, 'Orientation'));
+                  const imgToSend = processImg(uri, targetSize.height, targetSize.width, img.width, img.height, EXIF.getTag(file, 'Orientation'));
                   images.push(imgToSend);
                   this.setState(images);
                 });
@@ -466,7 +431,6 @@ class ListingForm extends React.Component {
             return;
           }
           // Set images to state
-          console.log('what is images', images);
           this.setState({
             images,
           });

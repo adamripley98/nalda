@@ -8,12 +8,16 @@ import Dropzone from 'react-dropzone';
 import uuid from 'uuid-v4';
 import async from 'async';
 import {connect} from 'react-redux';
+import EXIF from 'exif-js';
 
 // Import components
 import ErrorMessage from '../../shared/ErrorMessage';
 import Medium from '../../shared/Medium';
 import Loading from '../../shared/Loading';
 import Tags from '../../shared/Tags';
+
+// Import helper methods
+import {processImg, getTargetSize} from '../../../helperMethods/imageUploading';
 
 // Import actions
 import {notifyMessage} from '../../../actions/notification';
@@ -325,10 +329,23 @@ class EditListingForm extends React.Component {
         const reader = new FileReader();
         // Convert from blob to a proper file object that can be passed to server
         reader.onload = (upload) => {
-          // Set images to state
-          this.setState({
-            image: upload.target.result,
-          });
+          var img = new Image();
+          img.onload = () => {
+            ((file, uri) => {
+              const targetSize = getTargetSize(img, 1200);
+              EXIF.getData(file, () => {
+                const imgToSend = processImg(uri, targetSize.height, targetSize.width, img.width, img.height, EXIF.getTag(file, 'Orientation'));
+                // Set images to state
+                this.setState({
+                  image: imgToSend,
+                  imagePreview: imgToSend,
+                  imageName: image.name,
+                  error: '',
+                });
+              });
+            })(image, upload.target.result);
+          };
+          img.src = upload.target.result;
         };
         // File reader set up
         reader.onabort = () => this.setState({error: "File read aborted."});
@@ -336,12 +353,12 @@ class EditListingForm extends React.Component {
         reader.readAsDataURL(image);
       } else {
         // Ensure no more than 6 were uploaded
-        if (acceptedFiles.length + this.state.images.length > 6) {
+        if (acceptedFiles.length + this.state.images.length > 10) {
           this.setState({
-            error: 'You may only upload 6 images.',
+            error: 'You may only upload 10 images.',
           });
-          // Shorten acceptedFiles to 6
-          acceptedFiles.splice(6 - this.state.images.length);
+          // Shorten acceptedFiles to 10
+          acceptedFiles.splice(10 - this.state.images.length);
         }
 
         // Make a copy of the images in state
@@ -352,7 +369,18 @@ class EditListingForm extends React.Component {
           const reader = new FileReader();
           // Convert from blob to a proper file object that can be passed to server
           reader.onload = (upload) => {
-            images.push(upload.target.result);
+            var img = new Image();
+            img.onload = () => {
+              ((file, uri) => {
+                const targetSize = getTargetSize(img, 750);
+                EXIF.getData(file, () => {
+                  const imgToSend = processImg(uri, targetSize.height, targetSize.width, img.width, img.height, EXIF.getTag(file, 'Orientation'));
+                  images.push(imgToSend);
+                  this.setState(images);
+                });
+              })(pic, upload.target.result);
+            };
+            img.src = upload.target.result;
             cb();
           };
           // File reader set up
