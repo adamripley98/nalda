@@ -4,8 +4,6 @@
  * NOTE these routes serve and accept JSON-formatted data
  */
 
-// TODO Generic add component, remove component routes. Also need add and remove content from a given component
-
 // Import frameworks
 const express = require('express');
 const router = express.Router();
@@ -174,8 +172,6 @@ module.exports = () => {
               banner: homepage.banner,
               components: [],
             });
-
-            // });
           }
         });
       } else {
@@ -184,137 +180,6 @@ module.exports = () => {
           error: '',
           banner: homepage.banner,
           components: [],
-        });
-      }
-    });
-  });
-
-  // Route to handle adding content to homepage recommended
-  router.post('/recommended/add', (req, res) => {
-    AdminCheck(req, (authRes) => {
-      if (!authRes.success) {
-        res.send({
-          success: false,
-          error: authRes.error,
-        });
-      } else {
-        const contentId = req.body.contentId;
-        Listing.findById(contentId, (errListing, listing) => {
-          if (errListing) {
-            res.send({
-              success: false,
-              error: 'Error finding content.'
-            });
-          // Make sure id is of right format
-          } else if (!contentId.match(/^[0-9a-fA-F]{24}$/)) {
-            res.send({
-              success: false,
-              error: 'No listing with that id exists.'
-            });
-            // Make sure content with given id exists
-          } else if (!listing) {
-            res.send({
-              success: false,
-              error: 'No listing with that ID exists.',
-            });
-          } else {
-            Homepage.find({}, (errHomepage, home) => {
-              if (errHomepage) {
-                res.send({
-                  success: false,
-                  error: 'Error loading homepage.',
-                });
-              } else {
-                const homepage = home[0];
-                const recommended = homepage.recommended.slice();
-                // Error check for duplicate content in banner
-                let duplicate = false;
-                recommended.forEach((item) => {
-                  if (item.contentId === contentId) {
-                    duplicate = true;
-                  }
-                });
-                if (duplicate) {
-                  res.send({
-                    success: false,
-                    error: 'This listing is already in the recommended content section.',
-                  });
-                } else {
-                  // Create object to pass back, of type listing
-                  const newRecommendedContent = {
-                    contentType: 'listing',
-                    contentId,
-                  };
-                  // Add to Recommended
-                  recommended.push(newRecommendedContent);
-                  homepage.recommended = recommended;
-                  // Save new banner to mongo
-                  homepage.save((errSave) => {
-                    if (errSave) {
-                      res.send({
-                        success: false,
-                        error: 'Error adding recommended.',
-                      });
-                    } else {
-                      res.send({
-                        success: true,
-                        error: '',
-                        data: homepage.recommended,
-                      });
-                    }
-                  });
-                }
-              }
-            });
-          }
-        });
-      }
-    });
-  });
-
-  // Route to handle deleting an item from the recommended
-  router.post('/recommended/remove/:recommendedContentId', (req, res) => {
-    // Find the id from the url
-    const contentId = req.params.recommendedContentId;
-    AdminCheck(req, (authRes) => {
-      if (!authRes.success) {
-        res.send({
-          success: false,
-          error: authRes.error,
-        });
-      } else {
-        Homepage.find({}, (err, home) => {
-          if (err) {
-            res.send({
-              success: false,
-              error: 'Error retrieving homepage data.',
-            });
-          } else {
-            const homepage = home[0];
-            const recommended = homepage.recommended.slice();
-            // Loop through to delete specific item
-            recommended.forEach((item) => {
-              if (item.contentId === contentId) {
-                recommended.splice(recommended.indexOf(item), 1);
-                return;
-              }
-            });
-            homepage.recommended = recommended;
-            homepage.save((errHome) => {
-              if (errHome) {
-                res.send({
-                  success: false,
-                  error: 'Error removing recommended.',
-                });
-              } else {
-                res.send({
-                  success: true,
-                  error: '',
-                  data: homepage.recommended,
-                });
-              }
-            });
-          }
         });
       }
     });
@@ -605,9 +470,8 @@ module.exports = () => {
   });
 
   // Route to delete a given component from homepage
-  // TODO remove from homepage instead of from home
-  router.post('/component/remove/:componentId', (req, res) => {
-    const {componentId} = req.params;
+  router.post('/component/remove', (req, res) => {
+    const {componentId} = req.body;
     AdminCheck(req, (authRes) => {
       if (!authRes.success) {
         res.send({
@@ -624,39 +488,87 @@ module.exports = () => {
           } else {
             const homepage = home[0];
             const components = homepage.components.slice();
+            let hasChanged = false;
             components.forEach((component, i) => {
-              console.log('comp id', component._id, componentId);
-              if (component._id === componentId) {
+              if (component._id.toString() === componentId) {
                 console.log('wow same');
-                // TODO remove dude
-              } else {
-                console.log('not same');
+                const newComponents = homepage.components.slice();
+                newComponents.splice(i, 1);
+                homepage.components = newComponents;
+                hasChanged = true;
               }
             });
-            HomeComponent.findById(componentId, (err, component) => {
-              if (err) {
-                res.send({
-                  success: false,
-                  error: 'Error deleting component.',
-                });
-              } else {
-                component.remove((errRemove) => {
-                  if (errRemove) {
-                    res.send({
-                      success: false,
-                      error: 'Error deleting component',
-                    });
-                  } else {
-                    res.send({
-                      success: true,
-                      error: '',
-                    });
-                  }
-                });
-              }
-            });
+            if (hasChanged) {
+              homepage.save();
+              res.send({
+                success: true,
+                error: '',
+              });
+            } else {
+              res.send({
+                success: false,
+                error: 'Error removing component.',
+              });
+            }
           }
         });
+      }
+    });
+  });
+
+  // Route to add content to an existing component
+  router.post('/component/content/remove', (req, res) => {
+    AdminCheck(req, (authRes) => {
+      if (!authRes.success) {
+        res.send({
+          success: false,
+          error: authRes.error,
+        });
+      } else {
+        const {contentId, componentId} = req.body;
+        if (!contentId || !componentId) {
+          res.send({
+            success: false,
+            error: 'Error removing content.',
+          });
+        } else {
+          // TODO implement
+          Homepage.find({}, (errHome, home) => {
+            if (errHome) {
+              res.send({
+                success: false,
+                error: 'Error removing content.',
+              });
+            } else {
+              const homepage = home[0];
+              let hasChanged = false;
+              homepage.components.forEach((comp, i) => {
+                if (comp._id.toString() === componentId) {
+                  comp.content.forEach((content, j) => {
+                    if (content.contentId === contentId) {
+                      const newContent = comp.content.slice();
+                      newContent.splice(j, 1);
+                      homepage.components[i].content = newContent;
+                      hasChanged = true;
+                    }
+                  });
+                }
+              });
+              if (hasChanged) {
+                homepage.save();
+                res.send({
+                  success: true,
+                  error: '',
+                });
+              } else {
+                res.send({
+                  success: false,
+                  error: 'Error removing content.'
+                });
+              }
+            }
+          });
+        }
       }
     });
   });
@@ -699,7 +611,6 @@ module.exports = () => {
                   } else if (video) {
                     newContentType = 'Videos';
                   }
-                  // TODO dklaflsdkj
                   Homepage.find({}, (errHome, home) => {
                     if (errHome) {
                       res.send({
@@ -709,23 +620,23 @@ module.exports = () => {
                     } else {
                       const homepage = home[0];
                       let hasChanged = false;
+                      let contentExists = false;
                       homepage.components.forEach((comp, i) => {
                         if (comp._id.toString() === component._id && comp.contentType === newContentType) {
                           const newContent = homepage.components[i].content.slice();
-                          newContent.forEach((cont, j) => {
-                            console.log('what is cont contentid', cont.contentId, contentId);
-                            if (cont.contentId !== contentId) {
-                              console.log('different, push');
-                              newContent.push({contentId});
-                              homepage.components[i].content = newContent;
-                              hasChanged = true;
-                            } else {
-                              console.log('its the same dude');
+                          newContent.forEach(cont => {
+                            if (cont.contentId === contentId) {
+                              contentExists = true;
                             }
                           });
+                          if (!contentExists) {
+                            newContent.push({contentId});
+                            homepage.components[i].content = newContent;
+                            hasChanged = true;
+                          }
                         }
                       });
-                      if (hasChanged) {
+                      if (hasChanged && !contentExists) {
                         homepage.save(saveErr => {
                           if (saveErr) {
                             res.send({
@@ -742,7 +653,7 @@ module.exports = () => {
                       } else {
                         res.send({
                           success: false,
-                          error: 'Cannot find content or add repeat content.',
+                          error: 'Cannot add content. Make sure it is the right type and is not repeat.',
                         });
                       }
                     }

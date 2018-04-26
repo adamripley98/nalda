@@ -57,25 +57,20 @@ class Admin extends Component {
     this.editHomepage = this.editHomepage.bind(this);
     this.handleChangeEmail = this.handleChangeEmail.bind(this);
     this.handleChangeBannerContentId = this.handleChangeBannerContentId.bind(this);
-    this.handleChangeRecommended = this.handleChangeRecommended.bind(this);
-    this.handleChangeFromTheEditors = this.handleChangeFromTheEditors.bind(this);
-    this.handleChangeNaldaVideos = this.handleChangeNaldaVideos.bind(this);
     this.onSubmitAdmin = this.onSubmitAdmin.bind(this);
     this.onSubmitCurator = this.onSubmitCurator.bind(this);
     this.onSubmitRemoveCurator = this.onSubmitRemoveCurator.bind(this);
     this.onSubmitRemoveBannerContent = this.onSubmitRemoveBannerContent.bind(this);
     this.onSubmitChangeBanner = this.onSubmitChangeBanner.bind(this);
-    this.onSubmitChangeRecommended = this.onSubmitChangeRecommended.bind(this);
-    this.onSubmitRemoveRecommendedContent = this.onSubmitRemoveRecommendedContent.bind(this);
-    this.onSubmitRemoveFromTheEditorsContent = this.onSubmitRemoveFromTheEditorsContent.bind(this);
-    this.onSubmitChangeFromTheEditors = this.onSubmitChangeFromTheEditors.bind(this);
-    this.onSubmitChangeNaldaVideos = this.onSubmitChangeNaldaVideos.bind(this);
     this.displayUserData = this.displayUserData.bind(this);
     this.displayBanner = this.displayBanner.bind(this);
     this.sidebarCallback = this.sidebarCallback.bind(this);
     this.displayAdminForm = this.displayAdminForm.bind(this);
     this.displayList = this.displayList.bind(this);
     this.pullFromBackend = this.pullFromBackend.bind(this);
+    this.onSubmitContent = this.onSubmitContent.bind(this);
+    this.onRemoveContent = this.onRemoveContent.bind(this);
+    this.onRemoveComponent = this.onRemoveComponent.bind(this);
   }
 
   componentDidMount() {
@@ -481,8 +476,7 @@ class Admin extends Component {
           <th scope="row">{i + 1}</th>
           <td>{content.title}</td>
           <td>{content.contentId}</td>
-          {/* TODO new REMOVE method */}
-          <td>
+          <td onClick={() => this.onRemoveContent(component, content.contentId)}>
             <i className="fa fa-close" aria-hidden="true" />
           </td>
         </tr>
@@ -493,7 +487,7 @@ class Admin extends Component {
   }
 
   // Helper method to add content to a specific homepage component
-  onSubmitComponent(event, component, contentId) {
+  onSubmitContent(event, component, contentId) {
     event.preventDefault();
     if (contentId) {
       axios.post('/api/home/component/content/add', {
@@ -504,6 +498,7 @@ class Admin extends Component {
         if (resp.data.error) {
           this.setState({error: resp.data.error});
         } else {
+          // TODO why isn't this notifying..
           this.props.notifyMessage("Successfully added content.");
         }
       })
@@ -514,19 +509,68 @@ class Admin extends Component {
       });
     }
   }
+
+  // Helper method to remove a piece of content from a component
+  onRemoveContent(component, contentId) {
+    if (component && contentId) {
+      console.log('component', component);
+      axios.post('/api/home/component/content/remove', {
+        componentId: component._id,
+        contentId,
+      })
+      .then(resp => {
+        if (resp.data.error) {
+          this.setState({error: resp.data.error});
+        } else {
+          console.log('sucess', resp.data);
+          this.setState({
+            error: '',
+          });
+        }
+      })
+      .catch(error => {this.setState({error});});
+    } else {
+      this.setState({error: 'Error removing content.'});
+    }
+  }
+
+  // Helper method to remove a given component
+  onRemoveComponent(component) {
+    if (component) {
+      axios.post('/api/home/component/remove', {
+        componentId: component._id,
+      })
+      .then(resp => {
+        if (resp.data.error) {
+          this.setState({error: resp.data.error});
+        } else {
+          console.log('success remove!', resp.data);
+          this.setState({
+            error: '',
+          });
+        }
+      })
+      .catch(error => {this.setState({error});});
+    } else {
+      this.setState({error: 'Error removing component.'});
+    }
+  }
   // Helper method to edit what is seen on homepage
   editHomepage() {
     let components = '';
     if (this.state.components && this.state.components.length) {
       components = this.state.components.map((component, i) => (
         <div key={component._id}>
-          <form onSubmit={(e) => this.onSubmitComponent(e, component, document.getElementById(`contentId${i}`).value)}>
+          <form onSubmit={(e) => this.onSubmitContent(e, component, document.getElementById(`contentId${i}`).value)}>
             <h4 className="bold marg-bot-1">
               {component.title}
             </h4>
             <p className="marg-bot-1">
               Enter the content Id of the {component.contentType.toLowerCase()} you would like to appear in this section of the homepage.
             </p>
+            <div onClick={() => this.onRemoveComponent(component)}>
+              <i className="fa fa-close" aria-hidden="true" />
+            </div>
 
             <div className="inline-field">
               <input
