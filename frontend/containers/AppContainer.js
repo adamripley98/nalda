@@ -63,6 +63,7 @@ import ListArticles from '../components/admin/tables/ListArticles';
 import ListListings from '../components/admin/tables/ListListings';
 import ListVideos from '../components/admin/tables/ListVideos';
 import ManageAdmins from '../components/admin/forms/ManageAdmins';
+import ManageHomepage from '../components/admin/forms/ManageHomepage';
 
 // Import routes
 import {
@@ -230,6 +231,14 @@ class AppContainer extends Component {
                   component={requireAdmin(() => (
                     <AdminWrapper>
                       <ManageAdmins />
+                    </AdminWrapper>
+                  ))}
+                />
+                <Route
+                  exact path={manageHomepagePath}
+                  component={requireAdmin(() => (
+                    <AdminWrapper>
+                      <ManageHomepage />
                     </AdminWrapper>
                   ))}
                 />
