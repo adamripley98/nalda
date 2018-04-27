@@ -75,10 +75,9 @@ class NewComponent extends Component {
           <option>Articles</option>
           <option>Videos</option>
         </select>
-        <input
-          className="btn btn-primary marg-bot-1"
-          value="Submit section"
-        />
+        <button className="btn btn-primary marg-bot-1">
+          Submit section
+        </button>
       </form>
     );
   }

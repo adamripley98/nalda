@@ -1,5 +1,5 @@
 // Import frameworks
-import React from 'react';
+import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 
 // Import routes
@@ -18,39 +18,31 @@ import {
 /**
  * Sidebar for the admin panel
  */
-const Sidebar = () => {
-  return (
-    <div className="col-12 col-md-4 col-lg-3 admin-sidebar">
-      <Link to={adminPath} className="link">
-        Panel Home
+class Sidebar extends Component {
+  renderLink(path, text) {
+    return (
+      <Link to={path} className="link">
+        {text}
       </Link>
-      <Link to={manageHomepagePath} className="link">
-        Manage homepage
-      </Link>
-      <Link to={adminAdminsPath} className="link">
-        View all admins
-      </Link>
-      <Link to={adminCuratorsPath} className="link">
-        View all curators
-      </Link>
-      <Link to={adminUsersPath} className="link">
-        View all users
-      </Link>
-      <Link to={manageAdminsPath} className="link">
-        Manage admins
-      </Link>
-      <Link to={adminArticlesPath} className="link">
-        Articles
-      </Link>
-      <Link to={adminListingsPath} className="link">
-        Listings
-      </Link>
-      <Link to={adminVideosPath} className="link">
-        Videos
-      </Link>
-    </div>
-  );
-};
+    );
+  }
+
+  render() {
+    return (
+      <div className="col-12 col-md-4 col-lg-3 admin-sidebar">
+        {this.renderLink(adminPath, 'Panel home')}
+        {this.renderLink(manageHomepagePath, 'Manage homepage')}
+        {this.renderLink(manageAdminsPath, 'Manage admins')}
+        {this.renderLink(adminAdminsPath, 'View all admins')}
+        {this.renderLink(adminCuratorsPath, 'View all curators')}
+        {this.renderLink(adminUsersPath, 'View all users')}
+        {this.renderLink(adminArticlesPath, 'Articles')}
+        {this.renderLink(adminListingsPath, 'Listings')}
+        {this.renderLink(adminVideosPath, 'Videos')}
+      </div>
+    );
+  }
+}
 
 // Export the component
 export default Sidebar;

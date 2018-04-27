@@ -544,7 +544,7 @@ class ManageHomepage extends Component {
           placeholder="Content ID"
           className="form-control marg-bot-1 border"
           value={ this.state.bannerContentId }
-          onChange={ this.handleChangeBannerContentId}
+          onChange={ this.handleChangeBannerContentId }
           rows="1"
         />
         {
