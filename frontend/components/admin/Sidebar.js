@@ -1,29 +1,56 @@
 // Import frameworks
 import React from 'react';
-import PropTypes from 'prop-types';
+import {Link} from 'react-router-dom';
+
+// Import routes
+import {
+  adminPath,
+  adminArticlesPath,
+  adminListingsPath,
+  adminVideosPath,
+  manageAdminsPath,
+  manageHomepagePath,
+  adminAdminsPath,
+  adminUsersPath,
+  adminCuratorsPath,
+} from '../../routes';
 
 /**
  * Sidebar for the admin panel
  */
-const Sidebar = ({ cb }) => {
+const Sidebar = () => {
   return (
     <div className="col-12 col-md-4 col-lg-3 admin-sidebar">
-      <div className="link" onClick={() => cb("")}>Panel home</div>
-      <div className="link" onClick={() => cb("homepage")}>Manage homepage</div>
-      <div className="link" onClick={() => cb("admins")}>View all admins</div>
-      <div className="link" onClick={() => cb("curators")}>View all curators</div>
-      <div className="link" onClick={() => cb("users")}>View all users</div>
-      <div className="link" onClick={() => cb("manage-admins")}>Manage admins</div>
-      <div className="link" onClick={() => cb("articles")}>Articles</div>
-      <div className="link" onClick={() => cb("listings")}>Listings</div>
-      <div className="link" onClick={() => cb("videos")}>Videos</div>
+      <Link to={adminPath} className="link">
+        Panel Home
+      </Link>
+      <Link to={manageHomepagePath} className="link">
+        Manage homepage
+      </Link>
+      <Link to={adminAdminsPath} className="link">
+        View all admins
+      </Link>
+      <Link to={adminCuratorsPath} className="link">
+        View all curators
+      </Link>
+      <Link to={adminUsersPath} className="link">
+        View all users
+      </Link>
+      <Link to={manageAdminsPath} className="link">
+        Manage admins
+      </Link>
+      <Link to={adminArticlesPath} className="link">
+        Articles
+      </Link>
+      <Link to={adminListingsPath} className="link">
+        Listings
+      </Link>
+      <Link to={adminVideosPath} className="link">
+        Videos
+      </Link>
     </div>
   );
 };
 
-// Prop validations
-Sidebar.propTypes = {
-  cb: PropTypes.func,
-};
-
+// Export the component
 export default Sidebar;

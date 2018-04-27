@@ -66,6 +66,7 @@ import ManageAdmins from '../components/admin/forms/ManageAdmins';
 
 // Import routes
 import {
+  adminPath,
   adminAdminsPath,
   adminCuratorsPath,
   adminUsersPath,
@@ -73,6 +74,7 @@ import {
   adminListingsPath,
   adminVideosPath,
   manageAdminsPath,
+  manageHomepagePath,
 } from '../routes';
 
 /**
@@ -167,7 +169,14 @@ class AppContainer extends Component {
                 <Route exact path="/" component={Home}/>
 
                 { /* Admin routes */ }
-                <Route exact path="/admin" component={requireAdmin(Admin)}/>
+                <Route
+                  exact path={adminPath}
+                  component={requireAdmin(() => (
+                    <AdminWrapper>
+                      <Admin />
+                    </AdminWrapper>
+                  ))}
+                />
                 <Route
                   exact path={adminAdminsPath}
                   component={requireAdmin(() => (
