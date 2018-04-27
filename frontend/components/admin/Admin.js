@@ -5,6 +5,7 @@ import axios from 'axios';
 import Dropzone from 'react-dropzone';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
+import EXIF from 'exif-js';
 
 // Import components
 import ErrorMessage from '../shared/ErrorMessage';
@@ -17,6 +18,9 @@ import ListVideos from './tables/ListVideos';
 import ListUsers from './tables/ListUsers';
 import ListCurators from './tables/ListCurators';
 import NewComponent from './NewComponent';
+
+// Import helper methods
+import {processImg, getTargetSize} from '../../helperMethods/imageUploading';
 
 // Import actions
 import {notifyMessage} from '../../actions/notification';
@@ -175,7 +179,6 @@ class Admin extends Component {
           // Set the state
           this.setState({
             error: '',
-            manageHomepageSuccess: 'Banner content updated.',
             banner: resp.data.data,
             bannerContentId: '',
             bannerImageToAdd: '',
@@ -366,13 +369,23 @@ class Admin extends Component {
       const image = acceptedFiles[0];
       const reader = new FileReader();
       reader.onload = (upload) => {
-        // Set images to state
-        this.setState({
-          bannerImageToAdd: upload.target.result,
-          bannerImagePreview: image.preview,
-          bannerImageName: image.name,
-          error: '',
-        });
+        var img = new Image();
+        img.onload = () => {
+          ((file, uri) => {
+            const targetSize = getTargetSize(img, 2000);
+            EXIF.getData(file, () => {
+              const imgToSend = processImg(uri, targetSize.height, targetSize.width, img.width, img.height, EXIF.getTag(file, 'Orientation'));
+              // Set images to state
+              this.setState({
+                bannerImageToAdd: imgToSend,
+                bannerImagePreview: imgToSend,
+                bannerImageName: image.name,
+                error: '',
+              });
+            });
+          })(image, upload.target.result);
+        };
+        img.src = upload.target.result;
       };
       // File reader set up
       reader.onabort = () => this.setState({error: "File read aborted."});

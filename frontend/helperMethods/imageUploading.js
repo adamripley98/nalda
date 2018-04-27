@@ -20,7 +20,10 @@ const processImg = (image, trgHeight, trgWidth, srcWidth, srcHeight, orientation
 
 // Helper method to maintain correct proportions
 const getTargetSize = (img, maxSize) => {
-  const targetSize = {};
+  const targetSize = {
+    width: img.width,
+    height: img.height,
+  };
   if (img.width > img.height) {
     if (img.width > maxSize) {
       targetSize.height = img.height * maxSize / img.width;

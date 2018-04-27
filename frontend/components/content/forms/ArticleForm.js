@@ -6,12 +6,16 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Dropzone from 'react-dropzone';
+import EXIF from 'exif-js';
 
 // Import components
 import ErrorMessage from '../../shared/ErrorMessage';
 import Tags from '../../shared/Tags';
 import Author from '../../shared/Author';
 import Medium from '../../shared/Medium';
+
+// Import helper functions
+import {processImg, getTargetSize} from '../../../helperMethods/imageUploading';
 
 // Import actions
 import {notifyMessage} from '../../../actions/notification';
@@ -203,12 +207,23 @@ class ArticleForm extends React.Component {
         const reader = new FileReader();
         // Convert from blob to a proper file object that can be passed to server
         reader.onload = (upload) => {
-          this.setState({
-            image: upload.target.result,
-            imagePreview: pic.preview,
-            imageName: pic.name,
-            error: '',
-          });
+          var img = new Image();
+          img.onload = () => {
+            ((file, uri) => {
+              const targetSize = getTargetSize(img, 2000);
+              EXIF.getData(file, () => {
+                const imgToSend = processImg(uri, targetSize.height, targetSize.width, img.width, img.height, EXIF.getTag(file, 'Orientation'));
+                // Set images to state
+                this.setState({
+                  image: imgToSend,
+                  imagePreview: imgToSend,
+                  imageName: pic.name,
+                  error: '',
+                });
+              });
+            })(pic, upload.target.result);
+          };
+          img.src = upload.target.result;
         };
         // File reader set up
         reader.onabort = () => this.setState({error: "File read aborted."});
@@ -218,15 +233,24 @@ class ArticleForm extends React.Component {
         const reader = new FileReader();
         // Convert from blob to a proper file object that can be passed to server
         reader.onload = (upload) => {
-          // Manipulate the correct component object
-          const bodyObj = this.state.body;
-          bodyObj[index].preview = pic.preview;
-          bodyObj[index].body = upload.target.result;
-          // Update the state
-          this.setState({
-            body: bodyObj,
-            error: '',
-          });
+          var img = new Image();
+          img.onload = () => {
+            ((file, uri) => {
+              const targetSize = getTargetSize(img, 2000);
+              EXIF.getData(file, () => {
+                const imgToSend = processImg(uri, targetSize.height, targetSize.width, img.width, img.height, EXIF.getTag(file, 'Orientation'));
+                // Set images to state
+                const bodyObj = this.state.body;
+                bodyObj[index].preview = pic.preview;
+                bodyObj[index].body = imgToSend;
+                this.setState({
+                  body: bodyObj,
+                  error: '',
+                });
+              });
+            })(pic, upload.target.result);
+          };
+          img.src = upload.target.result;
         };
         // File reader set up
         reader.onabort = () => this.setState({error: "File read aborted."});

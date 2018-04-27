@@ -368,11 +368,12 @@ module.exports = () => {
               if (errHome) {
                 res.send({
                   success: false,
-                  error: 'Error remvoing content.',
+                  error: 'Error removing content.',
                 });
               } else {
                 res.send({
                   success: true,
+                  data: banner,
                   error: '',
                 });
               }
