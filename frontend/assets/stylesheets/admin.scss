@@ -10,6 +10,7 @@
   // Style links in the admin sidebar
   .link {
     width: 100%;
+    display: block;
     padding: 0.75rem 1rem;
     color: $dark-gray;
     cursor: hand;
@@ -17,11 +18,14 @@
     transition: all 0.2s ease;
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 
-    // If a link is active
-    &:hover,
-    &:active,
-    &:focus {
+    &:hover {
       background: $light-gray;
+    }
+
+    &:active,
+    &:focus,
+    &.active {
+      background: darken($light-gray, 1%) !important;
     }
   }
 }

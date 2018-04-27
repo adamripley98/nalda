@@ -50,9 +50,33 @@ import Contact from '../components/Contact';
 import Credits from '../components/Credits';
 import Terms from '../components/Terms';
 import Privacy from '../components/Privacy';
-import Admin from '../components/admin/Admin';
 import NotFoundSection from '../components/NotFoundSection';
 import Profile from '../components/Profile';
+
+// Admin routes
+import Admin from '../components/admin/Admin';
+import AdminWrapper from '../components/admin/AdminWrapper';
+import ListAdmins from '../components/admin/tables/ListAdmins';
+import ListCurators from '../components/admin/tables/ListCurators';
+import ListUsers from '../components/admin/tables/ListUsers';
+import ListArticles from '../components/admin/tables/ListArticles';
+import ListListings from '../components/admin/tables/ListListings';
+import ListVideos from '../components/admin/tables/ListVideos';
+import ManageAdmins from '../components/admin/forms/ManageAdmins';
+import ManageHomepage from '../components/admin/forms/ManageHomepage';
+
+// Import routes
+import {
+  adminPath,
+  adminAdminsPath,
+  adminCuratorsPath,
+  adminUsersPath,
+  adminArticlesPath,
+  adminListingsPath,
+  adminVideosPath,
+  manageAdminsPath,
+  manageHomepagePath,
+} from '../routes';
 
 /**
  * Component to handle routing on the frontend
@@ -146,7 +170,78 @@ class AppContainer extends Component {
                 <Route exact path="/" component={Home}/>
 
                 { /* Admin routes */ }
-                <Route exact path="/admin" component={requireAdmin(Admin)}/>
+                <Route
+                  exact path={adminPath}
+                  component={requireAdmin(() => (
+                    <AdminWrapper>
+                      <Admin />
+                    </AdminWrapper>
+                  ))}
+                />
+                <Route
+                  exact path={adminAdminsPath}
+                  component={requireAdmin(() => (
+                    <AdminWrapper>
+                      <ListAdmins />
+                    </AdminWrapper>
+                  ))}
+                />
+                <Route
+                  exact path={adminCuratorsPath}
+                  component={requireAdmin(() => (
+                    <AdminWrapper>
+                      <ListCurators />
+                    </AdminWrapper>
+                  ))}
+                />
+                <Route
+                  exact path={adminUsersPath}
+                  component={requireAdmin(() => (
+                    <AdminWrapper>
+                      <ListUsers />
+                    </AdminWrapper>
+                  ))}
+                />
+                <Route
+                  exact path={adminArticlesPath}
+                  component={requireAdmin(() => (
+                    <AdminWrapper>
+                      <ListArticles />
+                    </AdminWrapper>
+                  ))}
+                />
+                <Route
+                  exact path={adminListingsPath}
+                  component={requireAdmin(() => (
+                    <AdminWrapper>
+                      <ListListings />
+                    </AdminWrapper>
+                  ))}
+                />
+                <Route
+                  exact path={adminVideosPath}
+                  component={requireAdmin(() => (
+                    <AdminWrapper>
+                      <ListVideos />
+                    </AdminWrapper>
+                  ))}
+                />
+                <Route
+                  exact path={manageAdminsPath}
+                  component={requireAdmin(() => (
+                    <AdminWrapper>
+                      <ManageAdmins />
+                    </AdminWrapper>
+                  ))}
+                />
+                <Route
+                  exact path={manageHomepagePath}
+                  component={requireAdmin(() => (
+                    <AdminWrapper>
+                      <ManageHomepage />
+                    </AdminWrapper>
+                  ))}
+                />
 
                 { /* Routes for articles */ }
                 <Route exact path="/articles" component={Articles} />

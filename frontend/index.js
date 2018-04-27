@@ -4,7 +4,7 @@ import { render } from 'react-dom';
 
 // Necessary for redux state persistence
 import { persistStore } from 'redux-persist';
-import { compose, createStore, applyMiddleware } from 'redux';
+import { compose, createStore } from 'redux';
 import rootReducer from './reducers';
 // import logger from 'redux-logger';
 import Root from './containers/Root';
@@ -32,6 +32,6 @@ persistStore(
 );
 
 render(
-    <Root store={store} persistor={persistor}/>,
+    <Root store={store} persistor={persistor} />,
     document.getElementById('root')
 );

@@ -1,13 +1,48 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import Blurb from '../../shared/Blurb';
 import {Link} from 'react-router-dom';
+import axios from 'axios';
+import Loading from '../../shared/Loading';
+import ErrorMessage from '../../shared/ErrorMessage';
 
 class ListCurators extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      pending: true,
+      curators: [],
+    };
+  }
+
+  componentDidMount() {
+    axios.get('/api/admin/curators')
+      .then(res => {
+        if (!res.data.success) {
+          this.setState({
+            pending: false,
+            error: res.data.error,
+          });
+          return;
+        }
+        this.setState({
+          pending: false,
+          curators: res.data.curators,
+        });
+      })
+      .catch(err => {
+        this.setState({
+          pending: false,
+          error: err.message,
+        });
+      });
+  }
+
   render() {
-    if (this.props.curators && this.props.curators.length) {
-      const curators = this.props.curators.map((curator, i) => (
-        <tr key={ curator.userId }>
+    if (this.state.pending) return (<Loading />);
+    if (this.state.error) return (<ErrorMessage error={this.state.error} />);
+    if (this.state.curators && this.state.curators.length) {
+      const curators = this.state.curators.map((curator, i) => (
+        <tr key={curator._id}>
           <th scope="row">
             {i + 1}
           </th>
@@ -47,9 +82,5 @@ class ListCurators extends Component {
     );
   }
 }
-
-ListCurators.propTypes = {
-  curators: PropTypes.array,
-};
 
 export default ListCurators;

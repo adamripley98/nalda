@@ -1,29 +1,48 @@
 // Import frameworks
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, {Component} from 'react';
+import {Link} from 'react-router-dom';
+
+// Import routes
+import {
+  adminPath,
+  adminArticlesPath,
+  adminListingsPath,
+  adminVideosPath,
+  manageAdminsPath,
+  manageHomepagePath,
+  adminAdminsPath,
+  adminUsersPath,
+  adminCuratorsPath,
+} from '../../routes';
 
 /**
  * Sidebar for the admin panel
  */
-const Sidebar = ({ cb }) => {
-  return (
-    <div className="col-12 col-md-4 col-lg-3 admin-sidebar">
-      <div className="link" onClick={() => cb("")}>Panel home</div>
-      <div className="link" onClick={() => cb("homepage")}>Manage homepage</div>
-      <div className="link" onClick={() => cb("admins")}>View all admins</div>
-      <div className="link" onClick={() => cb("curators")}>View all curators</div>
-      <div className="link" onClick={() => cb("users")}>View all users</div>
-      <div className="link" onClick={() => cb("manage-admins")}>Manage admins</div>
-      <div className="link" onClick={() => cb("articles")}>Articles</div>
-      <div className="link" onClick={() => cb("listings")}>Listings</div>
-      <div className="link" onClick={() => cb("videos")}>Videos</div>
-    </div>
-  );
-};
+class Sidebar extends Component {
+  renderLink(path, text) {
+    return (
+      <Link to={path} className={window.location.pathname === path ? 'link active' : 'link'}>
+        {text}
+      </Link>
+    );
+  }
 
-// Prop validations
-Sidebar.propTypes = {
-  cb: PropTypes.func,
-};
+  render() {
+    return (
+      <div className="col-12 col-md-4 col-lg-3 admin-sidebar">
+        {this.renderLink(adminPath, 'Panel home')}
+        {this.renderLink(manageHomepagePath, 'Manage homepage')}
+        {this.renderLink(manageAdminsPath, 'Manage admins')}
+        {this.renderLink(adminAdminsPath, 'View all admins')}
+        {this.renderLink(adminCuratorsPath, 'View all curators')}
+        {this.renderLink(adminUsersPath, 'View all users')}
+        {this.renderLink(adminArticlesPath, 'Articles')}
+        {this.renderLink(adminListingsPath, 'Listings')}
+        {this.renderLink(adminVideosPath, 'Videos')}
+      </div>
+    );
+  }
+}
 
+// Export the component
 export default Sidebar;

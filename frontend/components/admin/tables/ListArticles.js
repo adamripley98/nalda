@@ -1,12 +1,48 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
+import axios from 'axios';
 import Blurb from '../../shared/Blurb';
+import Loading from '../../shared/Loading';
+import ErrorMessage from '../../shared/ErrorMessage';
 
+/**
+ * Render a table listing all articles
+ */
 class ListArticles extends Component {
+  // Constructor method
+  constructor(props) {
+    super(props);
+    this.state = {
+      pending: true,
+      articles: [],
+    };
+  }
+
+  // Pull data
+  componentDidMount() {
+    axios.get('/api/admin/articles')
+      .then(res => {
+        if (res.data.error) {
+          this.setState({
+            pending: false,
+            error: res.data.error,
+          });
+          return;
+        }
+        this.setState({
+          pending: false,
+          articles: res.data.articles,
+        });
+      })
+      .catch(err => this.setState({ error: err.message }));
+  }
+
+  // Render the table
   render() {
-    if (this.props.articles && this.props.articles.length) {
-      const articles = this.props.articles.map((article, i) => (
+    if (this.state.pending) return (<Loading />);
+    if (this.state.error) return (<ErrorMessage error={this.state.error} />);
+    if (this.state.articles && this.state.articles.length) {
+      const articles = this.state.articles.map((article, i) => (
         <tr key={ article._id }>
           <th scope="row">
             {i + 1}
@@ -49,9 +85,5 @@ class ListArticles extends Component {
     );
   }
 }
-
-ListArticles.propTypes = {
-  articles: PropTypes.array,
-};
 
 export default ListArticles;

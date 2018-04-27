@@ -1,12 +1,46 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
+import axios from 'axios';
 import Blurb from '../../shared/Blurb';
+import Loading from '../../shared/Loading';
+import ErrorMessage from '../../shared/ErrorMessage';
 
 class ListVideos extends Component {
+  // Constructor method
+  constructor(props) {
+    super(props);
+    this.state = {
+      pending: true,
+      videos: [],
+      error: "",
+    };
+  }
+
+  // Pull data
+  componentDidMount() {
+    axios.get('/api/admin/videos')
+      .then(res => {
+        if (res.data.error) {
+          this.setState({
+            pending: false,
+            error: res.data.error,
+          });
+          return;
+        }
+        this.setState({
+          pending: false,
+          videos: res.data.videos,
+        });
+      })
+      .catch(err => this.setState({ error: err.message }));
+  }
+
+  // Render the table
   render() {
-    if (this.props.videos && this.props.videos.length) {
-      const videos = this.props.videos.map((video, i) => (
+    if (this.state.pending) return (<Loading />);
+    if (this.state.error) return (<ErrorMessage error={this.state.error} />);
+    if (this.state.videos && this.state.videos.length) {
+      const videos = this.state.videos.map((video, i) => (
         <tr key={video._id}>
           <th scope="row">
             {i + 1}
@@ -47,9 +81,5 @@ class ListVideos extends Component {
     );
   }
 }
-
-ListVideos.propTypes = {
-  videos: PropTypes.array,
-};
 
 export default ListVideos;

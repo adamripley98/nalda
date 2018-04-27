@@ -1,12 +1,46 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
+import axios from 'axios';
 import Blurb from '../../shared/Blurb';
+import Loading from '../../shared/Loading';
+import ErrorMessage from '../../shared/ErrorMessage';
 
 class ListListings extends Component {
+  // Constructor method
+  constructor(props) {
+    super(props);
+    this.state = {
+      pending: true,
+      listings: [],
+      error: "",
+    };
+  }
+
+  // Pull data
+  componentDidMount() {
+    axios.get('/api/admin/listings')
+      .then(res => {
+        if (res.data.error) {
+          this.setState({
+            pending: false,
+            error: res.data.error,
+          });
+          return;
+        }
+        this.setState({
+          pending: false,
+          listings: res.data.listings,
+        });
+      })
+      .catch(err => this.setState({ error: err.message }));
+  }
+
+  // Render the table
   render() {
-    if (this.props.listings && this.props.listings.length) {
-      const listings = this.props.listings.map((listing, i) => (
+    if (this.state.pending) return (<Loading />);
+    if (this.state.error) return (<ErrorMessage error={this.state.error} />);
+    if (this.state.listings && this.state.listings.length) {
+      const listings = this.state.listings.map((listing, i) => (
         <tr key={ listing._id }>
           <th scope="row">
             {i + 1}
@@ -38,7 +72,7 @@ class ListListings extends Component {
               </tr>
             </thead>
             <tbody>
-              { listings }
+              {listings}
             </tbody>
           </table>
         </div>
@@ -49,9 +83,5 @@ class ListListings extends Component {
     );
   }
 }
-
-ListListings.propTypes = {
-  listings: PropTypes.array,
-};
 
 export default ListListings;
