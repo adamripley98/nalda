@@ -7,6 +7,7 @@
   box-shadow: 0.1rem 0rem 0.1rem rgba(0, 0, 0, 0.025);
   border-right: 1px solid rgba(0, 0, 0, 0.05);
 
+  // Style links in the admin sidebar
   .link {
     width: 100%;
     padding: 0.75rem 1rem;
@@ -16,6 +17,7 @@
     transition: all 0.2s ease;
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 
+    // If a link is active
     &:hover,
     &:active,
     &:focus {
@@ -24,25 +26,30 @@
   }
 }
 
+// The sidebar should take up at least the full height on wider screens
 @media screen and (min-width: 768px) and (min-device-width: 768px) {
   .admin-sidebar {
     min-height: 100vh;
   }
 }
 
+// Style tables used in the admin panel
 .table {
   border: 1px solid $border;
 
+  // Give the head a darker color
   thead {
     background: darken($lighter-gray, 1.5%);
   }
 
+  // Give every other row a slightly darker color
   tbody {
     tr:nth-child(even) {
       background: lighten($lighter-gray, 1%);
     }
   }
 
+  // Style icons used in tables
   .fa-close {
     cursor: hand;
     cursor: pointer;

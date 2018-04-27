@@ -21,13 +21,14 @@
  * This file is what is included in every page on the application
  */
 
-// Overwriting the default container
+// Overwriting the default bootstrap container to be more full-width
 .container {
 	width: calc(100% - 48px);
 	margin: 0 auto;
 	padding: 0;
 }
 
+// Adjust margins depending on the screen size
 @media only screen and (min-width: 768px) {
 	.container {
 		width: calc(100% - 72px);
