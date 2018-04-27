@@ -15,6 +15,9 @@ import ErrorMessage from '../../shared/ErrorMessage';
 import Medium from '../../shared/Medium';
 import Tags from '../../shared/Tags';
 
+// Import helper functions
+import {processImg, getTargetSize} from '../../../helperMethods/imageUploading';
+
 // Import actions
 import {notifyMessage} from '../../../actions/notification';
 
@@ -134,7 +137,6 @@ class ListingForm extends React.Component {
     this.removeImage = this.removeImage.bind(this);
     this.handleChangeAdditionalAmenities = this.handleChangeAdditionalAmenities.bind(this);
     this.renderAdditionalAmenities = this.renderAdditionalAmenities.bind(this);
-    this.processImg = this.processImg.bind(this);
     this.onDrop = this.onDrop.bind(this);
   }
 
@@ -346,27 +348,6 @@ class ListingForm extends React.Component {
     return null;
   }
 
-  // Helper method to rotate image
-  processImg(image, trgHeight, trgWidth, srcWidth, srcHeight, orientation) {
-    var canvas = document.createElement('canvas');
-    canvas.width = trgWidth;
-    canvas.height = trgHeight;
-    var img = new Image;
-    img.src = image;
-    var ctx = canvas.getContext("2d");
-    if (orientation === 2) ctx.transform(-1, 0, 0, 1, trgWidth, 0);
-    if (orientation === 3) ctx.transform(-1, 0, 0, -1, trgWidth, trgHeight);
-    if (orientation === 4) ctx.transform(1, 0, 0, -1, 0, trgHeight);
-    if (orientation === 5) ctx.transform(0, 1, 1, 0, 0, 0);
-    if (orientation === 6) ctx.transform(0, 1, -1, 0, trgHeight, 0);
-    if (orientation === 7) ctx.transform(0, -1, -1, 0, trgHeight, trgWidth);
-    if (orientation === 8) ctx.transform(0, -1, 1, 0, 0, trgWidth);
-    ctx.drawImage(img, 0, 0, srcWidth, srcHeight, 0, 0, trgWidth, trgHeight);
-    ctx.fill();
-    return canvas.toDataURL();
-  }
-
-
   // Helper method for image uploads
   onDrop(acceptedFiles, rejectedFiles, hero) {
     // Ensure at leat one valid image was uploaded
@@ -379,12 +360,9 @@ class ListingForm extends React.Component {
           var img = new Image();
           img.onload = () => {
             ((file, uri) => {
+              const targetSize = getTargetSize(img, 1200);
               EXIF.getData(file, () => {
-                var imgToSend = this.processImg(
-                uri,
-                img.height, img.width,
-                img.width, img.height,
-                EXIF.getTag(file, 'Orientation'));
+                const imgToSend = processImg(uri, targetSize.height, targetSize.width, img.width, img.height, EXIF.getTag(file, 'Orientation'));
                 // Set images to state
                 this.setState({
                   image: imgToSend,
@@ -419,31 +397,18 @@ class ListingForm extends React.Component {
           const reader = new FileReader();
           // Convert from blob to a proper file object that can be passed to server
           reader.onload = (upload) => {
-            const image = new Image();
-            image.onload = () => {
-              // Resize image before passing to backend
-              const canvas = document.createElement('canvas');
-              const maxSize = 800;
-              let width = image.width;
-              let height = image.height;
-              if (width > height) {
-                if (width > maxSize) {
-                  height *= maxSize / width;
-                  width = maxSize;
-                }
-              } else {
-                if (height > maxSize) {
-                  width *= maxSize / height;
-                  height = maxSize;
-                }
-              }
-              canvas.width = width;
-              canvas.height = height;
-              canvas.getContext('2d').drawImage(image, 0, 0, width, height);
-              const dataUrl = canvas.toDataURL('image/jpeg');
-              images.push(dataUrl);
+            var img = new Image();
+            img.onload = () => {
+              ((file, uri) => {
+                const targetSize = getTargetSize(img, 750);
+                EXIF.getData(file, () => {
+                  const imgToSend = processImg(uri, targetSize.height, targetSize.width, img.width, img.height, EXIF.getTag(file, 'Orientation'));
+                  images.push(imgToSend);
+                  this.setState(images);
+                });
+              })(pic, upload.target.result);
             };
-            image.src = upload.target.result;
+            img.src = upload.target.result;
             cb();
           };
           // File reader set up

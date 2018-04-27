@@ -372,7 +372,7 @@ module.exports = () => {
           });
         } else {
           // Update image
-          if (image.indexOf('naldacampus.s3.amazonaws') === -1) {
+          if (image.indexOf('s3.amazonaws') === -1) {
             // Convert article picture to a form that s3 can display
             const imageConverted = new Buffer(image.replace(/^data:image\/\w+;base64,/, ""), 'base64');
             const folderId = uuid();
@@ -537,7 +537,7 @@ module.exports = () => {
             async.eachSeries(body, (comp, cb) => {
               if (comp.componentType === 'image') {
                 // Need to story body image in aws
-                if (comp.body.indexOf('naldacampus.s3.amazonaws') === -1) {
+                if (comp.body.indexOf('s3.amazonaws') === -1) {
                   const articlePictureConverted = new Buffer(comp.body.replace(/^data:image\/\w+;base64,/, ""), 'base64');
                   sharp(articlePictureConverted)
                   .resize(600, null)
@@ -744,21 +744,27 @@ module.exports = () => {
                   });
                 } else {
                   const home = homepage[0];
-                  const fromTheEditors = home.fromTheEditors;
-                  const banner = home.banner;
-                  // Delete listing from homepage
-                  for (var i = 0; i < fromTheEditors.length; i++) {
-                    if (fromTheEditors[i].contentId === articleId) {
-                      fromTheEditors.splice(i, 1);
-                      break;
-                    }
-                  }
+                  const banner = home.banner.slice();
+                  // Remove content from banner
                   for (var j = 0; j < banner.length; j++) {
                     if (banner[j].contentId === articleId) {
                       banner.splice(j, 1);
                       break;
                     }
                   }
+                  // Delete component from homepage
+                  const components = home.components.slice();
+                  components.forEach((comp, i) => {
+                    comp.content.forEach((content, k) => {
+                      if (content.contentId === articleId) {
+                        components[i].content.splice(k, 1);
+                      }
+                    });
+                  });
+                  // Save changes
+                  home.banner = banner;
+                  home.components = components;
+
                   home.save((errSave) => {
                     if (errSave) {
                       res.send({
