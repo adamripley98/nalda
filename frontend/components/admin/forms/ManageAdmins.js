@@ -11,6 +11,9 @@ class ManageAdmins extends Component {
       success: '',
       error: '',
       email: '',
+      users: [],
+      curators: [],
+      admins: [],
     };
 
     // Bind this to helper methods
@@ -19,6 +22,31 @@ class ManageAdmins extends Component {
     this.onSubmitAdmin = this.onSubmitAdmin.bind(this);
     this.onSubmitCurator = this.onSubmitCurator.bind(this);
     this.onSubmitRemoveCurator = this.onSubmitRemoveCurator.bind(this);
+  }
+
+  componentDidMount() {
+    window.scrollTo(0, 0);
+    axios.get('/api/admin/admins')
+    .then(resp1 => {
+      axios.get('/api/admin/curators')
+      .then(resp2 => {
+        axios.get('/api/admin/users')
+        .then(resp3 => {
+          if (resp1.data.success && resp2.data.success && resp3.data.success) {
+            this.setState({
+              admins: resp1.data.admins,
+              curators: resp2.data.curators,
+              users: resp3.data.users,
+            });
+          } else {
+            this.setState({error: 'Error pulling users.'});
+          }
+        });
+      });
+    })
+    .catch(error => {
+      this.setState({error});
+    });
   }
 
   handleChange(event) {
@@ -52,7 +80,7 @@ class ManageAdmins extends Component {
       }
       this.setState({
         error: '',
-        success: 'Successfullt added new admin',
+        success: 'Successfully added new admin',
         email: '',
       });
     }).catch(err => {
@@ -122,7 +150,7 @@ class ManageAdmins extends Component {
         });
         this.setState({
           error: "",
-          manageAdminSuccess: 'Successfully removed curator',
+          success: 'Successfully removed curator',
           curators: newCurators,
           users: newUsers,
           email: '',
