@@ -7,9 +7,14 @@ import PropTypes from 'prop-types';
 
 // Import components
 import NewComponent from '../NewComponent';
+import ErrorMessage from '../../shared/ErrorMessage';
 
 // Import actions
 import {notifyMessage} from '../../../actions/notification';
+
+// TODO fix on drop
+// TODO refresh adding/deleting content
+// TODO error on both forms
 
 class ManageHomepage extends Component {
   // Constructor method
@@ -19,19 +24,13 @@ class ManageHomepage extends Component {
     // Set the state
     this.state = {
       error: '',
-      manageHomepageSuccess: '',
       bannerContentId: '',
       bannerImageToAdd: '',
       bannerImagePreview: '',
       bannerImageName: '',
-      recommendedContentId: '',
-      fromTheEditorsContentId: '',
-      naldaVideosContentId: '',
       pending: true,
       banner: [],
-      recommended: [],
-      fromTheEditors: [],
-      naldaVideos: [],
+      components: [],
     };
 
     // Bind this to helper methods
@@ -49,6 +48,7 @@ class ManageHomepage extends Component {
     this.onRemoveContent = this.onRemoveContent.bind(this);
     this.onRemoveComponent = this.onRemoveComponent.bind(this);
     this.displayList = this.displayList.bind(this);
+    this.updateComponents = this.updateComponents.bind(this);
   }
 
   componentDidMount() {
@@ -135,7 +135,6 @@ class ManageHomepage extends Component {
           // Set the state
           this.setState({
             error: '',
-            manageHomepageSuccess: 'Banner content updated.',
             banner: resp.data.data,
             bannerContentId: '',
             bannerImageToAdd: '',
@@ -147,7 +146,6 @@ class ManageHomepage extends Component {
       .catch((err) => {
         this.setState({
           error: err,
-          manageHomepageSuccess: '',
           bannerContentId: '',
           bannerImageToAdd: '',
         });
@@ -179,6 +177,7 @@ class ManageHomepage extends Component {
   }
 
   // Helper method for image uploads
+  // TODO fix on drop
   onDrop(acceptedFiles, rejectedFiles) {
     // Ensure at leat one valid image was uploaded
     if (acceptedFiles.length) {
@@ -206,6 +205,13 @@ class ManageHomepage extends Component {
     }
   }
 
+  updateComponents(newComponents) {
+    this.setState({
+      components: newComponents,
+      error: '',
+    });
+  }
+
   // Helper method to display banner options
   displayBanner() {
     let banner = null;
@@ -227,13 +233,6 @@ class ManageHomepage extends Component {
 
     return (
       <div>
-        {
-          this.state.manageHomepageSuccess ? (
-            <div className="alert alert-success marg-bot-1">
-              { this.state.manageHomepageSuccess }
-            </div>
-          ) : null
-        }
         <h4>Banner</h4>
         <input
           type="text"
@@ -300,8 +299,10 @@ class ManageHomepage extends Component {
         if (resp.data.error) {
           this.setState({error: resp.data.error});
         } else {
-          // TODO why isn't this notifying..
           this.props.notifyMessage("Successfully added content.");
+          this.setState({
+            components: resp.data.data,
+          });
         }
       })
       .catch(error => {this.setState(error);});
@@ -315,7 +316,6 @@ class ManageHomepage extends Component {
   // Helper method to remove a piece of content from a component
   onRemoveContent(component, contentId) {
     if (component && contentId) {
-      console.log('component', component);
       axios.post('/api/home/component/content/remove', {
         componentId: component._id,
         contentId,
@@ -324,8 +324,9 @@ class ManageHomepage extends Component {
         if (resp.data.error) {
           this.setState({error: resp.data.error});
         } else {
-          console.log('sucess', resp.data);
+          this.props.notifyMessage("Content removed.");
           this.setState({
+            components: resp.data.data,
             error: '',
           });
         }
@@ -346,9 +347,10 @@ class ManageHomepage extends Component {
         if (resp.data.error) {
           this.setState({error: resp.data.error});
         } else {
-          console.log('success remove!', resp.data);
+          this.props.notifyMessage("Component removed!");
           this.setState({
             error: '',
+            components: resp.data.data,
           });
         }
       })
@@ -381,6 +383,7 @@ class ManageHomepage extends Component {
     if (this.state.components && this.state.components.length) {
       components = this.state.components.map((component, i) => (
         <div key={component._id}>
+          <ErrorMessage error={this.state.error} />
           <form onSubmit={(e) => this.onSubmitContent(e, component, document.getElementById(`contentId${i}`).value)}>
             <h4 className="bold marg-bot-1">
               {component.title}
@@ -437,7 +440,9 @@ class ManageHomepage extends Component {
       <div>
         {this.displayBanner()}
         {this.editHomepage()}
-        <NewComponent />
+        <NewComponent
+          updateComponents={this.updateComponents}
+         />
       </div>
     );
   }

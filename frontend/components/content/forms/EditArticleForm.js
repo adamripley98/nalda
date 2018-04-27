@@ -459,7 +459,6 @@ class EditArticleForm extends React.Component {
                           placeholder = "Type some header text...";
                           className = "special header";
                         }
-                        console.log('bofy', this.state.body[index].body);
 
                         // Return the textarea associated with the component
                         return (

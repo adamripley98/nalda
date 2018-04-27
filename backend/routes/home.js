@@ -441,6 +441,7 @@ module.exports = () => {
           res.send({
             error: '',
             success: true,
+            data: components,
           });
         });
       });
@@ -476,10 +477,19 @@ module.exports = () => {
               }
             });
             if (hasChanged) {
-              homepage.save();
-              res.send({
-                success: true,
-                error: '',
+              homepage.save((e, newHome) => {
+                if (e) {
+                  res.send({
+                    success: false,
+                    error: 'Error removing component.',
+                  });
+                } else {
+                  res.send({
+                    success: true,
+                    error: '',
+                    data: newHome.components,
+                  });
+                }
               });
             } else {
               res.send({
@@ -509,7 +519,6 @@ module.exports = () => {
             error: 'Error removing content.',
           });
         } else {
-          // TODO implement
           Homepage.find({}, (errHome, home) => {
             if (errHome) {
               res.send({
@@ -532,10 +541,19 @@ module.exports = () => {
                 }
               });
               if (hasChanged) {
-                homepage.save();
-                res.send({
-                  success: true,
-                  error: '',
+                homepage.save((e, newHome) => {
+                  if (e) {
+                    res.send({
+                      success: false,
+                      error: 'Error removing content.',
+                    });
+                  } else {
+                    res.send({
+                      success: true,
+                      data: newHome.components,
+                      error: '',
+                    });
+                  }
                 });
               } else {
                 res.send({
@@ -614,7 +632,7 @@ module.exports = () => {
                         }
                       });
                       if (hasChanged && !contentExists) {
-                        homepage.save(saveErr => {
+                        homepage.save((saveErr, newHome) => {
                           if (saveErr) {
                             res.send({
                               success: false,
@@ -623,7 +641,8 @@ module.exports = () => {
                           } else {
                             res.send({
                               success: true,
-                              error: ''
+                              error: '',
+                              data: newHome.components,
                             });
                           }
                         });
