@@ -21,7 +21,7 @@ import {
 class Sidebar extends Component {
   renderLink(path, text) {
     return (
-      <Link to={path} className="link">
+      <Link to={path} className={window.location.pathname === path ? 'link active' : 'link'}>
         {text}
       </Link>
     );
