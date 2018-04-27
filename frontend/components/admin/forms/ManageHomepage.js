@@ -2,7 +2,13 @@ import React, {Component} from 'react';
 
 class ManageHomepage extends Component {
   render() {
-    return (<div>Hi</div>);
+    return(
+      <form>
+        <h4 className="bold marg-bot-1">
+          Manage Homepage
+        </h4>
+      </form>
+    );
   }
 }
 

@@ -252,27 +252,26 @@ module.exports = () => {
                         error: 'Error finding content.',
                       });
                     } else {
-                      const userData = {
-                        totalUsers: 0,
-                        weeklyRegisters: 0,
-                      };
-
                       // Display pertinent information
                       profiles.forEach((user) => {
                         if (user.userType === 'curator') {
-                          curators.push({name: user.name, username: user.username, userId: user._id});
+                          curators.push({
+                            name: user.name,
+                            username: user.username,
+                            userId: user._id,
+                          });
                         } else if (user.userType === 'admin') {
-                          admins.push({name: user.name, username: user.username, userId: user._id});
+                          admins.push({
+                            name: user.name,
+                            username: user.username,
+                            userId: user._id,
+                          });
                         } else if (user.userType === 'user') {
-                          users.push({name: user.name, username: user.username, userId: user._id});
-                          // Increment total users
-                          userData.totalUsers++;
-                          const weekAgo = new Date();
-                          weekAgo.setDate(weekAgo.getDate() - 7);
-                          // Count number of users who registered this week
-                          if (user._id.getTimestamp().getTime() > weekAgo.getTime()) {
-                            userData.weeklyRegisters++;
-                          }
+                          users.push({
+                            name: user.name,
+                            username: user.username,
+                            userId: user._id
+                          });
                         }
                       });
                       const homepage = homepageContent[0];
@@ -316,7 +315,6 @@ module.exports = () => {
                                       admins,
                                       users,
                                       homepageContent: home,
-                                      userData,
                                       articles,
                                       listings,
                                       videos,

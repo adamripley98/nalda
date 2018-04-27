@@ -9,13 +9,6 @@ import {connect} from 'react-redux';
 // Import components
 import ErrorMessage from '../shared/ErrorMessage';
 import Loading from '../shared/Loading';
-import Sidebar from './Sidebar';
-import ListAdmins from './tables/ListAdmins';
-import ListListings from './tables/ListListings';
-import ListArticles from './tables/ListArticles';
-import ListVideos from './tables/ListVideos';
-import ListUsers from './tables/ListUsers';
-import ListCurators from './tables/ListCurators';
 import NewComponent from './NewComponent';
 
 // Import actions
@@ -60,9 +53,6 @@ class Admin extends Component {
     this.handleChangeRecommended = this.handleChangeRecommended.bind(this);
     this.handleChangeFromTheEditors = this.handleChangeFromTheEditors.bind(this);
     this.handleChangeNaldaVideos = this.handleChangeNaldaVideos.bind(this);
-    this.onSubmitAdmin = this.onSubmitAdmin.bind(this);
-    this.onSubmitCurator = this.onSubmitCurator.bind(this);
-    this.onSubmitRemoveCurator = this.onSubmitRemoveCurator.bind(this);
     this.onSubmitRemoveBannerContent = this.onSubmitRemoveBannerContent.bind(this);
     this.onSubmitChangeBanner = this.onSubmitChangeBanner.bind(this);
     this.onSubmitChangeRecommended = this.onSubmitChangeRecommended.bind(this);
@@ -70,10 +60,7 @@ class Admin extends Component {
     this.onSubmitRemoveFromTheEditorsContent = this.onSubmitRemoveFromTheEditorsContent.bind(this);
     this.onSubmitChangeFromTheEditors = this.onSubmitChangeFromTheEditors.bind(this);
     this.onSubmitChangeNaldaVideos = this.onSubmitChangeNaldaVideos.bind(this);
-    this.displayUserData = this.displayUserData.bind(this);
     this.displayBanner = this.displayBanner.bind(this);
-    this.sidebarCallback = this.sidebarCallback.bind(this);
-    this.displayAdminForm = this.displayAdminForm.bind(this);
   }
 
   componentDidMount() {
@@ -149,14 +136,6 @@ class Admin extends Component {
   handleChangeNaldaVideos(event) {
     this.setState({
       naldaVideosContentId: event.target.value,
-    });
-  }
-
-  // Handle a callback to the sidebar
-  sidebarCallback(to) {
-    this.setState({
-      to,
-      error: "",
     });
   }
 
@@ -521,20 +500,6 @@ class Admin extends Component {
     });
   }
 
-  displayUserData() {
-    return (
-      <div className="tags big">
-        <div className="space-1" />
-        <span className="tag">
-          <strong>Total users:</strong> {this.state.userData.totalUsers}
-        </span>
-        <span className="tag">
-          <strong>New users this week:</strong> {this.state.userData.weeklyRegisters}
-        </span>
-      </div>
-    );
-  }
-
   // Helper method for image uploads
   onDrop(acceptedFiles, rejectedFiles) {
     // Ensure at leat one valid image was uploaded
@@ -839,128 +804,28 @@ class Admin extends Component {
     );
   }
 
-  // Display the form to manage admins
-  displayAdminForm() {
-    return (
-      <form>
-        <h4 className="bold marg-bot-1">
-          Manage Admins
-        </h4>
-        <p className="marg-bot-1">
-          Enter a user's email address in order to add them as an admin or as a content curator or to remove them as a content creator.
-        </p>
-        {
-          this.state.manageAdminSuccess ? (
-            <div className="alert alert-success marg-bot-1">
-              { this.state.manageAdminSuccess }
-            </div>
-          ) : null
-        }
-
-        <input
-          type="text"
-          placeholder="Email"
-          className="form-control marg-bot-1 border"
-          value={ this.state.email }
-          onChange={ this.handleChangeEmail }
-          rows="1"
-        />
-
-        <div className="row">
-          <div className="col-6">
-            <button
-              onClick={(e) => this.onSubmitAdmin(e)}
-              className={
-                this.state.email ? (
-                  "btn btn-primary full-width cursor"
-                ) : (
-                  "btn btn-primary full-width disabled"
-                )
-              }
-            >
-              Add as admin
-            </button>
-          </div>
-          <div className="col-6">
-            <button
-              onClick={(e) => this.onSubmitCurator(e)}
-              className={
-                this.state.email ? (
-                  "btn btn-primary full-width cursor"
-                ) : (
-                  "btn btn-primary full-width disabled"
-                )
-              }
-            >
-              Add as curator
-            </button>
-          </div>
-          <div className="col-12 marg-top-1">
-            <button
-              onClick={(e) => this.onSubmitRemoveCurator(e)}
-              className={
-                this.state.email ? (
-                  "btn btn-primary full-width cursor"
-                ) : (
-                  "btn btn-primary full-width disabled"
-                )
-              }
-            >
-              Remove curator
-            </button>
-          </div>
-        </div>
-      </form>
-    );
-  }
-
   // Render the component
   render() {
     // If the app is pending
     if (this.state.pending) return (<Loading />);
     return (
-      <div className="container-fluid">
-        <div className="row">
-          <Sidebar cb={(to) => this.sidebarCallback(to)} />
-          <div className="col-12 col-md-8 col-lg-8 col-xl-7">
-            <div className="space-1" />
-            <ErrorMessage error={ this.state.error } />
-            { this.state.to === "" && (
-              <div>
-                <h4>Admin panel</h4>
-                Welcome to the admin panel; through this portion of the application you can keep track of your user base, recommended content, and created content.
-                { this.displayUserData() }
-              </div>
-            )}
-            {this.state.to === "admins" && (
-              <ListAdmins />
-            )}
-            {this.state.to === "curators" && (
-              <ListCurators />
-            )}
-            {this.state.to === "users" && (
-              <ListUsers />
-            )}
-            { this.state.to === "manage-admins" && this.displayAdminForm() }
-            {this.state.to === "listings" && (
-              <ListListings listings={this.state.listings} />
-            )}
-            {this.state.to === "articles" && (
-              <ListArticles />
-            )}
-            {this.state.to === "videos" && (
-              <ListVideos videos={this.state.videos} />
-            )}
-            { this.state.to === "homepage" && (
-              <div>
-                {this.displayBanner()}
-                {this.editHomepage()}
-                <NewComponent />
-              </div>
-            )}
-            <div className="space-2" />
+      <div>
+        <div className="space-1" />
+        <ErrorMessage error={ this.state.error } />
+        { this.state.to === "" && (
+          <div>
+            <h4>Admin panel</h4>
+            Welcome to the admin panel; through this portion of the application you can keep track of your user base, recommended content, and created content.
           </div>
-        </div>
+        )}
+        { this.state.to === "homepage" && (
+          <div>
+            {this.displayBanner()}
+            {this.editHomepage()}
+            <NewComponent />
+          </div>
+        )}
+        <div className="space-2" />
       </div>
     );
   }
