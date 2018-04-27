@@ -226,114 +226,66 @@ module.exports = () => {
           success: false,
           error: authRes.error,
         });
-      } else {
-        // Declare arrays of data that will be passed back
-        const curators = [];
-        const admins = [];
-        const users = [];
-
-        // Find content
-        Article.find({}, (errArticles, articles) => {
-          Listing.find({}, (errListings, listings) => {
-            Video.find({}, (errVideos, videos) => {
-              Homepage.find({}, (errHomepage, homepageContent) => {
-                // Send back any errors
-                if (errArticles || errListings || errVideos || errHomepage) {
-                  res.send({
-                    success: false,
-                    error: 'Error finding content.',
-                  });
-                } else {
-                  // Find all curators and admins
-                  User.find({}, (err, profiles) => {
-                    if (err) {
-                      res.send({
-                        success: false,
-                        error: 'Error finding content.',
-                      });
-                    } else {
-                      // Display pertinent information
-                      profiles.forEach((user) => {
-                        if (user.userType === 'curator') {
-                          curators.push({
-                            name: user.name,
-                            username: user.username,
-                            userId: user._id,
-                          });
-                        } else if (user.userType === 'admin') {
-                          admins.push({
-                            name: user.name,
-                            username: user.username,
-                            userId: user._id,
-                          });
-                        } else if (user.userType === 'user') {
-                          users.push({
-                            name: user.name,
-                            username: user.username,
-                            userId: user._id
-                          });
-                        }
-                      });
-                      const homepage = homepageContent[0];
-                      pullData(homepage.fromTheEditors, (editorsResp) => {
-                        if (!editorsResp.success) {
-                          res.send({
-                            success: false,
-                            error: editorsResp.error,
-                          });
-                        } else {
-                          const fromTheEditors = editorsResp.returnArr;
-                          pullData(homepage.naldaVideos, (videosResp) => {
-                            if (!videosResp.success) {
-                              res.send({
-                                success: false,
-                                error: videosResp.error,
-                              });
-                            } else {
-                              const naldaVideos = videosResp.returnArr;
-                              pullData(homepage.recommended, (recResp) => {
-                                if (!recResp.success) {
-                                  res.send({
-                                    success: false,
-                                    error: recResp.error,
-                                  });
-                                } else {
-                                  const recommended = recResp.returnArr;
-                                  const home = {
-                                    banner: homepage.banner,
-                                    naldaVideos,
-                                    fromTheEditors,
-                                    recommended,
-                                    categories: homepage.categories,
-                                  };
-                                  // Send back information
-                                  res.send({
-                                    success: true,
-                                    error: '',
-                                    data: {
-                                      curators,
-                                      admins,
-                                      users,
-                                      homepageContent: home,
-                                      articles,
-                                      listings,
-                                      videos,
-                                    }
-                                  });
-                                }
-                              });
-                            }
-                          });
-                        }
-                      });
-                    }
-                  });
-                }
-              });
-            });
-          });
-        });
+        return;
       }
+      // Find content
+      Homepage.find({}, (errHomepage, homepageContent) => {
+        // Send back any errors
+        if (errHomepage) {
+          res.send({
+            success: false,
+            error: 'Error finding content.',
+          });
+          return;
+        }
+        // Find all curators and admins
+        const homepage = homepageContent[0];
+        pullData(homepage.fromTheEditors, (editorsResp) => {
+          if (!editorsResp.success) {
+            res.send({
+              success: false,
+              error: editorsResp.error,
+            });
+          } else {
+            const fromTheEditors = editorsResp.returnArr;
+            pullData(homepage.naldaVideos, (videosResp) => {
+              if (!videosResp.success) {
+                res.send({
+                  success: false,
+                  error: videosResp.error,
+                });
+              } else {
+                const naldaVideos = videosResp.returnArr;
+                pullData(homepage.recommended, (recResp) => {
+                  if (!recResp.success) {
+                    res.send({
+                      success: false,
+                      error: recResp.error,
+                    });
+                  } else {
+                    const recommended = recResp.returnArr;
+                    const home = {
+                      banner: homepage.banner,
+                      naldaVideos,
+                      fromTheEditors,
+                      recommended,
+                      categories: homepage.categories,
+                    };
+                    // Send back information
+                    res.send({
+                      success: true,
+                      error: '',
+                      data: {
+                        homepageContent: home,
+                      }
+                    });
+                  }
+                });
+              }
+            });
+          }
+        });
+      });
     });
   });
 
