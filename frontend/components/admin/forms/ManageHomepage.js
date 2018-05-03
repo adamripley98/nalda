@@ -177,9 +177,8 @@ class ManageHomepage extends Component {
   }
 
   // Helper method for image uploads
-  // TODO fix on drop
   onDrop(acceptedFiles, rejectedFiles) {
-    // Ensure at leat one valid image was uploaded
+    // Ensure at least one valid image was uploaded
     if (acceptedFiles.length) {
       const image = acceptedFiles[0];
       const reader = new FileReader();
