@@ -13,23 +13,31 @@ const sgMail = require('@sendgrid/mail');
 module.exports = () => {
   // Route to send an email to Nalda team
   router.post('/', (req, res) => {
+    // Isolate variables from the request
+    const {
+      email,
+      name,
+      message,
+    } = req.body;
+
     // Error check for empty fields
-    if (!req.body.email) {
+    if (!email) {
       res.send({
         success: false,
         error: 'Email field must be populated.',
       });
-    } else if (!req.body.name) {
+    } else if (!name) {
       res.send({
         success: false,
         error: 'Name field must be populated.',
       });
-    } else if (!req.body.message) {
+    } else if (!message) {
       res.send({
         success: false,
         error: 'Message field must be populated.',
       });
     } else {
+      // Isolate the API key
       sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
       // Create message

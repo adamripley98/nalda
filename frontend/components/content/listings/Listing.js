@@ -298,28 +298,6 @@ class Listing extends React.Component {
     });
   }
 
-  // Helper method to delete reviews
-  deleteReview(reviewId) {
-    axios.post('/api/reviews/delete', {
-      reviewId,
-      listingId: this.state.listingId,
-    })
-    .then((resp) => {
-      if (resp.data.success) {
-        this.updateReviews();
-      } else {
-        this.setState({
-          error: resp.data.error,
-        });
-      }
-    })
-    .catch((err) => {
-      this.setState({
-        error: err,
-      });
-    });
-  }
-
   /**
    * Helper method to render additional amenities
    */
@@ -348,7 +326,7 @@ class Listing extends React.Component {
 
   // Helper method to delete reviews
   deleteReview(reviewId) {
-    axios.post('/api/reviews/delete', {
+    axios.delete('/api/reviews', {
       reviewId,
       listingId: this.state.listingId,
     })

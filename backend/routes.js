@@ -209,7 +209,6 @@ module.exports = () => {
     });
   });
 
-
   // Return the router for use throughout the application
   return router;
 };

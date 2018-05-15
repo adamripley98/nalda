@@ -46,7 +46,13 @@ module.exports = () => {
         });
       } else {
         // Isolate variables from the request
-        const { name, bio, location, profilePicture, profilePictureChanged } = req.body;
+        const {
+          name,
+          bio,
+          location,
+          profilePicture,
+          profilePictureChanged
+        } = req.body;
 
         // Error checking
         if (!name) {
