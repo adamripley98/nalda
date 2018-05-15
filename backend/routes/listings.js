@@ -267,7 +267,7 @@ module.exports = () => {
           const newImages = [];
           const folderId = uuid();
           // If main image was a newly uploaded image
-          if (image.indexOf('naldacampus.s3.amazonaws') === -1) {
+          if (image.indexOf('s3.amazonaws') === -1) {
             // Convert article picture to a form that s3 can display
             const imageConverted = new Buffer(image.replace(/^data:image\/\w+;base64,/, ""), 'base64');
             // Resize image before storage
@@ -317,7 +317,7 @@ module.exports = () => {
                           } else {
                             async.eachSeries(images, (img, cb) => {
                               // New image is actually new
-                              if (img.indexOf('naldacampus.s3.amazonaws') === -1) {
+                              if (img.indexOf('s3.amazonaws') === -1) {
                                 const listingPictureConverted = new Buffer(img.replace(/^data:image\/\w+;base64,/, ""), 'base64');
                                 sharp(listingPictureConverted)
                                 .resize(800, null)
@@ -428,7 +428,7 @@ module.exports = () => {
           } else {
             async.eachSeries(images, (img, cb) => {
               // If img is a new image
-              if (img.indexOf('naldacampus.s3.amazonaws') === -1) {
+              if (img.indexOf('s3.amazonaws') === -1) {
                 // Convert to storable form
                 const listingPictureConverted = new Buffer(img.replace(/^data:image\/\w+;base64,/, ""), 'base64');
                 // Resize image
@@ -570,21 +570,27 @@ module.exports = () => {
                   });
                 } else {
                   const home = homepage[0];
-                  const recommended = home.recommended;
-                  const banner = home.banner;
-                  // Delete listing from homepage
-                  for (var i = 0; i < recommended.length; i++) {
-                    if (recommended[i].contentId === listingId) {
-                      recommended.splice(i, 1);
-                      break;
-                    }
-                  }
+                  const banner = home.banner.slice();
+                  // Remove content from banner
                   for (var j = 0; j < banner.length; j++) {
                     if (banner[j].contentId === listingId) {
                       banner.splice(j, 1);
                       break;
                     }
                   }
+                  // Delete component from homepage
+                  const components = home.components.slice();
+                  components.forEach((comp, i) => {
+                    comp.content.forEach((content, k) => {
+                      if (content.contentId === listingId) {
+                        components[i].content.splice(k, 1);
+                      }
+                    });
+                  });
+                  // Save changes
+                  home.banner = banner;
+                  home.components = components;
+
                   home.save((errSave) => {
                     if (errSave) {
                       res.send({

@@ -52,7 +52,7 @@ class NewComponent extends Component {
           this.setState({error: resp.data.error});
         } else {
           this.props.notifyMessage("Successfully added component.");
-          // TODO refresh
+          this.props.updateComponents(resp.data.data);
         }
       })
       .catch(error => this.setState({error}));
@@ -112,6 +112,7 @@ class NewComponent extends Component {
 // Prop validations
 NewComponent.propTypes = {
   notifyMessage: PropTypes.func,
+  updateComponents: PropTypes.func,
 };
 
 const mapStateToProps = () => {

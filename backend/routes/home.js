@@ -17,7 +17,6 @@ const Article = require('../models/article');
 const Listing = require('../models/listing');
 const Video = require('../models/video');
 const Homepage = require('../models/homepage');
-const HomeComponent = require('../models/homeComponent');
 
 // Import helper methods
 const {AdminCheck} = require('../helperMethods/authChecking');
@@ -369,13 +368,13 @@ module.exports = () => {
               if (errHome) {
                 res.send({
                   success: false,
-                  error: 'Error remvoing content.',
+                  error: 'Error removing content.',
                 });
               } else {
                 res.send({
                   success: true,
+                  data: banner,
                   error: '',
-                  data: homepage.banner,
                 });
               }
             });
@@ -405,64 +404,44 @@ module.exports = () => {
         return;
       }
 
-      // Declare new home component with no content
-      const newHomeComponent = new HomeComponent({
+      const newComp = {
         title,
         subtitle,
         contentType,
         content: [],
-      });
-      // Save in mongo
-      newHomeComponent.save((err, component) => {
-        if (err) {
+      };
+
+      // Find the homepage to add the content to
+      Homepage.find({}, (errHome, home) => {
+        if (errHome) {
           res.send({
             success: false,
-            error: 'Error adding component.',
+            error: 'Failed to save to homepage',
           });
           return;
         }
 
-        const newComp = {
-          title,
-          subtitle,
-          contentType,
-          content: [],
-        };
+        // Select the first homepage
+        const homepage = home[0];
 
-        // Find the homepage to add the content to
-        Homepage.find({}, (errHome, home) => {
-          if (errHome) {
+        // Add this component to the homepage components
+        const components = homepage.components.slice();
+        components.push(newComp);
+        homepage.components = components;
+
+        // Save the new components to the homepage
+        homepage.save(errSave => {
+          if (errSave) {
             res.send({
               success: false,
-              error: 'Failed to save to homepage',
+              error: 'Error adding component.',
             });
             return;
           }
-
-          // Select the first homepage
-          const homepage = home[0];
-
-          // Add this component to the homepage components
-          const components = homepage.components.slice();
-          components.push(newComp);
-          homepage.components = components;
-
-          // Save the new components to the homepage
-          homepage.save((errSave, newHomepage) => {
-            if (errSave) {
-              res.send({
-                success: false,
-                error: 'Error adding component.',
-              });
-              return;
-            }
-
-            res.send({
-              newHomepage,
-              homepage,
-              success: true,
-              data: component,
-            });
+          res.send({
+            error: '',
+            success: true,
+            data: components,
           });
         });
       });
@@ -491,7 +470,6 @@ module.exports = () => {
             let hasChanged = false;
             components.forEach((component, i) => {
               if (component._id.toString() === componentId) {
-                console.log('wow same');
                 const newComponents = homepage.components.slice();
                 newComponents.splice(i, 1);
                 homepage.components = newComponents;
@@ -499,10 +477,19 @@ module.exports = () => {
               }
             });
             if (hasChanged) {
-              homepage.save();
-              res.send({
-                success: true,
-                error: '',
+              homepage.save((e, newHome) => {
+                if (e) {
+                  res.send({
+                    success: false,
+                    error: 'Error removing component.',
+                  });
+                } else {
+                  res.send({
+                    success: true,
+                    error: '',
+                    data: newHome.components,
+                  });
+                }
               });
             } else {
               res.send({
@@ -532,7 +519,6 @@ module.exports = () => {
             error: 'Error removing content.',
           });
         } else {
-          // TODO implement
           Homepage.find({}, (errHome, home) => {
             if (errHome) {
               res.send({
@@ -555,10 +541,19 @@ module.exports = () => {
                 }
               });
               if (hasChanged) {
-                homepage.save();
-                res.send({
-                  success: true,
-                  error: '',
+                homepage.save((e, newHome) => {
+                  if (e) {
+                    res.send({
+                      success: false,
+                      error: 'Error removing content.',
+                    });
+                  } else {
+                    res.send({
+                      success: true,
+                      data: newHome.components,
+                      error: '',
+                    });
+                  }
                 });
               } else {
                 res.send({
@@ -637,7 +632,7 @@ module.exports = () => {
                         }
                       });
                       if (hasChanged && !contentExists) {
-                        homepage.save(saveErr => {
+                        homepage.save((saveErr, newHome) => {
                           if (saveErr) {
                             res.send({
                               success: false,
@@ -646,7 +641,8 @@ module.exports = () => {
                           } else {
                             res.send({
                               success: true,
-                              error: ''
+                              error: '',
+                              data: newHome.components,
                             });
                           }
                         });
