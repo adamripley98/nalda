@@ -48,6 +48,10 @@
       font-size: 1.2rem;
       padding-top: 0.5rem;
       padding-left: 0.2rem;
+
+      &.small {
+        display: none;
+      }
     }
 
     .form-control {
@@ -441,13 +445,25 @@
  * NOTE these links can still be accessed by toggling the side menu
  */
 @media screen and (max-width: 718px) {
-  .nav .search .form-control {
-    &.small {
-      display: block;
+  .nav .search {
+    .fa-search {
+      &.small {
+        display: block;
+      }
+
+      &.large {
+        display: none;
+      }
     }
 
-    &.large {
-      display: none;
+    .form-control {
+      &.small {
+        display: block;
+      }
+
+      &.large {
+        display: none;
+      }
     }
   }
 
@@ -457,13 +473,25 @@
 }
 
 @media screen and (max-device-width: 718px) {
-  .nav .search .form-control {
-    &.small {
-      display: block;
+  .nav .search {
+    .fa-search {
+      &.small {
+        display: block;
+      }
+
+      &.large {
+        display: none;
+      }
     }
 
-    &.large {
-      display: none;
+    .form-control {
+      &.small {
+        display: block;
+      }
+
+      &.large {
+        display: none;
+      }
     }
   }
 

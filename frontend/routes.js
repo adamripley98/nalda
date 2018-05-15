@@ -8,3 +8,6 @@ export const adminListingsPath   = '/admin/listings';
 export const adminVideosPath     = '/admin/videos';
 export const manageAdminsPath    = '/admin/manage-admins';
 export const manageHomepagePath  = '/admin/manage-homepage';
+
+// Addiitonal routes
+export const searchResultsPath   = '/search';

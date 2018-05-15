@@ -33,6 +33,7 @@ class Search extends Component {
     this.handleChangeSearch = this.handleChangeSearch.bind(this);
     this.renderSuggestions = this.renderSuggestions.bind(this);
     this.getSearchResults = this.getSearchResults.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   /**
@@ -121,6 +122,14 @@ class Search extends Component {
         search: value,
       });
     }
+  }
+
+  /**
+   * Handle the user submitting the form
+   */
+  handleSubmit(event) {
+    event.preventDefault();
+    window.location.href = '/';
   }
 
   /**
@@ -226,11 +235,24 @@ class Search extends Component {
     return (
       <div className="search">
         <i
-          className="fa fa-search cursor"
+          className="fa fa-search cursor small"
           aria-hidden="true"
           onClick={ () => {
             // Focus on the search element
             document.getElementById('search').focus();
+
+            // Update the state for the searchbar to be active
+            this.setState({
+              active: true,
+            });
+          }}
+        />
+        <i
+          className="fa fa-search cursor large"
+          aria-hidden="true"
+          onClick={ () => {
+            // Focus on the search element
+            document.getElementById('search-large').focus();
 
             // Update the state for the searchbar to be active
             this.setState({
@@ -249,6 +271,7 @@ class Search extends Component {
         />
         <input
           className="form-control large"
+          id="search-large"
           value={ this.state.seach }
           onChange={ this.handleChangeSearch }
           onClick={ () => this.setState({ active: true }) }

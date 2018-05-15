@@ -52,6 +52,7 @@ import Terms from '../components/Terms';
 import Privacy from '../components/Privacy';
 import NotFoundSection from '../components/NotFoundSection';
 import Profile from '../components/Profile';
+import SearchResults from '../components/content/SearchResults';
 
 // Admin routes
 import Admin from '../components/admin/Admin';
@@ -76,6 +77,7 @@ import {
   adminVideosPath,
   manageAdminsPath,
   manageHomepagePath,
+  searchResultsPath,
 } from '../routes';
 
 /**
@@ -167,6 +169,7 @@ class AppContainer extends Component {
                 <Route exact path="/terms" component={Terms}/>
                 <Route exact path="/privacy" component={Privacy}/>
                 <Route exact path="/credits" component={Credits}/>
+                <Route exact path={searchResultsPath} component={SearchResults}/>
                 <Route exact path="/" component={Home}/>
 
                 { /* Admin routes */ }
