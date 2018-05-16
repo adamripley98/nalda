@@ -33,6 +33,7 @@ class Search extends Component {
     this.handleChangeSearch = this.handleChangeSearch.bind(this);
     this.renderSuggestions = this.renderSuggestions.bind(this);
     this.getSearchResults = this.getSearchResults.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   /**
@@ -121,6 +122,14 @@ class Search extends Component {
         search: value,
       });
     }
+  }
+
+  /**
+   * Handle the user submitting the form
+   */
+  handleSubmit(event) {
+    event.preventDefault();
+    window.location.href = `/search?search=${this.state.search}`;
   }
 
   /**
@@ -226,7 +235,7 @@ class Search extends Component {
     return (
       <div className="search">
         <i
-          className="fa fa-search cursor"
+          className="fa fa-search cursor small"
           aria-hidden="true"
           onClick={ () => {
             // Focus on the search element
@@ -238,22 +247,40 @@ class Search extends Component {
             });
           }}
         />
-        <input
-          className="form-control small"
-          id="search"
-          value={ this.state.seach }
-          onChange={ this.handleChangeSearch }
-          onClick={ () => this.setState({ active: true }) }
-          ref={(input) => { this.nameInput = input; }}
-          placeholder="Search"
+        <i
+          className="fa fa-search cursor large"
+          aria-hidden="true"
+          onClick={ () => {
+            // Focus on the search element
+            document.getElementById('search-large').focus();
+
+            // Update the state for the searchbar to be active
+            this.setState({
+              active: true,
+            });
+          }}
         />
-        <input
-          className="form-control large"
-          value={ this.state.seach }
-          onChange={ this.handleChangeSearch }
-          onClick={ () => this.setState({ active: true }) }
-          placeholder="Search for activities, places, or curators"
-        />
+        <form onSubmit={this.handleSubmit} className="small">
+          <input
+            className="form-control"
+            id="search"
+            value={ this.state.seach }
+            onChange={ this.handleChangeSearch }
+            onClick={ () => this.setState({ active: true }) }
+            ref={(input) => { this.nameInput = input; }}
+            placeholder="Search"
+          />
+        </form>
+        <form onSubmit={this.handleSubmit} className="large">
+          <input
+            className="form-control"
+            id="search-large"
+            value={ this.state.seach }
+            onChange={ this.handleChangeSearch }
+            onClick={ () => this.setState({ active: true }) }
+            placeholder="Search for activities, places, or curators"
+          />
+        </form>
         {
           this.renderSuggestions()
         }

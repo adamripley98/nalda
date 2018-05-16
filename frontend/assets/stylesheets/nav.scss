@@ -50,16 +50,21 @@
       padding-left: 0.2rem;
     }
 
+    form {
+      width: 100%;
+      display: block;
+    }
+
+    .small {
+      display: none !important;
+    }
+
     .form-control {
       border: 0px solid !important;
       flex: 1;
       padding-left: 0rem;
       padding-right: 0rem;
       background: transparent;
-
-      &.small {
-        display: none;
-      }
 
       &::-webkit-input-placeholder {
         color: $gray;
@@ -441,13 +446,13 @@
  * NOTE these links can still be accessed by toggling the side menu
  */
 @media screen and (max-width: 718px) {
-  .nav .search .form-control {
-    &.small {
-      display: block;
+  .nav .search {
+    .small {
+      display: block !important;
     }
 
-    &.large {
-      display: none;
+    .large {
+      display: none !important;
     }
   }
 
@@ -457,13 +462,13 @@
 }
 
 @media screen and (max-device-width: 718px) {
-  .nav .search .form-control {
-    &.small {
-      display: block;
+  .nav .search {
+    .small {
+      display: block !important;
     }
 
-    &.large {
-      display: none;
+    .large {
+      display: none !important;
     }
   }
 
