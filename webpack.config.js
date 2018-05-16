@@ -7,10 +7,10 @@ module.exports = {
   ],
   module: {
     rules: [
-        { test: /\.js?$/, loader: 'babel-loader', exclude: /node_modules/ },
-        { test: /\.s?css$/, loader: 'style-loader!css-loader!sass-loader' },
-        { test: /\.(png|jpg|gif)$/, use: [{ loader: 'file-loader', options: {}}] },
-        { test: /\.svg$/, use: [{loader: "babel-loader"}, {loader: "react-svg-loader", options: {jsx: true}}] },
+      { test: /\.js?$/, loader: 'babel-loader', exclude: /node_modules/ },
+      { test: /\.s?css$/, loader: 'style-loader!css-loader!sass-loader' },
+      { test: /\.(png|jpg|gif)$/, use: [{ loader: 'file-loader', options: {}}] },
+      { test: /\.svg$/, use: [{loader: "babel-loader"}, {loader: "react-svg-loader", options: {jsx: true}}] },
     ],
   },
   resolve: {
