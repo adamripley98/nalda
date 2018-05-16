@@ -9,7 +9,7 @@
     "frontend": "webpack -d --watch",
     "backend": "nodemon server.js",
     "go": "nodemon --exec npm start",
-    "start": "yarn build && NODE_ENV=production node server.js",
+    "start": "NODE_ENV=production node server.js",
     "test": "mocha --compilers js:babel-core/register ./test/**/*.js --require ignore-styles"
   },
   "author": "Adam Ripley, Cameron Cabo",
