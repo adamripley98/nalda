@@ -129,7 +129,7 @@ class Search extends Component {
    */
   handleSubmit(event) {
     event.preventDefault();
-    window.location.href = '/';
+    window.location.href = `/search?search=${this.state.search}`;
   }
 
   /**
@@ -260,23 +260,27 @@ class Search extends Component {
             });
           }}
         />
-        <input
-          className="form-control small"
-          id="search"
-          value={ this.state.seach }
-          onChange={ this.handleChangeSearch }
-          onClick={ () => this.setState({ active: true }) }
-          ref={(input) => { this.nameInput = input; }}
-          placeholder="Search"
-        />
-        <input
-          className="form-control large"
-          id="search-large"
-          value={ this.state.seach }
-          onChange={ this.handleChangeSearch }
-          onClick={ () => this.setState({ active: true }) }
-          placeholder="Search for activities, places, or curators"
-        />
+        <form onSubmit={this.handleSubmit} className="small">
+          <input
+            className="form-control"
+            id="search"
+            value={ this.state.seach }
+            onChange={ this.handleChangeSearch }
+            onClick={ () => this.setState({ active: true }) }
+            ref={(input) => { this.nameInput = input; }}
+            placeholder="Search"
+          />
+        </form>
+        <form onSubmit={this.handleSubmit} className="large">
+          <input
+            className="form-control"
+            id="search-large"
+            value={ this.state.seach }
+            onChange={ this.handleChangeSearch }
+            onClick={ () => this.setState({ active: true }) }
+            placeholder="Search for activities, places, or curators"
+          />
+        </form>
         {
           this.renderSuggestions()
         }
