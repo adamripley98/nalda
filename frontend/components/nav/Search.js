@@ -225,6 +225,7 @@ class Search extends Component {
       );
     }
 
+    // If the navbar is not active, show no results
     return null;
   }
 
@@ -281,9 +282,7 @@ class Search extends Component {
             placeholder="Search for activities, places, or curators"
           />
         </form>
-        {
-          this.renderSuggestions()
-        }
+        {this.renderSuggestions()}
         {
           this.state.active && (
             <div

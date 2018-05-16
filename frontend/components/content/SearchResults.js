@@ -33,8 +33,13 @@ class SearchResults extends Component {
       search: string,
     };
 
+    // Bind this to helper methods
+    this.renderResults = this.renderResults.bind(this);
+  }
+
+  componentDidMount() {
     // Make a request for search data
-    axios.post('/api/search', {search: string})
+    axios.post('/api/search', {search: this.state.search})
       .then(res => {
         if (!res.data.success) {
           this.setState({
@@ -54,11 +59,9 @@ class SearchResults extends Component {
         });
       })
       .catch(err => this.setState({error: err.message}));
-
-    // Bind this to helper methods
-    this.renderResults = this.renderResults.bind(this);
   }
 
+  // Helper method to return if there is any data in the passed in array
   isEmpty(array) {
     return (!array || array.length === 0);
   }
@@ -141,6 +144,7 @@ class SearchResults extends Component {
   }
 
   render() {
+    // If data is still being pulled
     if (this.state.pending) return (<Loading />);
 
     // If data has been pulled
