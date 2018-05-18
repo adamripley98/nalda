@@ -3,7 +3,7 @@ const processImg = (image, trgHeight, trgWidth, srcWidth, srcHeight, orientation
   var canvas = document.createElement('canvas');
   canvas.width = trgWidth;
   canvas.height = trgHeight;
-  var img = new Image;
+  var img = new Image();
   img.src = image;
   var ctx = canvas.getContext("2d");
   if (orientation === 2) ctx.transform(-1, 0, 0, 1, trgWidth, 0);
@@ -15,7 +15,7 @@ const processImg = (image, trgHeight, trgWidth, srcWidth, srcHeight, orientation
   if (orientation === 8) ctx.transform(0, -1, 1, 0, 0, trgWidth);
   ctx.drawImage(img, 0, 0, srcWidth, srcHeight, 0, 0, trgWidth, trgHeight);
   ctx.fill();
-  return canvas.toDataURL();
+  return canvas.toDataURL('image/jpeg', 1.0);
 };
 
 // Helper method to maintain correct proportions
