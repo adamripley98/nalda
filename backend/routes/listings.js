@@ -634,25 +634,13 @@ module.exports = () => {
         });
       } else {
         // Isolate variables from the body
-        const title = req.body.title;
-        const description = req.body.description;
-        const naldaFavorite = req.body.naldaFavorite;
-        const image = req.body.image;
-        const images = req.body.images;
-        const hours = req.body.hours;
-        const rating = req.body.rating;
-        const price = req.body.price;
-        const website = req.body.website;
-        const categories = req.body.categories;
-        const amenities = req.body.amenities;
-        const additionalAmenities = req.body.additionalAmenities;
-        const location = req.body.location;
+        const { title, description, naldaFavorite, image, images, hours, rating,
+                price, website, categories, amenities, additionalAmenities, location } = req.body;
         const userId  = req.session.passport.user;
 
         let error = "";
 
         // Error checking
-        // TODO: error check for hours and categories
         if (!title) {
           error = "Title must be populated.";
         } else if (!description) {
