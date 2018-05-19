@@ -82,12 +82,8 @@ module.exports = () => {
         });
       } else {
         // Isolate variables
-        const title = req.body.title;
-        const subtitle = req.body.subtitle;
-        const image = req.body.image;
-        const body = req.body.body;
-        const location = req.body.location;
         const userId = req.session.passport.user;
+        const { title, subtitle, image, body, location } = req.body;
 
         // Keep track of any errors
         let error = "";
@@ -120,8 +116,6 @@ module.exports = () => {
                        component.componentType !== "header"
             ) {
               error = "Component type must be valid.";
-            } else if (component.componentType === "image") {
-              // TODO Error check to ensure pictures are valid form
             }
           }
         }
@@ -137,17 +131,16 @@ module.exports = () => {
             if (err) {
               res.send({
                 success: false,
-                error: 'Error finding author.',
+                error: 'You must be an author.',
               });
             } else if (!author) {
               res.send({
                 success: false,
-                error: 'Author not found.'
+                error: 'You must be an author.'
               });
             } else {
               // Convert article picture to a form that s3 can display
               const imageConverted = new Buffer(image.replace(/^data:image\/\w+;base64,/, ""), 'base64');
-              const folderId = uuid();
 
               // Resize to be appropriate size
               sharp(imageConverted)
@@ -155,127 +148,121 @@ module.exports = () => {
               .toBuffer()
               .then( resized => {
                 // Create bucket
-                s3bucket.createBucket(() => {
-                  var params = {
-                    Bucket: AWS_BUCKET_NAME,
-                    Key: `articlepictures/${folderId}/${uuid()}`,
-                    ContentType: 'image/jpeg',
-                    Body: resized,
-                    ContentEncoding: 'base64',
-                    ACL: 'public-read',
-                  };
-                  // Upload photo
-                  s3bucket.upload(params, (errUpload, data) => {
-                    if (errUpload) {
-                      res.send({
-                        success: false,
-                        error: 'Error uploading profile picture.',
-                      });
-                    } else {
-                      // Resize to be appropriate size
-                      sharp(imageConverted)
-                      .resize(600, null)
-                      .toBuffer()
-                      .then( resizedPrev => {
-                        s3bucket.createBucket(() => {
-                          var previewParams = {
-                            Bucket: AWS_BUCKET_NAME,
-                            Key: `articlepictures/${folderId}/${uuid()}`,
-                            ContentType: 'image/jpeg',
-                            Body: resizedPrev,
-                            ContentEncoding: 'base64',
-                            ACL: 'public-read',
-                          };
-                          // Upload photo
-                          s3bucket.upload(previewParams, (errorUpload, previewData) => {
-                            if (errorUpload) {
-                              res.send({
-                                success: false,
-                                error: 'Error uploading profile picture.',
+                var params = {
+                  Bucket: AWS_BUCKET_NAME,
+                  Key: `articlepictures/${title}/${uuid()}`,
+                  ContentType: 'image/jpeg',
+                  Body: resized,
+                  ContentEncoding: 'base64',
+                  ACL: 'public-read',
+                };
+                // Upload photo
+                s3bucket.upload(params, (errUpload, data) => {
+                  if (errUpload) {
+                    res.send({
+                      success: false,
+                      error: 'Error uploading profile picture.',
+                    });
+                  } else {
+                    // Resize to be appropriate size
+                    sharp(imageConverted)
+                    .resize(600, null)
+                    .toBuffer()
+                    .then( resizedPrev => {
+                      var previewParams = {
+                        Bucket: AWS_BUCKET_NAME,
+                        Key: `articlepictures/${title}/${uuid()}`,
+                        ContentType: 'image/jpeg',
+                        Body: resizedPrev,
+                        ContentEncoding: 'base64',
+                        ACL: 'public-read',
+                      };
+                      // Upload photo
+                      s3bucket.upload(previewParams, (errorUpload, previewData) => {
+                        if (errorUpload) {
+                          res.send({
+                            success: false,
+                            error: 'Error uploading profile picture.',
+                          });
+                        } else {
+                          const newBody = [];
+                          async.eachSeries(body, (comp, cb) => {
+                            if (comp.componentType === 'image') {
+                              const articlePictureConverted = new Buffer(comp.body.replace(/^data:image\/\w+;base64,/, ""), 'base64');
+
+                              // Resize to be appropriate size
+                              sharp(articlePictureConverted)
+                              .resize(1280, null)
+                              .toBuffer()
+                              .then( resizedArticlePic => {
+                                var parameters = {
+                                  Bucket: AWS_BUCKET_NAME,
+                                  Key: `articlepictures/${title}/${uuid()}`,
+                                  ContentType: 'image/jpeg',
+                                  Body: resizedArticlePic,
+                                  ContentEncoding: 'base64',
+                                  ACL: 'public-read',
+                                };
+                                // Upload photo
+                                s3bucket.upload(parameters, (errorupload, img) => {
+                                  if (errorupload) {
+                                    res.send({
+                                      success: false,
+                                      error: 'Error uploading profile picture.',
+                                    });
+                                  } else {
+                                    newBody.push({componentType: comp.componentType, body: img.Location});
+                                    cb();
+                                  }
+                                });
                               });
                             } else {
-                              const newBody = [];
-                              async.eachSeries(body, (comp, cb) => {
-                                if (comp.componentType === 'image') {
-                                  const articlePictureConverted = new Buffer(comp.body.replace(/^data:image\/\w+;base64,/, ""), 'base64');
+                              // If component is not an image, simply add it to body
+                              newBody.push({componentType: comp.componentType, body: comp.body});
+                              cb();
+                            }
+                          }, (asyncErr) => {
+                            if (asyncErr) {
+                              res.send({
+                                success: false,
+                                error: 'Error posting article.',
+                              });
+                            } else {
+                              // Creates a new article with given params
+                              const newArticle = new Article({
+                                title,
+                                subtitle,
+                                image: data.Location,
+                                imagePreview: previewData.Location,
+                                body: newBody,
+                                location,
+                                author: userId,
+                                createdAt: Date.now(),
+                                updatedAt: Date.now(),
+                              });
 
-                                  // Resize to be appropriate size
-                                  sharp(articlePictureConverted)
-                                  .resize(1280, null)
-                                  .toBuffer()
-                                  .then( resizedArticlePic => {
-                                    s3bucket.createBucket(() => {
-                                      var parameters = {
-                                        Bucket: AWS_BUCKET_NAME,
-                                        Key: `articlepictures/${folderId}/${uuid()}`,
-                                        ContentType: 'image/jpeg',
-                                        Body: resizedArticlePic,
-                                        ContentEncoding: 'base64',
-                                        ACL: 'public-read',
-                                      };
-                                      // Upload photo
-                                      s3bucket.upload(parameters, (errorupload, img) => {
-                                        if (errorupload) {
-                                          res.send({
-                                            success: false,
-                                            error: 'Error uploading profile picture.',
-                                          });
-                                        } else {
-                                          newBody.push({componentType: comp.componentType, body: img.Location});
-                                          cb();
-                                        }
-                                      });
-                                    });
-                                  });
-                                } else {
-                                  // If component is not an image, simply add it to body
-                                  newBody.push({componentType: comp.componentType, body: comp.body});
-                                  cb();
-                                }
-                              }, (asyncErr) => {
-                                if (asyncErr) {
+                              // Save the new article in Mongo
+                              newArticle.save((errArticle, article) => {
+                                if (errArticle) {
+                                  // If there was an error saving the article
                                   res.send({
                                     success: false,
                                     error: 'Error posting article.',
                                   });
                                 } else {
-                                  // Creates a new article with given params
-                                  const newArticle = new Article({
-                                    title,
-                                    subtitle,
-                                    image: data.Location,
-                                    imagePreview: previewData.Location,
-                                    body: newBody,
-                                    location,
-                                    author: userId,
-                                    createdAt: Date.now(),
-                                    updatedAt: Date.now(),
-                                  });
-
-                                  // Save the new article in Mongo
-                                  newArticle.save((errArticle, article) => {
-                                    if (errArticle) {
-                                      // If there was an error saving the article
-                                      res.send({
-                                        success: false,
-                                        error: 'Error posting article.',
-                                      });
-                                    } else {
-                                      // Successfully send back data
-                                      res.send({
-                                        success: true,
-                                        data: article,
-                                      });
-                                    }
+                                  // Successfully send back data
+                                  res.send({
+                                    success: true,
+                                    data: article,
                                   });
                                 }
                               });
                             }
                           });
-                        });
+                        }
                       });
-                    }
-                  });
+                    });
+                  }
                 });
               })
               .catch(() => {
