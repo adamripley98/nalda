@@ -207,6 +207,7 @@ module.exports = () => {
    * @param categories
    */
    // TODO find better solution than reusing entire code block lol
+   // TODO when person changes title, change title in s3 as well
   router.post('/:id/edit', (req, res) => {
     // Find the id from the url
     const listingId = req.params.id;
@@ -266,7 +267,6 @@ module.exports = () => {
           });
         } else {
           const newImages = [];
-          const folderId = uuid();
           // If main image was a newly uploaded image
           if (image.indexOf('s3.amazonaws') === -1) {
             // Convert article picture to a form that s3 can display
@@ -280,7 +280,7 @@ module.exports = () => {
               s3bucket.createBucket(() => {
                 var params = {
                   Bucket: AWS_BUCKET_NAME,
-                  Key: `listingpictures/${folderId}/${uuid()}`,
+                  Key: `listingpictures/${title}/${uuid()}`,
                   ContentType: 'image/jpeg',
                   Body: imageResized,
                   ContentEncoding: 'base64',
@@ -302,7 +302,7 @@ module.exports = () => {
                       s3bucket.createBucket(() => {
                         var previewParams = {
                           Bucket: AWS_BUCKET_NAME,
-                          Key: `listingpictures/${folderId}/${uuid()}`,
+                          Key: `listingpictures/${title}/${uuid()}`,
                           ContentType: 'image/jpeg',
                           Body: resizedPrev,
                           ContentEncoding: 'base64',
@@ -327,7 +327,7 @@ module.exports = () => {
                                   s3bucket.createBucket(() => {
                                     var parameters = {
                                       Bucket: AWS_BUCKET_NAME,
-                                      Key: `listingpictures/${folderId}/${uuid()}`,
+                                      Key: `listingpictures/${title}/${uuid()}`,
                                       ContentType: 'image/jpeg',
                                       Body: listingPicResized,
                                       ContentEncoding: 'base64',
@@ -427,6 +427,7 @@ module.exports = () => {
               });
             });
           } else {
+            // TODO This is only to resize existing images
             // Go to s3 and download image
             request.get(image, (reqErr, response, body) => {
               if(!reqErr && response.statusCode === 200) {
@@ -466,7 +467,7 @@ module.exports = () => {
                             s3bucket.createBucket(() => {
                               var parameters = {
                                 Bucket: AWS_BUCKET_NAME,
-                                Key: `listingpictures/${folderId}/${uuid()}`,
+                                Key: `listingpictures/${title}/${uuid()}`,
                                 ContentType: 'image/jpeg',
                                 Body: listingPicResized,
                                 ContentEncoding: 'base64',
@@ -487,9 +488,45 @@ module.exports = () => {
                             });
                           });
                         } else {
-                          // Simply add old image to new images array
-                          newImages.push(img);
-                          cb();
+                          // Find each image at given url, convert to buffer and resize
+                          console.log('what is img', img);
+                          request.get(img, (reqError, resp, newImg) => {
+                            if(!reqError && resp.statusCode === 200) {
+                              // Convert downloaded image to a buffer
+                              const listingPictureConverted = new Buffer(newImg, 'base64');
+                              // resize and reconvert to buffer
+                              sharp(listingPictureConverted)
+                              .resize(800, null)
+                              .toBuffer()
+                              .then( listingPicResized => {
+                                s3bucket.createBucket(() => {
+                                  var parameters = {
+                                    Bucket: AWS_BUCKET_NAME,
+                                    Key: `listingpictures/${title}/${uuid()}`,
+                                    ContentType: 'image/jpeg',
+                                    Body: listingPicResized,
+                                    ContentEncoding: 'base64',
+                                    ACL: 'public-read',
+                                  };
+                                  // Upload photo
+                                  s3bucket.upload(parameters, (errorUpload, pic) => {
+                                    if (errorUpload) {
+                                      res.send({
+                                        success: false,
+                                        error: 'Error uploading profile picture.',
+                                      });
+                                    } else {
+                                      // TODO go back to only pushing original image
+                                      newImages.push(pic.Location);
+                                      // Simply add old image to new images array
+                                      // newImages.push(img);
+                                      cb();
+                                    }
+                                  });
+                                });
+                              });
+                            }
+                          });
                         }
                       }, (asyncErr) => {
                         if (asyncErr) {
@@ -631,9 +668,25 @@ module.exports = () => {
                         error: 'Error deleting listing.',
                       });
                     } else {
-                      res.send({
-                        success: true,
-                        error: '',
+                      // Delete images from AWS
+                      const params = {
+                        Bucket: AWS_BUCKET_NAME,
+                        Key: `listingpictures/${listing.title}`,
+                      };
+                      s3bucket.deleteObject(params, (err, data) => {
+                        if (err) {
+                          res.send({
+                            success: false,
+                            error: 'Error deleting listing.',
+                          });
+                          console.log(err, err.stack);
+                        } else {
+                          console.log('deleting', data);
+                          res.send({
+                            success: true,
+                            error: '',
+                          });
+                        }
                       });
                     }
                   });
