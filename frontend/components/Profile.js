@@ -96,7 +96,7 @@ class Profile extends Component {
           _id={ art._id }
           title={ art.title }
           subtitle={ art.subtitle }
-          image={ art.previewImage ? art.previewImage : art.image }
+          image={ art.imagePreview ? art.imagePreview : art.image }
           isArticle
           isThin
         />
@@ -125,7 +125,7 @@ class Profile extends Component {
           _id={ listing._id }
           title={ listing.title }
           subtitle={ listing.description }
-          image={ listing.previewImage ? listing.previewImage : listing.image }
+          image={ listing.imagePreview ? listing.imagePreview : listing.image }
           key={ listing._id }
           isListing
           isThin

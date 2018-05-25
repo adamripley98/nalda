@@ -138,7 +138,7 @@ class Articles extends React.Component {
           key={ art._id }
           title={ art.title }
           subtitle={ art.subtitle }
-          image={ art.previewImage ? art.previewImage : art.image }
+          image={ art.imagePreview ? art.imagePreview : art.image }
           isArticle
         />
       ));

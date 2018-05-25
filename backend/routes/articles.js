@@ -479,7 +479,7 @@ module.exports = () => {
                                     article.title = title;
                                     article.subtitle = subtitle;
                                     article.image = data.Location;
-                                    article.previewImage = previewData.Location;
+                                    article.imagePreview = previewData.Location;
                                     article.body = newBody;
                                     article.location = location;
                                     article.author = userId;

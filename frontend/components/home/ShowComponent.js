@@ -18,7 +18,7 @@ class ShowComponent extends Component {
               <ArticlePreview
                 title={c.title}
                 subtitle={c.subtitle}
-                image={c.previewImage ? c.previewImage : c.image}
+                image={c.imagePreview ? c.imagePreview : c.image}
                 contentId={c.contentId}
                 key={`content-${c.contentId}`}
               />
