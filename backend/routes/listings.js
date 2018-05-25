@@ -93,7 +93,7 @@ module.exports = () => {
               error: "Failed to find author.",
             });
           } else if (!author) {
-            res.send({
+            res.status(404).send({
               success: false,
               error: 'Failed to find author.',
             });
@@ -363,7 +363,7 @@ module.exports = () => {
                                     listing.description = description;
                                     listing.naldaFavorite = naldaFavorite;
                                     listing.image = data.Location;
-                                    listing.previewImage = prevData.Location;
+                                    listing.imagePreview = prevData.Location;
                                     listing.images = newImages;
                                     listing.rating = rating;
                                     listing.price = price;
@@ -430,137 +430,152 @@ module.exports = () => {
                         error: 'Error uploading profile picture.',
                       });
                     } else {
-                      async.eachSeries(images, (img, cb) => {
-                        // If img is a new image
-                        if (img.indexOf('s3.amazonaws') === -1) {
-                          // Convert to storable form
-                          const listingPictureConverted = new Buffer(img.replace(/^data:image\/\w+;base64,/, ""), 'base64');
-                          // Resize image
-                          sharp(listingPictureConverted)
-                          .resize(800, null)
-                          .toBuffer()
-                          .then(listingPicResized => {
-                            s3bucket.createBucket(() => {
-                              var parameters = {
-                                Bucket: AWS_BUCKET_NAME,
-                                Key: `listingpictures/${title}/${uuid()}`,
-                                ContentType: 'image/jpeg',
-                                Body: listingPicResized,
-                                ContentEncoding: 'base64',
-                                ACL: 'public-read',
-                              };
-                              // Upload photo
-                              s3bucket.upload(parameters, (errorUpload, pic) => {
-                                if (errorUpload) {
-                                  res.send({
-                                    success: false,
-                                    error: 'Error uploading profile picture.',
-                                  });
-                                } else {
-                                  newImages.push(pic.Location);
-                                  cb();
-                                }
-                              });
-                            });
-                          });
-                        } else {
-                          // Find each image at given url, convert to buffer and resize
-                          console.log('what is img', img);
-                          request.get(img, (reqError, resp, newImg) => {
-                            if(!reqError && resp.statusCode === 200) {
-                              // Convert downloaded image to a buffer
-                              const listingPictureConverted = new Buffer(newImg, 'base64');
-                              // resize and reconvert to buffer
+                      sharp(imageConverted)
+                      .resize(600, null)
+                      .toBuffer()
+                      .then(resizedPrev => {
+                      // Create bucket
+                        var previewParams = {
+                          Bucket: AWS_BUCKET_NAME,
+                          Key: `listingpictures/${title}/${uuid()}`,
+                          ContentType: 'image/jpeg',
+                          Body: resizedPrev,
+                          ContentEncoding: 'base64',
+                          ACL: 'public-read',
+                        };
+                        // Upload photo
+                        s3bucket.upload(previewParams, (errorupload, prevData) => {
+                          async.eachSeries(images, (img, cb) => {
+                            // If img is a new image
+                            if (img.indexOf('s3.amazonaws') === -1) {
+                              // Convert to storable form
+                              const listingPictureConverted = new Buffer(img.replace(/^data:image\/\w+;base64,/, ""), 'base64');
+                              // Resize image
                               sharp(listingPictureConverted)
                               .resize(800, null)
                               .toBuffer()
-                              .then( listingPicResized => {
-                                s3bucket.createBucket(() => {
-                                  var parameters = {
-                                    Bucket: AWS_BUCKET_NAME,
-                                    Key: `listingpictures/${title}/${uuid()}`,
-                                    ContentType: 'image/jpeg',
-                                    Body: listingPicResized,
-                                    ContentEncoding: 'base64',
-                                    ACL: 'public-read',
-                                  };
-                                  // Upload photo
-                                  s3bucket.upload(parameters, (errorUpload, pic) => {
-                                    if (errorUpload) {
-                                      res.send({
-                                        success: false,
-                                        error: 'Error uploading profile picture.',
-                                      });
-                                    } else {
-                                      // TODO go back to only pushing original image
-                                      newImages.push(pic.Location);
-                                      // Simply add old image to new images array
-                                      // newImages.push(img);
-                                      cb();
-                                    }
-                                  });
+                              .then(listingPicResized => {
+                                var parameters = {
+                                  Bucket: AWS_BUCKET_NAME,
+                                  Key: `listingpictures/${title}/${uuid()}`,
+                                  ContentType: 'image/jpeg',
+                                  Body: listingPicResized,
+                                  ContentEncoding: 'base64',
+                                  ACL: 'public-read',
+                                };
+                                // Upload photo
+                                s3bucket.upload(parameters, (errorUpload, pic) => {
+                                  if (errorUpload) {
+                                    res.send({
+                                      success: false,
+                                      error: 'Error uploading profile picture.',
+                                    });
+                                  } else {
+                                    newImages.push(pic.Location);
+                                    cb();
+                                  }
                                 });
                               });
-                            }
-                          });
-                        }
-                      }, (asyncErr) => {
-                        if (asyncErr) {
-                          res.send({
-                            success: false,
-                            error: 'Error editting listing.',
-                          });
-                        } else {
-                          // Find the author
-                          User.findById(userId, (err, author) => {
-                            if (err) {
-                              res.send({
-                                success: false,
-                                error: 'Error finding author.',
+                            } else {
+                              // Find each image at given url, convert to buffer and resize
+                              // TODO only for resizing purposes
+                              request.get(img, (reqError, resp, newImg) => {
+                                if(!reqError && resp.statusCode === 200) {
+                                  // Convert downloaded image to a buffer
+                                  const listingPictureConverted = new Buffer(newImg, 'base64');
+                                  // resize and reconvert to buffer
+                                  sharp(listingPictureConverted)
+                                  .resize(800, null)
+                                  .toBuffer()
+                                  .then( listingPicResized => {
+                                    var parameters = {
+                                      Bucket: AWS_BUCKET_NAME,
+                                      Key: `listingpictures/${title}/${uuid()}`,
+                                      ContentType: 'image/jpeg',
+                                      Body: listingPicResized,
+                                      ContentEncoding: 'base64',
+                                      ACL: 'public-read',
+                                    };
+                                    // Upload photo
+                                    s3bucket.upload(parameters, (errorUpload, pic) => {
+                                      if (errorUpload) {
+                                        res.send({
+                                          success: false,
+                                          error: 'Error uploading profile picture.',
+                                        });
+                                      } else {
+                                        // TODO go back to only pushing original image
+                                        newImages.push(pic.Location);
+                                        // Simply add old image to new images array
+                                        // newImages.push(img);
+                                        cb();
+                                      }
+                                    });
+                                  });
+                                }
                               });
-                            } else if (!author) {
+                            }
+                          }, (asyncErr) => {
+                            if (asyncErr) {
                               res.send({
                                 success: false,
-                                error: 'Author not found.'
+                                error: 'Error editting listing.',
                               });
                             } else {
-                              // Find listing in Mongo
-                              Listing.findById(listingId, (listingErr, listing) => {
-                                if (listingErr) {
+                              // Find the author
+                              User.findById(userId, (err, author) => {
+                                if (err) {
                                   res.send({
                                     success: false,
-                                    error: 'Error editting listing.',
+                                    error: 'Error finding author.',
+                                  });
+                                } else if (!author) {
+                                  res.send({
+                                    success: false,
+                                    error: 'Author not found.'
                                   });
                                 } else {
-                                  // Make changes to given listing
-                                  listing.title = title;
-                                  listing.description = description;
-                                  listing.naldaFavorite = naldaFavorite;
-                                  // TODO change back to image after done resizing
-                                  listing.image = data.Location;
-                                  listing.images = newImages;
-                                  listing.rating = rating;
-                                  listing.price = price;
-                                  listing.location = location;
-                                  listing.categories = categories;
-                                  listing.amenities = amenities;
-                                  listing.additionalAmenities = additionalAmenities;
-                                  listing.hours = hours;
-                                  listing.website = website;
-                                  listing.updatedAt = new Date().getTime();
-
-                                  // Save changes in mongo
-                                  listing.save((errSave) => {
-                                    if (errSave) {
+                                  // Find listing in Mongo
+                                  Listing.findById(listingId, (listingErr, listing) => {
+                                    if (listingErr) {
                                       res.send({
                                         success: false,
-                                        error: 'Error saving listing.',
+                                        error: 'Error editting listing.',
                                       });
                                     } else {
-                                      res.send({
-                                        success: true,
-                                        error: '',
-                                        data: listing,
+                                      // Make changes to given listing
+                                      listing.title = title;
+                                      listing.description = description;
+                                      listing.naldaFavorite = naldaFavorite;
+                                      // TODO change back to image after done resizing
+                                      listing.image = data.Location;
+                                      // TODO change back
+                                      listing.imagePreview = prevData.Location;
+                                      listing.images = newImages;
+                                      listing.rating = rating;
+                                      listing.price = price;
+                                      listing.location = location;
+                                      listing.categories = categories;
+                                      listing.amenities = amenities;
+                                      listing.additionalAmenities = additionalAmenities;
+                                      listing.hours = hours;
+                                      listing.website = website;
+                                      listing.updatedAt = new Date().getTime();
+
+                                      // Save changes in mongo
+                                      listing.save((errSave) => {
+                                        if (errSave) {
+                                          res.send({
+                                            success: false,
+                                            error: 'Error saving listing.',
+                                          });
+                                        } else {
+                                          res.send({
+                                            success: true,
+                                            error: '',
+                                            data: listing,
+                                          });
+                                        }
                                       });
                                     }
                                   });
@@ -568,7 +583,7 @@ module.exports = () => {
                               });
                             }
                           });
-                        }
+                        });
                       });
                     }
                   });
@@ -584,7 +599,6 @@ module.exports = () => {
 /**
  * Route to handle deleting a specific listing
  */
- // TODO delete assets from AWS as well
   router.delete('/:id', (req, res) => {
     // Find the id from the listing url
     const listingId = req.params.id;
@@ -696,8 +710,7 @@ module.exports = () => {
         });
       } else {
         // Isolate variables from the body
-        const { title, description, naldaFavorite, image, images, hours, rating,
-                price, website, categories, amenities, additionalAmenities, location } = req.body;
+        const { title, description, naldaFavorite, image, images, hours, rating, price, website, categories, amenities, additionalAmenities, location } = req.body;
         const userId  = req.session.passport.user;
 
         let error = "";
@@ -725,7 +738,7 @@ module.exports = () => {
 
         // Handle error if there is one
         if (error) {
-          res.send({
+          res.status(400).send({
             success: false,
             error,
           });
@@ -749,7 +762,7 @@ module.exports = () => {
             // Upload photo
             s3bucket.upload(params, (errUpload, data) => {
               if (errUpload) {
-                res.send({
+                res.status(400).send({
                   success: false,
                   error: 'Error uploading profile picture.',
                 });

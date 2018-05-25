@@ -118,47 +118,45 @@ module.exports = () => {
               .toBuffer()
               .then( resized => {
                 // Create bucket
-                s3bucket.createBucket(() => {
-                  const params = {
-                    Bucket: AWS_BUCKET_NAME,
-                    Key: `profilepictures/${uuid()}`,
-                    ContentType: 'image/jpeg',
-                    Body: resized,
-                    ContentEncoding: 'base64',
-                    ACL: 'public-read',
-                  };
+                const params = {
+                  Bucket: AWS_BUCKET_NAME,
+                  Key: `profilepictures/${uuid()}`,
+                  ContentType: 'image/jpeg',
+                  Body: resized,
+                  ContentEncoding: 'base64',
+                  ACL: 'public-read',
+                };
 
-                  // Upload photo
-                  s3bucket.upload(params, (errUpload, data) => {
-                    if (errUpload) {
-                      res.send({
-                        success: false,
-                        error: 'Error uploading profile picture.',
-                      });
-                    } else {
-                      // Update the user
-                      user.profilePicture = data.Location;
-                      user.name = name;
-                      user.location = location;
-                      user.bio = bio;
+                // Upload photo
+                s3bucket.upload(params, (errUpload, data) => {
+                  if (errUpload) {
+                    res.send({
+                      success: false,
+                      error: 'Error uploading profile picture.',
+                    });
+                  } else {
+                    // Update the user
+                    user.profilePicture = data.Location;
+                    user.name = name;
+                    user.location = location;
+                    user.bio = bio;
 
-                      // Save the changes
-                      user.save(userErr => {
-                        if (userErr) {
-                          res.send({
-                            success: false,
-                            error: 'There was an error updating your account information. Check the form and try again.',
-                          });
-                        } else {
-                          res.send({
-                            success: true,
-                            error: '',
-                            data: user.profilePicture,
-                          });
-                        }
-                      });
-                    }
-                  });
+                    // Save the changes
+                    user.save(userErr => {
+                      if (userErr) {
+                        res.send({
+                          success: false,
+                          error: 'There was an error updating your account information. Check the form and try again.',
+                        });
+                      } else {
+                        res.send({
+                          success: true,
+                          error: '',
+                          data: user.profilePicture,
+                        });
+                      }
+                    });
+                  }
                 });
               })
               .catch(() => {
