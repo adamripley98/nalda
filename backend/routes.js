@@ -83,17 +83,38 @@ module.exports = () => {
     }
   });
 
+  function makeSuffixes(values) {
+    var results = [];
+    values.sort().reverse().forEach(function(val) {
+      let tmp, hasSuffix;
+      for (var i = 0; i < val.length - 2; i++) {
+        tmp = val.substr(i).toUpperCase();
+        hasSuffix = false;
+        for (var j = 0; j < results.length; j++) {
+          if (results[j].indexOf(tmp) === 0) {
+            hasSuffix = true;
+            break;
+          }
+        }
+        if (!hasSuffix) results.push(tmp);
+      }
+    });
+    console.log('suffs', results);
+    return results;
+  }
   /**
    * Pull listings, videos, articles, and curators from the database based off what is searched for
    * @param search (what term user searched for)
    */
   router.post('/search', (req, res) => {
     // Search through relevant data in Mongo
-    Article.find({"$text": { $search: req.body.search }}, (errArticle, articles) => {
-      Listing.find({"$text": { $search: req.body.search }}, (errListing, listings) => {
-        Video.find({"$text": { $search: req.body.search }}, (errVideo, videos) => {
-          User.find({"$text": { $search: req.body.search }}, (errUser, users) => {
+    Article.find({$or: [{"title": new RegExp(req.body.search, "i")}, {"subtitle": new RegExp(req.body.search, "i")}]}, (errArticle, articles) => {
+      Listing.find({$or: [{"title": new RegExp(req.body.search, "i")}, {"description": new RegExp(req.body.search, "i")}, {"naldaFavorite": new RegExp(req.body.search, "i")}]}, (errListing, listings) => {
+        Video.find({$or: [{"title": new RegExp(req.body.search, "i")}, {"description": new RegExp(req.body.search, "i")}]}, (errVideo, videos) => {
+          User.find({name: new RegExp(req.body.search, "i")}, (errUser, users) => {
+            // Return any errors
             if (errArticle || errListing || errVideo || errUser) {
+              console.log('err', errArticle, errListing, errVideo, errUser );
               res.status(400).send({
                 success: false,
                 error: 'Search error.',
@@ -103,6 +124,7 @@ module.exports = () => {
               const curators = users.filter(user => user.userType !== 'user').map(x => {
                 return {name: x.name, _id: x._id, profilePicture: x.profilePicture};
               });
+              console.log('a', articles);
 
               // If there were no errors, send back all data
               res.send({
