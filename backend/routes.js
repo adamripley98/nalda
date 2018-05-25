@@ -88,81 +88,42 @@ module.exports = () => {
    * @param search (what term user searched for)
    */
   router.post('/search', (req, res) => {
-    // First search through articles
+    // Search through relevant data in Mongo
     Article.find({"$text": { $search: req.body.search }}, (errArticle, articles) => {
-      // Error finding articles
-      if (errArticle) {
-        res.send({
-          success: false,
-          error: 'Search error.'
+      Listing.find({"$text": { $search: req.body.search }}, (errListing, listings) => {
+        Video.find({"$text": { $search: req.body.search }}, (errVideo, videos) => {
+          User.find({"$text": { $search: req.body.search }}, (errUser, users) => {
+            if (errArticle || errListing || errVideo || errUser) {
+              res.status(400).send({
+                success: false,
+                error: 'Search error.',
+              });
+            } else {
+              // Only return curators or admins, only return relevant info
+              const curators = users.filter(user => user.userType !== 'user').map(x => {
+                return {name: x.name, _id: x._id, profilePicture: x.profilePicture};
+              });
+
+              // If there were no errors, send back all data
+              res.send({
+                success: true,
+                error: '',
+                data: {
+                  articles,
+                  listings,
+                  videos,
+                  curators,
+                },
+              });
+            }
+          });
         });
-      } else {
-        // Now search through listings
-        // TODO: Don't allow search through reviewers
-        Listing.find({"$text": { $search: req.body.search }}, (errListing, listings) => {
-          // Error finding listings
-          if (errListing) {
-            res.send({
-              success: false,
-              error: 'Search error.',
-            });
-          } else {
-            // Now search through videos
-            Video.find({"$text": { $search: req.body.search }}, (errVideo, videos) => {
-              // Error finding videos
-              if (errVideo) {
-                res.send({
-                  success: false,
-                  error: 'Search error.',
-                });
-              } else {
-                // Now search through users
-                User.find({"$text": { $search: req.body.search }}, (errUser, users) => {
-                  // Error finding users
-                  if (errUser) {
-                    res.send({
-                      success: false,
-                      error: 'Search error.',
-                    });
-                  } else {
-                    // Make sure that users are curators or admins, do not want to be able to search for regular users
-                    const curators = [];
-                    // Check each user to make sure they are admin or curator before returning
-                    users.forEach((user) => {
-                      if (user.userType !== 'user') {
-                        curators.push(user);
-                      }
-                    });
-                    // Do not return private information about curators (password, username, etc)
-                    curators.forEach((curator) => {
-                      curator.password = '';
-                      curator.userType = '';
-                      curator.username = '';
-                    });
-                    // If there were no errors, send back all data
-                    res.send({
-                      success: true,
-                      error: '',
-                      data: {
-                        articles,
-                        listings,
-                        videos,
-                        curators,
-                      },
-                    });
-                  }
-                });
-              }
-            });
-          }
-        });
-      }
+      });
     });
   });
 
   /**
    * Route to receive user's information from Mongo
-   * @param userID
    */
   router.get('/account', (req, res) => {
     // Check to make sure poster is logged in
@@ -172,13 +133,6 @@ module.exports = () => {
         res.send({
           success: false,
           error: authRes.error,
-        });
-      // Check to make sure user is accessing their own data
-      // TODO Will need to change once we don't pass userId from frontend
-      } else if (req.session.passport.user !== req.query.userId) {
-        res.send({
-          success: false,
-          error: 'You may only access your own information.'
         });
       } else {
           // Find user in Mongo
