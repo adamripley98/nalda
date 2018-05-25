@@ -83,25 +83,6 @@ module.exports = () => {
     }
   });
 
-  function makeSuffixes(values) {
-    var results = [];
-    values.sort().reverse().forEach(function(val) {
-      let tmp, hasSuffix;
-      for (var i = 0; i < val.length - 2; i++) {
-        tmp = val.substr(i).toUpperCase();
-        hasSuffix = false;
-        for (var j = 0; j < results.length; j++) {
-          if (results[j].indexOf(tmp) === 0) {
-            hasSuffix = true;
-            break;
-          }
-        }
-        if (!hasSuffix) results.push(tmp);
-      }
-    });
-    console.log('suffs', results);
-    return results;
-  }
   /**
    * Pull listings, videos, articles, and curators from the database based off what is searched for
    * @param search (what term user searched for)
