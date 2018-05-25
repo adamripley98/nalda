@@ -114,7 +114,6 @@ module.exports = () => {
           User.find({name: new RegExp(req.body.search, "i")}, (errUser, users) => {
             // Return any errors
             if (errArticle || errListing || errVideo || errUser) {
-              console.log('err', errArticle, errListing, errVideo, errUser );
               res.status(400).send({
                 success: false,
                 error: 'Search error.',
@@ -124,8 +123,6 @@ module.exports = () => {
               const curators = users.filter(user => user.userType !== 'user').map(x => {
                 return {name: x.name, _id: x._id, profilePicture: x.profilePicture};
               });
-              console.log('a', articles);
-
               // If there were no errors, send back all data
               res.send({
                 success: true,
