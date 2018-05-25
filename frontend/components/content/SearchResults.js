@@ -35,12 +35,15 @@ class SearchResults extends Component {
 
     // Bind this to helper methods
     this.renderResults = this.renderResults.bind(this);
+    this.isEmpty = this.isEmpty.bind(this);
   }
 
   componentDidMount() {
     // Make a request for search data
+    console.log('this.state.search', this.state.search);
     axios.post('/api/search', {search: this.state.search})
       .then(res => {
+        console.log('what is res', res.data);
         if (!res.data.success) {
           this.setState({
             error: res.data.error,

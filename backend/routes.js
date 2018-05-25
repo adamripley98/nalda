@@ -83,86 +83,69 @@ module.exports = () => {
     }
   });
 
+  function makeSuffixes(values) {
+    var results = [];
+    values.sort().reverse().forEach(function(val) {
+      let tmp, hasSuffix;
+      for (var i = 0; i < val.length - 2; i++) {
+        tmp = val.substr(i).toUpperCase();
+        hasSuffix = false;
+        for (var j = 0; j < results.length; j++) {
+          if (results[j].indexOf(tmp) === 0) {
+            hasSuffix = true;
+            break;
+          }
+        }
+        if (!hasSuffix) results.push(tmp);
+      }
+    });
+    console.log('suffs', results);
+    return results;
+  }
   /**
    * Pull listings, videos, articles, and curators from the database based off what is searched for
    * @param search (what term user searched for)
    */
   router.post('/search', (req, res) => {
-    // First search through articles
-    Article.find({"$text": { $search: req.body.search }}, (errArticle, articles) => {
-      // Error finding articles
-      if (errArticle) {
-        res.send({
-          success: false,
-          error: 'Search error.'
+    // Search through relevant data in Mongo
+    Article.find({$or: [{"title": new RegExp(req.body.search, "i")}, {"subtitle": new RegExp(req.body.search, "i")}]}, (errArticle, articles) => {
+      Listing.find({$or: [{"title": new RegExp(req.body.search, "i")}, {"description": new RegExp(req.body.search, "i")}, {"naldaFavorite": new RegExp(req.body.search, "i")}]}, (errListing, listings) => {
+        Video.find({$or: [{"title": new RegExp(req.body.search, "i")}, {"description": new RegExp(req.body.search, "i")}]}, (errVideo, videos) => {
+          User.find({name: new RegExp(req.body.search, "i")}, (errUser, users) => {
+            // Return any errors
+            if (errArticle || errListing || errVideo || errUser) {
+              console.log('err', errArticle, errListing, errVideo, errUser );
+              res.status(400).send({
+                success: false,
+                error: 'Search error.',
+              });
+            } else {
+              // Only return curators or admins, only return relevant info
+              const curators = users.filter(user => user.userType !== 'user').map(x => {
+                return {name: x.name, _id: x._id, profilePicture: x.profilePicture};
+              });
+              console.log('a', articles);
+
+              // If there were no errors, send back all data
+              res.send({
+                success: true,
+                error: '',
+                data: {
+                  articles,
+                  listings,
+                  videos,
+                  curators,
+                },
+              });
+            }
+          });
         });
-      } else {
-        // Now search through listings
-        // TODO: Don't allow search through reviewers
-        Listing.find({"$text": { $search: req.body.search }}, (errListing, listings) => {
-          // Error finding listings
-          if (errListing) {
-            res.send({
-              success: false,
-              error: 'Search error.',
-            });
-          } else {
-            // Now search through videos
-            Video.find({"$text": { $search: req.body.search }}, (errVideo, videos) => {
-              // Error finding videos
-              if (errVideo) {
-                res.send({
-                  success: false,
-                  error: 'Search error.',
-                });
-              } else {
-                // Now search through users
-                User.find({"$text": { $search: req.body.search }}, (errUser, users) => {
-                  // Error finding users
-                  if (errUser) {
-                    res.send({
-                      success: false,
-                      error: 'Search error.',
-                    });
-                  } else {
-                    // Make sure that users are curators or admins, do not want to be able to search for regular users
-                    const curators = [];
-                    // Check each user to make sure they are admin or curator before returning
-                    users.forEach((user) => {
-                      if (user.userType !== 'user') {
-                        curators.push(user);
-                      }
-                    });
-                    // Do not return private information about curators (password, username, etc)
-                    curators.forEach((curator) => {
-                      curator.password = '';
-                      curator.userType = '';
-                      curator.username = '';
-                    });
-                    // If there were no errors, send back all data
-                    res.send({
-                      success: true,
-                      error: '',
-                      data: {
-                        articles,
-                        listings,
-                        videos,
-                        curators,
-                      },
-                    });
-                  }
-                });
-              }
-            });
-          }
-        });
-      }
+      });
     });
   });
 
   /**
    * Route to receive user's information from Mongo
-   * @param userID
    */
   router.get('/account', (req, res) => {
     // Check to make sure poster is logged in
@@ -172,13 +155,6 @@ module.exports = () => {
         res.send({
           success: false,
           error: authRes.error,
-        });
-      // Check to make sure user is accessing their own data
-      // TODO Will need to change once we don't pass userId from frontend
-      } else if (req.session.passport.user !== req.query.userId) {
-        res.send({
-          success: false,
-          error: 'You may only access your own information.'
         });
       } else {
           // Find user in Mongo
