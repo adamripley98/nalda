@@ -265,15 +265,15 @@
 
     &.active {
       #first {
-        transform: translateY(11px) translateX(0.2rem) rotate(-45deg);
+        transform: translateY(11px) translateX(0.2rem) rotate(135deg);
       }
 
       #second {
-        transform: translateX(10rem);
+        transform: rotate(-135deg) translateX(-0.14142rem) translateY(0.14142rem);
       }
 
       #third {
-        transform: translateY(-11px) translateX(0.2rem) rotate(45deg);
+        transform: translateY(-11px) translateX(0.2rem) rotate(135deg);
       }
     }
   }

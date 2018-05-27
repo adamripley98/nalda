@@ -184,6 +184,52 @@ module.exports = () => {
     });
   });
 
+  // Route to handle viewing a single homepage component
+  router.get('/components/:id', (req, res) => {
+    const id = req.params.id;
+    if (!id) {
+      res.status(404).send({
+        success: false,
+        error: "Invalid homepage component ID.",
+      });
+      return;
+    }
+
+    // Find the homepage
+    Homepage.findOne({}, (err, home) => {
+      if (err || !home) {
+        res.status(404).send({
+          success: false,
+          error: "There was an issue pulling homepage data. Refresh the page and try again.",
+        });
+        return;
+      }
+
+      // Find the component with the correct ID
+      let component = null;
+      home.components.forEach(c => {
+        if (c._id === id) {
+          component = c;
+        }
+      });
+
+      // If we failed to find a component
+      if (!component) {
+        res.status(404).send({
+          success: false,
+          error: "There is no component with the passed in ID. Check the URL and try again.",
+        });
+        return;
+      }
+
+      // If a component was successfully found
+      res.send({
+        success: true,
+        component,
+      });
+    });
+  });
+
   // Route to handle adding content to homepage banner
   router.post('/banner/add', (req, res) => {
     AdminCheck(req, (authRes) => {

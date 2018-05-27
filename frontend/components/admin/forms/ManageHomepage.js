@@ -129,7 +129,7 @@ class ManageHomepage extends Component {
             bannerImagePreview: '',
           });
         } else {
-          // Notify success
+          // Notify success to the user
           this.props.notifyMessage("Successfully added banner image.");
 
           // Set the state
@@ -143,7 +143,7 @@ class ManageHomepage extends Component {
           });
         }
       })
-      .catch((err) => {
+      .catch(err => {
         this.setState({
           error: err,
           bannerContentId: '',
@@ -169,7 +169,7 @@ class ManageHomepage extends Component {
         });
       }
     })
-    .catch((err) => {
+    .catch(err => {
       this.setState({
         error: err,
       });
@@ -359,6 +359,7 @@ class ManageHomepage extends Component {
     }
   }
 
+  // Display a list of all content in a component
   displayList(component) {
     if (component.content && component.content.length) {
       const list = component.content.map((content, i) => (
@@ -387,12 +388,10 @@ class ManageHomepage extends Component {
             <h4 className="bold marg-bot-1">
               {component.title}
             </h4>
+
             <p className="marg-bot-1">
               Enter the content Id of the {component.contentType.toLowerCase()} you would like to appear in this section of the homepage.
             </p>
-            <div onClick={() => this.onRemoveComponent(component)}>
-              <i className="fa fa-close" aria-hidden="true" />
-            </div>
 
             <div className="inline-field">
               <input
@@ -410,21 +409,30 @@ class ManageHomepage extends Component {
             </div>
           </form>
 
-          <div className="space-1" />
+          {
+            (component.content && component.content.length) ? (
+              <div>
+                <div className="space-1" />
+                <table className="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Content ID</th>
+                      <th />
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {this.displayList(component)}
+                  </tbody>
+                </table>
+              </div>
+            ) : null
+          }
 
-          <table className="table">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">Content ID</th>
-                <th />
-              </tr>
-            </thead>
-            <tbody>
-              {this.displayList(component)}
-            </tbody>
-          </table>
+          <div className="btn btn-sm btn-danger" onClick={() => this.onRemoveComponent(component)}>
+            Remove component
+          </div>
 
           <div className="line" />
         </div>
@@ -439,6 +447,8 @@ class ManageHomepage extends Component {
       <div>
         {this.displayBanner()}
         {this.editHomepage()}
+
+        {/* Render a form to create a new homepage component*/}
         <NewComponent
           updateComponents={this.updateComponents}
          />

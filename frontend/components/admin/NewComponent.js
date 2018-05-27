@@ -63,7 +63,6 @@ class NewComponent extends Component {
     return (
       <form onSubmit={this.handleSubmit}>
         <ErrorMessage error={this.state.error} />
-        <div className="line" />
         <h4 className="marg-bot-1">
           Add a new homepage component
         </h4>
