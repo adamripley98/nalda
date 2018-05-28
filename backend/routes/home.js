@@ -200,7 +200,7 @@ module.exports = () => {
       if (err || !home) {
         res.status(404).send({
           success: false,
-          error: "There was an issue pulling homepage data. Refresh the page and try again.",
+          error: 'There was an issue pulling homepage data. Refresh the page and try again.',
         });
         return;
       }
@@ -208,7 +208,8 @@ module.exports = () => {
       // Find the component with the correct ID
       let component = null;
       home.components.forEach(c => {
-        if (c._id === id) {
+        // NOTE the ID must be cast to a string
+        if ('' + c._id === id) {
           component = c;
         }
       });
@@ -217,16 +218,98 @@ module.exports = () => {
       if (!component) {
         res.status(404).send({
           success: false,
-          error: "There is no component with the passed in ID. Check the URL and try again.",
+          error: 'There is no component with the passed in ID. Check the URL and try again.',
         });
         return;
       }
 
-      // If a component was successfully found
-      res.send({
-        success: true,
-        component,
-      });
+      // Find the model for pulling data based on the content type
+      let Model = null;
+      if (component.contentType === 'Articles') {
+        Model = Article;
+      } else if (component.contentType === 'Listings') {
+        Model = Listing;
+      } else if (component.contentType === 'Videos') {
+        Model = Video;
+      } else return;
+
+      // Find all of the content associated with the component
+      if (component.content && component.content.length) {
+        const returnContent = [];
+        async.forEach(component.content, (cont, contentCallback) => {
+          Model.findById(cont.contentId, (errContent, content) => {
+            if (errContent) {
+              res.send({
+                success: false,
+                error: 'Error fetching homepage content',
+              });
+              return;
+            } else if (content) {
+              let newContent = {};
+              if (component.contentType === 'Articles') {
+                newContent = {
+                  contentType: component.contentType,
+                  contentId: cont.contentId,
+                  title: content.title,
+                  subtitle: content.subtitle,
+                  image: content.image,
+                  createdAt: content.createdAt,
+                  updatedAt: content.updatedAt,
+                  location: content.location,
+                };
+              } else if (component.contentType === 'Listings') {
+                newContent = {
+                  contentType: component.contentType,
+                  contentId: cont.contentId,
+                  title: content.title,
+                  description: content.description,
+                  location: content.location,
+                  image: content.image,
+                  rating: content.rating,
+                  price: content.price,
+                  categories: content.categories,
+                };
+              } else {
+                // Content is a video
+                newContent = {
+                  contentType: component.contentType,
+                  contentId: cont.contentId,
+                  title: content.title,
+                  description: content.description,
+                  url: content.url,
+                  location: content.location,
+                  createdAt: content.createdAt,
+                  updatedAt: content.updatedAt,
+                };
+              }
+              returnContent.push(newContent);
+              contentCallback();
+            } else {
+              contentCallback();
+            }
+          });
+        }, contentAsyncErr => {
+          if (contentAsyncErr) {
+            res.send({
+              success: false,
+              error: 'Failed to pull content.',
+            });
+          } else {
+            component.content = returnContent;
+
+            // If a component was successfully found
+            res.send({
+              success: true,
+              component,
+            });
+          }
+        });
+      } else {
+        res.status(404).send({
+          success: false,
+          error: 'No content data was found.',
+        });
+      }
     });
   });
 

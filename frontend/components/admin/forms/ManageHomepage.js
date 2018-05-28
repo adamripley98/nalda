@@ -298,7 +298,7 @@ class ManageHomepage extends Component {
         if (resp.data.error) {
           this.setState({error: resp.data.error});
         } else {
-          this.props.notifyMessage("Successfully added content.");
+          this.props.notifyMessage('Successfully added content.');
           this.setState({
             components: resp.data.data,
           });
