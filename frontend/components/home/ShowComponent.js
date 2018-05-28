@@ -28,15 +28,26 @@ class ShowComponent extends Component {
       );
     }
 
-    return (
-      this.props.component.content.map((c, index) => (
-        <Preview
-          content={c}
-          key={`${this.props.component.title}-${c.contentId}`}
-          index={index}
-        />
-      ))
-    );
+    if (this.props.showAll) {
+      return (
+        this.props.component.content.map((c, index) => (
+          <Preview
+            content={c}
+            key={`${this.props.component.title}-${c.contentId}`}
+          />
+        ))
+      );
+    } else {
+      return (
+        this.props.component.content.map((c, index) => (
+          <Preview
+            content={c}
+            key={`${this.props.component.title}-${c.contentId}`}
+            index={index}
+          />
+        ))
+      );
+    }
   }
 
   render() {
@@ -57,6 +68,7 @@ class ShowComponent extends Component {
 
 ShowComponent.propTypes = {
   component: PropTypes.object,
+  showAll: PropTypes.bool,
 };
 
 export default ShowComponent;

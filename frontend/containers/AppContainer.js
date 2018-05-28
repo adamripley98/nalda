@@ -26,6 +26,7 @@ import Verify from '../components/auth/Verify';
 
 // Content viewing components
 import Home from '../components/home/Home';
+import ComponentPage from '../components/home/ComponentPage';
 import Article from '../components/content/articles/Article';
 import Articles from '../components/content/articles/Articles';
 import Listing from '../components/content/listings/Listing';
@@ -78,6 +79,7 @@ import {
   manageAdminsPath,
   manageHomepagePath,
   searchResultsPath,
+  componentPath,
 } from '../routes';
 
 /**
@@ -171,6 +173,7 @@ class AppContainer extends Component {
                 <Route exact path="/credits" component={Credits}/>
                 <Route exact path={searchResultsPath} component={SearchResults}/>
                 <Route exact path="/" component={Home}/>
+                <Route exact path={componentPath} component={ComponentPage}/>
 
                 { /* Admin routes */ }
                 <Route

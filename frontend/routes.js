@@ -9,5 +9,6 @@ export const adminVideosPath     = '/admin/videos';
 export const manageAdminsPath    = '/admin/manage-admins';
 export const manageHomepagePath  = '/admin/manage-homepage';
 
-// Addiitonal routes
+// Additional routes
 export const searchResultsPath   = '/search';
+export const componentPath       = '/components/:id';
