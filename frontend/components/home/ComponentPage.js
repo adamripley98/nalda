@@ -10,6 +10,9 @@ class ComponentPage extends Component {
   constructor(props) {
     super(props);
 
+    // Scroll to the top of the screen
+    window.scrollTo(0, 0);
+
     // Set the initial state
     this.state = {
       pending: true,

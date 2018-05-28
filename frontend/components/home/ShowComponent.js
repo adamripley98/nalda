@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
+import {Link} from 'react-router-dom';
 import ArticlePreview from '../content/articles/ArticlePreview';
 import Preview from '../content/Preview';
 
@@ -30,30 +31,42 @@ class ShowComponent extends Component {
 
     if (this.props.showAll) {
       return (
-        this.props.component.content.map((c, index) => (
+        this.props.component.content.map(c => (
           <Preview
             content={c}
             key={`${this.props.component.title}-${c.contentId}`}
-          />
-        ))
-      );
-    } else {
-      return (
-        this.props.component.content.map((c, index) => (
-          <Preview
-            content={c}
-            key={`${this.props.component.title}-${c.contentId}`}
-            index={index}
           />
         ))
       );
     }
+
+    // If we show a number depending on the screen size
+    // This is used, for example, on the homepage
+    return (
+      this.props.component.content.map((c, index) => (
+        <Preview
+          content={c}
+          key={`${this.props.component.title}-${c.contentId}`}
+          index={index}
+        />
+      ))
+    );
   }
 
   render() {
     if (!this.props.component) return null;
     return (
       <div className="home-section">
+        {
+          (this.props.showLink) ? (
+            <Link
+              className="view-all-link"
+              to={`/components/${this.props.component._id}`}
+            >
+              View all
+            </Link>
+          ) : null
+        }
         <h2 className="home-section-title">
           {this.props.component.title}
         </h2>
@@ -69,6 +82,7 @@ class ShowComponent extends Component {
 ShowComponent.propTypes = {
   component: PropTypes.object,
   showAll: PropTypes.bool,
+  showLink: PropTypes.bool,
 };
 
 export default ShowComponent;

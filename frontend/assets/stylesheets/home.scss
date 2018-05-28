@@ -17,6 +17,18 @@
     color: $gray-text;
     font-size: 16px;
   }
+
+  a.view-all-link {
+    color: $gray;
+    position: absolute;
+    right: 0;
+
+    &:hover,
+    &:active,
+    &:focus {
+      color: $dark-gray;
+    }
+  }
 }
 
 @media only screen and (min-width: 768px) {
