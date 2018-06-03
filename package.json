@@ -46,7 +46,7 @@
     "passport-facebook": "^2.1.1",
     "passport-google-oauth20": "^1.0.0",
     "passport-local": "^1.0.0",
-    "prop-types": "^15.5.8",
+    "prop-types": "^15.6.1",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "react-dropzone": "^4.2.7",
