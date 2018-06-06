@@ -148,8 +148,7 @@ passport.use('local', new LocalStrategy({
     // Authentication is successful
     return done(null, user);
   });
-}
-));
+}));
 
 // Facebook strategy
 passport.use(
