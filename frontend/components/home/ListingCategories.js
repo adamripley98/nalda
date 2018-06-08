@@ -1,6 +1,5 @@
 // Import frameworks
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
 
 // Import json
@@ -35,10 +34,5 @@ class ListingCategories extends Component {
     );
   }
 }
-
-// Prop validations
-ListingCategories.propTypes = {
-  content: PropTypes.array,
-};
 
 export default ListingCategories;
