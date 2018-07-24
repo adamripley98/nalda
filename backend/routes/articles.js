@@ -139,6 +139,7 @@ module.exports = () => {
                 error: 'You must be an author.'
               });
             } else {
+              console.log('what is image', image);
               // Convert article picture to a form that s3 can display
               const imageConverted = new Buffer(image.replace(/^data:image\/\w+;base64,/, ""), 'base64');
 
