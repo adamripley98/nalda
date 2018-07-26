@@ -107,6 +107,7 @@ class ArticleForm extends React.Component {
    * Helper method to handle a change to the body state
    */
   handleChangeBody(event, index) {
+    console.log('e.tar.va', event.target.value);
     // Manipulate the correct component object
     const bodyObj = this.state.body;
     bodyObj[index].body = event.target.value;
