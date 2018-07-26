@@ -41,6 +41,8 @@ POST '/api/videos/new'         // Create a new video
 POST '/api/videos/:id/edit'    // Edit a specific video
 DELETE '/api/videos/:id'       // Delete a specific article
 ```
+API documentation can be found [here.](https://nalda-api.herokuapp.com/)
+
 # Feature tracking
 
 ## By 2/17
