@@ -551,6 +551,7 @@ class ArticleForm extends React.Component {
                 className={
                   !this.state.pendingSubmit &&
                   this.state.title &&
+                  this.state.image &&
                   this.state.subtitle &&
                   this.state.body[0].body ? (
                     "btn btn-primary full-width"
