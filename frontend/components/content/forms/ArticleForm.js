@@ -32,7 +32,7 @@ class ArticleForm extends React.Component {
     this.state = {
       title: "",
       subtitle: "",
-      image: {},
+      image: "",
       imagePreview: "",
       body: [
         {
@@ -48,7 +48,6 @@ class ArticleForm extends React.Component {
     // Bind this to helper methods
     this.handleChangeTitle = this.handleChangeTitle.bind(this);
     this.handleChangeSubtitle = this.handleChangeSubtitle.bind(this);
-    this.handleChangeImage = this.handleChangeImage.bind(this);
     this.handleChangeBody = this.handleChangeBody.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.addNewComponent = this.addNewComponent.bind(this);
@@ -105,15 +104,6 @@ class ArticleForm extends React.Component {
   }
 
   /**
-   * Helper method to handle a change to the image state
-   */
-  handleChangeImage(event) {
-    this.setState({
-      image: event.target.value,
-    });
-  }
-
-  /**
    * Helper method to handle a change to the body state
    */
   handleChangeBody(event, index) {
@@ -165,6 +155,11 @@ class ArticleForm extends React.Component {
         pendingSubmit: false,
       });
       return false;
+    } else if (!this.state.image) {
+      this.setState({
+        error: "Image must be populated.",
+        pendingSubmit: false,
+      });
     } else if (!this.state.body) {
       this.setState({
         error: "Body must be populated.",
@@ -213,6 +208,7 @@ class ArticleForm extends React.Component {
               const targetSize = getTargetSize(img, 2000);
               EXIF.getData(file, () => {
                 const imgToSend = processImg(uri, targetSize.height, targetSize.width, img.width, img.height, EXIF.getTag(file, 'Orientation'));
+                console.log('imgTosend', typeof imgToSend);
                 // Set images to state
                 this.setState({
                   image: imgToSend,
