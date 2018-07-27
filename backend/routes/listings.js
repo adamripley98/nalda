@@ -669,9 +669,7 @@ module.exports = () => {
                             success: false,
                             error: 'Error deleting listing.',
                           });
-                          console.log(err, err.stack);
                         } else {
-                          console.log('deleting', data);
                           res.send({
                             success: true,
                             error: '',

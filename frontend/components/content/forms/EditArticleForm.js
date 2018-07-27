@@ -43,6 +43,7 @@ class EditArticleForm extends React.Component {
       pending: true,
       redirectToHome: false,
       pendingSubmit: false,
+      changeOrder: false,
     };
 
     // Bind this to helper methods
@@ -53,6 +54,7 @@ class EditArticleForm extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.addNewComponent = this.addNewComponent.bind(this);
     this.inputValid = this.inputValid.bind(this);
+    this.switchBodyOrder = this.switchBodyOrder.bind(this);
     this.onDrop = this.onDrop.bind(this);
   }
 
@@ -295,6 +297,23 @@ class EditArticleForm extends React.Component {
     return true;
   }
 
+  // Helper method to switch body order
+  switchBodyOrder(direction, index) {
+    const bodyObj = this.state.body;
+    const temp = bodyObj[index];
+    if (direction === 'up' && bodyObj[index - 1]) {
+      bodyObj[index] = bodyObj[index - 1];
+      bodyObj[index - 1] = temp;
+    } else if (direction === 'down' && bodyObj[index + 1]) {
+      bodyObj[index] = bodyObj[index + 1];
+      bodyObj[index + 1] = temp;
+    }
+    this.setState({
+      body: bodyObj,
+    });
+    return null;
+  }
+
   /**
    * Helper method to handle when the form is submitted
    */
@@ -520,6 +539,24 @@ class EditArticleForm extends React.Component {
                             {
                               component.componentType !== "image" && (
                                 <div className="component">
+                                  {
+                                    (this.state.changeOrder && this.state.body[index - 1]) && (
+                                      <i
+                                        className="fa fa-arrow-up"
+                                        aria-hidden="true"
+                                        onClick={() => this.switchBodyOrder('up', index)}
+                                      />
+                                    )
+                                  }
+                                  {
+                                    (this.state.changeOrder && this.state.body[index + 1]) && (
+                                      <i
+                                        className="fa fa-arrow-down"
+                                        aria-hidden="true"
+                                        onClick={() => this.switchBodyOrder('down', index)}
+                                      />
+                                    )
+                                  }
                                   <textarea
                                     placeholder={ placeholder }
                                     name="body"
@@ -589,6 +626,13 @@ class EditArticleForm extends React.Component {
                         onClick={ () => this.addNewComponent("header") }
                       />
                     </div>
+                    <input
+                      type="button"
+                      value={ this.state.changeOrder ? "Done changing order" : "Change section order" }
+                      className="btn btn-primary"
+                      onClick={() => this.setState({changeOrder: !this.state.changeOrder})}
+                    />
+                    <div className="line" />
 
                     <input
                       type="submit"

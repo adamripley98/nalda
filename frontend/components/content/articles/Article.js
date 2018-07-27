@@ -252,7 +252,7 @@ class Article extends React.Component {
                     this.state.body.map((component, index) => {
                       if (component.componentType === "text") {
                         return (
-                          <p key={ component.index } className="p-formatted">
+                          <p key={ index } className="p-formatted">
                             {component.body}
                           </p>
                         );

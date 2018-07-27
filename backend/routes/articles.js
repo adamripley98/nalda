@@ -218,7 +218,6 @@ module.exports = () => {
                               });
                             } else {
                               // If component is not an image, simply add it to body
-                              console.log('waht is comp body', comp.body);
                               newBody.push({componentType: comp.componentType, body: comp.body});
                               cb();
                             }
