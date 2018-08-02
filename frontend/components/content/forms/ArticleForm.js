@@ -317,27 +317,21 @@ class ArticleForm extends React.Component {
             },
           })
             .then(res => {
-              if (res.data.success) {
-                // Notify success
-                this.props.notifyMessage("Successfully created article.");
+              // Notify success
+              this.props.notifyMessage("Successfully created article.");
 
-                // If creating the article was successful
-                this.setState({
-                  error: '',
-                  articleId: res.data.data._id,
-                  redirectToHome: true,
-                });
-              } else {
-                this.setState({
-                  error: res.data.error,
-                  pendingSubmit: false,
-                });
-              }
+              // If creating the article was successful
+              this.setState({
+                error: '',
+                articleId: res.data.article._id,
+                redirectToHome: true,
+              });
             })
             .catch(err => {
+              console.log('what is the err', err, err.response);
               // If there was an error in making the request
               this.setState({
-                error: err,
+                error: err.response.data.error || err.response.data,
                 pendingSubmit: false,
               });
             });

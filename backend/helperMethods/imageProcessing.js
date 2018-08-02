@@ -21,6 +21,7 @@ const s3bucket = new AWS.S3({
 
 // Helper method to resize an article image
 const ResizeArticleImage = (image, newSize, title, cb) => {
+  console.log('enters helper');
   // Error check
   if (!image || !newSize || !title) {
     cb({
@@ -38,6 +39,7 @@ const ResizeArticleImage = (image, newSize, title, cb) => {
   .resize(newSize, null)
   .toBuffer()
   .then(resized => {
+    console.log('sharp done');
     // Create bucket
     var params = {
       Bucket: AWS_BUCKET_NAME,
@@ -56,6 +58,7 @@ const ResizeArticleImage = (image, newSize, title, cb) => {
         });
         return;
       }
+      console.log('yuh uploaded', data.Location);
       cb({
         success: true,
         error: '',
