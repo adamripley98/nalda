@@ -40,23 +40,16 @@ class Articles extends React.Component {
     // Pull the data
     axios.get('/api/articles')
     .then((resp) => {
-      if (resp.data.success) {
-        this.setState({
-          articles: resp.data.data,
-          pending: false,
-          error: "",
-        });
-      } else {
-        this.setState({
-          pending: false,
-          error: resp.data.error,
-        });
-      }
+      this.setState({
+        articles: resp.data.articles,
+        pending: false,
+        error: "",
+      });
     })
-    .catch(err => {
+    .catch(error => {
       this.setState({
         pending: false,
-        error: err,
+        error: error.response.data.error || error.response.data,
       });
     });
   }

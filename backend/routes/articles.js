@@ -4,6 +4,10 @@
  * NOTE these routes serve and accept JSON-formatted data
  */
 
+ // TODO sometimes pass back 400 error
+
+console.log('755 lines');
+
 // Import frameworks
 const express = require('express');
 const router = express.Router();
@@ -19,6 +23,7 @@ const Homepage = require('../models/homepage');
 
 // Import helper methods
 const {CuratorOrAdminCheck} = require('../helperMethods/authChecking');
+const {ResizeArticleImage} = require('../helperMethods/imageProcessing');
 
 // Isolate environmental variables
 const AWS_BUCKET_NAME = process.env.AWS_BUCKET_NAME;
@@ -39,27 +44,30 @@ module.exports = () => {
    */
   router.get('/', (req, res) => {
     // Pulls articles from mongo
-    Article.find((err, articles) => {
+    Article.find((err, fullArticles) => {
       if (err) {
         // If there was an error with the request
-        res.send({
-          success: false,
-          error: 'Error finding articles.',
-        });
+        res.status(404).send({error: 'Error finding articles.'});
       } else {
         // Add a timestamp field for sorting
-        articles.forEach((article) => {
+        fullArticles.forEach((article) => {
           article.createdAt = article._id.getTimestamp();
         });
+
+        // Return only important information
+        const articles = fullArticles.map(article => ({
+          _id: article._id,
+          title: article.title,
+          subtitle: article.subtitle,
+          image: article.image,
+          imagePreview: article.imagePreview,
+        }));
 
         // Send articles back in correct order
         articles.reverse();
 
         // Send back data
-        res.send({
-          success: true,
-          data: articles,
-        });
+        res.send({articles});
       }
     });
   });
@@ -77,204 +85,123 @@ module.exports = () => {
       // Return any authentication errors
       if (authRes.error) {
         res.send({
-          success: false,
           error: authRes.error,
         });
+        return;
+      }
+      // Isolate variables
+      const userId = req.session.passport.user;
+      const { title, subtitle, image, body, location } = req.body;
+
+      // Keep track of any errors
+      let error = "";
+
+      // Perform error checking on variables
+      if (!title) {
+        error = "Title must be populated.";
+      } else if (!subtitle) {
+        error = "Subtitle must be populated.";
+      } else if (!image) {
+        error = "Image must be populated.";
+      } else if (!body || !body.length) {
+        error = "Body must be populated.";
+      } else if (typeof body !== "object" || !Array.isArray(body)) {
+        error = "Body must be an array";
+      } else if (Object.keys(location).length === 0) {
+        error = "Location must be populated.";
       } else {
-        // Isolate variables
-        const userId = req.session.passport.user;
-        const { title, subtitle, image, body, location } = req.body;
-
-        // Keep track of any errors
-        let error = "";
-
-        // Perform error checking on variables
-        if (!title) {
-          error = "Title must be populated.";
-        } else if (!subtitle) {
-          error = "Subtitle must be populated.";
-        } else if (!image) {
-          error = "Image must be populated.";
-        } else if (!body || !body.length) {
-          error = "Body must be populated.";
-        } else if (typeof body !== "object" || !Array.isArray(body)) {
-          error = "Body must be an array";
-        } else if (Object.keys(location).length === 0) {
-          error = "Location must be populated.";
-        } else {
-          // Ensure that each article component is properly formatted
-          for (let i = 0; i < body.length && !error; i++) {
-            // Find the component at the given index
-            const component = body[i];
-            if (!component) {
-              error = "Each component must be defined.";
-            } else if (!component.body) {
-              error = "Each component must be populated with text.";
-            } else if (component.componentType !== "text" &&
-                       component.componentType !== "image" &&
-                       component.componentType !== "quote" &&
-                       component.componentType !== "header"
-            ) {
-              error = "Component type must be valid.";
-            }
+        // Ensure that each article component is properly formatted
+        for (let i = 0; i < body.length && !error; i++) {
+          // Find the component at the given index
+          const component = body[i];
+          if (!component) {
+            error = "Each component must be defined.";
+          } else if (!component.body) {
+            error = "Each component must be populated with text.";
+          } else if (component.componentType !== "text" &&
+                     component.componentType !== "image" &&
+                     component.componentType !== "quote" &&
+                     component.componentType !== "header"
+          ) {
+            error = "Component type must be valid.";
           }
         }
-        // If there was an error or not
-        if (error) {
-          res.send({
-            success: false,
-            error,
-          });
-        } else {
-          // Find the author
-          User.findById(userId, (err, author) => {
-            if (err) {
-              res.send({
-                success: false,
-                error: 'You must be an author.',
-              });
-            } else if (!author) {
-              res.send({
-                success: false,
-                error: 'You must be an author.'
-              });
-            } else {
-              // Convert article picture to a form that s3 can display
-              const imageConverted = new Buffer(image.replace(/^data:image\/\w+;base64,/, ""), 'base64');
+      }
+      // If there was an error or not
+      if (error) {
+        res.status(404).send({error});
+        return;
+      }
 
-              // Resize to be appropriate size
-              sharp(imageConverted)
-              .resize(1920, null)
-              .toBuffer()
-              .then( resized => {
-                // Create bucket
-                var params = {
-                  Bucket: AWS_BUCKET_NAME,
-                  Key: `articlepictures/${title}/${uuid()}`,
-                  ContentType: 'image/jpeg',
-                  Body: resized,
-                  ContentEncoding: 'base64',
-                  ACL: 'public-read',
-                };
-                // Upload photo
-                s3bucket.upload(params, (errUpload, data) => {
-                  if (errUpload) {
-                    res.send({
-                      success: false,
-                      error: 'Error uploading profile picture.',
-                    });
-                  } else {
-                    // Resize to be appropriate size
-                    sharp(imageConverted)
-                    .resize(600, null)
-                    .toBuffer()
-                    .then( resizedPrev => {
-                      var previewParams = {
-                        Bucket: AWS_BUCKET_NAME,
-                        Key: `articlepictures/${title}/${uuid()}`,
-                        ContentType: 'image/jpeg',
-                        Body: resizedPrev,
-                        ContentEncoding: 'base64',
-                        ACL: 'public-read',
-                      };
-                      // Upload photo
-                      s3bucket.upload(previewParams, (errorUpload, previewData) => {
-                        if (errorUpload) {
-                          res.send({
-                            success: false,
-                            error: 'Error uploading profile picture.',
-                          });
-                        } else {
-                          const newBody = [];
-                          async.eachSeries(body, (comp, cb) => {
-                            if (comp.componentType === 'image') {
-                              const articlePictureConverted = new Buffer(comp.body.replace(/^data:image\/\w+;base64,/, ""), 'base64');
-
-                              // Resize to be appropriate size
-                              sharp(articlePictureConverted)
-                              .resize(1280, null)
-                              .toBuffer()
-                              .then( resizedArticlePic => {
-                                var parameters = {
-                                  Bucket: AWS_BUCKET_NAME,
-                                  Key: `articlepictures/${title}/${uuid()}`,
-                                  ContentType: 'image/jpeg',
-                                  Body: resizedArticlePic,
-                                  ContentEncoding: 'base64',
-                                  ACL: 'public-read',
-                                };
-                                // Upload photo
-                                s3bucket.upload(parameters, (errorupload, img) => {
-                                  if (errorupload) {
-                                    res.send({
-                                      success: false,
-                                      error: 'Error uploading profile picture.',
-                                    });
-                                  } else {
-                                    newBody.push({componentType: comp.componentType, body: img.Location});
-                                    cb();
-                                  }
-                                });
-                              });
-                            } else {
-                              // If component is not an image, simply add it to body
-                              newBody.push({componentType: comp.componentType, body: comp.body});
-                              cb();
-                            }
-                          }, (asyncErr) => {
-                            if (asyncErr) {
-                              res.send({
-                                success: false,
-                                error: 'Error posting article.',
-                              });
-                            } else {
-                              // Creates a new article with given params
-                              const newArticle = new Article({
-                                title,
-                                subtitle,
-                                image: data.Location,
-                                imagePreview: previewData.Location,
-                                body: newBody,
-                                location,
-                                author: userId,
-                                createdAt: Date.now(),
-                                updatedAt: Date.now(),
-                              });
-
-                              // Save the new article in Mongo
-                              newArticle.save((errArticle, article) => {
-                                if (errArticle) {
-                                  // If there was an error saving the article
-                                  res.send({
-                                    success: false,
-                                    error: 'Error posting article.',
-                                  });
-                                } else {
-                                  // Successfully send back data
-                                  res.send({
-                                    success: true,
-                                    data: article,
-                                  });
-                                }
-                              });
-                            }
-                          });
-                        }
-                      });
-                    });
+      // Find the author
+      User.findById(userId)
+      .then(author => {
+        // Error check
+        if (!author) {
+          res.status(404).send({error: 'You must be an author.'});
+          return;
+        }
+        // Resize main article image
+        ResizeArticleImage(image, 1920, title, (resp1) => {
+          if (resp1.error) {
+            res.status(404).send({error: resp1.error});
+            return;
+          }
+          // Resize preview article image
+          ResizeArticleImage(image, 600, title, (resp2) => {
+            if (resp2.error) {
+              res.status(404).send({error: resp2.error});
+              return;
+            }
+            // Resize all article images from body
+            const newBody = [];
+            async.eachSeries(body, (comp, cb) => {
+              if (comp.componentType === 'image') {
+                ResizeArticleImage(comp.body, 1280, title, (resp3) => {
+                  if (resp3.error) {
+                    res.status(404).send({error: resp3.error});
+                    return;
                   }
+                  newBody.push({componentType: comp.componentType, body: resp3.resizedImg});
+                  cb();
                 });
+              } else {
+                // If component is not an image, simply add it to body
+                newBody.push({componentType: comp.componentType, body: comp.body});
+                cb();
+              }
+            }, (asyncErr) => {
+              if (asyncErr) {
+                res.status(404).send({error: 'Error posting article.'});
+                return;
+              }
+              // Creates a new article with given params
+              const newArticle = new Article({
+                title,
+                subtitle,
+                image: resp1.resizedImg,
+                imagePreview: resp2.resizedImg,
+                body: newBody,
+                location,
+                author: userId,
+                createdAt: Date.now(),
+                updatedAt: Date.now(),
+              });
+              // Save article
+              newArticle.save()
+              .then(article => {
+                // Successfully send back data
+                res.send({article});
+                return;
               })
               .catch(() => {
-                res.send({
-                  success: false,
-                  error: 'Error uploading image.',
-                });
+                res.status(404).send({error: 'Error posting article.'});
+                return;
               });
-            }
+            });
           });
-        }
-      }
+        });
+      });
     });
   });
 
