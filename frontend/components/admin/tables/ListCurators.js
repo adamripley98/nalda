@@ -17,22 +17,15 @@ class ListCurators extends Component {
   componentDidMount() {
     axios.get('/api/admin/curators')
       .then(res => {
-        if (!res.data.success) {
-          this.setState({
-            pending: false,
-            error: res.data.error,
-          });
-          return;
-        }
         this.setState({
           pending: false,
           curators: res.data.curators,
         });
       })
-      .catch(err => {
+      .catch(error => {
         this.setState({
           pending: false,
-          error: err.message,
+          error,
         });
       });
   }

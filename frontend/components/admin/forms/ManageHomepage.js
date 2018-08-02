@@ -61,23 +61,16 @@ class ManageHomepage extends Component {
     // Pull data to display on admin panel
     axios.get('/api/admin')
     .then((resp) => {
-      if (resp.data.success) {
-        this.setState({
-          banner: resp.data.data.homepageContent ? resp.data.data.homepageContent.banner : [],
-          components: resp.data.data.homepageContent ? resp.data.data.homepageContent.components : [],
-          pending: false,
-          to: '',
-        });
-      } else {
-        this.setState({
-          error: resp.data.error,
-          pending: false,
-        });
-      }
-    })
-    .catch((err) => {
       this.setState({
-        error: err,
+        banner: resp.data.homepageContent ? resp.data.homepageContent.banner : [],
+        components: resp.data.homepageContent ? resp.data.homepageContent.components : [],
+        pending: false,
+        to: '',
+      });
+    })
+    .catch(error => {
+      this.setState({
+        error,
         pending: false,
       });
     });

@@ -17,22 +17,15 @@ class ListAdmins extends Component {
   componentDidMount() {
     axios.get('/api/admin/admins')
       .then(res => {
-        if (!res.data.success) {
-          this.setState({
-            pending: false,
-            error: res.data.error,
-          });
-          return;
-        }
         this.setState({
           pending: false,
           admins: res.data.admins,
         });
       })
-      .catch(err => {
+      .catch(error => {
         this.setState({
           pending: false,
-          error: err.message,
+          error,
         });
       });
   }
