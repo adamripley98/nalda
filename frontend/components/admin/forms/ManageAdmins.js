@@ -36,7 +36,7 @@ class ManageAdmins extends Component {
       });
     })
     .catch(error => {
-      this.setState({error});
+      this.setState({error: error.response.data.error || error.response.data });
     });
   }
 
@@ -68,7 +68,7 @@ class ManageAdmins extends Component {
       });
     }).catch(error => {
       this.setState({
-        error,
+        error: error.response.data.error || error.response.data,
         success: '',
       });
     });
@@ -92,7 +92,7 @@ class ManageAdmins extends Component {
       });
     }).catch((error) => {
       this.setState({
-        error,
+        error: error.response.data.error || error.response.data,
         success: '',
       });
     });
@@ -108,15 +108,12 @@ class ManageAdmins extends Component {
       userToRemove: this.state.email,
     })
     .then((resp) => {
-      // Shows any errors
-      const newUsers = this.state.users.slice();
+      const newUsers = this.state.users && this.state.users.length ? this.state.users.slice() : [];
 
       // Add new user (revoke from curator)
       newUsers.push(resp.data.removedCurator);
       // Remove curator
-      const newCurators = this.state.curators.filter((user) => {
-        return user.userId !== resp.data.removedCurator.userId;
-      });
+      const newCurators = this.state.curators && this.state.curators.length ? this.state.curators.filter(user => user.userId !== resp.data.removedCurator.userId) : [];
       this.setState({
         error: "",
         success: 'Successfully removed curator',
@@ -124,9 +121,9 @@ class ManageAdmins extends Component {
         users: newUsers,
         email: '',
       });
-    }).catch((err) => {
+    }).catch(err => {
       this.setState({
-        error: err,
+        error: err.response.data.error,
         success: '',
       });
     });

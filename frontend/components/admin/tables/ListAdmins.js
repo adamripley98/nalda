@@ -25,7 +25,7 @@ class ListAdmins extends Component {
       .catch(error => {
         this.setState({
           pending: false,
-          error,
+          error: error.response.data.error || error.response.data,
         });
       });
   }

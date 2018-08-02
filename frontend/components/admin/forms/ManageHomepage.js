@@ -70,7 +70,7 @@ class ManageHomepage extends Component {
     })
     .catch(error => {
       this.setState({
-        error,
+        error: error.response.data.error || error.response.data,
         pending: false,
       });
     });

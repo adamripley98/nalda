@@ -25,7 +25,7 @@ class ListListings extends Component {
           listings: res.data.listings,
         });
       })
-      .catch(err => this.setState({ error: 'Error pulling listings.' }));
+      .catch(() => this.setState({ error: 'Error pulling listings.' }));
   }
 
   // Render the table
