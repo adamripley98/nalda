@@ -4,17 +4,11 @@
  * NOTE these routes serve and accept JSON-formatted data
  */
 
- // TODO sometimes pass back 400 error
-
-console.log('755 lines');
-
 // Import frameworks
 const express = require('express');
 const router = express.Router();
 const AWS = require('aws-sdk');
-const uuid = require('uuid-v4');
 const async = require('async');
-const sharp = require('sharp');
 
 // Import database models
 const Article = require('../models/article');
@@ -29,13 +23,6 @@ const {ResizeArticleImage} = require('../helperMethods/imageProcessing');
 const AWS_BUCKET_NAME = process.env.AWS_BUCKET_NAME;
 const AWS_USER_KEY = process.env.AWS_USER_KEY;
 const AWS_USER_SECRET = process.env.AWS_USER_SECRET;
-
-// Set up bucket
-const s3bucket = new AWS.S3({
-  accessKeyId: AWS_USER_KEY,
-  secretAccessKey: AWS_USER_SECRET,
-  Bucket: AWS_BUCKET_NAME,
-});
 
 // Export the following methods for routing
 module.exports = () => {
@@ -147,14 +134,12 @@ module.exports = () => {
             res.status(404).send({error: resp1.error});
             return;
           }
-          console.log('first im resi', resp1.resizedImg);
           // Resize preview article image
           ResizeArticleImage(image, 600, title, (resp2) => {
             if (resp2.error) {
               res.status(404).send({error: resp2.error});
               return;
             }
-            console.log('second im resi', resp2.resizedImg);
             // Resize all article images from body
             const newBody = [];
             async.eachSeries(body, (comp, cb) => {
@@ -164,7 +149,6 @@ module.exports = () => {
                     res.status(404).send({error: resp3.error});
                     return;
                   }
-                  console.log('resize3', resp3.resizedImg);
                   newBody.push({componentType: comp.componentType, body: resp3.resizedImg});
                   cb();
                 });
@@ -280,461 +264,104 @@ module.exports = () => {
         });
         return;
       }
-      // Async issue fix
-      async.waterfall([
-        () => {
-          // If initial image is new, upload to s3
-          if (image.indexOf('s3.amazonaws') === -1) {
-            ResizeArticleImage(image, 1920, title, (resp1) => {
-              if (resp1.error) {
-                res.status(404).send({error: resp1.error});
-                return;
-              }
-              // Make a preview version for performance
-              ResizeArticleImage(image, 600, title, (resp2) => {
-                if (resp2.error) {
-                  res.status(404).send({error: resp2.error});
-                  return;
-                }
-                // For scope reasons
-                articleImg = resp1.resizedImg;
-                articlePrevImg = resp2.resizedImg;
-              });
-            });
-          }
-        }, () => {
-          // Loop through images
-          const newBody = [];
-          async.eachSeries(body, (comp, cb) => {
-            if (comp.componentType === 'image') {
-              if (comp.body.indexOf('naldacampus') === -1) {
-                ResizeArticleImage(comp.body, 600, title, (resp3) => {
-                  if (resp3.error) {
-                    res.status(404).send({error: resp3.error});
-                    return;
-                  }
-                  newBody.push({componentType: comp.componentType, body: resp3.resizedImg});
-                  cb();
-                });
-              } else {
-                // Image has already been uploaded
-                newBody.push({componentType: comp.componentType, body: comp.body});
-                cb();
-              }
-            } else {
-              // Body component is not an image
-              newBody.push({componentType: comp.componentType, body: comp.body});
-              cb();
-            }
-          }, (asyncErr) => {
-            if (asyncErr) {
-              res.status(404).send({error: 'Error editting article'});
+
+      // If initial image is new, upload to s3
+      const awaitStoreMainImg = new Promise(resolve => {
+        if (image.indexOf('s3.amazonaws') === -1) {
+          ResizeArticleImage(image, 1920, title, (resp1) => {
+            if (resp1.error) {
+              resolve(res.status(404).send({error: resp1.error}));
               return;
             }
-            // Find the author
-            User.findById(userId)
-            .then(author => {
-              if (!author) {
-                res.status(404).send({error: 'Error editting article'});
+            // Make a preview version for performance
+            ResizeArticleImage(image, 600, title, (resp2) => {
+              if (resp2.error) {
+                resolve(res.status(404).send({error: resp2.error}));
                 return;
               }
-              // Find article in Mongo
-              Article.findById(articleId, (articleErr, article) => {
-                if (articleErr) {
-                  res.status(404).send({error: 'Error editting article'});
-                  return;
-                }
-                // Make changes to given article
-                article.title = title;
-                article.subtitle = subtitle;
-                article.image = articleImg;
-                article.imagePreview = articlePrevImg;
-                article.body = newBody;
-                article.location = location;
-                article.author = userId;
-                article.updatedAt = new Date().getTime();
-                // Save changes in mongo
-                article.save()
-                .then(() => {
-                  // Success
-                  res.send({
-                    article,
-                  });
-                })
-                .catch(() => {
-                  res.status(404).send({error: 'Error editting article'});
-                  return;
-                });
-              });
-            })
-            .catch(() => {
-              res.status(404).send({error: 'Error finding author'});
-              return;
+              // For scope reasons
+              articleImg = resp1.resizedImg;
+              articlePrevImg = resp2.resizedImg;
             });
           });
         }
-      ], (asyncWaterfallErr) => {
-        if (asyncWaterfallErr) {
-          res.status(404).send({error: 'Error editting article'});
-          return;
-        }
+        resolve();
+      })
+      .then((results) => {
+        // Loop through images
+        const newBody = [];
+        async.eachSeries(body, (comp, cb) => {
+          if (comp.componentType === 'image') {
+            if (comp.body.indexOf('s3.amazonaws') === -1) {
+              ResizeArticleImage(comp.body, 600, title, (resp3) => {
+                if (resp3.error) {
+                  res.status(404).send({error: resp3.error});
+                  return;
+                }
+                newBody.push({componentType: comp.componentType, body: resp3.resizedImg});
+                cb();
+              });
+            } else {
+              // Image has already been uploaded
+              newBody.push({componentType: comp.componentType, body: comp.body});
+              cb();
+            }
+          } else {
+            // Body component is not an image
+            newBody.push({componentType: comp.componentType, body: comp.body});
+            cb();
+          }
+        }, (asyncErr) => {
+          if (asyncErr) {
+            res.status(404).send({error: 'Error editting article'});
+            return;
+          }
+          // Find the author
+          User.findById(userId)
+          .then(author => {
+            if (!author) {
+              res.status(404).send({error: 'Error editting article'});
+              return;
+            }
+            // Find article in Mongo
+            Article.findById(articleId, (articleErr, article) => {
+              if (articleErr) {
+                res.status(404).send({error: 'Error editting article'});
+                return;
+              }
+              // Make changes to given article
+              article.title = title;
+              article.subtitle = subtitle;
+              article.image = articleImg;
+              article.imagePreview = articlePrevImg;
+              article.body = newBody;
+              article.location = location;
+              article.author = userId;
+              article.updatedAt = new Date().getTime();
+              // Save changes in mongo
+              article.save()
+              .then(() => {
+                // Success
+                res.send({article});
+              })
+              .catch(() => {
+                res.status(404).send({error: 'Error editting article'});
+                return;
+              });
+            });
+          })
+          .catch(() => {
+            res.status(404).send({error: 'Error finding author'});
+            return;
+          });
+        });
+      })
+      .catch(() => {
+        res.status(404).send({error: 'Error editting author'});
+        return;
       });
     });
   });
-
-
-  //           const articlePictureConverted = new Buffer(comp.body.replace(/^data:image\/\w+;base64,/, ""), 'base64');
-  //           // Resize to be appropriate size
-  //           sharp(articlePictureConverted)
-  //           .resize(600, null)
-  //           .toBuffer()
-  //           .then( resizedArticleImage => {
-  //             var parameters = {
-  //               Bucket: AWS_BUCKET_NAME,
-  //               Key: `articlepictures/${folderId}/${uuid()}`,
-  //               ContentType: 'image/jpeg',
-  //               Body: resizedArticleImage,
-  //               ContentEncoding: 'base64',
-  //               ACL: 'public-read',
-  //             };
-  //             // Upload photo
-  //             s3bucket.upload(parameters, (errorupload, img) => {
-  //               if (errorupload) {
-  //                 res.send({
-  //                   success: false,
-  //                   error: 'Error uploading profile picture.',
-  //                 });
-  //               } else {
-  //                 newBody.push({componentType: comp.componentType, body: img.Location});
-  //                 cb();
-  //               }
-  //             });
-  //           });
-  //         } else {
-  //           newBody.push({componentType: comp.componentType, body: comp.body});
-  //           cb();
-  //         }
-  //       } else {
-  //         // If component is not an image, simply add it to body
-  //         newBody.push({componentType: comp.componentType, body: comp.body});
-  //         cb();
-  //       }
-  //     }, (asyncErr) => {
-  //       if (asyncErr) {
-  //         res.send({
-  //           success: false,
-  //           error: 'Error posting article.',
-  //         });
-  //       } else {
-  //         // Find the author
-  //         User.findById(userId, (err, author) => {
-  //           if (err) {
-  //             res.send({
-  //               success: false,
-  //               error: 'Error finding author.',
-  //             });
-  //           } else if (!author) {
-  //             res.send({
-  //               success: false,
-  //               error: 'Author not found.'
-  //             });
-  //           } else {
-  //             // Find article in Mongo
-  //             Article.findById(articleId, (articleErr, article) => {
-  //               if (articleErr) {
-  //                 res.send({
-  //                   success: false,
-  //                   error: 'Error editing article.',
-  //                 });
-  //               } else {
-  //                 // Make changes to given article
-  //                 article.title = title;
-  //                 article.subtitle = subtitle;
-  //                 article.image = data.Location;
-  //                 article.imagePreview = previewData.Location;
-  //                 article.body = newBody;
-  //                 article.location = location;
-  //                 article.author = userId;
-  //                 article.updatedAt = new Date().getTime();
-  //                 // Save changes in mongo
-  //                 article.save((errSave) => {
-  //                   if (errSave) {
-  //                     res.send({
-  //                       success: false,
-  //                       error: 'Error editting article.',
-  //                     });
-  //                   } else {
-  //                     res.send({
-  //                       success: true,
-  //                       error: '',
-  //                       data: article,
-  //                     });
-  //                   }
-  //                 });
-  //               }
-  //             });
-  //           }
-  //         });
-  //       }
-  //     });
-  //
-  //
-  //
-  //       // Convert article picture to a form that s3 can display
-  //       const imageConverted = new Buffer(image.replace(/^data:image\/\w+;base64,/, ""), 'base64');
-  //       const folderId = uuid();
-  //
-  //       // Resize to be appropriate size
-  //       sharp(imageConverted)
-  //       .resize(1920, null)
-  //       .toBuffer()
-  //       .then( resizedImage => {
-  //       // Create bucket
-  //         const params = {
-  //           Bucket: AWS_BUCKET_NAME,
-  //           Key: `articlepictures/${folderId}/${uuid()}`,
-  //           ContentType: 'image/jpeg',
-  //           Body: resizedImage,
-  //           ContentEncoding: 'base64',
-  //           ACL: 'public-read',
-  //         };
-  //         // Upload photo
-  //         s3bucket.upload(params, (errUpload, data) => {
-  //           if (errUpload) {
-  //             res.send({
-  //               success: false,
-  //               error: 'Error uploading profile picture.',
-  //             });
-  //           } else {
-  //             // Resize to be appropriate size
-  //             sharp(imageConverted)
-  //             .resize(600, null)
-  //             .toBuffer()
-  //             .then( resizedPreviewImage => {
-  //               var previewParams = {
-  //                 Bucket: AWS_BUCKET_NAME,
-  //                 Key: `articlepictures/${folderId}/${uuid()}`,
-  //                 ContentType: 'image/jpeg',
-  //                 Body: resizedPreviewImage,
-  //                 ContentEncoding: 'base64',
-  //                 ACL: 'public-read',
-  //               };
-  //               // Upload photo
-  //               s3bucket.upload(previewParams, (errorUpload, previewData) => {
-  //                 if (errorUpload) {
-  //                   res.send({
-  //                     success: false,
-  //                     error: 'Error uploading profile picture.',
-  //                   });
-  //                 } else {
-  //                   const newBody = [];
-  //                   async.eachSeries(body, (comp, cb) => {
-  //                     if (comp.componentType === 'image') {
-  //                       if (comp.body.indexOf('naldacampus') === -1) {
-  //                         const articlePictureConverted = new Buffer(comp.body.replace(/^data:image\/\w+;base64,/, ""), 'base64');
-  //                         // Resize to be appropriate size
-  //                         sharp(articlePictureConverted)
-  //                         .resize(600, null)
-  //                         .toBuffer()
-  //                         .then( resizedArticleImage => {
-  //                           var parameters = {
-  //                             Bucket: AWS_BUCKET_NAME,
-  //                             Key: `articlepictures/${folderId}/${uuid()}`,
-  //                             ContentType: 'image/jpeg',
-  //                             Body: resizedArticleImage,
-  //                             ContentEncoding: 'base64',
-  //                             ACL: 'public-read',
-  //                           };
-  //                           // Upload photo
-  //                           s3bucket.upload(parameters, (errorupload, img) => {
-  //                             if (errorupload) {
-  //                               res.send({
-  //                                 success: false,
-  //                                 error: 'Error uploading profile picture.',
-  //                               });
-  //                             } else {
-  //                               newBody.push({componentType: comp.componentType, body: img.Location});
-  //                               cb();
-  //                             }
-  //                           });
-  //                         });
-  //                       } else {
-  //                         newBody.push({componentType: comp.componentType, body: comp.body});
-  //                         cb();
-  //                       }
-  //                     } else {
-  //                       // If component is not an image, simply add it to body
-  //                       newBody.push({componentType: comp.componentType, body: comp.body});
-  //                       cb();
-  //                     }
-  //                   }, (asyncErr) => {
-  //                     if (asyncErr) {
-  //                       res.send({
-  //                         success: false,
-  //                         error: 'Error posting article.',
-  //                       });
-  //                     } else {
-  //                       // Find the author
-  //                       User.findById(userId, (err, author) => {
-  //                         if (err) {
-  //                           res.send({
-  //                             success: false,
-  //                             error: 'Error finding author.',
-  //                           });
-  //                         } else if (!author) {
-  //                           res.send({
-  //                             success: false,
-  //                             error: 'Author not found.'
-  //                           });
-  //                         } else {
-  //                           // Find article in Mongo
-  //                           Article.findById(articleId, (articleErr, article) => {
-  //                             if (articleErr) {
-  //                               res.send({
-  //                                 success: false,
-  //                                 error: 'Error editing article.',
-  //                               });
-  //                             } else {
-  //                               // Make changes to given article
-  //                               article.title = title;
-  //                               article.subtitle = subtitle;
-  //                               article.image = data.Location;
-  //                               article.imagePreview = previewData.Location;
-  //                               article.body = newBody;
-  //                               article.location = location;
-  //                               article.author = userId;
-  //                               article.updatedAt = new Date().getTime();
-  //                               // Save changes in mongo
-  //                               article.save((errSave) => {
-  //                                 if (errSave) {
-  //                                   res.send({
-  //                                     success: false,
-  //                                     error: 'Error editting article.',
-  //                                   });
-  //                                 } else {
-  //                                   res.send({
-  //                                     success: true,
-  //                                     error: '',
-  //                                     data: article,
-  //                                   });
-  //                                 }
-  //                               });
-  //                             }
-  //                           });
-  //                         }
-  //                       });
-  //                     }
-  //                   });
-  //                 }
-  //               });
-  //             });
-  //           }
-  //         });
-  //       });
-  //     } else {
-  //       // Don't update image because it is already stored in s3
-  //       const folderId = uuid();
-  //       const newBody = [];
-  //       async.eachSeries(body, (comp, cb) => {
-  //         if (comp.componentType === 'image') {
-  //           // Need to story body image in aws
-  //           if (comp.body.indexOf('s3.amazonaws') === -1) {
-  //             const articlePictureConverted = new Buffer(comp.body.replace(/^data:image\/\w+;base64,/, ""), 'base64');
-  //             sharp(articlePictureConverted)
-  //             .resize(600, null)
-  //             .toBuffer()
-  //             .then( resizedArticleImage => {
-  //               var parameters = {
-  //                 Bucket: AWS_BUCKET_NAME,
-  //                 Key: `articlepictures/${folderId}/${uuid()}`,
-  //                 ContentType: 'image/jpeg',
-  //                 Body: resizedArticleImage,
-  //                 ContentEncoding: 'base64',
-  //                 ACL: 'public-read',
-  //               };
-  //               // Upload photo
-  //               s3bucket.upload(parameters, (errorUpload, img) => {
-  //                 if (errorUpload) {
-  //                   res.send({
-  //                     success: false,
-  //                     error: 'Error uploading profile picture.',
-  //                   });
-  //                 } else {
-  //                   newBody.push({componentType: comp.componentType, body: img.Location});
-  //                   cb();
-  //                 }
-  //               });
-  //             });
-  //           } else {
-  //             // body image is already stored in aws
-  //             newBody.push({componentType: comp.componentType, body: comp.body});
-  //             cb();
-  //           }
-  //         } else {
-  //           // If component is not an image, simply add it to body
-  //           newBody.push({componentType: comp.componentType, body: comp.body});
-  //           cb();
-  //         }
-  //       }, (asyncErr) => {
-  //         if (asyncErr) {
-  //           res.send({
-  //             success: false,
-  //             error: 'Error posting article.',
-  //           });
-  //         } else {
-  //           // Find the author
-  //           User.findById(userId, (err, author) => {
-  //             if (err) {
-  //               res.send({
-  //                 success: false,
-  //                 error: 'Error finding author.',
-  //               });
-  //             } else if (!author) {
-  //               res.send({
-  //                 success: false,
-  //                 error: 'Author not found.'
-  //               });
-  //             } else {
-  //               // Find article in Mongo
-  //               Article.findById(articleId, (articleErr, article) => {
-  //                 if (articleErr) {
-  //                   res.send({
-  //                     success: false,
-  //                     error: 'Error posting article.',
-  //                   });
-  //                 } else {
-  //                   // Make changes to given article
-  //                   article.title = title;
-  //                   article.subtitle = subtitle;
-  //                   article.image = image;
-  //                   article.body = newBody;
-  //                   article.location = location;
-  //                   article.author = userId;
-  //                   article.updatedAt = new Date().getTime();
-  //                   // Save changes in mongo
-  //                   article.save((errSave) => {
-  //                     if (errSave) {
-  //                       res.send({
-  //                         success: false,
-  //                         error: 'Error posting article.',
-  //                       });
-  //                     } else {
-  //                       res.send({
-  //                         success: true,
-  //                         error: '',
-  //                         data: article,
-  //                       });
-  //                     }
-  //                   });
-  //                 }
-  //               });
-  //             }
-  //           });
-  //         }
-  //       });
-  //     }
-  //   });
-  // });
 
   /**
    * Route to handle pulling the information for a specific article

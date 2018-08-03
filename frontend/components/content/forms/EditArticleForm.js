@@ -350,26 +350,19 @@ class EditArticleForm extends React.Component {
             },
           })
             .then((res) => {
-              if (res.data.success) {
-                // Notify success
-                this.props.notifyMessage("Successfully updated article.");
+              // Notify success
+              this.props.notifyMessage("Successfully updated article.");
 
-                // If creating the article was successful
-                this.setState({
-                  articleId: res.data.data._id,
-                  redirectToHome: true,
-                });
-              } else {
-                this.setState({
-                  error: res.data.error,
-                  pendingSubmit: false,
-                });
-              }
+              // If creating the article was successful
+              this.setState({
+                articleId: res.data.article._id,
+                redirectToHome: true,
+              });
             })
-            .catch((err) => {
+            .catch(error => {
               // If there was an error in making the request
               this.setState({
-                error: err,
+                error: error.response.data.error || error.response.data,
                 pendingSubmit: false,
               });
             });
