@@ -7,7 +7,6 @@
 // Import frameworks
 const express = require('express');
 const router = express.Router();
-const AWS = require('aws-sdk');
 const async = require('async');
 
 // Import database models
@@ -18,11 +17,6 @@ const Homepage = require('../models/homepage');
 // Import helper methods
 const {CuratorOrAdminCheck} = require('../helperMethods/authChecking');
 const {ResizeArticleImage} = require('../helperMethods/imageProcessing');
-
-// Isolate environmental variables
-const AWS_BUCKET_NAME = process.env.AWS_BUCKET_NAME;
-const AWS_USER_KEY = process.env.AWS_USER_KEY;
-const AWS_USER_SECRET = process.env.AWS_USER_SECRET;
 
 // Export the following methods for routing
 module.exports = () => {
@@ -35,27 +29,27 @@ module.exports = () => {
       if (err) {
         // If there was an error with the request
         res.status(404).send({error: 'Error finding articles.'});
-      } else {
-        // Add a timestamp field for sorting
-        fullArticles.forEach((article) => {
-          article.createdAt = article._id.getTimestamp();
-        });
-
-        // Return only important information
-        const articles = fullArticles.map(article => ({
-          _id: article._id,
-          title: article.title,
-          subtitle: article.subtitle,
-          image: article.image,
-          imagePreview: article.imagePreview,
-        }));
-
-        // Send articles back in correct order
-        articles.reverse();
-
-        // Send back data
-        res.send({articles});
+        return;
       }
+        // Add a timestamp field for sorting
+      fullArticles.forEach((article) => {
+        article.createdAt = article._id.getTimestamp();
+      });
+
+      // Return only important information
+      const articles = fullArticles.map(article => ({
+        _id: article._id,
+        title: article.title,
+        subtitle: article.subtitle,
+        image: article.image,
+        imagePreview: article.imagePreview,
+      }));
+
+      // Send articles back in correct order
+      articles.reverse();
+
+      // Send back data
+      res.send({articles});
     });
   });
 
@@ -71,9 +65,7 @@ module.exports = () => {
     CuratorOrAdminCheck(req, (authRes) => {
       // Return any authentication errors
       if (authRes.error) {
-        res.send({
-          error: authRes.error,
-        });
+        res.status(400).send({error: authRes.error});
         return;
       }
       // Isolate variables
@@ -207,10 +199,7 @@ module.exports = () => {
     CuratorOrAdminCheck(req, (authRes) => {
       // Return any authentication errors
       if (!authRes.success) {
-        res.send({
-          success: false,
-          error: authRes.error,
-        });
+        res.status(400).send({error: authRes.error});
         return;
       }
       // Isolate variables
@@ -258,15 +247,12 @@ module.exports = () => {
 
       // If there was an error or not
       if (error) {
-        res.send({
-          success: false,
-          error,
-        });
+        res.status(400).send({error});
         return;
       }
 
       // If initial image is new, upload to s3
-      const awaitStoreMainImg = new Promise(resolve => {
+      Promise(resolve => {
         if (image.indexOf('s3.amazonaws') === -1) {
           ResizeArticleImage(image, 1920, title, (resp1) => {
             if (resp1.error) {
@@ -287,10 +273,12 @@ module.exports = () => {
         }
         resolve();
       })
-      .then((results) => {
+      // After initial image is dealed with, check if other images need to be uploaded
+      .then(() => {
         // Loop through images
         const newBody = [];
         async.eachSeries(body, (comp, cb) => {
+          // Check if given component is an image and hasn't been uploaded to s3
           if (comp.componentType === 'image') {
             if (comp.body.indexOf('s3.amazonaws') === -1) {
               ResizeArticleImage(comp.body, 600, title, (resp3) => {
@@ -370,67 +358,54 @@ module.exports = () => {
     // Find the id from the url
     const id = req.params.id;
 
-    // Check if user is logged in
-    let userId = "";
-    if (req.session.passport) {
-      userId = req.session.passport.user;
-    }
-
     // Pull specific article from mongo
-    Article.findById(id, (err, article) => {
-      if (err) {
-        res.status(404).send({
-          success: false,
-          error: "Article not found.",
-        });
-      // If the article doesn't exist
-      } else if (!article) {
-        res.status(404).send({
-          success: false,
-          error: "Article not found.",
-        });
-
-        // If no errors, returns article along with the date it was created
-      } else {
-        // Fetch author data
-        User.findById(article.author, (er, author) => {
-          if (er) {
-            // Error finding author
-            res.send({
-              success: false,
-              error: "Article not found.",
-            });
-          } else if (!author) {
-            res.send({
-              success: false,
-              error: 'Cannot find author.',
-            });
-          } else {
-            // Default: users can't change article
-            let canModify = false;
-            User.findById(userId, (errUser, user) => {
-              if (user) {
-                // Check if given user is either an admin or the curator of the article
-                if (user.userType === 'admin' || user.userType === 'curator') {
-                  canModify = true;
-                }
-              }
-              // Author found
-              res.send({
-                success: true,
-                data: article,
-                timestamp: article._id.getTimestamp(),
-                author: {
-                  name: author.name,
-                  profilePicture: author.profilePicture,
-                  _id: author._id,
-                },
-                canModify,
-              });
-            });
-          }
-        });
+    Article.findById(id)
+    .then(article => {
+      if (!article) {
+        res.status(404).send({error: "Article not found."});
+        return;
       }
+      // Fetch author data
+      User.findById(article.author)
+      .then(author => {
+        if (!author) {
+          res.status(404).send({error: "Article not found."});
+          return;
+        }
+        // Default: users can't change article
+        let canModify = false;
+        // Check to see if user is logged in, admin/curator
+        User.findById(req.session.passport ? req.session.passport.user : null)
+        .then(user => {
+          if (user) {
+            // Check if given user is either an admin or the curator of the article
+            if (user.userType === 'admin' || user.userType === 'curator') {
+              canModify = true;
+            }
+          }
+          res.send({
+            article,
+            author: {
+              name: author.name,
+              profilePicture: author.profilePicture,
+              _id: author._id,
+            },
+            canModify,
+          });
+        })
+        .catch(() => {
+          res.status(404).send({error: "Article not found."});
+          return;
+        });
+      })
+      .catch(() => {
+        res.status(404).send({error: "Article not found."});
+        return;
+      });
+    })
+    .catch(() => {
+      res.status(404).send({error: "Article not found."});
+      return;
     });
   });
 
@@ -445,69 +420,66 @@ module.exports = () => {
     CuratorOrAdminCheck(req, (authRes) => {
       // Return any authentication errors
       if (!authRes.success) {
-        res.send({
-          success: false,
-          error: authRes.error,
-        });
-      } else {
-        Article.findById(articleId, (artErr, article) => {
-          // User CAN delete articles, remove from mongo
-          article.remove((errRemove) => {
-            if (errRemove) {
-              res.send({
-                success: false,
-                error: "Error deleting article.",
-              });
-            // Send back success
-            } else {
-              Homepage.find({}, (errHome, homepage) => {
-                if (errHome) {
-                  res.send({
-                    success: false,
-                    error: 'Error deleting article.',
-                  });
-                } else {
-                  const home = homepage[0];
-                  const banner = home.banner.slice();
-                  // Remove content from banner
-                  for (var j = 0; j < banner.length; j++) {
-                    if (banner[j].contentId === articleId) {
-                      banner.splice(j, 1);
-                      break;
-                    }
-                  }
-                  // Delete component from homepage
-                  const components = home.components.slice();
-                  components.forEach((comp, i) => {
-                    comp.content.forEach((content, k) => {
-                      if (content.contentId === articleId) {
-                        components[i].content.splice(k, 1);
-                      }
-                    });
-                  });
-                  // Save changes
-                  home.banner = banner;
-                  home.components = components;
-
-                  home.save((errSave) => {
-                    if (errSave) {
-                      res.send({
-                        success: false,
-                        error: 'Error deleting article.',
-                      });
-                    } else {
-                      res.send({
-                        success: true,
-                        error: '',
-                      });
-                    }
-                  });
+        res.status(404).send({error: authRes.error});
+        return;
+      }
+      // Find given article
+      Article.findById(articleId)
+      .then(article => {
+        // User CAN delete articles, remove from mongo
+        article.remove()
+        .then(() => {
+          // Remove it from homepage
+          Homepage.find({})
+          .then((homepage) => {
+            const home = homepage[0];
+            const banner = home.banner.slice();
+            // Remove content from banner
+            for (var j = 0; j < banner.length; j++) {
+              if (banner[j].contentId === articleId) {
+                banner.splice(j, 1);
+                break;
+              }
+            }
+            // Delete component from homepage
+            const components = home.components.slice();
+            components.forEach((comp, i) => {
+              comp.content.forEach((content, k) => {
+                if (content.contentId === articleId) {
+                  components[i].content.splice(k, 1);
                 }
               });
-            }
+            });
+            // Save changes
+            home.banner = banner;
+            home.components = components;
+
+            // Save in mongo
+            home.save()
+            .then(() => {
+              // On success, return
+              res.send({error: ''});
+              return;
+            })
+            .catch(() => {
+              res.status(400).send({error: 'Cannot delete article.'});
+              return;
+            });
+          })
+          .catch(() => {
+            res.status(400).send({error: 'Cannot delete article.'});
+            return;
           });
+        })
+        .catch(() => {
+          res.status(400).send({error: 'Cannot delete article.'});
+          return;
         });
-      }
+      })
+      .catch(() => {
+        res.status(400).send({error: 'Cannot delete article.'});
+        return;
+      });
     });
   });
 

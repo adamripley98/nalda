@@ -55,23 +55,17 @@ class Article extends React.Component {
     // Find the article
     axios.get(`/api/articles/${id}`)
       .then(res => {
-        if (res.data.success) {
-          this.setState({
-            error: "",
-            ...res.data.data,
-            author: res.data.author,
-            pending: false,
-            canModify: res.data.canModify,
-          });
-        } else {
-          // If there was an error with the request
-          this.setState({
-            error: res.data.error,
-            pending: false,
-          });
-        }
+        console.log('res', res);
+        this.setState({
+          error: "",
+          ...res.data.article,
+          author: res.data.author,
+          pending: false,
+          canModify: res.data.canModify,
+        });
       })
       .catch(err => {
+        console.log('e', err);
         if (err.response.status === 404) {
           this.setState({
             pending: false,
@@ -102,26 +96,19 @@ class Article extends React.Component {
     // Post to backend
     axios.delete(`/api/articles/${id}`)
       .then(resp => {
-        if (resp.data.success) {
-          // If the request was successful
-          // Collapse the modal upon success
-          $('#deleteModal').modal('toggle');
+        // If the request was successful
+        // Collapse the modal upon success
+        $('#deleteModal').modal('toggle');
 
-          // Update the state and redirect to home
-          this.setState({
-            redirectToHome: true,
-            pendingDelete: false,
-          });
-        } else {
-          this.setState({
-            deleteError: resp.data.error,
-            pendingDelete: false,
-          });
-        }
-      })
-      .catch(err => {
+        // Update the state and redirect to home
         this.setState({
-          deleteError: err,
+          redirectToHome: true,
+          pendingDelete: false,
+        });
+      })
+      .catch(error => {
+        this.setState({
+          deleteError: error.response.data.error || error.response.data,
           pendingDelete: false,
         });
       });
