@@ -332,20 +332,10 @@ class Listing extends React.Component {
       reviewId,
       listingId: this.state.listingId,
     })
-    .then((resp) => {
-      if (resp.data.success) {
-        this.updateReviews();
-      } else {
-        this.setState({
-          error: resp.data.error,
-        });
-      }
+    .then(() => {
+      this.updateReviews();
     })
-    .catch((err) => {
-      this.setState({
-        error: err,
-      });
-    });
+    .catch(err => this.setState({error: err.response.data.error || err.response.data}));
   }
 
   // Helper method to render the entire reviews section

@@ -143,6 +143,7 @@ module.exports = () => {
           banner: homepage.banner,
           components: [],
         });
+        return;
       }
     })
     .catch(() => {
@@ -256,6 +257,7 @@ module.exports = () => {
 
           // If a component was successfully found
           res.send({component});
+          return;
         });
       } else {
         res.status(404).send({error: 'No content data was found.'});
@@ -318,7 +320,7 @@ module.exports = () => {
                 // save new homepage in mongo
                 newHomepage.save()
                 .then(() => {
-                  res.send({error: 'You just created the first instance of a homepage, try adding a banner again.'});
+                  res.status(404).send({error: 'You just created the first instance of a homepage, try adding a banner again.'});
                   return;
                 })
                 .catch(() => {
@@ -407,6 +409,7 @@ module.exports = () => {
         homepage.save()
         .then(() => {
           res.send({data: banner});
+          return;
         })
         .catch(() => {
           res.status(404).send({error: 'Error removing content.'});
@@ -430,7 +433,7 @@ module.exports = () => {
 
       const { title, subtitle, contentType } = req.body;
       if (!title || !subtitle || !contentType) {
-        res.send({error: 'Form must be filled out completely.'});
+        res.status(404).send({error: 'Form must be filled out completely.'});
         return;
       }
 
@@ -456,6 +459,7 @@ module.exports = () => {
         homepage.save()
         .then(() => {
           res.send({components});
+          return;
         })
         .catch(() => {
           res.status(404).send({error: 'Failed to save to homepage'});
@@ -616,6 +620,7 @@ module.exports = () => {
                 homepage.save()
                 .then(newHome => {
                   res.send({components: newHome.components});
+                  return;
                 })
                 .catch(() => {
                   res.status(404).send({error: 'Cannot add content.'});

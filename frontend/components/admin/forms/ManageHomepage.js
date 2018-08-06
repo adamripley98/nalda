@@ -272,16 +272,12 @@ class ManageHomepage extends Component {
         contentId,
       })
       .then(resp => {
-        if (resp.data.error) {
-          this.setState({error: resp.data.error});
-        } else {
-          this.props.notifyMessage('Successfully added content.');
-          this.setState({
-            components: resp.data.data,
-          });
-        }
+        this.props.notifyMessage('Successfully added content.');
+        this.setState({
+          components: resp.data.components,
+        });
       })
-      .catch(error => {this.setState(error);});
+      .catch(error => this.setState({error: error.response.data.error || error.response.data}));
     } else {
       this.setState({
         error: 'Content Id must be provided.',

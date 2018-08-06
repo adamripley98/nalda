@@ -102,14 +102,7 @@ class ReviewForm extends React.Component {
         userId: this.props.userId,
         listingId: this.props.listingId,
       })
-      .then((resp) => {
-        // If error, display it
-        if (!resp.data.success) {
-          this.setState({
-            error: resp.data.error,
-          });
-        }
-
+      .then(() => {
         // Calls parent component (Listing.js) method to display new review
         this.props.updateReviews();
 
@@ -123,7 +116,7 @@ class ReviewForm extends React.Component {
       .catch((err) => {
         if (err) {
           this.setState({
-            error: err,
+            error: err.response.data.error || err.response.data,
           });
         }
       });
