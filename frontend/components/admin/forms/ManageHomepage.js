@@ -112,33 +112,23 @@ class ManageHomepage extends Component {
         bannerContentId,
         bannerImageToAdd,
       })
-      .then((resp) => {
-        if (!resp.data.success) {
-          this.setState({
-            error: resp.data.error,
-            bannerContentId: '',
-            bannerImageToAdd: '',
-            bannerImageName: '',
-            bannerImagePreview: '',
-          });
-        } else {
-          // Notify success to the user
-          this.props.notifyMessage("Successfully added banner image.");
+      .then(resp => {
+        // Notify success to the user
+        this.props.notifyMessage("Successfully added banner image.");
 
-          // Set the state
-          this.setState({
-            error: '',
-            banner: resp.data.data,
-            bannerContentId: '',
-            bannerImageToAdd: '',
-            bannerImageName: '',
-            bannerImagePreview: '',
-          });
-        }
+        // Set the state
+        this.setState({
+          error: '',
+          banner: resp.data.banner,
+          bannerContentId: '',
+          bannerImageToAdd: '',
+          bannerImageName: '',
+          bannerImagePreview: '',
+        });
       })
       .catch(err => {
         this.setState({
-          error: err,
+          error: err.response.data.error || err.response.data,
           bannerContentId: '',
           bannerImageToAdd: '',
         });
@@ -149,22 +139,16 @@ class ManageHomepage extends Component {
   // Helper method to remove a banner item
   onSubmitRemoveBannerContent(bannerContentId) {
     axios.post(`/api/home/banner/remove/${bannerContentId}`)
-    .then((resp) => {
-      if (!resp.data.success) {
-        this.setState({
-          error: resp.data.error,
-        });
-      } else {
-        this.props.notifyMessage("Successfully removed banner image");
-        this.setState({
-          error: '',
-          banner: resp.data.data,
-        });
-      }
+    .then(resp => {
+      this.props.notifyMessage("Successfully removed banner image");
+      this.setState({
+        error: '',
+        banner: resp.data.data,
+      });
     })
     .catch(err => {
       this.setState({
-        error: err,
+        error: err.response.data.error || err.response.data,
       });
     });
   }
@@ -313,17 +297,13 @@ class ManageHomepage extends Component {
         contentId,
       })
       .then(resp => {
-        if (resp.data.error) {
-          this.setState({error: resp.data.error});
-        } else {
-          this.props.notifyMessage("Content removed.");
-          this.setState({
-            components: resp.data.data,
-            error: '',
-          });
-        }
+        this.props.notifyMessage("Content removed.");
+        this.setState({
+          components: resp.data.components,
+          error: '',
+        });
       })
-      .catch(error => {this.setState({error});});
+      .catch(error => this.setState({error: error.response.data.error || error.response.data}));
     } else {
       this.setState({error: 'Error removing content.'});
     }
@@ -336,17 +316,13 @@ class ManageHomepage extends Component {
         componentId: component._id,
       })
       .then(resp => {
-        if (resp.data.error) {
-          this.setState({error: resp.data.error});
-        } else {
-          this.props.notifyMessage("Component removed!");
-          this.setState({
-            error: '',
-            components: resp.data.data,
-          });
-        }
+        this.props.notifyMessage("Component removed!");
+        this.setState({
+          error: '',
+          components: resp.data.components,
+        });
       })
-      .catch(error => {this.setState({error});});
+      .catch(error => this.setState({error: error.response.data.error || error.response.data}));
     } else {
       this.setState({error: 'Error removing component.'});
     }

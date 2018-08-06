@@ -7,10 +7,7 @@
 // Import frameworks
 const express = require('express');
 const router = express.Router();
-const AWS = require('aws-sdk');
-const uuid = require('uuid-v4');
 const async = require('async');
-const sharp = require('sharp');
 
 // Import database models
 const Article = require('../models/article');
@@ -20,18 +17,7 @@ const Homepage = require('../models/homepage');
 
 // Import helper methods
 const {AdminCheck} = require('../helperMethods/authChecking');
-
-// Isolate environmental variables
-const AWS_BUCKET_NAME = process.env.AWS_BUCKET_NAME;
-const AWS_USER_KEY = process.env.AWS_USER_KEY;
-const AWS_USER_SECRET = process.env.AWS_USER_SECRET;
-
-// Set up bucket
-const s3bucket = new AWS.S3({
-  accessKeyId: AWS_USER_KEY,
-  secretAccessKey: AWS_USER_SECRET,
-  Bucket: AWS_BUCKET_NAME,
-});
+const {ResizeAndUploadImage} = require('../helperMethods/imageProcessing');
 
 // Export the following methods for routing
 module.exports = () => {
@@ -137,74 +123,51 @@ module.exports = () => {
    * Get content for the homepage
    */
   router.get('/', (req, res) => {
-    Homepage.find({}, (errHome, home) => {
-      if (errHome) {
-        res.send({
-          success: false,
-          error: 'Cannot return homepage.',
-        });
-        return;
-      }
-
+    Homepage.find({})
+    .then(home => {
       const homepage = home[0];
       if (homepage.components && homepage.components.length) {
         pullData(homepage.components, (resp) => {
           if (!resp.success) {
-            res.send({
-              success: false,
-              error: resp.error,
-            });
-          } else {
-            if (resp.returnComponents && resp.returnComponents.length) {
-              res.send({
-                success: true,
-                error: '',
-                banner: homepage.banner,
-                components: resp.returnComponents,
-              });
-              return;
-            }
-
-            res.send({
-              success: true,
-              error: '',
-              banner: homepage.banner,
-              components: [],
-            });
+            res.status(404).send({error: resp.error});
+            return;
           }
+          res.send({
+            banner: homepage.banner,
+            components: resp.returnComponents && resp.returnComponents.length ? resp.returnComponents : [],
+          });
+          return;
         });
       } else {
         res.send({
-          success: true,
-          error: '',
           banner: homepage.banner,
           components: [],
         });
       }
+    })
+    .catch(() => {
+      res.status(404).send({error: 'Cannot return homepage.'});
+      return;
     });
   });
 
-  // Route to handle viewing a single homepage component
+  /**
+   * View a single homepage component
+   */
   router.get('/components/:id', (req, res) => {
     const id = req.params.id;
     if (!id) {
-      res.status(404).send({
-        success: false,
-        error: "Invalid homepage component ID.",
-      });
+      res.status(404).send({error: "Invalid homepage component ID."});
       return;
     }
 
     // Find the homepage
-    Homepage.findOne({}, (err, home) => {
-      if (err || !home) {
-        res.status(404).send({
-          success: false,
-          error: 'There was an issue pulling homepage data. Refresh the page and try again.',
-        });
+    Homepage.findOne({})
+    .then(home => {
+      if (!home) {
+        res.status(404).send({error: 'There was an issue pulling homepage data. Refresh the page and try again.'});
         return;
       }
-
       // Find the component with the correct ID
       let component = null;
       home.components.forEach(c => {
@@ -216,10 +179,7 @@ module.exports = () => {
 
       // If we failed to find a component
       if (!component) {
-        res.status(404).send({
-          success: false,
-          error: 'There is no component with the passed in ID. Check the URL and try again.',
-        });
+        res.status(404).send({error: 'There is no component with the passed in ID. Check the URL and try again.'});
         return;
       }
 
@@ -237,14 +197,11 @@ module.exports = () => {
       if (component.content && component.content.length) {
         const returnContent = [];
         async.forEach(component.content, (cont, contentCallback) => {
-          Model.findById(cont.contentId, (errContent, content) => {
-            if (errContent) {
-              res.send({
-                success: false,
-                error: 'Error fetching homepage content',
-              });
-              return;
-            } else if (content) {
+          Model.findById(cont.contentId)
+          .then(content => {
+            if (!content) {
+              contentCallback();
+            } else {
               let newContent = {};
               if (component.contentType === 'Articles') {
                 newContent = {
@@ -284,32 +241,30 @@ module.exports = () => {
               }
               returnContent.push(newContent);
               contentCallback();
-            } else {
-              contentCallback();
             }
+          })
+          .catch(() => {
+            res.status(404).send({error: 'Error fetching homepage content'});
+            return;
           });
         }, contentAsyncErr => {
           if (contentAsyncErr) {
-            res.send({
-              success: false,
-              error: 'Failed to pull content.',
-            });
-          } else {
-            component.content = returnContent;
-
-            // If a component was successfully found
-            res.send({
-              success: true,
-              component,
-            });
+            res.status(404).send({error: 'Failed to pull content.'});
+            return;
           }
+          component.content = returnContent;
+
+          // If a component was successfully found
+          res.send({component});
         });
       } else {
-        res.status(404).send({
-          success: false,
-          error: 'No content data was found.',
-        });
+        res.status(404).send({error: 'No content data was found.'});
+        return;
       }
+    })
+    .catch(() => {
+      res.status(404).send({error: 'There was an issue pulling homepage data. Refresh the page and try again.'});
+      return;
     });
   });
 
@@ -317,148 +272,110 @@ module.exports = () => {
   router.post('/banner/add', (req, res) => {
     AdminCheck(req, (authRes) => {
       if (!authRes.success) {
-        res.send({
-          success: false,
-          error: authRes.error,
-        });
-      } else {
-        // Isolate body params
-        const contentId = req.body.bannerContentId;
-        const contentImage = req.body.bannerImageToAdd;
-        // Attempt to find content in listing or article
-        Listing.findById(contentId, (errListing, listing) => {
-          Article.findById(contentId, (errArticle, article) => {
-            // Pass back errors
-            if (errListing || errArticle) {
-              res.send({
-                success: false,
-                error: 'Error finding content.',
-              });
-              // Make sure id is of right format
-            } else if (!contentId.match(/^[0-9a-fA-F]{24}$/)) {
-              res.send({
-                success: false,
-                error: 'No content with that id exists.'
-              });
-              // Make sure content with given id exists
-            } else if (!article && !listing) {
-              res.send({
-                success: false,
-                error: 'No article or listing with that ID exists.',
-              });
-            } else {
-              // Convert article picture to a form that s3 can display
-              const imageConverted = new Buffer(contentImage.replace(/^data:image\/\w+;base64,/, ""), 'base64');
+        res.status(404).send({error: authRes.error});
+        return;
+      }
+      // Isolate body params
+      const contentId = req.body.bannerContentId;
+      const contentImage = req.body.bannerImageToAdd;
+      // Attempt to find content in listing or article
+      Listing.findById(contentId)
+      .then(listing => {
+        Article.findById(contentId)
+        .then(article => {
+          let error = '';
+          if (!contentId.match(/^[0-9a-fA-F]{24}$/)) {
+            error = "No content with that id exists.";
+            // Make sure content with given id exists
+          } else if (!article && !listing) {
+            error = 'No article or listing with that ID exists.';
+          }
 
-              // Resize to be appropriate size
-              sharp(imageConverted)
-              .resize(1920, null)
-              .toBuffer()
-              .then( resized => {
-                var params = {
-                  Bucket: AWS_BUCKET_NAME,
-                  Key: `bannerpictures/${uuid()}`,
-                  ContentType: 'image/jpeg',
-                  Body: resized,
-                  ContentEncoding: 'base64',
-                  ACL: 'public-read',
-                };
-                // Upload photo
-                s3bucket.upload(params, (errUpload, data) => {
-                  if (errUpload) {
-                    res.send({
-                      success: false,
-                      error: 'Error uploading profile picture.',
-                    });
-                  } else {
-                    // Find homepage
-                    Homepage.find({}, (errHomepage, home) => {
-                      if (errHomepage) {
-                        res.send({
-                          success: false,
-                          error: 'Error finding homepage.',
-                        });
-                      // NOTE this is only to declare a homepage in the database for the first time
-                      } else if (!home.length) {
-                        // Create new homepage
-                        const newHomepage = new Homepage({
-                          banner: [],
-                          naldaVideos: [],
-                          categories: [],
-                          recommended: [],
-                          fromTheEditors: [],
-                        });
-                        // save new homepage in mongo
-                        newHomepage.save((err) => {
-                          if (err) {
-                            res.send({
-                              success: false,
-                              error: 'Error on homepage.',
-                            });
-                          } else {
-                            res.send({
-                              success: false,
-                              error: 'You just created the first instance of a homepage, try adding a banner again.',
-                            });
-                          }
-                        });
-                      } else {
-                        const homepage = home[0];
-                        const banner = homepage.banner.slice();
-                        // Error check for duplicate content in banner
-                        let duplicate = false;
-                        banner.forEach((item) => {
-                          if (item.contentId === contentId) {
-                            duplicate = true;
-                          }
-                        });
-                        if (duplicate) {
-                          res.send({
-                            success: false,
-                            error: 'This content is already in the banner.',
-                          });
-                        } else {
-                          // Create object to pass back, of type article or listing
-                          const newBannerContent = {
-                            contentType: article ? "article" : "listing",
-                            contentId,
-                            contentImage: data.Location,
-                          };
-                          // Add to banner
-                          banner.push(newBannerContent);
-                          homepage.banner = banner;
-                          // Save new banner to mongo
-                          homepage.save((errSave) => {
-                            if (errSave) {
-                              res.send({
-                                success: false,
-                                error: 'Error saving image.',
-                              });
-                            } else {
-                              // Send back success
-                              res.send({
-                                success: true,
-                                error: '',
-                                data: homepage.banner,
-                              });
-                            }
-                          });
-                        }
-                      }
-                    });
+          if (error) {
+            res.status(404).send({error});
+            return;
+          }
+
+          // Resize main article image
+          ResizeAndUploadImage(contentImage, 'bannerpictures', 1920, null, (resp) => {
+            if (resp.error) {
+              res.status(404).send({error: resp.error});
+              return;
+            }
+            // Find homepage
+            Homepage.find({})
+            .then(home => {
+              // NOTE only to declare 1 time
+              if (!home.length) {
+                // Create new homepage
+                const newHomepage = new Homepage({
+                  banner: [],
+                  naldaVideos: [],
+                  categories: [],
+                  recommended: [],
+                  fromTheEditors: [],
+                });
+                // save new homepage in mongo
+                newHomepage.save()
+                .then(() => {
+                  res.send({error: 'You just created the first instance of a homepage, try adding a banner again.'});
+                  return;
+                })
+                .catch(() => {
+                  res.status(404).send({error: 'Error on homepage.'});
+                  return;
+                });
+              } else {
+                const homepage = home[0];
+                const banner = homepage.banner.slice();
+                // Error check for duplicate content in banner
+                let duplicate = false;
+                banner.forEach((item) => {
+                  if (item.contentId === contentId) {
+                    duplicate = true;
                   }
                 });
-              })
-              .catch(() => {
-                res.send({
-                  success: false,
-                  error: 'Image upload error.',
+                if (duplicate) {
+                  res.status(404).send({error: 'This content is already in the banner.'});
+                  return;
+                }
+                // Create object to pass back, of type article or listing
+                const newBannerContent = {
+                  contentType: article ? "article" : "listing",
+                  contentId,
+                  contentImage: resp.resizedImg,
+                };
+                // Add to banner
+                banner.push(newBannerContent);
+                homepage.banner = banner;
+                // Save new banner to mongo
+                homepage.save()
+                .then(() => {
+                  // Send back success
+                  res.send({banner: homepage.banner});
+                  return;
+                })
+                .catch(() => {
+                  res.status(404).send({error: 'Error saving image.'});
+                  return;
                 });
-              });
-            }
+              }
+            })
+            .catch(() => {
+              res.status(404).send({error: 'Error finding homepage.'});
+              return;
+            });
           });
+        })
+        .catch(() => {
+          res.status(404).send({error: 'Error finding content'});
+          return;
         });
-      }
+      })
+      .catch(() => {
+        res.status(404).send({error: 'Error finding content'});
+        return;
+      });
     });
   });
 
@@ -468,45 +385,38 @@ module.exports = () => {
     const contentId = req.params.bannerContentId;
     AdminCheck(req, (authRes) => {
       if (!authRes.success) {
-        res.send({
-          success: false,
-          error: authRes.error,
-        });
-      } else {
-        Homepage.find({}, (err, home) => {
-          if (err) {
-            res.send({
-              success: false,
-              error: 'Error retrieving homepage data.',
-            });
-          } else {
-            const homepage = home[0];
-            const banner = homepage.banner.slice();
-            // Loop through to delete specific item
-            banner.forEach((item) => {
-              if (item.contentId === contentId) {
-                banner.splice(banner.indexOf(item), 1);
-                return;
-              }
-            });
-            homepage.banner = banner;
-            homepage.save((errHome) => {
-              if (errHome) {
-                res.send({
-                  success: false,
-                  error: 'Error removing content.',
-                });
-              } else {
-                res.send({
-                  success: true,
-                  data: banner,
-                  error: '',
-                });
-              }
-            });
+        res.status(404).send({error: authRes.error});
+        return;
+      }
+      Homepage.find({})
+      .then(home => {
+        if (!home) {
+          res.status(404).send({error: 'Error removing item'});
+          return;
+        }
+        const homepage = home[0];
+        const banner = homepage.banner.slice();
+        // Loop through to delete specific item
+        banner.forEach((item) => {
+          if (item.contentId === contentId) {
+            banner.splice(banner.indexOf(item), 1);
+            return;
           }
         });
-      }
+        homepage.banner = banner;
+        homepage.save()
+        .then(() => {
+          res.send({data: banner});
+        })
+        .catch(() => {
+          res.status(404).send({error: 'Error removing content.'});
+          return;
+        });
+      })
+      .catch(() => {
+        res.status(404).send({error: 'Error retrieving homepage data.'});
+        return;
+      });
     });
   });
 
@@ -514,19 +424,13 @@ module.exports = () => {
   router.post('/component/add', (req, res) => {
     AdminCheck(req, (authRes) => {
       if (!authRes.success) {
-        res.send({
-          success: false,
-          error: authRes.error,
-        });
+        res.status(404).send({error: authRes.error});
         return;
       }
 
       const { title, subtitle, contentType } = req.body;
       if (!title || !subtitle || !contentType) {
-        res.send({
-          success: false,
-          error: 'Form must be filled out completely.',
-        });
+        res.send({error: 'Form must be filled out completely.'});
         return;
       }
 
@@ -538,15 +442,8 @@ module.exports = () => {
       };
 
       // Find the homepage to add the content to
-      Homepage.find({}, (errHome, home) => {
-        if (errHome) {
-          res.send({
-            success: false,
-            error: 'Failed to save to homepage',
-          });
-          return;
-        }
-
+      Homepage.find({})
+      .then(home => {
         // Select the first homepage
         const homepage = home[0];
 
@@ -556,20 +453,18 @@ module.exports = () => {
         homepage.components = components;
 
         // Save the new components to the homepage
-        homepage.save(errSave => {
-          if (errSave) {
-            res.send({
-              success: false,
-              error: 'Error adding component.',
-            });
-            return;
-          }
-          res.send({
-            error: '',
-            success: true,
-            data: components,
-          });
+        homepage.save()
+        .then(() => {
+          res.send({components});
+        })
+        .catch(() => {
+          res.status(404).send({error: 'Failed to save to homepage'});
+          return;
         });
+      })
+      .catch(() => {
+        res.status(404).send({error: 'Failed to save to homepage'});
+        return;
       });
     });
   });
@@ -579,53 +474,41 @@ module.exports = () => {
     const {componentId} = req.body;
     AdminCheck(req, (authRes) => {
       if (!authRes.success) {
-        res.send({
-          success: false,
-          error: authRes.error,
-        });
-      } else {
-        Homepage.find({}, (errHomepage, home) => {
-          if (errHomepage) {
-            res.send({
-              success: false,
-              error: 'Error removing component.',
-            });
-          } else {
-            const homepage = home[0];
-            const components = homepage.components.slice();
-            let hasChanged = false;
-            components.forEach((component, i) => {
-              if (component._id.toString() === componentId) {
-                const newComponents = homepage.components.slice();
-                newComponents.splice(i, 1);
-                homepage.components = newComponents;
-                hasChanged = true;
-              }
-            });
-            if (hasChanged) {
-              homepage.save((e, newHome) => {
-                if (e) {
-                  res.send({
-                    success: false,
-                    error: 'Error removing component.',
-                  });
-                } else {
-                  res.send({
-                    success: true,
-                    error: '',
-                    data: newHome.components,
-                  });
-                }
-              });
-            } else {
-              res.send({
-                success: false,
-                error: 'Error removing component.',
-              });
-            }
+        res.status(404).send({error: authRes.error});
+        return;
+      }
+      Homepage.find({})
+      .then(home => {
+        const homepage = home[0];
+        const components = homepage.components.slice();
+        let hasChanged = false;
+        components.forEach((component, i) => {
+          if (component._id.toString() === componentId) {
+            const newComponents = homepage.components.slice();
+            newComponents.splice(i, 1);
+            homepage.components = newComponents;
+            hasChanged = true;
           }
         });
-      }
+        if (hasChanged) {
+          homepage.save()
+          .then(newHome => {
+            res.send({components: newHome.components});
+            return;
+          })
+          .catch(() => {
+            res.status(404).send({error: 'Error removing component.'});
+            return;
+          });
+        } else {
+          res.staus(404).send({error: 'Error removing component.'});
+          return;
+        }
+      })
+      .catch(() => {
+        res.status(404).send({error: 'Error removing component.'});
+        return;
+      });
     });
   });
 
@@ -633,64 +516,49 @@ module.exports = () => {
   router.post('/component/content/remove', (req, res) => {
     AdminCheck(req, (authRes) => {
       if (!authRes.success) {
-        res.send({
-          success: false,
-          error: authRes.error,
+        res.status(404).send({error: authRes.error});
+        return;
+      }
+      const {contentId, componentId} = req.body;
+      if (!contentId || !componentId) {
+        res.status(404).send({error: 'Error removing content.'});
+        return;
+      }
+      Homepage.find({})
+      .then(home => {
+        const homepage = home[0];
+        let hasChanged = false;
+        homepage.components.forEach((comp, i) => {
+          if (comp._id.toString() === componentId) {
+            comp.content.forEach((content, j) => {
+              if (content.contentId === contentId) {
+                const newContent = comp.content.slice();
+                newContent.splice(j, 1);
+                homepage.components[i].content = newContent;
+                hasChanged = true;
+              }
+            });
+          }
         });
-      } else {
-        const {contentId, componentId} = req.body;
-        if (!contentId || !componentId) {
-          res.send({
-            success: false,
-            error: 'Error removing content.',
+        if (hasChanged) {
+          homepage.save()
+          .then(newHome => {
+            res.send({components: newHome.components});
+            return;
+          })
+          .catch(() => {
+            res.status(404).send({error: 'Error removing content.'});
+            return;
           });
         } else {
-          Homepage.find({}, (errHome, home) => {
-            if (errHome) {
-              res.send({
-                success: false,
-                error: 'Error removing content.',
-              });
-            } else {
-              const homepage = home[0];
-              let hasChanged = false;
-              homepage.components.forEach((comp, i) => {
-                if (comp._id.toString() === componentId) {
-                  comp.content.forEach((content, j) => {
-                    if (content.contentId === contentId) {
-                      const newContent = comp.content.slice();
-                      newContent.splice(j, 1);
-                      homepage.components[i].content = newContent;
-                      hasChanged = true;
-                    }
-                  });
-                }
-              });
-              if (hasChanged) {
-                homepage.save((e, newHome) => {
-                  if (e) {
-                    res.send({
-                      success: false,
-                      error: 'Error removing content.',
-                    });
-                  } else {
-                    res.send({
-                      success: true,
-                      data: newHome.components,
-                      error: '',
-                    });
-                  }
-                });
-              } else {
-                res.send({
-                  success: false,
-                  error: 'Error removing content.'
-                });
-              }
-            }
-          });
+          res.status(404).send({error: 'Error removing content.'});
+          return;
         }
-      }
+      })
+      .catch(() => {
+        res.status(404).send({error: 'Error removing content.'});
+        return;
+      });
     });
   });
 
@@ -698,94 +566,85 @@ module.exports = () => {
   router.post('/component/content/add', (req, res) => {
     AdminCheck(req, (authRes) => {
       if (!authRes.success) {
-        res.send({
-          success: false,
-          error: authRes.error,
-        });
-      } else {
-        const { component, contentId } = req.body;
-        let newContentType = '';
-        if (!contentId) {
-          res.send({
-            success: false,
-            error: 'Content ID must be provided.',
-          });
-        } else {
-          Article.findById(contentId, (errArt, article) => {
-            Listing.findById(contentId, (errList, listing) => {
-              Video.findById(contentId, (errVid, video) => {
-                if (errArt || errList || errVid) {
-                  res.send({
-                    success: false,
-                    error: 'Error adding content.',
-                  });
-                } else if (!article && !listing && !video) {
-                  res.send({
-                    success: false,
-                    error: 'No content found with given id found.',
-                  });
-                } else {
-                  if (article) {
-                    newContentType = 'Articles';
-                  } else if (listing) {
-                    newContentType = 'Listings';
-                  } else if (video) {
-                    newContentType = 'Videos';
-                  }
-                  Homepage.find({}, (errHome, home) => {
-                    if (errHome) {
-                      res.send({
-                        success: false,
-                        error: 'Error adding content.'
-                      });
-                    } else {
-                      const homepage = home[0];
-                      let hasChanged = false;
-                      let contentExists = false;
-                      homepage.components.forEach((comp, i) => {
-                        if (comp._id.toString() === component._id && comp.contentType === newContentType) {
-                          const newContent = homepage.components[i].content.slice();
-                          newContent.forEach(cont => {
-                            if (cont.contentId === contentId) {
-                              contentExists = true;
-                            }
-                          });
-                          if (!contentExists) {
-                            newContent.push({contentId});
-                            homepage.components[i].content = newContent;
-                            hasChanged = true;
-                          }
-                        }
-                      });
-                      if (hasChanged && !contentExists) {
-                        homepage.save((saveErr, newHome) => {
-                          if (saveErr) {
-                            res.send({
-                              success: false,
-                              error: 'Error adding content.',
-                            });
-                          } else {
-                            res.send({
-                              success: true,
-                              error: '',
-                              data: newHome.components,
-                            });
-                          }
-                        });
-                      } else {
-                        res.send({
-                          success: false,
-                          error: 'Cannot add content. Make sure it is the right type and is not repeat.',
-                        });
-                      }
+        res.status(404).send({error: authRes.error});
+        return;
+      }
+      const { component, contentId } = req.body;
+      let newContentType = '';
+      if (!contentId) {
+        res.status(404).send({success: false});
+        return;
+      }
+      Article.findById(contentId)
+      .then(article => {
+        Listing.findById(contentId)
+        .then(listing => {
+          Video.findById(contentId)
+          .then(video => {
+            if (!article && !listing && !video) {
+              res.status(404).send({error: 'No content found with given id found.'});
+              return;
+            }
+            if (article) {
+              newContentType = 'Articles';
+            } else if (listing) {
+              newContentType = 'Listings';
+            } else if (video) {
+              newContentType = 'Videos';
+            }
+            Homepage.find({})
+            .then(home => {
+              const homepage = home[0];
+              let hasChanged = false;
+              let contentExists = false;
+              homepage.components.forEach((comp, i) => {
+                if (comp._id.toString() === component._id && comp.contentType === newContentType) {
+                  const newContent = homepage.components[i].content.slice();
+                  newContent.forEach(cont => {
+                    if (cont.contentId === contentId) {
+                      contentExists = true;
                     }
                   });
+                  if (!contentExists) {
+                    newContent.push({contentId});
+                    homepage.components[i].content = newContent;
+                    hasChanged = true;
+                  }
                 }
               });
+              if (hasChanged && !contentExists) {
+                homepage.save()
+                .then(newHome => {
+                  res.send({components: newHome.components});
+                })
+                .catch(() => {
+                  res.status(404).send({error: 'Cannot add content.'});
+                  return;
+                });
+              } else {
+                res.send({error: 'Cannot add content. Make sure it is the right type and is not repeat.'});
+                return;
+              }
+            })
+            .catch(() => {
+              res.status(404).send({error: 'Cannot add content.'});
+              return;
             });
+          })
+          .catch(() => {
+            res.status(404).send({error: 'Cannot add content.'});
+            return;
           });
-        }
-      }
+        })
+        .catch(() => {
+          res.status(404).send({error: 'Cannot add content.'});
+          return;
+        });
+      })
+      .catch(() => {
+        res.status(404).send({error: 'Cannot add content.'});
+        return;
+      });
     });
   });
 

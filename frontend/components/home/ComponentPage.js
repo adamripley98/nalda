@@ -23,22 +23,15 @@ class ComponentPage extends Component {
     const id = this.props.match.params.id;
     axios.get(`/api/home/components/${id}`)
       .then(res => {
-        if (res.data.success) {
-          this.setState({
-            pending: false,
-            component: res.data.component,
-          });
-        } else {
-          this.setState({
-            pending: false,
-            error: res.data.error,
-          });
-        }
+        this.setState({
+          pending: false,
+          component: res.data.component,
+        });
       })
       .catch(err => {
         this.setState({
           pending: false,
-          error: err.message,
+          error: err.response.data.error || err.response.data,
         });
       });
   }

@@ -20,9 +20,9 @@ const s3bucket = new AWS.S3({
 
 
 // Helper method to resize an article image
-const ResizeArticleImage = (image, newSize, title, cb) => {
+const ResizeAndUploadImage = (image, keyName, newSize, title, cb) => {
   // Error check
-  if (!image || !newSize || !title) {
+  if (!image || !newSize || !keyName) {
     cb({
       success: false,
       error: 'All parameters must be provided.',
@@ -41,7 +41,7 @@ const ResizeArticleImage = (image, newSize, title, cb) => {
     // Create bucket
     var params = {
       Bucket: AWS_BUCKET_NAME,
-      Key: `articlepictures/${title}/${uuid()}`,
+      Key: `${keyName}/${title ? title + '/' : null}${uuid()}`,
       ContentType: 'image/jpeg',
       Body: resized,
       ContentEncoding: 'base64',
@@ -67,5 +67,5 @@ const ResizeArticleImage = (image, newSize, title, cb) => {
 };
 
 module.exports = {
-  ResizeArticleImage,
+  ResizeAndUploadImage,
 };

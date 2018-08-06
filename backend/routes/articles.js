@@ -16,7 +16,7 @@ const Homepage = require('../models/homepage');
 
 // Import helper methods
 const {CuratorOrAdminCheck} = require('../helperMethods/authChecking');
-const {ResizeArticleImage} = require('../helperMethods/imageProcessing');
+const {ResizeAndUploadImage} = require('../helperMethods/imageProcessing');
 
 // Export the following methods for routing
 module.exports = () => {
@@ -121,13 +121,13 @@ module.exports = () => {
           return;
         }
         // Resize main article image
-        ResizeArticleImage(image, 1920, title, (resp1) => {
+        ResizeAndUploadImage(image, 'articlepictures', 1920, title, (resp1) => {
           if (resp1.error) {
             res.status(404).send({error: resp1.error});
             return;
           }
           // Resize preview article image
-          ResizeArticleImage(image, 600, title, (resp2) => {
+          ResizeAndUploadImage(image, 'articlepictures', 600, title, (resp2) => {
             if (resp2.error) {
               res.status(404).send({error: resp2.error});
               return;
@@ -136,7 +136,7 @@ module.exports = () => {
             const newBody = [];
             async.eachSeries(body, (comp, cb) => {
               if (comp.componentType === 'image') {
-                ResizeArticleImage(comp.body, 1280, title, (resp3) => {
+                ResizeAndUploadImage(comp.body, 'articlepictures', 1280, title, (resp3) => {
                   if (resp3.error) {
                     res.status(404).send({error: resp3.error});
                     return;
@@ -254,13 +254,13 @@ module.exports = () => {
       // If initial image is new, upload to s3
       Promise(resolve => {
         if (image.indexOf('s3.amazonaws') === -1) {
-          ResizeArticleImage(image, 1920, title, (resp1) => {
+          ResizeAndUploadImage(image, 'articlepictures', 1920, title, (resp1) => {
             if (resp1.error) {
               resolve(res.status(404).send({error: resp1.error}));
               return;
             }
             // Make a preview version for performance
-            ResizeArticleImage(image, 600, title, (resp2) => {
+            ResizeAndUploadImage(image, 'articlepictures', 600, title, (resp2) => {
               if (resp2.error) {
                 resolve(res.status(404).send({error: resp2.error}));
                 return;
@@ -281,7 +281,7 @@ module.exports = () => {
           // Check if given component is an image and hasn't been uploaded to s3
           if (comp.componentType === 'image') {
             if (comp.body.indexOf('s3.amazonaws') === -1) {
-              ResizeArticleImage(comp.body, 600, title, (resp3) => {
+              ResizeAndUploadImage(comp.body, 'articlepictures', 600, title, (resp3) => {
                 if (resp3.error) {
                   res.status(404).send({error: resp3.error});
                   return;
