@@ -328,6 +328,8 @@ class Listing extends React.Component {
 
   // Helper method to delete reviews
   deleteReview(reviewId) {
+    console.log('revid', reviewId);
+    console.log('listid', this.state.listingId);
     axios.delete('/api/reviews', {
       reviewId,
       listingId: this.state.listingId,
@@ -335,7 +337,10 @@ class Listing extends React.Component {
     .then(() => {
       this.updateReviews();
     })
-    .catch(err => this.setState({error: err.response.data.error || err.response.data}));
+    .catch(err => {
+      console.log('ye', err);
+      this.setState({error: err.response.data.error || err.response.data});
+    });
   }
 
   // Helper method to render the entire reviews section
