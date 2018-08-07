@@ -11,7 +11,7 @@ import { login } from '../actions/index.js';
 
 // Shared and general components
 import Nav from '../components/nav/Nav';
-import Footer from '../components/shared/Footer';
+import Footer from '../components/footer/Footer';
 import Notification from '../components/shared/Notification';
 
 // Authorization components

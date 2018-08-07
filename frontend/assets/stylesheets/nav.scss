@@ -14,7 +14,7 @@
 .nav {
   border-bottom: 1px solid $border;
   font-weight: bold;
-  background: white;
+  background: $secondary;
   color: $gray;
   padding: 0rem 0.5rem;
   display: flex;
@@ -29,14 +29,17 @@
     border-right: 1px solid $border;
 
     img {
-      width: 2.5rem;
+      width: auto;
       height: 2.5rem;
     }
   }
 
   // Styling the serachbar--a component of the navbar
   .search {
-    padding: 0.6rem 0.5rem;
+    margin: 0.5rem 0rem;
+    background: $transparent;
+    border-radius: 0rem;
+    padding: 0.1rem 0.5rem;
     width: 24rem;
     max-width: 100% !important;
     display: flex;
@@ -44,7 +47,7 @@
 
     // Search icon to the left of the search bar
     .fa-search {
-      color: $gray;
+      color: white;
       padding-right: 0.7rem;
       font-size: 1.2rem;
       padding-top: 0.5rem;
@@ -72,19 +75,23 @@
       background: transparent;
 
       &::-webkit-input-placeholder {
-        color: $gray;
+        color: white;
+        opacity: 0.8;
       }
 
       &::-moz-placeholder {
-        color: $gray;
+        color: white;
+        opacity: 0.8;
       }
 
       &:-ms-input-placeholder {
-        color: $gray;
+        color: white;
+        opacity: 0.8;
       }
 
       &:-moz-placeholder {
-        color: $gray;
+        color: white;
+        opacity: 0.8;
       }
     }
 
@@ -156,33 +163,12 @@
       padding-top: 1rem;
       padding-right: 1rem;
 
-      button.login {
-        padding: 0.4rem 0.8rem;
-        margin-right: 0.4rem;
-        color: $gray;
-        outline: 0 !important;
-        line-height: 1;
-        background: white !important;
-
-        &:hover,
-        &:active,
-        &:focus {
-          color: $dark-gray;
-          background: white !important;
-        }
-      }
-
-      .register {
+      a {
         color: white;
-        background: $primary;
-        padding: 0.4rem 0.8rem;
-        border-radius: 0.4rem;
-        line-height: 1;
+        margin-left: calc(1rem + 5%);
 
-        &:hover,
-        &:active,
-        &:focus {
-          background: $dark-primary;
+        &:hover {
+          opacity: 0.8;
         }
       }
     }
@@ -242,20 +228,25 @@
     z-index: 1302;
     position: absolute;
 
+    .bar {
+      width: 100%;
+      background: white;
+      height: 3px;
+      display: block;
+      transition: all 0.2s ease;
+    }
+
     &:hover,
     &:focus,
     &:active {
       .bar {
-        background: $dark-gray;
+        background: white;
       }
     }
-
-    .bar {
-      width: 100%;
-      background: $gray;
-      height: 3px;
-      display: block;
-      transition: all 0.2s ease;
+    &.active {
+      .bar {
+        background: $gray;
+      }
     }
 
     // Apply a margin top to all bars except the first one

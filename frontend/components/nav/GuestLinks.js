@@ -6,24 +6,20 @@ class GuestLinks extends Component {
     return (
       <div className="user-info">
         <div className="sign-in-links">
-          <button
-            className="btn login"
-            type="button"
+          <a
             data-toggle="modal"
             data-target="#loginModal"
             onClick={ () => this.props.modalCallback(true) }
           >
             Login
-          </button>
-          <button
-            className="btn register"
-            type="button"
+          </a>
+          <a
             data-toggle="modal"
             data-target="#loginModal"
             onClick={ () => this.props.modalCallback(false) }
           >
             Register
-          </button>
+          </a>
         </div>
       </div>
     );
