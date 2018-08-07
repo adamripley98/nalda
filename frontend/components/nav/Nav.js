@@ -8,6 +8,8 @@ import PropTypes from 'prop-types';
 import Sidebar from './Sidebar';
 import Search from './Search';
 import Modal from '../auth/Modal';
+import UserLinks from './UserLinks';
+import GuestLinks from './GuestLinks';
 
 /**
  * Renders the navbar at the top of the screen on all pages.
@@ -69,58 +71,13 @@ class Nav extends Component {
         { /* NOTE the empty div preserves styling of the sidebar */ }
         {
           this.props.userId ? (
-            <div className="user-info">
-              <div className="user-text">
-                { /* Render the user's location information */ }
-                <div className="location">
-                  {
-                    this.props.location && this.props.location.indexOf(",") > 0 ? (
-                      this.props.location.substring(0, this.props.location.lastIndexOf(","))
-                    ) : (
-                      this.props.location || ""
-                    )
-                  }
-                </div>
-                <div className="name">
-                  {
-                    this.props.name ? (
-                      <p>
-                        Hi,&nbsp;
-                        <Link to="/account">
-                          {
-                            this.props.name.indexOf(' ' > -1) ? this.props.name.substring(0, this.props.name.indexOf(' ')) : this.props.name
-                          }
-                        </Link>
-                      </p>
-                    ) : (<p />)
-                  }
-                </div>
-              </div>
-              <div className="user-img" style={{ backgroundImage: `url(${this.props.profilePicture})` }}/>
-            </div>
+            <UserLinks
+              location={this.props.location}
+              name={this.props.name}
+              profilePicture={this.props.profilePicture}
+            />
           ) : (
-            <div className="user-info">
-              <div className="sign-in-links">
-                <button
-                  className="btn login"
-                  type="button"
-                  data-toggle="modal"
-                  data-target="#loginModal"
-                  onClick={ () => this.modalCallback(true) }
-                >
-                  Login
-                </button>
-                <button
-                  className="btn register"
-                  type="button"
-                  data-toggle="modal"
-                  data-target="#loginModal"
-                  onClick={ () => this.modalCallback(false) }
-                >
-                  Register
-                </button>
-              </div>
-            </div>
+            <GuestLinks modalCallback={this.modalCallback} />
           )
         }
 
