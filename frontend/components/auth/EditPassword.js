@@ -40,15 +40,12 @@ class EditPassword extends Component {
     window.scrollTo(0, 0);
     axios.get('/api/users/username')
     .then((resp) => {
-      if (!resp.data.success) {
-        this.setState({
-          error: resp.data.error,
-        });
-      } else {
-        this.setState({
-          username: resp.data.data,
-        });
-      }
+      this.setState({
+        username: resp.data.username,
+      });
+    })
+    .catch(e => {
+      this.setState({error: e.response.data.error || e.response.data});
     });
   }
 
