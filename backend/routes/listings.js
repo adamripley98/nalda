@@ -40,22 +40,15 @@ module.exports = () => {
  */
   router.get('/', (req, res) => {
     // Pulls articles from mongo
-    Listing.find((err, listings) => {
-      if (err) {
-        // If there was an error with the request
-        res.send({
-          success: false,
-          error: 'Error finding listings.',
-        });
-      } else {
-        // Send listings back in correct order
-        listings.reverse();
-        // If everything went as planned
-        res.send({
-          success: true,
-          data: listings,
-        });
-      }
+    Listing.find({})
+    .then(listings => {
+      // Send listings back in correct order
+      listings.reverse();
+      // If everything went as planned
+      res.send({listings});
+    })
+    .catch(() => {
+      res.status(404).send({error: 'Error finding listings.'});
     });
   });
 
@@ -69,122 +62,115 @@ module.exports = () => {
     // Check if user is logged in
     const userId = req.session.passport ? req.session.passport.user : null;
 
-    // Pull specific listing from mongo
-    Listing.findById(id, (err, listing) => {
-      if (err) {
-        res.status(404).send({
-          success: false,
-          error: "Listing not found.",
-        });
-      } else if (!listing) {
-        // If the listing doesn't exist
-        res.status(404).send({
-          success: false,
-          error: "Listing not found.",
-        });
-      // if no errors, returns article along with the date it was created
-      } else {
-        // Fetch author data
-        User.findById(listing.author, (userErr, author) => {
-          if (userErr) {
-            // Error finding author
-            res.status(404).send({
-              success: false,
-              error: "Failed to find author.",
-            });
-          } else if (!author) {
-            res.status(404).send({
-              success: false,
-              error: 'Failed to find author.',
-            });
-          } else {
-            // Default: users can't change listing
-            let canModify = false;
-            User.findById(userId, (errUser, user) => {
-              if (user) {
-                // Check if given user is either an admin or the curator of the listing
-                if (user.userType === 'admin' || user.userType === 'curator') {
-                  canModify = true;
-                }
-              }
-              // Go through each review and change the author data being passed to frontend
-              const reviews = [];
-              let reviewError = "";
-              async.each(listing.reviews, (review, callback) => {
-                // Copy the review object
-                const newRev = {
-                  _id: review._id,
-                  authorId: review.authorId,
-                  createdAt: review.createdAt,
-                  content: review.content,
-                  title: review.title,
-                  rating: review.rating,
-                  author: {
-                    name: "",
-                    _id: "",
-                    profilePicture: "",
-                  },
-                  canChange: false,
-                };
-
-                // Find author in Mongo
-                User.findById(review.authorId, (errAuthor, revAuthor) => {
-                  // Error finding author
-                  if (errAuthor) {
-                    reviewError = 'Cannot find review author.';
-                  // Author can't be found
-                  } else if (!revAuthor) {
-                    reviewError = "Cannot find review author.";
-                  }
-
-                  // Successfully found author, update so review contains author's name
-                  newRev.author = {
-                    name: revAuthor.name,
-                    _id: revAuthor._id,
-                    profilePicture: revAuthor.profilePicture,
-                  };
-
-                  // Check if user has review delete privileges: admin, listing author, or review author
-                  if (canModify || userId === review.authorId) {
-                    newRev.canChange = true;
-                  }
-
-                  // Return the review
-                  reviews.push(newRev);
-                  callback();
-                });
-              }, asyncErr => {
-                if (asyncErr) {
-                  res.send({
-                    success: false,
-                    error: 'Error getting content',
-                  });
-                } else {
-                  // Check for error with reviews
-                  if (reviewError) {
-                    res.send({
-                      success: false,
-                      error: reviewError,
-                    });
-                  } else {
-                    // Update the reviews
-                    listing.reviews = null;
-                    // Send back data
-                    res.send({
-                      author,
-                      success: true,
-                      data: listing,
-                      reviews: reviews,
-                      timestamp: listing._id.getTimestamp(),
-                      canModify,
-                    });
-                  }
-                }
-              });
-            });
-          }
-        });
+    Listing.findById(id)
+    .then(listing => {
+      if (!listing) {
+        res.status(404).send({error: 'Error pulling listing.'});
+        return;
       }
+      User.findById(listing.author)
+      .then(author => {
+        if (!author) {
+          res.status(404).send({error: 'Error pulling listing.'});
+          return;
+        }
+        // Default: users can't change listing
+        let canModify = false;
+        User.findById(userId)
+        .then(user => {
+          if (user) {
+            // Check if given user is either an admin or the curator of the listing
+            if (user.userType === 'admin' || user.userType === 'curator') {
+              canModify = true;
+            }
+          }
+          // Go through each review and change the author data being passed to frontend
+          const reviews = [];
+          let reviewError = "";
+          async.each(listing.reviews, (review, callback) => {
+            // Copy the review object
+            const newRev = {
+              _id: review._id,
+              authorId: review.authorId,
+              createdAt: review.createdAt,
+              content: review.content,
+              title: review.title,
+              rating: review.rating,
+              author: {
+                name: "",
+                _id: "",
+                profilePicture: "",
+              },
+              canChange: false,
+            };
+
+            // Find author in Mongo
+            User.findById(review.authorId)
+            .then(revAuthor => {
+              if (!revAuthor) {
+                reviewError = 'Cannot find author.';
+              }
+              // Successfully found author, update so review contains author's name
+              newRev.author = {
+                name: revAuthor.name,
+                _id: revAuthor._id,
+                profilePicture: revAuthor.profilePicture,
+              };
+
+              // Check if user has review delete privileges: admin, listing author, or review author
+              if (canModify || userId === review.authorId) {
+                newRev.canChange = true;
+              }
+
+              // Return the review
+              reviews.push(newRev);
+              callback();
+            })
+            .catch(() => {
+              reviewError = 'Cannot find author.';
+            });
+          }, asyncErr => {
+            if (asyncErr) {
+              res.send({
+                success: false,
+                error: 'Error getting content',
+              });
+            } else {
+              // Check for error with reviews
+              if (reviewError) {
+                res.send({
+                  success: false,
+                  error: reviewError,
+                });
+              } else {
+                // Update the reviews
+                listing.reviews = null;
+                // Send back data
+                res.send({
+                  author,
+                  success: true,
+                  data: listing,
+                  reviews: reviews,
+                  timestamp: listing._id.getTimestamp(),
+                  canModify,
+                });
+              }
+            }
+          });
+        })
+        .catch(() => {
+          res.status(404).send({error: 'Error pulling listing.'});
+          return;
+        });
+      })
+      .catch(() => {
+        res.status(404).send({error: 'Error pulling listing.'});
+        return;
+      });
+    })
+    .catch(() => {
+      res.status(404).send({error: 'Error pulling listing.'});
+      return;
     });
   });
 
@@ -200,8 +186,6 @@ module.exports = () => {
    * @param website
    * @param categories
    */
-   // TODO find better solution than reusing entire code block lol
-   // TODO when person changes title, change title in s3 as well
   router.post('/:id/edit', (req, res) => {
     // Find the id from the url
     const listingId = req.params.id;
