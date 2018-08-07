@@ -56,25 +56,17 @@ class EditVideoForm extends React.Component {
     // Pull existing data from the database
     axios.get(`/api/videos/${id}`)
       .then(res => {
-        if (res.data.success) {
           // If there was no error
-          this.setState({
-            pending: false,
-            error: "",
-            ...res.data.data,
-            videoId: id,
-          });
-        } else {
-          // There was an error in the request
-          this.setState({
-            error: res.data.error.message,
-            pending: false,
-          });
-        }
+        this.setState({
+          pending: false,
+          error: "",
+          ...res.data.video,
+          videoId: id,
+        });
       })
       .catch(err => {
         this.setState({
-          error: err,
+          error: err.response.data.error || err.response.data,
           pending: false,
         });
       });

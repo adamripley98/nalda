@@ -51,21 +51,13 @@ class Video extends React.Component {
     // Find the video
     axios.get(`/api/videos/${id}`)
       .then(res => {
-        if (res.data.success) {
-          this.setState({
-            ...res.data.data,
-            author: res.data.author,
-            error: "",
-            pending: false,
-            canModify: res.data.canModify,
-          });
-        } else {
-          // If there was an error with the request
-          this.setState({
-            error: res.data.error,
-            pending: false,
-          });
-        }
+        this.setState({
+          ...res.data.video,
+          author: res.data.author,
+          error: "",
+          pending: false,
+          canModify: res.data.canModify,
+        });
       })
       .catch(err => {
         if (err.response.status === 404) {
