@@ -8,6 +8,7 @@
     "dev": "concurrently -k \"npm run frontend\" \"npm run backend\"",
     "frontend": "webpack -d --watch",
     "backend": "nodemon server.js",
+    "dev": "source env.sh && concurrently 'yarn frontend' 'yarn backend'",
     "go": "nodemon --exec npm start",
     "start": "NODE_ENV=production node server.js",
     "test": "mocha --compilers js:babel-core/register ./test/**/*.js --require ignore-styles"
