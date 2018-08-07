@@ -1,15 +1,10 @@
-// Import frameworks
 import React, { Component } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-// Import components
 import Loading from '../shared/Loading';
 
-/**
- * Renders the search bar on the navbar
- */
 class Search extends Component {
   // Constructor method
   constructor(props) {
@@ -17,7 +12,7 @@ class Search extends Component {
 
     // Set the state
     this.state = {
-      search: "",
+      search: '',
       error: false,
       suggestions: {
         articles: [],
@@ -234,7 +229,7 @@ class Search extends Component {
    */
   render() {
     return (
-      <div className="search">
+      <div className={this.state.active ? 'search active' : 'search'}>
         <i
           className="fa fa-search cursor small"
           aria-hidden="true"
@@ -279,7 +274,7 @@ class Search extends Component {
             value={ this.state.seach }
             onChange={ this.handleChangeSearch }
             onClick={ () => this.setState({ active: true }) }
-            placeholder="Search for activities, places, or curators"
+            placeholder="Search for activities, restaurants, and more"
           />
         </form>
         {this.renderSuggestions()}

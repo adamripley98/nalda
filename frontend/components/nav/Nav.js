@@ -1,6 +1,5 @@
 // Import frameworks
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
@@ -10,6 +9,7 @@ import Search from './Search';
 import Modal from '../auth/Modal';
 import UserLinks from './UserLinks';
 import GuestLinks from './GuestLinks';
+import Logo from './Logo';
 
 /**
  * Renders the navbar at the top of the screen on all pages.
@@ -58,12 +58,7 @@ class Nav extends Component {
   render() {
     return (
       <nav className={ this.state.searchActive ? 'nav search-active' : 'nav' }>
-        {/* Render the logo which links to the home page */}
-        <Link to="/" className="logo">
-          <img src="https://s3.amazonaws.com/nalda/nalda_logo.svg" alt="Nalda" />
-        </Link>
-
-        { /* Render the search bar on the left of the navbar */ }
+        <Logo />
         <Search callback={ this.searchCallback } />
 
         { /* Render the user's profile information if the user is logged in */ }
