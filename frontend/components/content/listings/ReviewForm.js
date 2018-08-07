@@ -114,7 +114,6 @@ class ReviewForm extends React.Component {
         });
       })
       .catch((err) => {
-        console.log('eeee', err);
         this.setState({
           error: err.response.data.error || err.response.data,
         });

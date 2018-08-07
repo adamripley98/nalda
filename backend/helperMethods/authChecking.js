@@ -147,8 +147,6 @@ const ReviewCheck = (req, reviewId, listingId, cb) => {
       });
       return;
     }
-    console.log('list id', listingId, typeof listingId);
-    console.log('review id', reviewId, typeof reviewId);
     // Find given listing in Mongo
     Listing.findById(listingId, (errList, listing) => {
       // Error finding listing
@@ -184,7 +182,6 @@ const ReviewCheck = (req, reviewId, listingId, cb) => {
         }
       }
       if (successful) {
-        console.log('what is lsiting', listing);
         cb({
           success: true,
           error: '',

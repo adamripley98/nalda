@@ -55,7 +55,6 @@ class Article extends React.Component {
     // Find the article
     axios.get(`/api/articles/${id}`)
       .then(res => {
-        console.log('res', res);
         this.setState({
           error: "",
           ...res.data.article,
@@ -65,7 +64,6 @@ class Article extends React.Component {
         });
       })
       .catch(err => {
-        console.log('e', err);
         if (err.response.status === 404) {
           this.setState({
             pending: false,

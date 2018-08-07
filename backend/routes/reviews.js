@@ -28,8 +28,6 @@ module.exports = () => {
     // Isolate variables
     const reviewId = req.body.reviewId;
     const listingId = req.body.listingId;
-    console.log('revid', reviewId);
-    console.log('listid', listingId);
 
     // Check to make sure poster is able to delete reviews
     ReviewCheck(req, reviewId, listingId, (authRes) => {

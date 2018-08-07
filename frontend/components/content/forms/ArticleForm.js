@@ -328,7 +328,6 @@ class ArticleForm extends React.Component {
               });
             })
             .catch(err => {
-              console.log('what is the err', err, err.response);
               // If there was an error in making the request
               this.setState({
                 error: err.response.data.error || err.response.data,
