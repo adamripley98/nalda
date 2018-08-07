@@ -212,27 +212,19 @@ class EditVideoForm extends React.Component {
               lng: longitude,
             },
           })
-          .then((resp) => {
-            if (!resp.data.success) {
-              // Display error on frontend
-              this.setState({
-                error: resp.data.error,
-                pendingSubmit: false,
-              });
-            } else {
-              // Notify success
-              this.props.notifyMessage("Successfully edited video.");
+          .then(() => {
+            // Notify success
+            this.props.notifyMessage("Successfully edited video.");
 
-              // Redirect to home after successful submission
-              this.setState({
-                redirectToHome: true,
-                pendingSubmit: false,
-              });
-            }
-          })
-          .catch((err) => {
+            // Redirect to home after successful submission
             this.setState({
-              error: err,
+              redirectToHome: true,
+              pendingSubmit: false,
+            });
+          })
+          .catch(err => {
+            this.setState({
+              error: err.response.data.error || err.response.data,
             });
           });
         }

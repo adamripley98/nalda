@@ -627,7 +627,7 @@ module.exports = () => {
                   return;
                 });
               } else {
-                res.send({error: 'Cannot add content. Make sure it is the right type and is not repeat.'});
+                res.status(404).send({error: 'Cannot add content. Make sure it is the right type and is not repeat.'});
                 return;
               }
             })

@@ -126,8 +126,8 @@ module.exports = () => {
           Homepage.find({})
           .then(homepage => {
             const home = homepage[0];
-            const videos = home.naldaVideos;
-            const banner = home.banner;
+            const videos = home.naldaVideos || [];
+            const banner = home.banner || [];
             // Delete video from homepage
             for (var i = 0; i < videos.length; i++) {
               if (videos[i].contentId === videoId) {
@@ -147,21 +147,26 @@ module.exports = () => {
               return;
             })
             .catch(() => {
+              console.log(1);
               res.status(404).send({error: 'Error deleting video.'});
               return;
             });
           })
-          .catch(() => {
+          .catch((e) => {
+            console.log(e);
+            console.log(2);
             res.status(404).send({error: 'Error deleting video.'});
             return;
           });
         })
         .catch(() => {
+          console.log(3);
           res.status(404).send({error: 'Error deleting video.'});
           return;
         });
       })
       .catch(() => {
+        console.log(4);
         res.status(404).send({error: 'Error deleting video.'});
         return;
       });
@@ -260,7 +265,7 @@ module.exports = () => {
     CuratorOrAdminCheck(req, (authRes) => {
       // Return any authentication errors
       if (!authRes.success) {
-        res.send({error: authRes.error});
+        res.status(404).send({error: authRes.error});
         return;
       }
       // Isolate variables
