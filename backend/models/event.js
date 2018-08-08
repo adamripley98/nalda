@@ -18,7 +18,8 @@ const eventSchema = new Schema({
   images: [],
   price: String,
   website: String,
-  date: Date,
+  startDate: String,
+  endDate: String,
   requirements: [],
   author: {
     type: Schema.Types.ObjectId, ref: 'User',
