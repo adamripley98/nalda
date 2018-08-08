@@ -147,26 +147,21 @@ module.exports = () => {
               return;
             })
             .catch(() => {
-              console.log(1);
               res.status(404).send({error: 'Error deleting video.'});
               return;
             });
           })
-          .catch((e) => {
-            console.log(e);
-            console.log(2);
+          .catch(() => {
             res.status(404).send({error: 'Error deleting video.'});
             return;
           });
         })
         .catch(() => {
-          console.log(3);
           res.status(404).send({error: 'Error deleting video.'});
           return;
         });
       })
       .catch(() => {
-        console.log(4);
         res.status(404).send({error: 'Error deleting video.'});
         return;
       });

@@ -194,7 +194,6 @@ module.exports = () => {
   router.post('/:id/edit', (req, res) => {
     // Find the id from the url
     const articleId = req.params.id;
-
     // Check to make sure user is an admin or the author
     CuratorOrAdminCheck(req, (authRes) => {
       // Return any authentication errors
@@ -205,11 +204,11 @@ module.exports = () => {
       // Isolate variables
       const {title, subtitle, image, body, location} = req.body;
       const userId = req.session.passport.user;
-      let articleImg = image;
-      let articlePrevImg = image;
 
       // Keep track of any errors
       let error = "";
+      let articleImg = image;
+      let articlePrevImg = image;
 
       // Perform error checking on variables
       if (!title) {
@@ -252,7 +251,7 @@ module.exports = () => {
       }
 
       // If initial image is new, upload to s3
-      Promise(resolve => {
+      const awaitMainImageUpload = new Promise(resolve => {
         if (image.indexOf('s3.amazonaws') === -1) {
           ResizeAndUploadImage(image, 'articlepictures', 1920, title, (resp1) => {
             if (resp1.error) {
@@ -268,13 +267,15 @@ module.exports = () => {
               // For scope reasons
               articleImg = resp1.resizedImg;
               articlePrevImg = resp2.resizedImg;
+              resolve();
             });
           });
+        } else {
+          resolve();
         }
-        resolve();
-      })
+      });
       // After initial image is dealed with, check if other images need to be uploaded
-      .then(() => {
+      awaitMainImageUpload.then(() => {
         // Loop through images
         const newBody = [];
         async.eachSeries(body, (comp, cb) => {

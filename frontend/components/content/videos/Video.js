@@ -101,7 +101,6 @@ class Video extends React.Component {
       });
     })
     .catch(err => {
-      console.log('e', err);
       this.setState({
         deleteError: err.response.data.error || err.response.data,
         deletePending: false,

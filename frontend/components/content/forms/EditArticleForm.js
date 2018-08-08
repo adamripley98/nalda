@@ -67,24 +67,16 @@ class EditArticleForm extends React.Component {
     // Pull existing data from the database
     axios.get(`/api/articles/${id}`)
       .then(res => {
-        if (res.data.success) {
-          // If there was no error
-          this.setState({
-            pending: false,
-            error: "",
-            ...res.data.data,
-          });
-        } else {
-          // There was an error in the request
-          this.setState({
-            error: res.data.error,
-            pending: false,
-          });
-        }
+        // If there was no error
+        this.setState({
+          pending: false,
+          error: "",
+          ...res.data.article,
+        });
       })
       .catch(err => {
         this.setState({
-          error: err,
+          error: err.response.data.message || err.response.data,
           pending: false,
         });
       });
@@ -106,7 +98,7 @@ class EditArticleForm extends React.Component {
       }
 
       // Update the location field
-      document.getElementById('location').value = this.state.location.name;
+      document.getElementById('location').value = this.state.location ? this.state.location.name : null;
 
       // Toggle tooltips
       $(() => {
