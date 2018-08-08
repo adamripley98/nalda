@@ -63,7 +63,7 @@ class Home extends React.Component {
       .catch(err => {
         this.setState({
           pending: false,
-          error: err.message,
+          error: err.message || 'Something went wrong. Please try again later.',
         });
       });
   }

@@ -41,10 +41,10 @@ class Preview extends Component {
   // Get the type of the content as based on the props
   getType() {
     // Find the type of the content
-    if (this.props.isArticle || this.props.contentType === "article") {
-      return "articles";
-    } else if (this.props.isVideo || this.props.contentType === "video") {
-      return "videos";
+    if (this.props.isArticle || this.props.contentType === 'article') {
+      return 'articles';
+    } else if (this.props.isVideo || this.props.contentType === 'video') {
+      return 'videos';
     }
 
     // If none of the types match
@@ -88,7 +88,14 @@ class Preview extends Component {
     if (this.props.content) {
       // Find the image for the content depending on its type
       let image = "";
-      if (this.props.content.contentType === "video") {
+
+      let contentType = this.props.content.contentType;
+
+      if (contentType === 'Videos') contentType = 'video';
+      else if (contentType === 'Listings') contentType = 'listing';
+      else if (contentType === 'Articles') contentType = 'article';
+
+      if (contentType === 'video' || contentType === 'Videos') {
         const videoId = this.props.content.url.substring(this.props.content.url.indexOf("v=") + 2);
         image = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
       } else {
@@ -102,18 +109,12 @@ class Preview extends Component {
           key={this.props.content.contentId}
           title={this.props.content.title}
           categories={this.props.content.categories}
-          location={this.props.content.location ? this.props.content.location.name : ""}
-          subtitle={
-            this.props.content.subtitle ? (
-              this.props.content.subtitle
-            ) : (
-              this.props.content.description
-            )
-          }
+          location={this.props.content.location ? this.props.content.location.name : ''}
+          subtitle={this.props.content.subtitle || this.props.content.description}
           rating={this.props.content.rating}
           image={image}
           index={this.props.index}
-          contentType={ this.props.content.contentType }
+          contentType={this.props.content.contentType}
         />
       );
     }

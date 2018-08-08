@@ -34,6 +34,7 @@ class ShowComponent extends Component {
         this.props.component.content.map(c => (
           <Preview
             content={c}
+            contentType={this.props.component.contentType}
             key={`${this.props.component.title}-${c.contentId}`}
           />
         ))
@@ -46,6 +47,7 @@ class ShowComponent extends Component {
       this.props.component.content.map((c, index) => (
         <Preview
           content={c}
+          contentType={this.props.component.contentType}
           key={`${this.props.component.title}-${c.contentId}`}
           index={index}
         />
