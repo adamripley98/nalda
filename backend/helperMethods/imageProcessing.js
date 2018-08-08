@@ -19,7 +19,7 @@ const s3bucket = new AWS.S3({
 });
 
 
-// Helper method to resize an article image
+// Helper method to resize and upload an image
 const ResizeAndUploadImage = (image, keyName, newSize, title, cb) => {
   // Error check
   if (!image || !newSize || !keyName) {
@@ -66,6 +66,36 @@ const ResizeAndUploadImage = (image, keyName, newSize, title, cb) => {
   });
 };
 
+// Helper method to delete images from s3
+const DeleteImages = (keyName, title, cb) => {
+  // Error check
+  if (!title || !keyName) {
+    cb({
+      success: false,
+      error: 'All parameters must be provided.',
+    });
+    return;
+  }
+  const params = {
+    Bucket: AWS_BUCKET_NAME,
+    Key: `${keyName}/${title}`,
+  };
+  s3bucket.deleteObject(params, err => {
+    if (err) {
+      cb({
+        success: false,
+        error: 'Error deleting content from s3.',
+      });
+      return;
+    }
+    cb({
+      success: true,
+      error: '',
+    });
+  });
+};
+
 module.exports = {
   ResizeAndUploadImage,
+  DeleteImages,
 };

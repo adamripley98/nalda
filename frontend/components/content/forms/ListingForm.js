@@ -490,28 +490,20 @@ class ListingForm extends React.Component {
             amenities: this.state.amenities,
             additionalAmenities: this.state.additionalAmenities,
           })
-            .then((resp) => {
-              // Display any errors
-              if (!resp.data.success) {
-                this.setState({
-                  error: resp.data.error,
-                  pending: false,
-                });
-              } else {
-                // Notify success
-                this.props.notifyMessage("Successfully created listing.");
+            .then(resp => {
+              // Notify success
+              this.props.notifyMessage("Successfully created listing.");
 
-                // Redirect to the created listing if successful
-                this.setState({
-                  listingId: resp.data.data._id,
-                  redirectToHome: true,
-                  pending: false,
-                });
-              }
-            })
-            .catch((err) => {
+              // Redirect to the created listing if successful
               this.setState({
-                error: err,
+                listingId: resp.data.listing._id,
+                redirectToHome: true,
+                pending: false,
+              });
+            })
+            .catch(err => {
+              this.setState({
+                error: err.response.data.error || err.response.data,
                 pending: false,
               });
             });

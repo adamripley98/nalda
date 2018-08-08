@@ -20,7 +20,7 @@ const Homepage = require('../models/homepage');
 
 // Import helper methods
 const {CuratorOrAdminCheck} = require('../helperMethods/authChecking');
-const {ResizeAndUploadImage} = require('../helperMethods/imageProcessing');
+const {ResizeAndUploadImage, DeleteImages} = require('../helperMethods/imageProcessing');
 
 // Isolate environmental variables
 const AWS_BUCKET_NAME = process.env.AWS_BUCKET_NAME;
@@ -224,13 +224,13 @@ module.exports = () => {
 
       // If there was an error or not
       if (error) {
-        res.send({error});
+        res.status(404).send({error});
         return;
       }
       let mainImg = image;
       let previewImg = image;
       // If initial image is new, upload to s3
-      Promise(resolve => {
+      const awaitMainImageUpload = new Promise(resolve => {
         if (image.indexOf('s3.amazonaws') === -1) {
           ResizeAndUploadImage(image, 'listingpictures', 1920, title, (resp1) => {
             if (resp1.error) {
@@ -249,12 +249,13 @@ module.exports = () => {
               resolve();
             });
           });
+        } else {
+          // If initial image has already been uploaded, simply move on
+          resolve();
         }
-        // If initial image has already been uploaded, simply move on
-        resolve();
-      })
+      });
       // Now loop through the other images
-      .then(() => {
+      awaitMainImageUpload.then(() => {
         const newImages = [];
         async.eachSeries(images, (img, cb) => {
           // New image is actually new
@@ -343,83 +344,68 @@ module.exports = () => {
     CuratorOrAdminCheck(req, (authRes) => {
         // Auth error
       if (!authRes.success) {
-        res.send({
-          success: false,
-          error: authRes.error,
-        });
-      } else {
-        Listing.findById(listingId, (errListing, listing) => {
-          // User CAN delete listing, remove from mongo
-          listing.remove((errRemove) => {
-            if (errRemove) {
-              res.send({
-                success: false,
-                error: 'Error deleting listing.',
-              });
-            // Send back success
-            } else {
-              Homepage.find({}, (errHome, homepage) => {
-                if (errHome) {
-                  res.send({
-                    success: false,
-                    error: 'Error deleting listing.',
-                  });
-                } else {
-                  const home = homepage[0];
-                  const banner = home.banner.slice();
-                  // Remove content from banner
-                  for (var j = 0; j < banner.length; j++) {
-                    if (banner[j].contentId === listingId) {
-                      banner.splice(j, 1);
-                      break;
-                    }
-                  }
-                  // Delete component from homepage
-                  const components = home.components.slice();
-                  components.forEach((comp, i) => {
-                    comp.content.forEach((content, k) => {
-                      if (content.contentId === listingId) {
-                        components[i].content.splice(k, 1);
-                      }
-                    });
-                  });
-                  // Save changes
-                  home.banner = banner;
-                  home.components = components;
-
-                  home.save((errSave) => {
-                    if (errSave) {
-                      res.send({
-                        success: false,
-                        error: 'Error deleting listing.',
-                      });
-                    } else {
-                      // Delete images from AWS
-                      const params = {
-                        Bucket: AWS_BUCKET_NAME,
-                        Key: `listingpictures/${listing.title}`,
-                      };
-                      s3bucket.deleteObject(params, (err, data) => {
-                        if (err) {
-                          res.send({
-                            success: false,
-                            error: 'Error deleting listing.',
-                          });
-                        } else {
-                          res.send({
-                            success: true,
-                            error: '',
-                          });
-                        }
-                      });
-                    }
-                  });
+        res.status(404).send({error: authRes.error});
+        return;
+      }
+      Listing.findById(listingId)
+      .then(listing => {
+        listing.remove()
+        .then(() => {
+          Homepage.find({})
+          .then(homepage => {
+            const home = homepage[0];
+            const banner = home.banner.slice();
+            // Remove content from banner
+            for (var j = 0; j < banner.length; j++) {
+              if (banner[j].contentId === listingId) {
+                banner.splice(j, 1);
+                break;
+              }
+            }
+            // Delete component from homepage
+            const components = home.components.slice();
+            components.forEach((comp, i) => {
+              comp.content.forEach((content, k) => {
+                if (content.contentId === listingId) {
+                  components[i].content.splice(k, 1);
                 }
               });
-            }
+            });
+            // Save changes
+            home.banner = banner;
+            home.components = components;
+            home.save()
+            .then(() => {
+              // Delete images from AWS
+              DeleteImages('listingpictures', listing.title, resp => {
+                if (resp.error) {
+                  res.status(400).send({error: resp.error});
+                  return;
+                }
+                // No errors
+                res.send({'error': ''});
+                return;
+              });
+            })
+            .catch(() => {
+              res.status(404).send({error: 'Error deleting listing.'});
+              return;
+            });
+          })
+          .catch(() => {
+            res.status(404).send({error: 'Error deleting listing.'});
+            return;
           });
+        })
+        .catch(() => {
+          res.status(404).send({error: 'Error deleting listing.'});
+          return;
         });
-      }
+      })
+      .catch(() => {
+        res.status(404).send({error: 'Error deleting listing.'});
+        return;
+      });
     });
   });
 
@@ -438,172 +424,100 @@ module.exports = () => {
     CuratorOrAdminCheck(req, (authRes) => {
       // Return any authentication errors
       if (!authRes.success) {
-        res.send({
-          success: false,
-          error: authRes.error,
-        });
-      } else {
-        // Isolate variables from the body
-        const { title, description, naldaFavorite, image, images, hours, rating, price, website, categories, amenities, additionalAmenities, location } = req.body;
-        const userId  = req.session.passport.user;
+        res.status(404).send({error: authRes.error});
+        return;
+      }
+      // Isolate variables from the body
+      const { title, description, naldaFavorite, image, images, hours, rating, price, website, categories, amenities, additionalAmenities, location } = req.body;
+      const userId  = req.session.passport.user;
 
-        let error = "";
+      let error = "";
 
-        // Error checking
-        if (!title) {
-          error = "Title must be populated.";
-        } else if (!description) {
-          error = "Description must be populated.";
-        } else if (!naldaFavorite) {
-          error = "Nalda's Favorite must be populated.";
-        } else if (!image) {
-          error = "Hero image must be populated.";
-        } else if (images && images.length > 10) {
-          error = "Maximum of 10 images.";
-        } else if (!price) {
-          error = "Price must be populated.";
-        } else if (amenities.length > 10) {
-          error = "Only 10 amenities allowed";
-        } else if (!location.name) {
-          error = "Location must be populated.";
-        } else if (!location.lat || !location.lng) {
-          error = "Location must be valid.";
+      // Error checking
+      if (!title) {
+        error = "Title must be populated.";
+      } else if (!description) {
+        error = "Description must be populated.";
+      } else if (!naldaFavorite) {
+        error = "Nalda's Favorite must be populated.";
+      } else if (!image) {
+        error = "Hero image must be populated.";
+      } else if (images && images.length > 10) {
+        error = "Maximum of 10 images.";
+      } else if (!price) {
+        error = "Price must be populated.";
+      } else if (amenities.length > 10) {
+        error = "Only 10 amenities allowed";
+      } else if (!location.name) {
+        error = "Location must be populated.";
+      } else if (!location.lat || !location.lng) {
+        error = "Location must be valid.";
+      }
+
+      // Handle error if there is one
+      if (error) {
+        res.status(400).send({error});
+        return;
+      }
+      ResizeAndUploadImage(image, 'listingpictures', 1920, title, resp1 => {
+        if (resp1.error) {
+          res.status(404).send({error: resp1.error});
+          return;
         }
-
-        // Handle error if there is one
-        if (error) {
-          res.status(400).send({
-            success: false,
-            error,
-          });
-        } else {
+        ResizeAndUploadImage(image, 'listingpictures', 600, title, resp2 => {
+          if (resp2.error) {
+            res.status(404).send({error: resp2.error});
+            return;
+          }
           const newImages = [];
-          // Convert article picture to a form that s3 can display
-          const imageConverted = new Buffer(image.replace(/^data:image\/\w+;base64,/, ""), 'base64');
-          // Convert to appropriate size
-          sharp(imageConverted)
-          .resize(1920, null)
-          .toBuffer()
-          .then( resized => {
-            var params = {
-              Bucket: AWS_BUCKET_NAME,
-              Key: `listingpictures/${title}/${uuid()}`,
-              ContentType: 'image/jpeg',
-              Body: resized,
-              ContentEncoding: 'base64',
-              ACL: 'public-read',
-            };
-            // Upload photo
-            s3bucket.upload(params, (errUpload, data) => {
-              if (errUpload) {
-                res.status(400).send({
-                  success: false,
-                  error: 'Error uploading profile picture.',
-                });
-              } else {
-                sharp(imageConverted)
-                .resize(600, null)
-                .toBuffer()
-                .then( resizedPrev => {
-                  // Create bucket
-                  var previewParams = {
-                    Bucket: AWS_BUCKET_NAME,
-                    Key: `listingpictures/${title}/${uuid()}`,
-                    ContentType: 'image/jpeg',
-                    Body: resizedPrev,
-                    ContentEncoding: 'base64',
-                    ACL: 'public-read',
-                  };
-                  // Upload photo
-                  s3bucket.upload(previewParams, (errupload, prevData) => {
-                    if (errupload) {
-                      res.send({
-                        success: false,
-                        error: 'Error uploading profile picture.',
-                      });
-                    } else {
-                      async.eachSeries(images, (img, cb) => {
-                        const listingPictureConverted = new Buffer(img.replace(/^data:image\/\w+;base64,/, ""), 'base64');
-                        // Resize listing pictures
-                        sharp(listingPictureConverted)
-                        .resize(800, null)
-                        .toBuffer()
-                        .then(listingPicResized => {
-                          var parameters = {
-                            Bucket: AWS_BUCKET_NAME,
-                            Key: `listingpictures/${title}/${uuid()}`,
-                            ContentType: 'image/jpeg',
-                            Body: listingPicResized,
-                            ContentEncoding: 'base64',
-                            ACL: 'public-read',
-                          };
-                          // Upload photo
-                          s3bucket.upload(parameters, (errorUpload, pic) => {
-                            if (errorUpload) {
-                              res.send({
-                                success: false,
-                                error: 'Error uploading profile picture.',
-                              });
-                            } else {
-                              newImages.push(pic.Location);
-                              cb();
-                            }
-                          });
-                        });
-                      }, (asyncErr) => {
-                        if (asyncErr) {
-                          res.send({
-                            success: false,
-                            error: 'Error posting listing.',
-                          });
-                        } else {
-                          // Creates a new listing with given params
-                          const newListing = new Listing({
-                            title,
-                            description,
-                            naldaFavorite,
-                            image: data.Location,
-                            imagePreview: prevData.Location,
-                            images: newImages,
-                            hours,
-                            rating,
-                            price,
-                            website,
-                            categories,
-                            amenities,
-                            additionalAmenities,
-                            location,
-                            author: userId,
-                            createdAt: Date.now(),
-                            updatedAt: Date.now(),
-                          });
-
-                          // Save the new article in mongo
-                          newListing.save((er, listing) => {
-                            if (er) {
-                              // Pass on any error to the user
-                              res.send({
-                                success: false,
-                                error: 'Error posting listing.',
-                              });
-                            } else {
-                              // Send the data along if it was successfully stored
-                              res.send({
-                                success: true,
-                                data: listing,
-                              });
-                            }
-                          });
-                        }
-                      });
-                    }
-                  });
-                });
+          async.eachSeries(images, (img, cb) => {
+            ResizeAndUploadImage(img, 'listingpictures', 800, title, resp3 => {
+              if (resp3.error) {
+                res.status(404).send({error: resp3.error});
+                return;
               }
+              newImages.push(resp3.resizedImg);
+              cb();
+            });
+          }, (asyncErr) => {
+            if (asyncErr) {
+              res.status(400).send({error: 'Error posting listing.'});
+              return;
+            }
+            // Creates a new listing with given params
+            const newListing = new Listing({
+              title,
+              description,
+              naldaFavorite,
+              image: resp1.resizedImg,
+              imagePreview: resp2.resizedImg,
+              images: newImages,
+              hours,
+              rating,
+              price,
+              website,
+              categories,
+              amenities,
+              additionalAmenities,
+              location,
+              author: userId,
+              createdAt: Date.now(),
+              updatedAt: Date.now(),
+            });
+
+            // Save the new article in mongo
+            newListing.save()
+            .then(listing => {
+              // Send the data along if it was successfully stored
+              res.send({listing});
+            })
+            .catch(() => {
+              res.status(400).send({error: 'Error posting listing.'});
+              return;
             });
           });
-        }
-      }
+        });
+      });
     });
   });
 
@@ -611,35 +525,26 @@ module.exports = () => {
   router.get('/categories/:categoryName', (req, res) => {
     const categoryName = req.params.categoryName;
     const filteredListings = [];
-    Listing.find({}, (errListing, listings) => {
-      if (errListing) {
-        res.send({
-          success: false,
-          error: 'Error finding listings.',
-        });
-      } else {
-        // Loop through all listings to check if filters match
-        async.eachSeries(listings, (listing, cb) => {
-          const categories = listing.categories;
-          if (categories[categoryName]) {
-            filteredListings.push(listing);
-          }
-          cb();
-        }, (asyncErr) => {
-          if (asyncErr) {
-            res.send({
-              success: false,
-              error: 'Error finding listings.',
-            });
-          } else {
-            res.send({
-              success: true,
-              error: '',
-              data: filteredListings,
-            });
-          }
-        });
-      }
+    Listing.find({})
+    .then(listings => {
+      // Loop through all listings to check if filters match
+      async.eachSeries(listings, (listing, cb) => {
+        const categories = listing.categories;
+        if (categories[categoryName]) {
+          filteredListings.push(listing);
+        }
+        cb();
+      }, (asyncErr) => {
+        if (asyncErr) {
+          res.status(400).send({error: 'Error finding listings.'});
+          return;
+        }
+        res.send({filteredListings});
+        return;
+      });
+    })
+    .catch(() => {
+      res.status(400).send({error: 'Error finding listings.'});
     });
   });
 

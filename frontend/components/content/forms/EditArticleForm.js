@@ -341,7 +341,7 @@ class EditArticleForm extends React.Component {
               lng: longitude,
             },
           })
-            .then((res) => {
+            .then(res => {
               // Notify success
               this.props.notifyMessage("Successfully updated article.");
 

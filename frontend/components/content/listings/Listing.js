@@ -170,27 +170,19 @@ class Listing extends React.Component {
 
     // Post to backend
     axios.delete(`/api/listings/${id}`)
-    .then(resp => {
-      if (resp.data.success) {
-        // If the request was successful
-        // Collapse the modal upon success
-        $('#deleteModal').modal('toggle');
+    .then(() => {
+      // Collapse the modal upon success
+      $('#deleteModal').modal('toggle');
 
-        // Update the state and direct the user away
-        this.setState({
-          redirectToHome: true,
-          deletePending: false,
-        });
-      } else {
-        this.setState({
-          deleteError: resp.data.error,
-          deletePending: false,
-        });
-      }
+      // Update the state and direct the user away
+      this.setState({
+        redirectToHome: true,
+        deletePending: false,
+      });
     })
     .catch((err) => {
       this.setState({
-        deleteError: err,
+        deleteError: err.response.data.error || err.response.data,
         deletePending: false,
       });
     });
