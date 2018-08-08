@@ -352,6 +352,7 @@ class ArticleForm extends React.Component {
             <div className="tabs">
               <Link className="tab active" to="/articles/new">Article</Link>
               <Link className="tab" to="/listings/new">Listing</Link>
+              <Link className="tab" to="/events/new">Event</Link>
               <Link className="tab" to="/videos/new">Video</Link>
             </div>
 

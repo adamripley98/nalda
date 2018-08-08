@@ -1,14 +1,14 @@
 // Import frameworks
 import React from 'react';
-import autosize from 'autosize';
+// import autosize from 'autosize';
 import { Link, Redirect } from 'react-router-dom';
-import axios from 'axios';
+// import axios from 'axios';
 import Dropzone from 'react-dropzone';
-import uuid from 'uuid-v4';
-import async from 'async';
+// import uuid from 'uuid-v4';
+// import async from 'async';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import EXIF from 'exif-js';
+// import EXIF from 'exif-js';
 
 // Import components
 import ErrorMessage from '../../shared/ErrorMessage';
@@ -16,25 +16,15 @@ import Medium from '../../shared/Medium';
 import Tags from '../../shared/Tags';
 
 // Import helper functions
-import {processImg, getTargetSize} from '../../../helperMethods/imageUploading';
+// import {processImg, getTargetSize} from '../../../helperMethods/imageUploading';
 
 // Import actions
 import {notifyMessage} from '../../../actions/notification';
 
-// Import SVGs
-import CashOnly from '../../../assets/images/cash-only.svg';
-import Formal from '../../../assets/images/formal.svg';
-import OutdoorSeating from '../../../assets/images/outdoor-seating.svg';
-import Parking from '../../../assets/images/parking.svg';
-import Reservation from '../../../assets/images/reservation.svg';
-import Waiter from '../../../assets/images/waiter.svg';
-import Wifi from '../../../assets/images/wifi.svg';
-import Wink from '../../../assets/images/wink.svg';
-
 /**
  * Component to render the new listing form
  */
-class ListingForm extends React.Component {
+class EventForm extends React.Component {
   /**
    * Constructor method
    */
@@ -43,554 +33,24 @@ class ListingForm extends React.Component {
     this.state = {
       title: "",
       description: "",
-      naldaFavorite: "",
       location: "",
       image: "",
       images: [],
       imagePreview: "",
-      rating: 0.0,
       price: "$",
-      hours: {
-        monday: {
-          start: '',
-          finish: '',
-        },
-        tuesday: {
-          start: '',
-          finish: '',
-        },
-        wednesday: {
-          start: '',
-          finish: '',
-        },
-        thursday: {
-          start: '',
-          finish: '',
-        },
-        friday: {
-          start: '',
-          finish: '',
-        },
-        saturday: {
-          start: '',
-          finish: '',
-        },
-        sunday: {
-          start: '',
-          finish: '',
-        },
-      },
       error: "",
       listingId: "",
       redirectToHome: "",
       website: "",
       categories: {
-        foodTrucks: false,
-        lateNights: false,
-        healthy: false,
-        forTheSweetTooth: false,
-        forTheStudyGrind: false,
-        openLate: false,
-        parentsVisiting: false,
-        gotPlasteredLastNight: false,
-        bars: false,
-        byos: false,
-        speakeasies: false,
-        dateNight: false,
-        formals: false,
-        birthdays: false,
-        treatYourself: false,
-        adulting: false,
-        feelingLazy: false,
-        holeInTheWall: false,
-        showoffToYourFriends: false,
-        forTheGram: false,
+        nightTime: false,
+        concerts: false,
+        dateNights: false,
       },
-      amenities: {
-        outdoorSeating: false,
-        formal: false,
-        cashOnly: false,
-        parking: false,
-        reservation: false,
-        wifi: false,
-        waiter: false,
-        wink: false,
-      },
-      additionalAmenities: [],
-      additionalAmenitiesString: "",
+      requirements: [],
+      date: "",
       pending: false,
     };
-
-    // Bind this to helper methods
-    this.handleChangeTitle = this.handleChangeTitle.bind(this);
-    this.handleChangeDescription = this.handleChangeDescription.bind(this);
-    this.handleChangeNaldaFavorite = this.handleChangeNaldaFavorite.bind(this);
-    this.handleChangeImage = this.handleChangeImage.bind(this);
-    this.handleChangeHours = this.handleChangeHours.bind(this);
-    this.handleChangeRating = this.handleChangeRating.bind(this);
-    this.handleChangePrice = this.handleChangePrice.bind(this);
-    this.handleChangeWebsite = this.handleChangeWebsite.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleClickCategory = this.handleClickCategory.bind(this);
-    this.handleClickAmenity = this.handleClickAmenity.bind(this);
-    this.displayImages = this.displayImages.bind(this);
-    this.removeImage = this.removeImage.bind(this);
-    this.handleChangeAdditionalAmenities = this.handleChangeAdditionalAmenities.bind(this);
-    this.renderAdditionalAmenities = this.renderAdditionalAmenities.bind(this);
-    this.onDrop = this.onDrop.bind(this);
-  }
-
-  /**
-   * When the component mounts
-   */
-  componentDidMount() {
-    window.scrollTo(0, 0);
-
-    // Handle resizing textarea
-    autosize(document.querySelectorAll('textarea'));
-
-    // Autocomplete the user's city
-    const location = document.getElementById("location");
-    const options = {
-      componentRestrictions: {country: 'us'},
-    };
-    new google.maps.places.Autocomplete(location, options);
-  }
-
-  /**
-   * Helper method to handle a change to the title state
-   */
-  handleChangeTitle(event) {
-    this.setState({
-      title: event.target.value,
-    });
-  }
-
-  /**
-   * Helper method to handle a change to the description state
-   */
-  handleChangeDescription(event) {
-    this.setState({
-      description: event.target.value,
-    });
-  }
-
-  /**
-   * Helper method to handle a change to the Nalda's Favorite state
-   */
-  handleChangeNaldaFavorite(event) {
-    this.setState({
-      naldaFavorite: event.target.value,
-    });
-  }
-
-  /**
-   * Helper method to handle a change to the image state
-   */
-  handleChangeImage(event) {
-    this.setState({
-      image: event.target.value,
-    });
-  }
-
-  /**
-   * Helper method to handle a change to the rating state
-   */
-  handleChangeRating(event) {
-    this.setState({
-      rating: event.target.value,
-    });
-  }
-
-  /**
-   * Helper method to handle a change to the price state
-   */
-  handleChangePrice(event) {
-    this.setState({
-      price: event.target.value,
-    });
-  }
-
-  /**
-   * Helper method to handle a change to the hours state.
-   * Day parameter is saturday to sunday
-   * startOrFinish denotes whether it is open or close hours being entered
-   */
-  handleChangeHours(event, startOrFinish, day) {
-    // Get the object for current hours before the update
-    const currentHours = this.state.hours;
-
-    // Update the passed in value
-    currentHours[day][startOrFinish] = event.target.value;
-
-    // Update the finish if the start is now later than the finish
-    if (startOrFinish === "start" && (
-          !currentHours[day].finish ||
-          currentHours[day].finish < event.target.value
-        )
-    ) {
-      currentHours[day].finish = event.target.value;
-    }
-    this.setState({
-      hours: currentHours,
-    });
-  }
-
-  /**
-   * Handle change additional amenities
-   */
-  handleChangeAdditionalAmenities(event) {
-    // Prevent the default action
-    event.preventDefault();
-
-    // Create the tag array, removing whitespace and uppercase letters
-    const additionalAmenitiesString = event.target.value;
-    let additionalAmenities = additionalAmenitiesString.split(",").map(tag => tag.trim().toLowerCase());
-
-    // Remove all duplicate items
-    additionalAmenities = additionalAmenities.filter((value, index, self) => {
-      // If the value is empty
-      if (!value || value === "") {
-        return false;
-      }
-
-      // Else, ensure the value does not occur earlier in the array
-      return self.indexOf(value) === index;
-    });
-
-    // Update the state
-    this.setState({
-      additionalAmenitiesString,
-      additionalAmenities,
-    });
-  }
-
-  /**
-   * Helper method to handle a change to the website state
-   */
-  handleChangeWebsite(event) {
-    this.setState({
-      website: event.target.value,
-    });
-  }
-
-  /**
-   * Helper method to handle a change tto the amenities
-   */
-  handleClickAmenity(event, name) {
-    // Copy over the existing state
-    const newAmenityState = {
-      ...this.state.amenities,
-    };
-
-    // Update the state for the passed in field
-    newAmenityState[name] = !this.state.amenities[name];
-
-    // Update the component state
-    this.setState({
-      amenities: newAmenityState,
-    });
-  }
-
-  /**
-   * Helper method to handle click on food truck category
-   */
-  handleClickCategory(event, name) {
-    // Copy over the existing state
-    const newCategoryState = {
-      ...this.state.categories,
-    };
-
-    // Update the state for the passed in field
-    newCategoryState[name] = !this.state.categories[name];
-
-    // Update the component state
-    this.setState({
-      categories: newCategoryState,
-    });
-  }
-
-  // Helper method to remove an image
-  removeImage(index) {
-    const images = this.state.images.slice();
-    images.splice(index, 1);
-    this.setState({
-      images,
-    });
-  }
-
-  // Helper method to display images
-  displayImages() {
-    const images = this.state.images.map((image, i) => {
-      return (
-        <li key={uuid()}>
-          <img
-            src={image}
-            alt={"carousel image " + i}
-          />
-          <div onClick={() => this.removeImage(this.state.images.indexOf(image))}>
-            <i className="fa fa-close" aria-hidden="true" />
-          </div>
-        </li>
-      );
-    });
-
-    // If there are images to show
-    if (images && images.length) {
-      return (
-        <ul className="carousel-preview">
-          {images}
-        </ul>
-      );
-    }
-
-    // Else
-    return null;
-  }
-
-  // Helper method for image uploads
-  onDrop(acceptedFiles, rejectedFiles, hero) {
-    // Ensure at leat one valid image was uploaded
-    if (acceptedFiles.length) {
-      if (hero === "hero") {
-        const image = acceptedFiles[0];
-        const reader = new FileReader();
-        // Convert from blob to a proper file object that can be passed to server
-        reader.onload = (upload) => {
-          var img = new Image();
-          img.onload = () => {
-            ((file, uri) => {
-              const targetSize = getTargetSize(img, 1200);
-              EXIF.getData(file, () => {
-                const imgToSend = processImg(uri, targetSize.height, targetSize.width, img.width, img.height, EXIF.getTag(file, 'Orientation'));
-                // Set images to state
-                this.setState({
-                  image: imgToSend,
-                  imagePreview: imgToSend,
-                  imageName: image.name,
-                  error: '',
-                });
-              });
-            })(image, upload.target.result);
-          };
-          img.src = upload.target.result;
-        };
-        // File reader set up
-        reader.onabort = () => this.setState({error: "File read aborted."});
-        reader.onerror = () => this.setState({error: "File read error."});
-        reader.readAsDataURL(image);
-      } else {
-        // Ensure no more than 6 were uploaded
-        if (acceptedFiles.length + this.state.images.length > 10) {
-          this.setState({
-            error: 'You may only upload 10 images.',
-          });
-          // Shorten acceptedFiles to 10
-          acceptedFiles.splice(10 - this.state.images.length);
-        }
-
-        // Make a copy of the images in state
-        const images = this.state.images.slice();
-
-        // Loop through and convert images
-        async.eachSeries(acceptedFiles, (pic, cb) => {
-          const reader = new FileReader();
-          // Convert from blob to a proper file object that can be passed to server
-          reader.onload = (upload) => {
-            var img = new Image();
-            img.onload = () => {
-              ((file, uri) => {
-                const targetSize = getTargetSize(img, 750);
-                EXIF.getData(file, () => {
-                  const imgToSend = processImg(uri, targetSize.height, targetSize.width, img.width, img.height, EXIF.getTag(file, 'Orientation'));
-                  images.push(imgToSend);
-                  this.setState(images);
-                });
-              })(pic, upload.target.result);
-            };
-            img.src = upload.target.result;
-            cb();
-          };
-          // File reader set up
-          reader.onabort = () => {
-            this.setState({error: "File read aborted."});
-            cb();
-          };
-
-          reader.onerror = () => {
-            this.setState({error: "File read error."});
-            cb();
-          };
-
-          reader.readAsDataURL(pic);
-        }, asyncErr => {
-          if (asyncErr) {
-            this.setState({
-              error: "Async error with image upload.",
-            });
-            return;
-          }
-          // Set images to state
-          this.setState({
-            images,
-          });
-        });
-      }
-    }
-    if (rejectedFiles.length) {
-      // Display error with wrong file type
-      this.setState({
-        error: rejectedFiles[0].name + ' is not an image.',
-      });
-    }
-  }
-
-  /**
-   * Helper method to handle when the form is submitted
-   */
-  handleSubmit(event) {
-    // Denote that the request is pending
-    this.setState({
-      pending: true,
-    });
-
-    // Prevent the default submit action
-    event.preventDefault();
-
-    // Find the Location
-    const location = document.getElementById("location").value;
-
-    // If request is properly formulated, send request to make a new listing (routes.js)
-    if (this.inputValid()) {
-      // Find the longitude and latitude of the location passed in
-      const geocoder = new google.maps.Geocoder();
-      geocoder.geocode({ 'address': location }, (results, status) => {
-        if (status === google.maps.GeocoderStatus.OK) {
-          // Isolate the coordinates of the passed in location
-          const latitude = results[0].geometry.location.lat();
-          const longitude = results[0].geometry.location.lng();
-
-          // Create the new listing in the backend
-          axios.post('/api/listings/new', {
-            title: this.state.title,
-            image: this.state.image,
-            images: this.state.images,
-            location: {
-              name: location,
-              lat: latitude,
-              lng: longitude,
-            },
-            description: this.state.description,
-            naldaFavorite: this.state.naldaFavorite,
-            hours: this.state.hours,
-            rating: this.state.rating,
-            price: this.state.price,
-            website: this.state.website,
-            categories: this.state.categories,
-            amenities: this.state.amenities,
-            additionalAmenities: this.state.additionalAmenities,
-          })
-            .then(resp => {
-              // Notify success
-              this.props.notifyMessage("Successfully created listing.");
-
-              // Redirect to the created listing if successful
-              this.setState({
-                listingId: resp.data.listing._id,
-                redirectToHome: true,
-                pending: false,
-              });
-            })
-            .catch(err => {
-              this.setState({
-                error: err.response.data.error || err.response.data,
-                pending: false,
-              });
-            });
-        } else {
-          this.setState({
-            error: "Invalid location passed in.",
-            pending: false,
-          });
-        }
-      });
-    }
-  }
-
-  /**
-   * Helper method to check if all input is valid, returns true or false
-   * Frontend validations
-   */
-   // TODO check for hero image
-  inputValid() {
-    // Begin error checking
-    if (!this.state.title) {
-      this.setState({
-        error: "Title must be populated.",
-        pending: false,
-      });
-      return false;
-    } else if (!this.state.description) {
-      this.setState({
-        error: "Description must be populated.",
-        pending: false,
-      });
-      return false;
-    } else if (!this.state.naldaFavorite) {
-      this.setState({
-        error: "Nalda's Favorite Section must be populated.",
-        pending: false,
-      });
-      return false;
-    } else if (this.state.title.length < 2 || this.state.title.length > 100) {
-      this.setState({
-        error: "Title must be between 2 and 100 characters long.",
-        pending: false,
-      });
-      return false;
-    } else if (this.state.description.length < 4 || this.state.description.length > 2000) {
-      this.setState({
-        error: "Descriptions must be between 4 and 2000 characters long.",
-        pending: false,
-      });
-      return false;
-    } else if (this.state.naldaFavorite.length < 4 || this.state.naldaFavorite.length > 2000) {
-      this.setState({
-        error: "Nalda's Favorite Section must be between 4 and 2000 characters long.",
-        pending: false,
-      });
-      return false;
-    } else if (!this.state.images.length) {
-      this.setState({
-        error: "At least 1 image must be provided.",
-      });
-    } else if (!document.getElementById("location").value) {
-      this.setState({
-        error: "Location must be populated.",
-        pending: false,
-      });
-      return false;
-    }
-    // Set the error to the empty string if everything is valid
-    this.setState({
-      error: "",
-    });
-    return true;
-  }
-
-  /**
-   * Render additional amenities
-   */
-  renderAdditionalAmenities() {
-    if (!this.state.additionalAmenities || !this.state.additionalAmenities.length) return null;
-    const amenities =  this.state.additionalAmenities.map(amenity => (
-      <span className="category" key={amenity}>{amenity}</span>
-    ));
-    return (
-      <div className="categories">
-        {amenities}
-      </div>
-    );
   }
 
   /**
@@ -599,14 +59,14 @@ class ListingForm extends React.Component {
   render() {
     return (
       <div>
-        <Tags title="New Listing" />
-        { this.state.redirectToHome && <Redirect to={`/listings/${this.state.listingId}`}/> }
+        <Tags title="New Event" />
+        { this.state.redirectToHome && <Redirect to={`/events/${this.state.eventId}`}/> }
         <Medium>
           <div className="card thin-form no-pad">
             <div className="tabs">
               <Link className="tab" to="/articles/new">Article</Link>
-              <Link className="tab active" to="/listings/new">Listing</Link>
-              <Link className="tab" to="/events/new">Event</Link>
+              <Link className="tab" to="/listings/new">Listing</Link>
+              <Link className="tab active" to="/events/new">Event</Link>
               <Link className="tab" to="/videos/new">Video</Link>
             </div>
             <form className="pad-1" onSubmit={ this.handleSubmit }>
@@ -1136,7 +596,7 @@ class ListingForm extends React.Component {
 }
 
 // Prop validations
-ListingForm.propTypes = {
+EventForm.propTypes = {
   notifyMessage: PropTypes.func,
 };
 
@@ -1153,8 +613,8 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-ListingForm = connect(
+EventForm = connect(
   mapStateToProps,
   mapDispatchToProps,
-)(ListingForm);
-export default ListingForm;
+)(EventForm);
+export default EventForm;
