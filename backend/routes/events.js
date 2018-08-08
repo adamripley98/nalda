@@ -12,11 +12,12 @@ const async = require('async');
 // Import database models
 const Event = require('../models/event');
 const User = require('../models/user');
+const Homepage = require('../models/homepage');
 
 
 // Import helper methods
 const {CuratorOrAdminCheck} = require('../helperMethods/authChecking');
-const {ResizeAndUploadImage} = require('../helperMethods/imageProcessing');
+const {ResizeAndUploadImage, DeleteImages} = require('../helperMethods/imageProcessing');
 
 // Export the following methods for routing
 module.exports = () => {
@@ -39,7 +40,7 @@ module.exports = () => {
    * Route to handle pulling the information for a specific event
    */
   router.get('/:id', (req, res) => {
-    // Find the id from the listing url
+    // Find the id from the event url
     const id = req.params.id;
 
     // Check if user is logged in
@@ -160,7 +161,7 @@ module.exports = () => {
               res.status(400).send({error: 'Error posting event.'});
               return;
             }
-            // Creates a new listing with given params
+            // Creates a new event with given params
             const newEvent = new Event({
               title,
               description,
@@ -186,11 +187,87 @@ module.exports = () => {
               res.send({event});
             })
             .catch(() => {
-              res.status(400).send({error: 'Error posting listing.'});
+              res.status(400).send({error: 'Error posting event.'});
               return;
             });
           });
         });
+      });
+    });
+  });
+
+  /**
+   * Route to handle deleting a specific event
+   */
+  router.delete('/:id', (req, res) => {
+    // Find the id from the event url
+    const eventId = req.params.id;
+
+    // Check to make sure user is an admin or the author
+    CuratorOrAdminCheck(req, (authRes) => {
+        // Auth error
+      if (!authRes.success) {
+        res.status(404).send({error: authRes.error});
+        return;
+      }
+      Event.findById(eventId)
+      .then(event => {
+        event.remove()
+        .then(() => {
+          Homepage.find({})
+          .then(homepage => {
+            const home = homepage[0];
+            const banner = home.banner.slice();
+            // Remove content from banner
+            for (var j = 0; j < banner.length; j++) {
+              if (banner[j].contentId === eventId) {
+                banner.splice(j, 1);
+                break;
+              }
+            }
+            // Delete component from homepage
+            const components = home.components.slice();
+            components.forEach((comp, i) => {
+              comp.content.forEach((content, k) => {
+                if (content.contentId === eventId) {
+                  components[i].content.splice(k, 1);
+                }
+              });
+            });
+            // Save changes
+            home.banner = banner;
+            home.components = components;
+            home.save()
+            .then(() => {
+              // Delete images from AWS
+              DeleteImages('eventpictures', event.title, resp => {
+                if (resp.error) {
+                  res.status(400).send({error: resp.error});
+                  return;
+                }
+                // No errors
+                res.send({'error': ''});
+                return;
+              });
+            })
+            .catch(() => {
+              res.status(404).send({error: 'Error deleting event.'});
+              return;
+            });
+          })
+          .catch(() => {
+            res.status(404).send({error: 'Error deleting event.'});
+            return;
+          });
+        })
+        .catch(() => {
+          res.status(404).send({error: 'Error deleting event.'});
+          return;
+        });
+      })
+      .catch(() => {
+        res.status(404).send({error: 'Error deleting event.'});
+        return;
       });
     });
   });
