@@ -196,6 +196,155 @@ module.exports = () => {
     });
   });
 
+  // Route to handle editting an event
+  router.post('/:id/edit', (req, res) => {
+    // Check to make sure user is an admin or the author
+    CuratorOrAdminCheck(req, (authRes) => {
+        // Auth error
+      if (!authRes.success) {
+        res.status(404).send({error: authRes.error});
+        return;
+      }
+      // Isolate variables
+      const userId = req.session.passport.user;
+      const eventId = req.params.id;
+      const { title, description, requirements, image, images, startDate, endDate, price, website, categories, location } = req.body;
+
+      // Keep track of any errors
+      let error = "";
+
+      // Perform error checking on variables
+      if (!title) {
+        error = "Title must be populated.";
+      } else if (!description) {
+        error = "Description must be populated.";
+      } else if (!startDate) {
+        error = "Start Date must be populated.";
+      } else if (!endDate) {
+        error = "End Date must be populated.";
+      } else if (!image) {
+        error = "Hero image must be populated.";
+      } else if (!requirements || !requirements.length) {
+        error = "Requirements must be populated.";
+      } else if (images && images.length > 10) {
+        error = "Maximum of 10 images.";
+      } else if (!price) {
+        error = "Price must be populated.";
+      } else if (!location.name) {
+        error = "Location must be populated.";
+      } else if (!location.lat || !location.lng) {
+        error = "Location must be valid.";
+      }
+
+      // If there was an error or not
+      if (error) {
+        res.status(404).send({error});
+        return;
+      }
+      let mainImg = image;
+      let previewImg = image;
+      // If initial image is new, upload to s3
+      const awaitMainImageUpload = new Promise(resolve => {
+        if (image.indexOf('s3.amazonaws') === -1) {
+          ResizeAndUploadImage(image, 'eventpictures', 1920, title, (resp1) => {
+            if (resp1.error) {
+              resolve(res.status(404).send({error: resp1.error}));
+              return;
+            }
+            // Make a preview version for performance
+            ResizeAndUploadImage(image, 'eventpictures', 600, title, (resp2) => {
+              if (resp2.error) {
+                resolve(res.status(404).send({error: resp2.error}));
+                return;
+              }
+              // For scope reasons
+              mainImg = resp1.resizedImg;
+              previewImg = resp2.resizedImg;
+              resolve();
+            });
+          });
+        } else {
+          // If initial image has already been uploaded, simply move on
+          resolve();
+        }
+      });
+      // Now loop through the other images
+      awaitMainImageUpload.then(() => {
+        const newImages = [];
+        async.eachSeries(images, (img, cb) => {
+          // New image is actually new
+          if (img.indexOf('s3.amazonaws') === -1) {
+            ResizeAndUploadImage(img, 'eventpictures', 800, title, (resp3) => {
+              if (resp3.error) {
+                res.status(404).send({error: resp3.error});
+                return;
+              }
+              newImages.push(resp3.resizedImg);
+              cb();
+            });
+          } else {
+            // new image has already been uploaded
+            newImages.push(img);
+            cb();
+          }
+        }, (asyncErr) => {
+          if (asyncErr) {
+            res.status(400).send({error: 'Error editting.'});
+            return;
+          }
+          // Find the author
+          User.findById(userId)
+          .then(author => {
+            if (!author) {
+              res.status(404).send({error: 'Error editting event'});
+              return;
+            }
+            Event.findById(eventId)
+            .then(event => {
+              // Make changes to given event
+              event.title = title;
+              event.description = description;
+              event.image = mainImg;
+              event.imagePreview = previewImg;
+              event.images = newImages;
+              event.price = price;
+              event.location = location;
+              event.categories = categories;
+              event.website = website;
+              event.requirements = requirements;
+              event.startDate = startDate;
+              event.endDate = endDate;
+              event.updatedAt = new Date().getTime();
+
+              // Save changes in mongo
+              event.save()
+              .then(() => {
+                res.send({event});
+                return;
+              })
+              .catch(() => {
+                res.status(404).send({error: 'Error editting event'});
+                return;
+              });
+            })
+            .catch(() => {
+              res.status(404).send({error: 'Error editting event'});
+              return;
+            });
+          })
+          .catch(() => {
+            res.status(404).send({error: 'Error editting event'});
+            return;
+          });
+        });
+      })
+      .catch(() => {
+        res.status(404).send({error: 'Error editting event'});
+        return;
+      });
+    });
+  });
+
   /**
    * Route to handle deleting a specific event
    */
