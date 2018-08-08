@@ -21,6 +21,8 @@ class Preview extends Component {
     this.getSubtitle = this.getSubtitle.bind(this);
     this.getLocation = this.getLocation.bind(this);
     this.getCategories = this.getCategories.bind(this);
+    this.isVideo = this.isVideo.bind(this);
+    this.getClassName = this.getClassName.bind(this);
   }
 
   // Return the subtitle of the content
@@ -38,6 +40,10 @@ class Preview extends Component {
     );
   }
 
+  isVideo() {
+    return (this.props.isVideo || this.props.contentType === "video");
+  }
+
   // Get the type of the content as based on the props
   getType() {
     // Find the type of the content
@@ -48,7 +54,18 @@ class Preview extends Component {
     }
 
     // If none of the types match
-    return "listings";
+    return 'listings';
+  }
+
+  getClassName() {
+    let className;
+
+    if (this.props.index) className = `content-preview-wrapper grid-item-${this.props.index}`;
+    else className = 'content-preview-wrapper';
+
+    if (this.isVideo()) className += ' video';
+
+    return className;
   }
 
   // Get the location of the content if a location was passed to the component
@@ -89,11 +106,15 @@ class Preview extends Component {
       // Find the image for the content depending on its type
       let image = "";
 
-      let contentType = this.props.content.contentType;
+      let contentType = this.props.contentType;
+
+      console.log('\n\nCONTENT TYPE\n\n\n', contentType);
 
       if (contentType === 'Videos') contentType = 'video';
       else if (contentType === 'Listings') contentType = 'listing';
       else if (contentType === 'Articles') contentType = 'article';
+
+      console.log('\n\nCONTENT TYPE\n\n\n', contentType);
 
       if (contentType === 'video' || contentType === 'Videos') {
         const videoId = this.props.content.url.substring(this.props.content.url.indexOf("v=") + 2);
@@ -114,7 +135,7 @@ class Preview extends Component {
           rating={this.props.content.rating}
           image={image}
           index={this.props.index}
-          contentType={this.props.content.contentType}
+          contentType={contentType}
         />
       );
     }
@@ -123,13 +144,13 @@ class Preview extends Component {
     return (
       <Link
         to={ `/${this.getType()}/${this.props._id}` }
-        className={this.props.index ? `content-preview-wrapper grid-item-${this.props.index}` : 'content-preview-wrapper'}>
+        className={this.getClassName()}>
         <div className="content-preview">
           <div
             className="background-image"
             style={{ backgroundImage: `url(${this.props.image})`}}
           >
-            { (this.props.isVideo || this.props.contentType === "video") && (
+            { this.isVideo() && (
               <div className="image-wrapper">
                 <img
                   alt="Play video"

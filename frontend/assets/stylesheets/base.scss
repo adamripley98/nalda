@@ -475,27 +475,6 @@ a {
     margin-bottom: 0.5rem;
     width: 100%;
 		padding-top: 65%;
-
-    .image-wrapper {
-      height: 65%;
-      padding: 3rem 0rem;
-      display: block;
-
-      img {
-        margin: 0 auto;
-        height: 4rem;
-        width: auto;
-        display: block;
-        opacity: 0.6;
-        transition: all 0.2s ease;
-      }
-    }
-
-    &:hover {
-      .image-wrapper img {
-        opacity: 0.8;
-      }
-    }
   }
 
   .location {
@@ -516,6 +495,32 @@ a {
     margin-bottom: 0;
     font-size: 1.2rem;
     color: $dark-gray;
+  }
+}
+
+.content-preview-wrapper.video .content-preview .background-image {
+  padding-top: 0;
+
+  .image-wrapper {
+    z-index: 1;
+    height: 65%;
+    padding: 3rem 0rem;
+    display: block;
+
+    img {
+      margin: 0 auto;
+      height: 4rem;
+      width: auto;
+      display: block;
+      opacity: 0.6;
+      transition: all 0.2s ease;
+    }
+  }
+
+  &:hover {
+    .image-wrapper img {
+      opacity: 0.8;
+    }
   }
 }
 
