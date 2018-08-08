@@ -11,6 +11,8 @@ const async = require('async');
 
 // Import database models
 const Event = require('../models/event');
+const User = require('../models/user');
+
 
 // Import helper methods
 const {CuratorOrAdminCheck} = require('../helperMethods/authChecking');
@@ -18,6 +20,78 @@ const {ResizeAndUploadImage} = require('../helperMethods/imageProcessing');
 
 // Export the following methods for routing
 module.exports = () => {
+  // Route to pull all events
+  router.get('/', (req, res) => {
+    // Pulls events from mongo
+    Event.find({})
+    .then(events => {
+      // Send events back in correct order
+      events.reverse();
+      // If everything went as planned
+      res.send({events});
+    })
+    .catch(() => {
+      res.status(404).send({error: 'Error finding events.'});
+    });
+  });
+
+  /**
+   * Route to handle pulling the information for a specific event
+   */
+  router.get('/:id', (req, res) => {
+    // Find the id from the listing url
+    const id = req.params.id;
+
+    // Check if user is logged in
+    const userId = req.session.passport ? req.session.passport.user : null;
+
+    Event.findById(id)
+    .then(event => {
+      if (!event) {
+        res.status(404).send({error: 'Error pulling event.'});
+        return;
+      }
+      User.findById(event.author)
+      .then(author => {
+        if (!author) {
+          res.status(404).send({error: 'Error pulling event.'});
+          return;
+        }
+        // Default: users can't change event
+        let canModify = false;
+        User.findById(userId)
+        .then(user => {
+          if (user) {
+            // Check if given user is either an admin or the curator of the event
+            if (user.userType === 'admin' || user.userType === 'curator') {
+              canModify = true;
+            }
+
+            // Send back data
+            res.send({
+              author,
+              event,
+              timestamp: event._id.getTimestamp(),
+              canModify,
+            });
+          }
+        })
+        .catch(() => {
+          res.status(404).send({error: 'Error pulling event.'});
+          return;
+        });
+      })
+      .catch(() => {
+        res.status(404).send({error: 'Error pulling event.'});
+        return;
+      });
+    })
+    .catch(() => {
+      res.status(404).send({error: 'Error pulling event.'});
+      return;
+    });
+  });
+
   // Route to create a new event
   router.post('/new', (req, res) => {
     // Check to make sure poster is an admin or curator
