@@ -45,6 +45,7 @@ import EventForm from '../components/content/forms/EventForm';
 import EditArticleForm from '../components/content/forms/EditArticleForm';
 import EditListingForm from '../components/content/forms/EditListingForm';
 import EditVideoForm from '../components/content/forms/EditVideoForm';
+import EditEventForm from '../components/content/forms/EditEventForm';
 
 // Other components
 import About from '../components/About';
@@ -271,6 +272,7 @@ class AppContainer extends Component {
 
                 { /* Routes for events */ }
                 <Route exact path="/events/new" component={requireCurator(EventForm)} />
+                <Route exact path="/events/:id/edit" component={requireCurator(EditEventForm)} />
 
                 { /* 404 if no other route was matched */ }
                 <Route exact path="/*" component={NotFoundSection}/>

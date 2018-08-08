@@ -141,32 +141,24 @@ class EditListingForm extends React.Component {
     // Pull existing data from the database
     axios.get(`/api/listings/${id}`)
       .then(res => {
-        if (res.data.success) {
-          const additionalAmenities = res.data.data.additionalAmenities;
-          let additionalAmenitiesString = "";
-          if (additionalAmenities && additionalAmenities.length) {
-            additionalAmenitiesString = additionalAmenities.join(", ");
-          }
-          // If there was no error
-          this.setState({
-            pending: false,
-            error: "",
-            ...res.data.data,
-            additionalAmenitiesString,
-            rating: res.data.data.rating,
-            _id: id,
-          });
-        } else {
-          // There was an error in the request
-          this.setState({
-            error: res.data.error.message,
-            pending: false,
-          });
+        const additionalAmenities = res.data.data.additionalAmenities;
+        let additionalAmenitiesString = "";
+        if (additionalAmenities && additionalAmenities.length) {
+          additionalAmenitiesString = additionalAmenities.join(", ");
         }
+        // If there was no error
+        this.setState({
+          pending: false,
+          error: "",
+          ...res.data.data,
+          additionalAmenitiesString,
+          rating: res.data.data.rating,
+          _id: id,
+        });
       })
       .catch(err => {
         this.setState({
-          error: err,
+          error: err.response.data.error || err.response.data,
           pending: false,
         });
       });
@@ -654,7 +646,7 @@ class EditListingForm extends React.Component {
                     onChange={ this.handleChangeTitle }
                   />
                   <label>
-                    Hero Image (url to an image)
+                    Hero Image
                   </label>
                   {
                     this.state.imagePreview && (
