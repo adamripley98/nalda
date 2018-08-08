@@ -525,28 +525,20 @@ class EditListingForm extends React.Component {
             website: this.state.website,
             categories: this.state.categories,
           })
-            .then((resp) => {
-              // Display any errors
-              if (!resp.data.success) {
-                this.setState({
-                  error: resp.data.error,
-                  pendingSubmit: false,
-                });
-              } else {
-                // Notify success
-                this.props.notifyMessage("Successfully updated listing.");
+            .then(resp => {
+              // Notify success
+              this.props.notifyMessage("Successfully updated listing.");
 
-                // Redirect to home if successful
-                this.setState({
-                  listingId: resp.data.data._id,
-                  redirectToHome: true,
-                  pendingSubmit: false,
-                });
-              }
+              // Redirect to home if successful
+              this.setState({
+                listingId: resp.data.listing._id,
+                redirectToHome: true,
+                pendingSubmit: false,
+              });
             })
             .catch(err => {
               this.setState({
-                error: err,
+                error: err.response.data.error || err.response.data,
                 pendingSubmit: false,
               });
             });

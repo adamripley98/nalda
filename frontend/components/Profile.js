@@ -49,34 +49,27 @@ class Profile extends Component {
     const id = this.props.match.params.id;
     // Call to backend to get profile information
     axios.get(`/api/users/${id}`)
-    .then((resp) => {
+    .then(resp => {
       // If successful, will set state with user's information
-      if (resp.data.success) {
-        this.setState({
-          name: resp.data.data.name,
-          email: resp.data.data.username,
-          bio: resp.data.data.bio,
-          userType: resp.data.data.userType,
-          profilePicture: resp.data.data.profilePicture,
-          error: "",
-          content: {
-            articles: resp.data.articles,
-            listings: resp.data.listings,
-            videos: resp.data.videos,
-          },
-          location: resp.data.data.location ? resp.data.data.location.name : "",
-          pending: false,
-        });
-      } else {
-        this.setState({
-          pending: false,
-          error: resp.data.error,
-        });
-      }
-    }).catch((err) => {
+      this.setState({
+        name: resp.data.user.name,
+        email: resp.data.user.username,
+        bio: resp.data.user.bio,
+        userType: resp.data.user.userType,
+        profilePicture: resp.data.user.profilePicture,
+        error: "",
+        content: {
+          articles: resp.data.content ? resp.data.content.articles : [],
+          listings: resp.data.content ? resp.data.content.listings : [],
+          videos: resp.data.content ? resp.data.content.videos : [],
+        },
+        location: resp.data.user.location ? resp.data.user.location.name : "",
+        pending: false,
+      });
+    }).catch(err => {
       this.setState({
         pending: false,
-        error: err,
+        error: err.response.data.error || err.response.data,
       });
     });
   }

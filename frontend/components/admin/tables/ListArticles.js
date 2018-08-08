@@ -22,19 +22,12 @@ class ListArticles extends Component {
   componentDidMount() {
     axios.get('/api/admin/articles')
       .then(res => {
-        if (res.data.error) {
-          this.setState({
-            pending: false,
-            error: res.data.error,
-          });
-          return;
-        }
         this.setState({
           pending: false,
           articles: res.data.articles,
         });
       })
-      .catch(err => this.setState({ error: err.message }));
+      .catch(() => this.setState({ error: 'Error pulling articles.' }));
   }
 
   // Render the table
