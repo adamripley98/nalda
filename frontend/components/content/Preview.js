@@ -108,13 +108,9 @@ class Preview extends Component {
 
       let contentType = this.props.contentType;
 
-      console.log('\n\nCONTENT TYPE\n\n\n', contentType);
-
       if (contentType === 'Videos') contentType = 'video';
       else if (contentType === 'Listings') contentType = 'listing';
       else if (contentType === 'Articles') contentType = 'article';
-
-      console.log('\n\nCONTENT TYPE\n\n\n', contentType);
 
       if (contentType === 'video' || contentType === 'Videos') {
         const videoId = this.props.content.url.substring(this.props.content.url.indexOf("v=") + 2);

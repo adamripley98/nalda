@@ -27,7 +27,7 @@ $height: 57.19px;
     padding: 0.5rem 1rem;
     border-right: 1px solid $border;
 
-    img {
+    svg {
       padding-top: 0.3rem;
       width: auto;
       height: 2.2rem;
@@ -40,7 +40,7 @@ $height: 57.19px;
     background: $transparent;
     border-radius: 0rem;
     padding: 0.1rem 0.5rem;
-    width: 24rem;
+    flex: 1;
     max-width: 100% !important;
     display: flex;
     transition: all 0.2s ease;
@@ -149,7 +149,6 @@ $height: 57.19px;
   // This includes the user's name, location, and profile picture
   // The amount of information shown depends on the width of the screen
   .user-info {
-    flex: 1;
     margin: 0;
     padding: 0;
     height: 57.19px;
@@ -193,15 +192,15 @@ $height: 57.19px;
     // If the user is not signed in, then there is no information to display
     // Instead, there are links to login and register
     .sign-in-links {
-      width: 100%;
       height: 100%;
       text-align: right;
       padding-top: 1rem;
       padding-right: 1rem;
+      padding-left: 0.5rem;
 
       a {
         color: white;
-        margin-left: calc(1rem + 5%);
+        margin-left: 1rem;
 
         &:hover {
           opacity: 0.8;
