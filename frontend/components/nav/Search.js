@@ -243,6 +243,7 @@ class Search extends Component {
             });
           }}
         />
+
         <i
           className="fa fa-search cursor large"
           aria-hidden="true"
@@ -256,6 +257,7 @@ class Search extends Component {
             });
           }}
         />
+
         <form onSubmit={this.handleSubmit} className="small">
           <input
             className="form-control"
@@ -267,7 +269,16 @@ class Search extends Component {
             placeholder="Search"
           />
         </form>
+
         <form onSubmit={this.handleSubmit} className="large">
+          {
+            this.props.location ? (
+              <p className="location">
+                { this.props.location }
+              </p>
+            ) : null
+          }
+
           <input
             className="form-control"
             id="search-large"
@@ -277,7 +288,9 @@ class Search extends Component {
             placeholder="Search for activities, restaurants, and more"
           />
         </form>
+
         {this.renderSuggestions()}
+
         {
           this.state.active && (
             <div
@@ -295,6 +308,7 @@ class Search extends Component {
 
 Search.propTypes = {
   callback: PropTypes.func,
+  location: PropTypes.string,
 };
 
 export default Search;

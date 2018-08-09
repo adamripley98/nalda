@@ -54,6 +54,17 @@ $height: 57.19px;
       padding-left: 0.2rem;
     }
 
+    .location {
+      color: white;
+      font-weight: normal;
+      text-align: right;
+      height: 0;
+      overflow: visible;
+      margin: 0;
+      transform: translateY(0.4rem);
+      transition: all 0.2s ease;
+    }
+
     // Have the search bar take up the entire space it occupies
     form {
       width: 100%;
@@ -114,6 +125,10 @@ $height: 57.19px;
 
       .fa-search {
         color: $gray;
+      }
+
+      .location {
+        color: $dark-gray;
       }
 
       .form-control {
