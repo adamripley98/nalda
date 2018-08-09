@@ -135,6 +135,14 @@ class Search extends Component {
       return (
         <div className="suggestions">
           <div className="container-fluid">
+            {
+              this.props.location ? (
+                <p className="location small">
+                  Results in { this.props.location }
+                </p>
+              ) : null
+            }
+
             <div className="row">
               {
                 this.state.suggestions.articles.length ? (
