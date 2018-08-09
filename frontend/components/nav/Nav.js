@@ -59,7 +59,7 @@ class Nav extends Component {
     return (
       <nav className={ this.state.searchActive ? 'nav search-active' : 'nav' }>
         <Logo />
-        <Search callback={ this.searchCallback } />
+        <Search callback={ this.searchCallback } location={this.props.location} />
 
         { /* Render the user's profile information if the user is logged in */ }
         { /* If the user is not logged in, an empty div is returned */ }
@@ -67,7 +67,6 @@ class Nav extends Component {
         {
           this.props.userId ? (
             <UserLinks
-              location={this.props.location}
               name={this.props.name}
               profilePicture={this.props.profilePicture}
             />
