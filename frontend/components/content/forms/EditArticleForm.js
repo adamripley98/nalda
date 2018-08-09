@@ -43,6 +43,7 @@ class EditArticleForm extends React.Component {
       pending: true,
       redirectToHome: false,
       pendingSubmit: false,
+      changeOrder: false,
     };
 
     // Bind this to helper methods
@@ -53,6 +54,7 @@ class EditArticleForm extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.addNewComponent = this.addNewComponent.bind(this);
     this.inputValid = this.inputValid.bind(this);
+    this.switchBodyOrder = this.switchBodyOrder.bind(this);
     this.onDrop = this.onDrop.bind(this);
   }
 
@@ -65,24 +67,16 @@ class EditArticleForm extends React.Component {
     // Pull existing data from the database
     axios.get(`/api/articles/${id}`)
       .then(res => {
-        if (res.data.success) {
-          // If there was no error
-          this.setState({
-            pending: false,
-            error: "",
-            ...res.data.data,
-          });
-        } else {
-          // There was an error in the request
-          this.setState({
-            error: res.data.error,
-            pending: false,
-          });
-        }
+        // If there was no error
+        this.setState({
+          pending: false,
+          error: "",
+          ...res.data.article,
+        });
       })
       .catch(err => {
         this.setState({
-          error: err,
+          error: err.response.data.message || err.response.data,
           pending: false,
         });
       });
@@ -104,7 +98,7 @@ class EditArticleForm extends React.Component {
       }
 
       // Update the location field
-      document.getElementById('location').value = this.state.location.name;
+      document.getElementById('location').value = this.state.location ? this.state.location.name : null;
 
       // Toggle tooltips
       $(() => {
@@ -295,6 +289,23 @@ class EditArticleForm extends React.Component {
     return true;
   }
 
+  // Helper method to switch body order
+  switchBodyOrder(direction, index) {
+    const bodyObj = this.state.body;
+    const temp = bodyObj[index];
+    if (direction === 'up' && bodyObj[index - 1]) {
+      bodyObj[index] = bodyObj[index - 1];
+      bodyObj[index - 1] = temp;
+    } else if (direction === 'down' && bodyObj[index + 1]) {
+      bodyObj[index] = bodyObj[index + 1];
+      bodyObj[index + 1] = temp;
+    }
+    this.setState({
+      body: bodyObj,
+    });
+    return null;
+  }
+
   /**
    * Helper method to handle when the form is submitted
    */
@@ -330,27 +341,20 @@ class EditArticleForm extends React.Component {
               lng: longitude,
             },
           })
-            .then((res) => {
-              if (res.data.success) {
-                // Notify success
-                this.props.notifyMessage("Successfully updated article.");
+            .then(res => {
+              // Notify success
+              this.props.notifyMessage("Successfully updated article.");
 
-                // If creating the article was successful
-                this.setState({
-                  articleId: res.data.data._id,
-                  redirectToHome: true,
-                });
-              } else {
-                this.setState({
-                  error: res.data.error,
-                  pendingSubmit: false,
-                });
-              }
+              // If creating the article was successful
+              this.setState({
+                articleId: res.data.article._id,
+                redirectToHome: true,
+              });
             })
-            .catch((err) => {
+            .catch(error => {
               // If there was an error in making the request
               this.setState({
-                error: err,
+                error: error.response.data.error || error.response.data,
                 pendingSubmit: false,
               });
             });
@@ -520,6 +524,24 @@ class EditArticleForm extends React.Component {
                             {
                               component.componentType !== "image" && (
                                 <div className="component">
+                                  {
+                                    (this.state.changeOrder && this.state.body[index - 1]) && (
+                                      <i
+                                        className="fa fa-arrow-up"
+                                        aria-hidden="true"
+                                        onClick={() => this.switchBodyOrder('up', index)}
+                                      />
+                                    )
+                                  }
+                                  {
+                                    (this.state.changeOrder && this.state.body[index + 1]) && (
+                                      <i
+                                        className="fa fa-arrow-down"
+                                        aria-hidden="true"
+                                        onClick={() => this.switchBodyOrder('down', index)}
+                                      />
+                                    )
+                                  }
                                   <textarea
                                     placeholder={ placeholder }
                                     name="body"
@@ -589,6 +611,13 @@ class EditArticleForm extends React.Component {
                         onClick={ () => this.addNewComponent("header") }
                       />
                     </div>
+                    <input
+                      type="button"
+                      value={ this.state.changeOrder ? "Done changing order" : "Change section order" }
+                      className="btn btn-primary"
+                      onClick={() => this.setState({changeOrder: !this.state.changeOrder})}
+                    />
+                    <div className="line" />
 
                     <input
                       type="submit"

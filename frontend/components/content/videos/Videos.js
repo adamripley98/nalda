@@ -43,27 +43,19 @@ class Videos extends React.Component {
 
     // Pull the data
     axios.get('/api/videos')
-      .then((resp) => {
-        if (resp.data.success) {
-          // If everything was successful
-          this.setState({
-            videos: resp.data.data,
-            pending: false,
-            error: "",
-          });
-        } else {
-          // If an error was sent back from the database
-          this.setState({
-            pending: false,
-            error: resp.data.error,
-          });
-        }
+      .then(resp => {
+        // If everything was successful
+        this.setState({
+          videos: resp.data.videos,
+          pending: false,
+          error: "",
+        });
       })
       .catch(err => {
         // If there was an error with the request
         this.setState({
           pending: false,
-          error: err,
+          error: err.response.data.error || err.response.data,
         });
       });
   }

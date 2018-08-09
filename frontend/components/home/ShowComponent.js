@@ -48,6 +48,7 @@ class ShowComponent extends Component {
           content={c}
           key={`${this.props.component.title}-${c.contentId}`}
           index={index}
+          isVideo = {c.contentType === 'Videos'}
         />
       ))
     );

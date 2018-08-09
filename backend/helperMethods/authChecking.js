@@ -158,6 +158,14 @@ const ReviewCheck = (req, reviewId, listingId, cb) => {
         return;
       }
 
+      if (!listing) {
+        cb({
+          success: false,
+          error: 'Listing cannot be found',
+        });
+        return;
+      }
+
       // User is an admin, has privileges
       if (user.userType === 'admin' || listing.author.toString() === userId) {
         successful = true;

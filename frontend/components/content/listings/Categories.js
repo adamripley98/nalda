@@ -66,29 +66,20 @@ class Categories extends React.Component {
     const categoryName = this.props.match.params.categoryName;
 
     axios.get(`/api/listings/categories/${categoryName}`)
-      .then((resp) => {
-        if (resp.data.success) {
+      .then(resp => {
           // If there was no error
-          this.setState({
-            listings: resp.data.data,
-            pending: false,
-            error: "",
-            categoryName,
-          });
-        } else {
-          // If there was an error with the request itself
-          this.setState({
-            pending: false,
-            error: resp.data.error,
-            categoryName,
-          });
-        }
+        this.setState({
+          listings: resp.data.filteredListings,
+          pending: false,
+          error: "",
+          categoryName,
+        });
       })
       .catch(err => {
         // If there was an error with making the request
         this.setState({
           pending: false,
-          error: err,
+          error: err.response.data.error || err.response.data,
           categoryName,
         });
       });
