@@ -42,9 +42,13 @@ module.exports = () => {
   router.get('/:id', (req, res) => {
     // Find the id from the event url
     const id = req.params.id;
-
     // Check if user is logged in
     const userId = req.session.passport ? req.session.passport.user : null;
+
+    if (!id) {
+      res.status(404).send({error: 'Error pulling event'});
+      return;
+    }
 
     Event.findById(id)
     .then(event => {
@@ -67,7 +71,6 @@ module.exports = () => {
             if (user.userType === 'admin' || user.userType === 'curator') {
               canModify = true;
             }
-
             // Send back data
             res.send({
               author,

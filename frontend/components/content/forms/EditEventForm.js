@@ -14,6 +14,7 @@ import EXIF from 'exif-js';
 import ErrorMessage from '../../shared/ErrorMessage';
 import Medium from '../../shared/Medium';
 import Tags from '../../shared/Tags';
+import Loading from '../../shared/Loading';
 
 // Import helper functions
 import {processImg, getTargetSize} from '../../../helperMethods/imageUploading';
@@ -115,7 +116,7 @@ class EditEventForm extends React.Component {
         new google.maps.places.Autocomplete(location, options);
 
         // Populate the location field with the existing database value
-        document.getElementById('location').value = this.state.location.name;
+        document.getElementById('location').value = this.state.location ? this.state.location.name : null;
       }
 
       // Handle resizing textarea
@@ -286,27 +287,29 @@ class EditEventForm extends React.Component {
 
   // Helper method to display images
   displayImages() {
-    const images = this.state.images.map((image, i) => {
-      return (
-        <li key={uuid()}>
-          <img
-            src={image}
-            alt={"carousel image " + i}
-          />
-          <div onClick={() => this.removeImage(this.state.images.indexOf(image))}>
-            <i className="fa fa-close" aria-hidden="true" />
-          </div>
-        </li>
-      );
-    });
+    if (this.state.images && this.state.images.length) {
+      const images = this.state.images.map((image, i) => {
+        return (
+          <li key={uuid()}>
+            <img
+              src={image}
+              alt={"carousel image " + i}
+            />
+            <div onClick={() => this.removeImage(this.state.images.indexOf(image))}>
+              <i className="fa fa-close" aria-hidden="true" />
+            </div>
+          </li>
+        );
+      });
 
-    // If there are images to show
-    if (images && images.length) {
-      return (
-        <ul className="carousel-preview">
-          {images}
-        </ul>
-      );
+      // If there are images to show
+      if (images && images.length) {
+        return (
+          <ul className="carousel-preview">
+            {images}
+          </ul>
+        );
+      }
     }
 
     // Else
@@ -316,7 +319,7 @@ class EditEventForm extends React.Component {
   // Helper method to ensure all required fields are filled in validly
   inputValid() {
     return (this.state.title && this.state.description &&
-      this.state.image && this.state.website && this.state.startDate && this.state.endDate && document.getElementById("location").value);
+      this.state.image && this.state.website && this.state.startDate && this.state.endDate);
   }
 
   /**
@@ -325,7 +328,7 @@ class EditEventForm extends React.Component {
   handleSubmit(event) {
     // Denote that the request is pending
     this.setState({
-      pending: true,
+      pendingSubmit: true,
     });
 
     // Prevent the default submit action
@@ -415,7 +418,7 @@ class EditEventForm extends React.Component {
   render() {
     return (
       <div>
-        <Tags title="New Event" />
+        <Tags title="Edit Event" />
         { this.state.redirectToHome && <Redirect to={`/events/${this.state.eventId}`}/> }
         <Medium>
           <div className="card thin-form no-pad">
@@ -593,9 +596,9 @@ class EditEventForm extends React.Component {
                     </div>
                     <input
                       type="submit"
-                      value={ this.state.pending ? "Updating..." : "Update event" }
+                      value={ this.state.pendingSubmit ? "Updating..." : "Update event" }
                       className={
-                        !this.state.pending && this.inputValid() ? (
+                        !this.state.pendingSubmit && this.inputValid() ? (
                           "btn btn-primary full-width"
                         ) : (
                           "btn btn-primary disabled full-width"
