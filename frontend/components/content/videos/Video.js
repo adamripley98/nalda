@@ -51,21 +51,13 @@ class Video extends React.Component {
     // Find the video
     axios.get(`/api/videos/${id}`)
       .then(res => {
-        if (res.data.success) {
-          this.setState({
-            ...res.data.data,
-            author: res.data.author,
-            error: "",
-            pending: false,
-            canModify: res.data.canModify,
-          });
-        } else {
-          // If there was an error with the request
-          this.setState({
-            error: res.data.error,
-            pending: false,
-          });
-        }
+        this.setState({
+          ...res.data.video,
+          author: res.data.author,
+          error: "",
+          pending: false,
+          canModify: res.data.canModify,
+        });
       })
       .catch(err => {
         if (err.response.status === 404) {
@@ -76,7 +68,7 @@ class Video extends React.Component {
         } else {
           // If there was an error making the request
           this.setState({
-            error: err,
+            error: err.response.data.error || err.response.data,
             pending: false,
             deleteError: "",
             deletePending: false,
@@ -97,27 +89,20 @@ class Video extends React.Component {
 
     // Post to backend
     axios.delete(`/api/videos/${id}`)
-    .then((resp) => {
-      if (resp.data.success) {
-        // If the request was successful
-        // Collapse the modal upon success
-        $('#deleteModal').modal('toggle');
+    .then(() => {
+      // If the request was successful
+      // Collapse the modal upon success
+      $('#deleteModal').modal('toggle');
 
-        // Update the state
-        this.setState({
-          redirectToHome: true,
-          deletePending: false,
-        });
-      } else {
-        this.setState({
-          deleteError: resp.data.error,
-          deletePending: false,
-        });
-      }
-    })
-    .catch((err) => {
+      // Update the state
       this.setState({
-        deleteError: err,
+        redirectToHome: true,
+        deletePending: false,
+      });
+    })
+    .catch(err => {
+      this.setState({
+        deleteError: err.response.data.error || err.response.data,
         deletePending: false,
       });
     });

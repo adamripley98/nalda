@@ -176,28 +176,20 @@ class VideoForm extends React.Component {
             },
           })
             .then(resp => {
-              if (!resp.data.success) {
-                // Display error on frontend
-                this.setState({
-                  error: resp.data.error,
-                  pendingSubmit: false,
-                });
-              } else {
-                // Notify success
-                this.props.notifyMessage("Successfully created video");
+              // Notify success
+              this.props.notifyMessage("Successfully created video");
 
-                // Redirect to home after successful submission
-                this.setState({
-                  videoId: resp.data.data._id,
-                  redirectToHome: true,
-                  pendingSubmit: false,
-                });
-              }
+              // Redirect to home after successful submission
+              this.setState({
+                videoId: resp.data.video._id,
+                redirectToHome: true,
+                pendingSubmit: false,
+              });
             })
             .catch(err => {
               // If there was an error during the request
               this.setState({
-                error: err,
+                error: err.response.data.error || err.response.data,
               });
             });
         }
@@ -222,6 +214,7 @@ class VideoForm extends React.Component {
             <div className="tabs">
               <Link className="tab" to="/articles/new">Article</Link>
               <Link className="tab" to="/listings/new">Listing</Link>
+              <Link className="tab" to="/events/new">Event</Link>
               <Link className="tab active" to="/videos/new">Video</Link>
             </div>
             <form className="pad-1" onSubmit={ this.handleSubmit }>

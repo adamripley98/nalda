@@ -56,25 +56,17 @@ class EditVideoForm extends React.Component {
     // Pull existing data from the database
     axios.get(`/api/videos/${id}`)
       .then(res => {
-        if (res.data.success) {
           // If there was no error
-          this.setState({
-            pending: false,
-            error: "",
-            ...res.data.data,
-            videoId: id,
-          });
-        } else {
-          // There was an error in the request
-          this.setState({
-            error: res.data.error.message,
-            pending: false,
-          });
-        }
+        this.setState({
+          pending: false,
+          error: "",
+          ...res.data.video,
+          videoId: id,
+        });
       })
       .catch(err => {
         this.setState({
-          error: err,
+          error: err.response.data.error || err.response.data,
           pending: false,
         });
       });
@@ -220,27 +212,19 @@ class EditVideoForm extends React.Component {
               lng: longitude,
             },
           })
-          .then((resp) => {
-            if (!resp.data.success) {
-              // Display error on frontend
-              this.setState({
-                error: resp.data.error,
-                pendingSubmit: false,
-              });
-            } else {
-              // Notify success
-              this.props.notifyMessage("Successfully edited video.");
+          .then(() => {
+            // Notify success
+            this.props.notifyMessage("Successfully edited video.");
 
-              // Redirect to home after successful submission
-              this.setState({
-                redirectToHome: true,
-                pendingSubmit: false,
-              });
-            }
-          })
-          .catch((err) => {
+            // Redirect to home after successful submission
             this.setState({
-              error: err,
+              redirectToHome: true,
+              pendingSubmit: false,
+            });
+          })
+          .catch(err => {
+            this.setState({
+              error: err.response.data.error || err.response.data,
             });
           });
         }

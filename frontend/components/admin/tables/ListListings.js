@@ -20,19 +20,12 @@ class ListListings extends Component {
   componentDidMount() {
     axios.get('/api/admin/listings')
       .then(res => {
-        if (res.data.error) {
-          this.setState({
-            pending: false,
-            error: res.data.error,
-          });
-          return;
-        }
         this.setState({
           pending: false,
           listings: res.data.listings,
         });
       })
-      .catch(err => this.setState({ error: err.message }));
+      .catch(() => this.setState({ error: 'Error pulling listings.' }));
   }
 
   // Render the table

@@ -98,13 +98,11 @@ module.exports = () => {
           title: article.title,
         }));
         res.send({
-          success: true,
           articles,
         });
       })
       .catch(err => {
-        res.send({
-          success: false,
+        res.status(404).send({
           error: err.message,
         });
       });
@@ -121,13 +119,11 @@ module.exports = () => {
           title: listing.title,
         }));
         res.send({
-          success: true,
           listings,
         });
       })
       .catch(err => {
-        res.send({
-          success: false,
+        res.status(404).send({
           error: err.message,
         });
       });
@@ -144,13 +140,11 @@ module.exports = () => {
           title: video.title,
         }));
         res.send({
-          success: true,
           videos,
         });
       })
       .catch(err => {
-        res.send({
-          success: false,
+        res.status(404).send({
           error: err.message,
         });
       });
@@ -168,13 +162,11 @@ module.exports = () => {
           username: user.username,
         }));
         res.send({
-          success: true,
           admins,
         });
       })
       .catch(err => {
-        res.send({
-          success: false,
+        res.status(404).send({
           error: err.message,
         });
       });
@@ -192,13 +184,11 @@ module.exports = () => {
           username: user.username,
         }));
         res.send({
-          success: true,
           curators,
         });
       })
       .catch(err => {
-        res.send({
-          success: false,
+        res.status(404).send({
           error: err.message,
         });
       });
@@ -216,16 +206,48 @@ module.exports = () => {
           username: user.username,
         }));
         res.send({
-          success: true,
           users: userObjs,
         });
       })
       .catch(err => {
         res.send({
-          success: false,
           error: err.message,
         });
       });
+  });
+
+  /**
+   * Get a list of all admin, curators, and users
+   */
+  router.get('/admin/all', (req, res) => {
+    User.find({})
+    .then(allUsers => {
+      // Filter and display important info for different types of users
+      const users = allUsers.filter(user => user.userType === 'user').map(user => ({
+        _id: user._id,
+        name: user.name,
+        username: user.username,
+      }));
+      const curators = allUsers.filter(user => user.userType === 'curator').map(user => ({
+        _id: user._id,
+        name: user.name,
+        username: user.username,
+      }));
+      const admins = allUsers.filter(user => user.userType === 'admin').map(user => ({
+        _id: user._id,
+        name: user.name,
+        username: user.username,
+      }));
+      // Send the results
+      res.send({
+        users,
+        curators,
+        admins,
+      });
+    })
+    .catch(err => {
+      res.status(404).send({error: err.message});
+    });
   });
 
   /**
@@ -235,45 +257,36 @@ module.exports = () => {
     AdminCheck(req, (authRes) => {
       // Return any authentication errors
       if (!authRes.success) {
-        res.send({
-          success: false,
+        res.status(404).send({
           error: authRes.error,
         });
         return;
       }
 
       // Find content
-      Homepage.find({}, (errHomepage, homepageContent) => {
+      Homepage.find({}, (errHomepage, home) => {
         // Send back any errors
         if (errHomepage) {
-          res.send({
-            success: false,
+          res.status(404).send({
             error: 'Error finding content.',
           });
           return;
         }
 
-        const homepage = homepageContent[0];
+        const homepage = home[0];
         pullData(homepage.components, (resp) => {
           if (!resp.success) {
-            res.send({
-              success: false,
+            res.status(404).send({
               error: resp.error,
             });
           } else {
-            const home = {
+            const homepageContent = {
               banner: homepage.banner,
               components: resp.returnComponents,
             };
 
             // Send back information
-            res.send({
-              success: true,
-              error: '',
-              data: {
-                homepageContent: home,
-              }
-            });
+            res.send({homepageContent});
           }
         });
       });
@@ -289,60 +302,47 @@ module.exports = () => {
     AdminCheck(req, (authRes) => {
       // Return any authentication errors
       if (!authRes.success) {
-        res.send({
-          success: false,
+        res.status(404).send({
           error: authRes.error,
         });
-      } else {
-        // If user is an admin, finds given user to add in Mongo
-        User.findOne({username: req.body.userToAdd}, (err, user) => {
-          // Lets them know that if there is an error
-          if (err) {
-            res.send({
-              success: false,
-              error: 'Error adding admin.',
-            });
-          // Makes sure that user exists
-          } else if (!user) {
-            res.send({
-              success: false,
-              error: req.body.userToAdd + ' does not seem to exist!'
-            });
-          } else if (user.userType === "admin") {
-            res.send({
-              success: false,
-              error: user.name + ' is already an admin.',
-            });
-          } else {
-            // Makes given user an admin
-            user.userType = "admin";
-            // Save changes in Mongo
-            user.save((errSave) => {
-              if (errSave) {
-                res.send({
-                  success: false,
-                  error: "Error saving admin.",
-                });
-              } else {
-                // Create new admin to pass back
-                const newAdmin = {
-                  name: user.name,
-                  username: user.username,
-                  userId: user._id,
-                };
-                // If no error saving new user, returns successfully
-                res.send({
-                  success: true,
-                  data: {
-                    newAdmin,
-                  },
-                  error: '',
-                });
-              }
-            });
-          }
-        });
+        return;
       }
+      // If user is an admin, finds given user to add in Mongo
+      User.findOne({username: req.body.userToAdd})
+      .then(user => {
+        // Check for errors
+        let error = '';
+        if (!user) {
+          error = req.body.userToAdd + ' does not seem to exist!';
+        } else if (user.userType === "admin") {
+          error = user.name + ' is already an admin.';
+        }
+
+        if (error) {
+          res.status(404).send({error});
+          return;
+        }
+        // Makes given user an admin
+        user.userType = "admin";
+        // Save changes in Mongo
+        user.save()
+        .then(() => {
+          // If no error saving new user, returns successfully
+          res.send({
+            newAdmin: {
+              name: user.name,
+              username: user.username,
+              userId: user._id,
+            }
+          });
+        })
+        .catch(() => {
+          res.status(404).send({error: 'Error saving admin'});
+        });
+      })
+      .catch(err => {
+        res.status(404).send({error: err.message});
+      });
     });
   });
 
@@ -355,132 +355,103 @@ module.exports = () => {
     AdminCheck(req, (authRes) => {
       // Return any authentication errors
       if (!authRes.success) {
-        res.send({
-          success: false,
+        res.status(404).send({
           error: authRes.error,
         });
-      } else {
-        // If user is an admin, finds given user in Mongo
-        User.findOne({username: req.body.userToAdd}, (err, user) => {
-          // Lets them know that if there is an error
-          if (err) {
-            res.send({
-              success: false,
-              error: "Error adding curator.",
-            });
-          // Makes sure that user exists
-          } else if (!user) {
-            res.send({
-              success: false,
-              error: req.body.userToAdd + ' does not seem to exist!'
-            });
-          } else if (user.userType === "curator") {
-            res.send({
-              success: false,
-              error: user.name + ' is already a curator.'
-            });
-          } else if (user.userType === "admin") {
-            res.send({
-              success: false,
-              error: 'Cannot revoke admin privileges.'
-            });
-          } else {
-            // Makes given user an admin
-            user.userType = "curator";
-            // Save changes in mongo
-            user.save((errSave) => {
-              if (errSave) {
-                res.send({
-                  success: false,
-                  error: "Error saving curator.",
-                });
-              } else {
-                // Create new admin to pass back
-                const newCurator = {
-                  name: user.name,
-                  username: user.username,
-                  userId: user._id,
-                };
-                // If no error saving new user, returns successfully
-                res.send({
-                  success: true,
-                  error: '',
-                  data: {
-                    newCurator,
-                  }
-                });
-              }
-            });
-          }
-        });
+        return;
       }
+
+      // If user is an admin, finds given user in Mongo
+      User.findOne({username: req.body.userToAdd})
+      .then(user => {
+        // Error checking
+        let error = '';
+        if (!user) {
+          error = req.body.userToAdd + ' does not seem to exist!';
+        } else if (user.userType === "curator") {
+          error = user.name + ' is already a curator.';
+        } else if (user.userType === "admin") {
+          error = 'Cannot revoke admin privileges.';
+        }
+
+        if (error) {
+          res.status(404).send(error);
+          return;
+        }
+
+        // Makes given user an admin
+        user.userType = "curator";
+        // Save changes in mongo
+        user.save()
+        .then(() => {
+          // If no error saving new user, returns successfully
+          res.send({
+            newCurator: {
+              name: user.name,
+              username: user.username,
+              userId: user._id,
+            }
+          });
+        })
+        .catch(() => {
+          res.status(404).send({error: 'Error saving curator'});
+        });
+      })
+      .catch(err => {
+        res.status(404).send({error: err.message});
+      });
     });
   });
 
   /**
-   * Route to handle adding new curators who are allowed to create content but not add others
-   * @param userToAdd
+   * Route to handle removing curators
+   * @param userToRemove
    */
   router.post('/curator/remove', (req, res) => {
     // Check to make sure poster is an admin
     AdminCheck(req, (authRes) => {
       // Return any authentication errors
       if (!authRes.success) {
-        res.send({
-          success: false,
-          error: authRes.error,
-        });
-      } else {
-        // finds given user in Mongo
-        User.findOne({username: req.body.userToAdd}, (err, user) => {
-          // Lets them know that if there is an error
-          if (err) {
-            res.send({
-              success: false,
-              error: "Error finding content",
-            });
-          // Makes sure that user exists
-          } else if (!user) {
-            res.send({
-              success: false,
-              error: req.body.userToAdd + ' does not seem to exist!'
-            });
-          } else {
-            // Revokes curator privileges, don't have power to revoke admin privilege though
-            if (user.userType === "curator") {
-              user.userType = "user";
-              // Save changes in mongo
-              user.save((errSave) => {
-                if (errSave) {
-                  res.send({
-                    success: false,
-                    error: 'Error saving curator.',
-                  });
-                } else {
-                  const removedCurator = {
-                    name: user.name,
-                    username: user.username,
-                    userId: user._id,
-                  };
-                  // If no error saving new user, returns successfully
-                  res.send({
-                    success: true,
-                    error: '',
-                    data: {
-                      removedCurator,
-                    },
-                  });
-                }
-              });
-            } else {
-              res.send({
-                success: false,
-                error: 'Cannot revoke admin privileges.',
-              });
-            }
-          }
-        });
+        res.status(404).send({error: authRes.error});
+        return;
       }
+
+      // Finds given user in Mongo
+      User.findOne({username: req.body.userToRemove})
+      .then(user => {
+        let error = '';
+        if (!user) {
+          error = req.body.userToAdd + ' does not seem to exist!';
+        } else if (user.userType !== 'curator') {
+          error = 'Cannot revoke privileges.';
+        }
+
+        if (error) {
+          res.status(404).send({error});
+          return;
+        }
+        // Revokes curator privileges, don't have power to revoke admin privilege though
+        user.userType = "user";
+        user.save()
+        .then(() => {
+          // If no error saving new user, returns successfully
+          res.send({
+            success: true,
+            error: '',
+            removedCurator: {
+              name: user.name,
+              username: user.username,
+              userId: user._id,
+            },
+          });
+        })
+        .catch(() => {
+          res.status(404).send({error: 'Error saving curator'});
+        });
+      })
+      .catch(() => {
+        res.status(404).send({error: 'Error removing user.'});
+      });
     });
   });
 

@@ -243,29 +243,22 @@ class Account extends Component {
             profilePictureChanged: this.state.profilePictureChanged,
           })
             .then(res => {
-              if (!res.data.success) {
-                this.setState({
-                  pending: false,
-                  error: res.data.error,
-                });
-              } else {
-                this.props.changeName(this.state.name);
-                this.props.changeLocation(newLocation.name);
-                if (res.data.data) {
-                  this.props.changeProfilePic(res.data.data);
-                }
-
-                this.setState({
-                  pending: false,
-                  success: "Successfully updated account information.",
-                  profilePictureChanged: false,
-                });
+              this.props.changeName(this.state.name);
+              this.props.changeLocation(newLocation.name);
+              if (res.data.profilePicture) {
+                this.props.changeProfilePic(res.data.profilePicture);
               }
+
+              this.setState({
+                pending: false,
+                success: "Successfully updated account information.",
+                profilePictureChanged: false,
+              });
             })
             .catch(err => {
               this.setState({
                 pending: false,
-                error: err,
+                error: err.response.data.error || err.response.data,
               });
             });
         } else {

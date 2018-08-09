@@ -20,19 +20,12 @@ class ListVideos extends Component {
   componentDidMount() {
     axios.get('/api/admin/videos')
       .then(res => {
-        if (res.data.error) {
-          this.setState({
-            pending: false,
-            error: res.data.error,
-          });
-          return;
-        }
         this.setState({
           pending: false,
           videos: res.data.videos,
         });
       })
-      .catch(err => this.setState({ error: err.message }));
+      .catch(() => this.setState({ error: 'Cannot pull videos' }));
   }
 
   // Render the table

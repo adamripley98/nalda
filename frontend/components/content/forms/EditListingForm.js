@@ -141,32 +141,24 @@ class EditListingForm extends React.Component {
     // Pull existing data from the database
     axios.get(`/api/listings/${id}`)
       .then(res => {
-        if (res.data.success) {
-          const additionalAmenities = res.data.data.additionalAmenities;
-          let additionalAmenitiesString = "";
-          if (additionalAmenities && additionalAmenities.length) {
-            additionalAmenitiesString = additionalAmenities.join(", ");
-          }
-          // If there was no error
-          this.setState({
-            pending: false,
-            error: "",
-            ...res.data.data,
-            additionalAmenitiesString,
-            rating: res.data.data.rating,
-            _id: id,
-          });
-        } else {
-          // There was an error in the request
-          this.setState({
-            error: res.data.error.message,
-            pending: false,
-          });
+        const additionalAmenities = res.data.data.additionalAmenities;
+        let additionalAmenitiesString = "";
+        if (additionalAmenities && additionalAmenities.length) {
+          additionalAmenitiesString = additionalAmenities.join(", ");
         }
+        // If there was no error
+        this.setState({
+          pending: false,
+          error: "",
+          ...res.data.data,
+          additionalAmenitiesString,
+          rating: res.data.data.rating,
+          _id: id,
+        });
       })
       .catch(err => {
         this.setState({
-          error: err,
+          error: err.response.data.error || err.response.data,
           pending: false,
         });
       });
@@ -525,28 +517,20 @@ class EditListingForm extends React.Component {
             website: this.state.website,
             categories: this.state.categories,
           })
-            .then((resp) => {
-              // Display any errors
-              if (!resp.data.success) {
-                this.setState({
-                  error: resp.data.error,
-                  pendingSubmit: false,
-                });
-              } else {
-                // Notify success
-                this.props.notifyMessage("Successfully updated listing.");
+            .then(resp => {
+              // Notify success
+              this.props.notifyMessage("Successfully updated listing.");
 
-                // Redirect to home if successful
-                this.setState({
-                  listingId: resp.data.data._id,
-                  redirectToHome: true,
-                  pendingSubmit: false,
-                });
-              }
+              // Redirect to home if successful
+              this.setState({
+                listingId: resp.data.listing._id,
+                redirectToHome: true,
+                pendingSubmit: false,
+              });
             })
             .catch(err => {
               this.setState({
-                error: err,
+                error: err.response.data.error || err.response.data,
                 pendingSubmit: false,
               });
             });
@@ -662,7 +646,7 @@ class EditListingForm extends React.Component {
                     onChange={ this.handleChangeTitle }
                   />
                   <label>
-                    Hero Image (url to an image)
+                    Hero Image
                   </label>
                   {
                     this.state.imagePreview && (

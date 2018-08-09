@@ -46,24 +46,17 @@ class Home extends React.Component {
     // Pull all articles, listings, and videos from the database
     axios.get('/api/home/')
       .then(resp => {
-        if (resp.data.success) {
-          this.setState({
-            banner: resp.data.banner,
-            components: resp.data.components,
-            pending: false,
-            error: '',
-          });
-        } else {
-          this.setState({
-            pending: false,
-            error: resp.data.error,
-          });
-        }
+        this.setState({
+          banner: resp.data.banner,
+          components: resp.data.components,
+          pending: false,
+          error: '',
+        });
       })
-      .catch(err => {
+      .catch(error => {
         this.setState({
           pending: false,
-          error: err.message || 'Something went wrong. Please try again later.',
+          error: error.response.data.error || error.response.data || 'Something went wrong. Please try again later.',
         });
       });
   }
