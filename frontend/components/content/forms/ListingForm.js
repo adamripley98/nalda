@@ -606,6 +606,7 @@ class ListingForm extends React.Component {
             <div className="tabs">
               <Link className="tab" to="/articles/new">Article</Link>
               <Link className="tab active" to="/listings/new">Listing</Link>
+              <Link className="tab" to="/events/new">Event</Link>
               <Link className="tab" to="/videos/new">Video</Link>
             </div>
             <form className="pad-1" onSubmit={ this.handleSubmit }>

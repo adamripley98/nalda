@@ -8,10 +8,6 @@
 const express = require('express');
 const router = express.Router();
 const async = require('async');
-const AWS = require('aws-sdk');
-const uuid = require('uuid-v4');
-const sharp = require('sharp');
-const request = require('request').defaults({ encoding: null });
 
 // Import database models
 const Listing = require('../models/listing');
@@ -21,18 +17,6 @@ const Homepage = require('../models/homepage');
 // Import helper methods
 const {CuratorOrAdminCheck} = require('../helperMethods/authChecking');
 const {ResizeAndUploadImage, DeleteImages} = require('../helperMethods/imageProcessing');
-
-// Isolate environmental variables
-const AWS_BUCKET_NAME = process.env.AWS_BUCKET_NAME;
-const AWS_USER_KEY = process.env.AWS_USER_KEY;
-const AWS_USER_SECRET = process.env.AWS_USER_SECRET;
-
-// Set up bucket
-const s3bucket = new AWS.S3({
-  accessKeyId: AWS_USER_KEY,
-  secretAccessKey: AWS_USER_SECRET,
-  Bucket: AWS_BUCKET_NAME,
-});
 
 // Export the following methods for routing
 module.exports = () => {

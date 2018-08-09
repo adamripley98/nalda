@@ -39,11 +39,13 @@ import Categories from '../components/content/listings/Categories';
 import ArticleForm from '../components/content/forms/ArticleForm';
 import ListingForm from '../components/content/forms/ListingForm';
 import VideoForm from '../components/content/forms/VideoForm';
+import EventForm from '../components/content/forms/EventForm';
 
 // Content editing components
 import EditArticleForm from '../components/content/forms/EditArticleForm';
 import EditListingForm from '../components/content/forms/EditListingForm';
 import EditVideoForm from '../components/content/forms/EditVideoForm';
+import EditEventForm from '../components/content/forms/EditEventForm';
 
 // Other components
 import About from '../components/About';
@@ -267,6 +269,10 @@ class AppContainer extends Component {
                 <Route exact path="/videos/new" component={requireCurator(VideoForm)} />
                 <Route exact path="/videos/:id" component={Video} />
                 <Route exact path="/videos/:id/edit" component={requireCurator(EditVideoForm)} />
+
+                { /* Routes for events */ }
+                <Route exact path="/events/new" component={requireCurator(EventForm)} />
+                <Route exact path="/events/:id/edit" component={requireCurator(EditEventForm)} />
 
                 { /* 404 if no other route was matched */ }
                 <Route exact path="/*" component={NotFoundSection}/>
