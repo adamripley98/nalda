@@ -11,35 +11,27 @@ module.exports = (passport) => {
     passport.authenticate('local', (passportErr, user) => {
       // If there was an error in the authentication
       if (passportErr) {
-        res.send({
-          success: false,
-          error: passportErr,
-        });
-      } else if (!user) {
-        // If the user doesn't actually exist
-        res.send({
-          success: false,
-          error: 'Invalid email or password.'
-        });
-      } else {
-        // Built in passport login method
-        req.logIn(user, (loginErr) => {
-          // Error logging in
-          if (loginErr) {
-            res.send({
-              success: false,
-              error: loginErr,
-            });
-          } else {
-            // Finally, if there is no error, send back user
-            res.send({
-              success: true,
-              error: false,
-              user,
-            });
-          }
-        });
+        console.log('pass err');
+        res.status(404).send({error: passportErr});
+        return;
       }
+      // If the user doesn't actually exist
+      if (!user) {
+        res.status(404).send({error: 'Invalid email or password.'});
+        return;
+      }
+      // Built in passport login method
+      req.logIn(user, (loginErr) => {
+        // Error logging in
+        if (loginErr) {
+          console.log('log err');
+          res.status(404).send({error: loginErr});
+          return;
+        }
+        // Finally, if there is no error, send back user
+        res.send({user});
+        return;
+      });
     })(req, res, next);
   });
 

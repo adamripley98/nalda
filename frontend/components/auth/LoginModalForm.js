@@ -69,33 +69,25 @@ class LoginModalForm extends Component {
         username,
         password,
       })
-        .then((resp) => {
-          // If there was an issue with logging in, display error
-          if (!resp.data.success) {
-            this.setState({
-              error: resp.data.error,
-              pending: false,
-            });
-          } else {
-            // Collapse the modal
-            $('#loginModal').modal('toggle');
+        .then(resp => {
+          // Collapse the modal
+          $('#loginModal').modal('toggle');
 
-            // Dispatch the notification
-            this.props.notifyMessage("Successfully logged in.");
+          // Dispatch the notification
+          this.props.notifyMessage("Successfully logged in.");
 
-            // Dispatch login event for redux state
-            this.props.onLogin(
-              resp.data.user._id,
-              resp.data.user.userType,
-              resp.data.user.name,
-              resp.data.user.location ? resp.data.user.location.name : null,
-              resp.data.user.profilePicture,
-            );
-          }
+          // Dispatch login event for redux state
+          this.props.onLogin(
+            resp.data.user._id,
+            resp.data.user.userType,
+            resp.data.user.name,
+            resp.data.user.location ? resp.data.user.location.name : null,
+            resp.data.user.profilePicture,
+          );
         })
         .catch(err => {
           this.setState({
-            error: err,
+            error: err.response.data.error || err.response.data,
             pending: false,
           });
         });
