@@ -95,6 +95,7 @@ class AppContainer extends Component {
   // Constructor method
   constructor(props) {
     super(props);
+
     // Set the state
     this.state = {
       redirectToLogin: false,
@@ -109,8 +110,6 @@ class AppContainer extends Component {
   componentDidMount() {
     window.scrollTo(0, 0);
     // Isolate variables
-    const onLogout = this.props.onLogout;
-    const onLogin = this.props.onLogin;
     const userId = this.props.userId;
 
     // Call to backend (routes.js)
@@ -119,28 +118,23 @@ class AppContainer extends Component {
         userId,
       }
     })
-    .then(resp => {
-      // Redux persist and backend state are NOT synced. Need to wipe redux state and redirect to login
-      if (!resp.data.success) {
-        // Dispatch the logout action
-        onLogout();
+      .then(resp => {
+        // Redux persist and backend state are NOT synced. Need to wipe redux state and redirect to login
+        if (!resp.data.success) {
+          // Dispatch the logout action
+          this.props.onLogout();
+        } else {
+          // Get the user from the response
+          const user = resp.data.user;
 
-        // Set the state to redirect to login
-        this.setState({
-          redirectToLogin: true,
-        });
-      } else {
-        // Get the user from the response
-        const user = resp.data.user;
-
-        // If user is logged in through facebook on backend, update on Frontend
-        if (resp.data.oAuthLogin) {
-          // Send redux event
-          onLogin(user.userId, user.userType, user.name, user.location || null, user.profilePicture);
+          // If user is logged in through facebook on backend, update on Frontend
+          if (resp.data.oAuthLogin) {
+            // Send redux event
+            this.props.onLogin(user.userId, user.userType, user.name, user.location || null, user.profilePicture);
+          }
         }
-      }
-    })
-    .catch(() => {});
+      })
+      .catch(() => {/* do nothing */});
   }
 
   // Render the application

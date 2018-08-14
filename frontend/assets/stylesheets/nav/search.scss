@@ -1,0 +1,212 @@
+// Styling the serachbar
+.search {
+  margin: 0.5rem 0rem;
+  background: $transparent;
+  border-radius: 3px;
+  padding: 0.1rem 0.5rem;
+  flex: 1;
+  max-width: 100% !important;
+  display: flex;
+  transition: all 0.2s ease;
+
+  // Search icon to the left of the search bar
+  .fa-search {
+    color: white;
+    padding-right: 0.7rem;
+    font-size: 1rem;
+    padding-top: 0.6rem;
+    padding-left: 0.2rem;
+  }
+
+  // Have the search bar take up the entire space it occupies
+  form {
+    width: 100%;
+    display: block;
+
+    .location {
+      color: white;
+      font-weight: normal;
+      text-align: right;
+      height: 0;
+      overflow: visible;
+      margin: 0;
+      transform: translateY(0.4rem);
+      transition: all 0.2s ease;
+    }
+  }
+
+  // Smaller icon and search bar with a shorter placeholder
+  // NOTE this only displays on mobile
+  .small {
+    display: none !important;
+  }
+
+  // Styling the form control within the form
+  .form-control {
+    border: 0px solid !important;
+    flex: 1;
+    padding-left: 0rem;
+    padding-right: 0rem;
+    background: transparent;
+    color: white;
+
+    &::-webkit-input-placeholder {
+      color: white;
+      opacity: 0.7;
+    }
+
+    &::-moz-placeholder {
+      color: white;
+      opacity: 0.7;
+    }
+
+    &:-ms-input-placeholder {
+      color: white;
+      opacity: 0.7;
+    }
+
+    &:-moz-placeholder {
+      color: white;
+      opacity: 0.7;
+    }
+  }
+
+  // Clickable shade that renders below the navbar when the user is searching
+  .search-shade {
+    position: fixed;
+    left: 0;
+    z-index: -2;
+    cursor: hand;
+    cursor: pointer;
+    background: rgba(0, 0, 0, 0.4);
+    width: 100%;
+    height: 100%;
+    top: 57.19px;
+  }
+
+  &.active {
+    background: white;
+
+    .fa-search {
+      color: $gray;
+    }
+
+    .location {
+      color: $dark-gray;
+    }
+
+    .form-control {
+      border: 0px solid !important;
+      flex: 1;
+      padding-left: 0rem;
+      padding-right: 0rem;
+      background: transparent;
+      color: $dark-gray;
+
+      $color: $gray;
+
+      &::-webkit-input-placeholder {
+        color: $color;
+      }
+
+      &::-moz-placeholder {
+        color: $color;
+      }
+
+      &:-ms-input-placeholder {
+        color: $color;
+      }
+
+      &:-moz-placeholder {
+        color: $color;
+      }
+    }
+  }
+}
+
+// Handle when the search is active on smaller screens
+@media screen and (max-width: 648px) {
+  .nav {
+    .logo,
+    .sidebar-wrapper,
+    .user-info {
+      transition: all 0.4s ease;
+    }
+
+    .fa-search {
+      transition: all 0.4s ease;
+    }
+
+    #search {
+      transition: all 0.4s ease;
+      width: 100%;
+    }
+  }
+
+  .nav.search-active {
+    .logo {
+      transform: translateX(-5rem);
+    }
+
+    .sidebar-wrapper,
+    .user-info {
+      transform: translateX(5rem);
+    }
+
+    .logo, .sidebar-wrapper {
+      width: 0 !important;
+      padding: 0 !important;
+    }
+  }
+}
+
+// Styling search suggestions
+.suggestions {
+  position: fixed;
+  width: 100%;
+  height: auto;
+  padding: 1rem;
+  top: 57.19px;
+  background: white;
+  left: 0;
+  border-top: 1px solid $border;
+  box-shadow: 0rem 0.1rem 0.05rem rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid $border;
+
+  .col-12 {
+    margin-bottom: 0.5rem;
+  }
+
+  // Section titles at the top of each category of search results
+  // The categories are articles, listings, videos, and curators
+  h4 {
+    color: $dark-gray;
+  }
+
+  // Each result is a link to the corresponding content
+  a {
+    color: $gray;
+
+    &:hover,
+    &:active,
+    &:focus {
+      color: $dark-gray;
+    }
+  }
+}
+
+/**
+ * Swap the placeholder on smaller screen sizes for a shorter version
+ * NOTE the only way to do this is with a new input field
+ */
+@media screen and (max-width: 718px) {
+  .nav .search {
+    .small {
+      display: block !important;
+    }
+
+    .large {
+      display: none !important;
+    }
+  }
+}
