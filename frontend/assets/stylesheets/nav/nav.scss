@@ -1,0 +1,551 @@
+@import './search';
+
+$height: 57.19px;
+
+/**
+ * Spacer put at the top of the page to make room for the fixed navbar
+ * Essentially, this pushes the page content down the height of the navbar
+ */
+.nav-space {
+  height: $height;
+  width: 100%;
+  position: relative;
+}
+
+.nav {
+  border-bottom: 1px solid $border;
+  font-weight: bold;
+  background: $secondary;
+  color: $gray;
+  padding: 0rem 0.5rem;
+  display: flex;
+  position: fixed;
+  width: 100%;
+  z-index: 1299 !important;
+  box-shadow: 0rem 0.1rem 0.05rem rgba(0, 0, 0, 0.05);
+
+  // Style the logo
+  .logo {
+    padding: 0.5rem 1rem;
+    border-right: 1px solid $border;
+
+    svg {
+      padding-top: 0.3rem;
+      width: auto;
+      height: 2.2rem;
+    }
+  }
+
+  // Styling the serachbar--a component of the navbar
+  .search {
+    margin: 0.5rem 0rem;
+    background: $transparent;
+    border-radius: 3px;
+    padding: 0.1rem 0.5rem;
+    flex: 1;
+    max-width: 100% !important;
+    display: flex;
+    transition: all 0.2s ease;
+
+    // Search icon to the left of the search bar
+    .fa-search {
+      color: white;
+      padding-right: 0.7rem;
+      font-size: 1rem;
+      padding-top: 0.6rem;
+      padding-left: 0.2rem;
+    }
+
+    // Have the search bar take up the entire space it occupies
+    form {
+      width: 100%;
+      display: block;
+
+      .location {
+        color: white;
+        font-weight: normal;
+        text-align: right;
+        height: 0;
+        overflow: visible;
+        margin: 0;
+        transform: translateY(0.4rem);
+        transition: all 0.2s ease;
+      }
+    }
+
+    // Smaller icon and search bar with a shorter placeholder
+    // NOTE this only displays on mobile
+    .small {
+      display: none !important;
+    }
+
+    // Styling the form control within the form
+    .form-control {
+      border: 0px solid !important;
+      flex: 1;
+      padding-left: 0rem;
+      padding-right: 0rem;
+      background: transparent;
+      color: white;
+
+      &::-webkit-input-placeholder {
+        color: white;
+        opacity: 0.7;
+      }
+
+      &::-moz-placeholder {
+        color: white;
+        opacity: 0.7;
+      }
+
+      &:-ms-input-placeholder {
+        color: white;
+        opacity: 0.7;
+      }
+
+      &:-moz-placeholder {
+        color: white;
+        opacity: 0.7;
+      }
+    }
+
+    // Clickable shade that renders below the navbar when the user is searching
+    .search-shade {
+      position: fixed;
+      left: 0;
+      z-index: -2;
+      cursor: hand;
+      cursor: pointer;
+      background: rgba(0, 0, 0, 0.4);
+      width: 100%;
+      height: 100%;
+      top: 57.19px;
+    }
+
+    &.active {
+      background: white;
+
+      .fa-search {
+        color: $gray;
+      }
+
+      .location {
+        color: $dark-gray;
+      }
+
+      .form-control {
+        border: 0px solid !important;
+        flex: 1;
+        padding-left: 0rem;
+        padding-right: 0rem;
+        background: transparent;
+        color: $dark-gray;
+
+        $color: $gray;
+
+        &::-webkit-input-placeholder {
+          color: $color;
+        }
+
+        &::-moz-placeholder {
+          color: $color;
+        }
+
+        &:-ms-input-placeholder {
+          color: $color;
+        }
+
+        &:-moz-placeholder {
+          color: $color;
+        }
+      }
+    }
+  }
+
+  // Information about the user shown to the right of the navbar
+  // This includes the user's name, location, and profile picture
+  // The amount of information shown depends on the width of the screen
+  .user-info {
+    margin: 0;
+    padding: 0;
+    height: 57.19px;
+    display: flex;
+
+    .user-text {
+      flex: 1;
+      text-align: right;
+      display: flex;
+      padding: 1rem 0rem;
+      color: white;
+    }
+
+    .user-img {
+      height: 2rem;
+      margin: 0.8rem;
+      width: 2rem;
+      border-radius: 50%;
+      background: $gray;
+      display: inline-block;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      display: inline-block;
+    }
+
+    // If the user is not signed in, then there is no information to display
+    // Instead, there are links to login and register
+    .sign-in-links {
+      height: 100%;
+      text-align: right;
+      padding-top: 1rem;
+      padding-right: 1rem;
+      padding-left: 0.5rem;
+
+      a {
+        color: white;
+        margin-left: 1rem;
+
+        &:hover {
+          opacity: 0.8;
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Styling search suggestions
+ */
+.suggestions {
+  position: fixed;
+  width: 100%;
+  height: auto;
+  padding: 1rem;
+  top: 57.19px;
+  background: white;
+  left: 0;
+  border-top: 1px solid $border;
+  box-shadow: 0rem 0.1rem 0.05rem rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid $border;
+
+  .col-12 {
+    margin-bottom: 0.5rem;
+  }
+
+  // Section titles at the top of each category of search results
+  // The categories are articles, listings, videos, and curators
+  h4 {
+    color: $dark-gray;
+  }
+
+  // Each result is a link to the corresponding content
+  a {
+    color: $gray;
+
+    &:hover,
+    &:active,
+    &:focus {
+      color: $dark-gray;
+    }
+  }
+}
+
+/**
+ * Styling the menu used to trigger the sidebar
+ */
+.menu {
+  padding: 1.2rem 0.6rem 0rem 1rem;
+  z-index: 1301;
+  width: 3.6rem;
+
+  // Three menu bars which toggle the menu
+  .bars {
+    width: 1.5rem;
+    cursor: hand;
+    cursor: pointer;
+    z-index: 1302;
+    position: absolute;
+
+    .bar {
+      width: 100%;
+      background: white;
+      height: 2px;
+      display: block;
+      transition: all 0.2s ease;
+    }
+
+    &:hover,
+    &:focus,
+    &:active {
+      .bar {
+        background: white;
+      }
+    }
+
+    &.active {
+      .bar {
+        background: $gray;
+      }
+    }
+
+    // Apply a margin top to all bars except the first one
+    .bar + .bar {
+      margin-top: 0.33333333333333rem;
+    }
+
+    &.active {
+      #first {
+        transform: translateY(7.33333333px) translateX(0.1333333rem) rotate(135deg);
+      }
+
+      #second {
+        transform: rotate(-135deg) translateX(-0.094280904rem) translateY(0.094280904rem);
+      }
+
+      #third {
+        transform: translateY(-7.33333333px) translateX(0.13333333rem) rotate(135deg);
+      }
+    }
+  }
+}
+
+/**
+ * Styling the sidebar which renders triggered by the navbar
+ */
+#sidebar {
+  // Clickable shade to the left of the triggered sidebar
+  // Clicking the shade hides the sidebar
+  .shade {
+    z-index: 1300;
+    background: rgba(0, 0, 0, 0.4);
+    width: 100vw;
+    height: 100%;
+    left: 0;
+    cursor: hand;
+    cursor: pointer;
+    top: 0;
+    position: fixed;
+  }
+
+  // The actual sidebar with links
+  #side-menu {
+    z-index: 1301;
+    transition: all 0.4s ease;
+    position: fixed;
+    height: 100%;
+    background: white;
+    top: 0;
+    right: 0;
+    min-width: 20rem !important;
+    max-width: 100%;
+    border-left: 1px solid $border;
+  }
+
+  // Links contained within the sidebar
+  .links {
+    list-style: none;
+    margin: 0;
+    padding: 1rem 0;
+    width: 100%;
+
+    .link {
+      color: $gray;
+      padding: 0.6rem 1.6rem;
+      display: block;
+      width: 100%;
+      text-align: left;
+
+      &.line-above {
+        border-top: 1px solid $border;
+      }
+
+      &:hover {
+        color: $dark-gray;
+      }
+
+      &:focus,
+      &:active {
+        color: $primary;
+      }
+    }
+  }
+
+  // Each individual link
+  .link {
+    color: $gray;
+
+    &:hover,
+    &:active,
+    &:focus {
+      color: $dark-gray !important;
+    }
+  }
+
+  // Logo in the sidebar
+  .sidebar-logo {
+    width: 100%;
+    text-align: center;
+    margin-top: 1rem;
+
+    img {
+      width: 5rem;
+      height: 5rem;
+      -webkit-animation: spin 1.5s infinite linear;
+    }
+  }
+}
+
+// Oscillating spin transition for the compass rendered on the sidebar
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+
+  50% {
+    -webkit-transform: rotate(-20deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(0deg);
+  }
+}
+
+/**
+ * Make sidebar full-screen on smaller screens
+ */
+@media screen and (max-width: 448px) {
+  #sidebar #side-menu {
+    width: 100% !important;
+    min-width: inherit !important;
+    height: 100% !important;
+    overflow-y: scroll;
+    overflow-x: hidden;
+  }
+}
+
+@media screen and (max-device-width: 448px) {
+  #sidebar #side-menu {
+    width: 100% !important;
+    min-width: inherit !important;
+    height: 100% !important;
+    overflow-y: scroll;
+    overflow-x: hidden;
+  }
+}
+
+/**
+ * Hide user name when the screen is below 928px
+ */
+@media screen and (max-width: 928px) {
+  .nav .user-info .user-text .name {
+    display: none;
+  }
+}
+
+@media screen and (max-device-width: 928px) {
+  .nav .user-info .user-text .name {
+    display: none;
+  }
+}
+
+/**
+ * Hide the user text when the screen is below 848px
+ */
+@media screen and (max-width: 848px) {
+  .nav .user-info {
+    display: block;
+    text-align: right;
+    border-right: 1px solid $border;
+
+    .user-text {
+      display: none;
+    }
+  }
+}
+
+@media screen and (max-device-width: 848px) {
+  .nav .user-info {
+    display: block;
+    text-align: right;
+    border-right: 1px solid $border;
+
+    .user-text {
+      display: none;
+    }
+  }
+}
+
+/**
+ * Swap the placeholder on smaller screen sizes for a shorter version
+ * Also hide links prompting the user to login and register
+ * NOTE these links can still be accessed by toggling the side menu
+ */
+@media screen and (max-width: 718px) {
+  .nav .search {
+    .small {
+      display: block !important;
+    }
+
+    .large {
+      display: none !important;
+    }
+  }
+
+  .sign-in-links {
+    display: none;
+  }
+}
+
+@media screen and (max-device-width: 718px) {
+  .nav .search {
+    .small {
+      display: block !important;
+    }
+
+    .large {
+      display: none !important;
+    }
+  }
+
+  .sign-in-links {
+    display: none;
+  }
+}
+
+/**
+ * Handle when the search is active on smaller screens
+ */
+@media screen and (max-width: 648px) {
+  .nav {
+    .logo,
+    .sidebar-wrapper,
+    .user-info {
+      transition: all 0.4s ease;
+    }
+
+    .fa-search {
+      transition: all 0.4s ease;
+    }
+
+    #search {
+      transition: all 0.4s ease;
+      width: 100%;
+    }
+  }
+
+  .nav.search-active {
+    .logo {
+      transform: translateX(-5rem);
+    }
+
+    .sidebar-wrapper,
+    .user-info {
+      transform: translateX(5rem);
+    }
+
+    .logo, .sidebar-wrapper {
+      width: 0 !important;
+      padding: 0 !important;
+    }
+  }
+}

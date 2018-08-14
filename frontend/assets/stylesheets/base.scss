@@ -1,19 +1,11 @@
 /**
  * Import SCSS files for specific components of the applciation
  */
-@import './colors';
-@import './strapper';
-@import './nav';
-@import './footer';
-@import './article';
-@import './listing';
-@import './profile';
-@import './video';
-@import './home';
-@import './form';
-@import './notification';
-@import './admin';
-@import './account';
+@import './general/general';
+@import './nav/nav';
+@import './content/content';
+@import './user/user';
+@import './footer/footer';
 
 /**
  * General styles relevant to the whole application

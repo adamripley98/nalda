@@ -1,0 +1,16 @@
+/**
+ * Styling display of videos
+ */
+.video {
+  iframe {
+    width: 100%;
+    min-height: 60vh;
+    max-height: 100vh;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .title {
+    font-weight: bold;
+  }
+}
