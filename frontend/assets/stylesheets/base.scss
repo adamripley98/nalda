@@ -174,118 +174,21 @@ html, body {
   }
 }
 
-// Make buttons clickable with bold text
-// Additionally, set button colors and transition styles
-.btn {
-  cursor: hand;
-  cursor: pointer;
-  font-weight: bold !important;
-  border: 0px solid transparent;
-
-  // Make buttons white as necessary
-  &.white {
-    background: white !important;
-  }
-
-  // Helper class to make the button take up the full width of its container
-  &.full-width {
-    width: 100%;
-  }
-
-  // Primary buttons are blue with white text
-  &.btn-primary {
-    background: $primary;
-    color: white !important;
-    border: 0px solid transparent;
-
-    &:hover,
-    &:active,
-    &:focus {
-      background: $dark-primary;
-    }
-
-    // Left-aligned icons translate to the left upon hover, focus, etc.
-    .fa-chevron-left {
-      transition: all 0.2s ease;
-      margin-right: 0.5rem;
-    }
-
-    // Right-aligned icons translate to the right upon hover, focus, etc.
-    .fa-chevron-right {
-      transition: all 0.2s ease;
-      margin-left: 0.5rem;
-    }
-
-    &:hover,
-    &:focus,
-    &:active {
-      .fa-chevron-left {
-        transform: translateX(-0.2rem);
-      }
-
-      .fa-chevron-right {
-        transform: translateX(0.2rem);
-      }
-    }
-  }
-
-  &.facebook {
-    border: 2px solid #3b5998;
-    color: #3b5998;
-    background: transparent;
-    padding: 0.75rem;
-
-    &:hover,
-    &:focus,
-    &:active {
-      border: 2px solid #2c467c;
-      color: #2c467c;
-    }
-  }
-
-  &.google {
-    border: 2px solid $dark-gray;
-    color: $dark-gray;
-    background: transparent;
-    padding: 0.75rem;
-
-    &:hover,
-    &:focus,
-    &:active {
-      border: 2px solid $darker-gray;
-      color: $darker-gray;
-    }
-  }
-
-  // Secondary buttons are white with colored text
-  &.btn-secondary {
-    font-weight: bold;
-    color: $primary;
-    background: white;
-    border: 1px solid white;
-
-    &:hover,
-    &:active,
-    &:focus {
-      background: white;
-      color: $dark-primary;
-      border: 1px solid white;
-    }
-  }
-}
-
 // Modular helper class to denote that the element is clickable
 .cursor {
   cursor: hand;
   cursor: pointer;
 }
 
-// Remove underline on all anchor tags
 a {
   cursor: hand;
   cursor: pointer;
   text-decoration: none !important;
   color: $primary;
+
+  &:visited {
+    color: $primary;
+  }
 
   &:active,
   &:focus,

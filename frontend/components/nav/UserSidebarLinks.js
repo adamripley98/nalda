@@ -57,20 +57,34 @@ class UserSidebarLinks extends Component {
   render() {
     return (
       <div className="links">
+        <div className="space-2" />
+        <div className="profile-info">
+          <div className="profile-picture" style={{ backgroundImage: `url(${this.props.profilePicture})`}} />
+          <div className="profile-content">
+            <h4>Hi, {this.props.name}.</h4>
+            <p>{this.props.location}</p>
+            <Link onClick={this.props.toggleMenu} to="/account">
+              Edit Profile
+            </Link>
+            <a onClick={ this.handleLogoutSubmit } className="link-style">
+              Sign Out
+            </a>
+          </div>
+        </div>
+
+        <div className="line" />
+
         <Link onClick={this.props.toggleMenu} to="/" className="link">
           Home
         </Link>
         <Link onClick={this.props.toggleMenu} to="/articles" className="link">
-          Articles
+          Curator Articles
         </Link>
         <Link onClick={this.props.toggleMenu} to="/listings" className="link">
-          Listings
+          Philadelphia Listings
         </Link>
         <Link onClick={this.props.toggleMenu} to="/videos" className="link">
           Videos
-        </Link>
-        <Link onClick={this.props.toggleMenu} to="/account" className="link line-above">
-          Edit account
         </Link>
 
         {/* Link to the user's profile page */}
@@ -85,7 +99,7 @@ class UserSidebarLinks extends Component {
         {
           (this.isAdmin() || this.isCurator()) && (
             <Link onClick={this.props.toggleMenu} to="/articles/new" className="link">
-              Create
+              Create Content
             </Link>
           )
         }
@@ -94,14 +108,10 @@ class UserSidebarLinks extends Component {
         {
           (this.isAdmin()) && (
             <Link onClick={this.props.toggleMenu} to="/admin" className="link">
-              Admin
+              Admin Panel
             </Link>
           )
         }
-
-        <a onClick={ this.handleLogoutSubmit } className="link cursor line-above">
-          Logout
-        </a>
       </div>
     );
   }
@@ -113,6 +123,9 @@ UserSidebarLinks.propTypes = {
   userId: PropTypes.string,
   onLogout: PropTypes.func,
   notifyMessage: PropTypes.func,
+  location: PropTypes.string,
+  name: PropTypes.string,
+  profilePicture: PropTypes.string,
 };
 
 // Allows us to access redux state as this.props.userId inside component
@@ -120,6 +133,9 @@ const mapStateToProps = state => {
   return {
     userId: state.authState.userId,
     userType: state.authState.userType,
+    location: state.authState.location,
+    name: state.authState.name,
+    profilePicture: state.authState.profilePicture,
   };
 };
 

@@ -57,9 +57,9 @@ class Nav extends Component {
    */
   render() {
     return (
-      <nav className={ this.state.searchActive ? 'nav search-active' : 'nav' }>
+      <nav className={this.state.searchActive ? 'nav search-active' : 'nav'}>
         <Logo />
-        <Search callback={ this.searchCallback } location={this.props.location} />
+        <Search callback={this.searchCallback} location={this.props.location} />
 
         { /* Render the user's profile information if the user is logged in */ }
         { /* If the user is not logged in, an empty div is returned */ }
@@ -77,9 +77,9 @@ class Nav extends Component {
 
         { /* Render the sidebar */ }
         { /* This includes the three-bar menu toggle which is always visible */ }
-        <Sidebar modalCallback={ this.modalCallback } />
+        <Sidebar modalCallback={this.modalCallback} />
 
-        { !this.props.userId && <Modal isLogin={ this.state.isLogin }/> }
+        { !this.props.userId && (<Modal isLogin={this.state.isLogin} />) }
       </nav>
     );
   }
