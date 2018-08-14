@@ -1,0 +1,155 @@
+@import './search';
+@import './sidebar';
+@import './menu';
+
+$height: 57.19px;
+
+/**
+ * Spacer put at the top of the page to make room for the fixed navbar
+ * Essentially, this pushes the page content down the height of the navbar
+ */
+.nav-space {
+  height: $height;
+  width: 100%;
+  position: relative;
+}
+
+.nav {
+  border-bottom: 1px solid $border;
+  font-weight: bold;
+  background: $secondary;
+  color: $gray;
+  padding: 0rem 0.5rem;
+  display: flex;
+  position: fixed;
+  width: 100%;
+  z-index: 1299 !important;
+  box-shadow: 0rem 0.1rem 0.05rem rgba(0, 0, 0, 0.05);
+
+  // Style the logo
+  .logo {
+    padding: 0.5rem 1rem;
+    border-right: 1px solid $border;
+
+    svg {
+      padding-top: 0.3rem;
+      width: auto;
+      height: 2.2rem;
+    }
+  }
+
+  // Information about the user shown to the right of the navbar
+  // This includes the user's name, location, and profile picture
+  // The amount of information shown depends on the width of the screen
+  .user-info {
+    margin: 0;
+    padding: 0;
+    height: 57.19px;
+    display: flex;
+
+    .user-text {
+      flex: 1;
+      text-align: right;
+      display: flex;
+      padding: 1rem 0rem;
+      color: white;
+    }
+
+    .user-img {
+      height: 2rem;
+      margin: 0.8rem;
+      width: 2rem;
+      border-radius: 50%;
+      background: $gray;
+      display: inline-block;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      display: inline-block;
+    }
+
+    // If the user is not signed in, then there is no information to display
+    // Instead, there are links to login and register
+    .sign-in-links {
+      height: 100%;
+      text-align: right;
+      padding-top: 1rem;
+      padding-right: 1rem;
+      padding-left: 0rem;
+
+      a {
+        color: white;
+        margin-left: 1rem;
+
+        &:hover {
+          opacity: 0.8;
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Hide user name when the screen is below 928px
+ */
+@media screen and (max-width: 928px) {
+  .nav .user-info .user-text .name {
+    display: none;
+  }
+}
+
+@media screen and (max-device-width: 928px) {
+  .nav .user-info .user-text .name {
+    display: none;
+  }
+}
+
+/**
+ * Hide the user text when the screen is below 848px
+ */
+@media screen and (max-width: 848px) {
+  .nav .user-info {
+    display: block;
+    text-align: right;
+    border-right: 1px solid $border;
+
+    .user-text {
+      display: none;
+    }
+  }
+}
+
+@media screen and (max-device-width: 848px) {
+  .nav .user-info {
+    display: block;
+    text-align: right;
+    border-right: 1px solid $border;
+
+    .user-text {
+      display: none;
+    }
+  }
+}
+
+/**
+ * Also hide links prompting the user to login and register on smaller screens
+ * NOTE these links can still be accessed by toggling the side menu
+ **/
+@media screen and (max-width: 718px) {
+  .sign-in-links {
+    display: none;
+  }
+}
+
+// More spacing for nav elements on larger screens
+@media screen and (min-width: 1024px) {
+  .nav {
+    .logo {
+      padding-right: 2rem;
+    }
+
+    .user-info {
+      padding-left: 1rem;
+    }
+  }
+}

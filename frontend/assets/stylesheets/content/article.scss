@@ -1,0 +1,166 @@
+/**
+ * Styling for all components related to articles
+ */
+.article {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+
+  // Titles
+  .title {
+    font-weight: bold !important;
+    font-size: 3rem !important;
+    margin-bottom: 0.5rem;
+  }
+
+  // Subtitles
+  .subtitle {
+    font-weight: bold;
+    color: $gray;
+    font-style: italic;
+    margin-bottom: 0rem;
+  }
+
+  // Images
+  img {
+    margin-bottom: 1rem;
+    width: 100%;
+  }
+
+  // General text styling
+  p {
+    line-height: 1.5;
+  }
+
+  // Styling block quotes
+  .quote {
+    color: $gray;
+    font-style: italic;
+    border-left: 4px solid $light-gray;
+    padding-left: 0.5rem;
+    font-size: 1.2rem;
+  }
+
+  // Styling headers
+  .header {
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-top: 1.25rem;
+  }
+}
+
+/**
+ * Style form for creating and editing articles
+ */
+#article-form {
+  .form-control.special {
+    border: 0px solid transparent;
+    padding: 0rem;
+    border-left: 2px solid transparent;
+
+    &:active,
+    &:focus,
+    &:hover {
+      border-left: 2px solid $border;
+    }
+  }
+
+  // Style the title
+  #title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: black;
+  }
+
+  // Style the subtitle
+  #subtitle {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: $dark-gray;
+  }
+
+  // Style images
+  img {
+    width: 100% !important;
+    margin-bottom: 0.5rem;
+  }
+
+  // Style blockquote components
+  .quote {
+    padding-left: 1rem !important;
+    border-left: 4px solid $border !important;
+    color: gray;
+    font-style: italic;
+    font-size: 1.2rem;
+  }
+
+  // Style headers
+  .header {
+    font-weight: bold;
+    font-size: 1.4rem;
+  }
+}
+
+/**
+ * Styling article previews
+ */
+.article-preview-wrapper {
+  width: 100%;
+  display: inline-block;
+	clear: none;
+	margin: 0rem 0rem 1rem 0rem;
+	vertical-align: top;
+}
+
+@media screen and (min-width: 720px) {
+  .article-preview-wrapper {
+    width: 50%;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .article-preview-wrapper {
+    width: 33.3333%;
+  }
+}
+
+@media screen and (min-width: 1500px) {
+  .article-preview-wrapper {
+    width: 25%;
+  }
+}
+
+.article-preview {
+  height: 60vh;
+  overflow-y: hidden;
+  color: white;
+  width: calc(100% - 10px) !important;
+  margin: 0 auto;
+  background-color: rgba(0, 0, 0, 0.5);
+  margin-bottom: 1rem;
+  vertical-align: bottom;
+
+  .content {
+    height: 100%;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+    padding: 1rem;
+    vertical-align: bottom;
+
+    h4, p {
+      width: 100%;
+      display: block;
+      color: white;
+      margin-bottom: 0.4rem;
+    }
+
+    p {
+      margin-bottom: 0rem;
+    }
+
+    h4 {
+      font-size: 18px;
+      margin-top: auto;
+    }
+  }
+}

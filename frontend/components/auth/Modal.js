@@ -1,13 +1,9 @@
-// Import framworks
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import axios from 'axios';
 
-// Import actions
 import { login } from '../../actions/index.js';
 
-// Import components
 import LoginModalForm from './LoginModalForm';
 import RegisterModalForm from './RegisterModalForm';
 

@@ -1,0 +1,147 @@
+/**
+ * Styling the sidebar which renders triggered by the navbar
+ */
+#sidebar {
+  // Clickable shade to the left of the triggered sidebar
+  // Clicking the shade hides the sidebar
+  .shade {
+    z-index: 1300;
+    background: rgba(0, 0, 0, 0.4);
+    width: 100vw;
+    height: 100%;
+    left: 0;
+    cursor: hand;
+    cursor: pointer;
+    top: 0;
+    position: fixed;
+  }
+
+  // The actual sidebar with links
+  #side-menu {
+    z-index: 1301;
+    transition: all 0.4s ease;
+    position: fixed;
+    height: 100%;
+    background: white;
+    top: 0;
+    right: 0;
+    min-width: 20rem !important;
+    max-width: 100%;
+    border-left: 1px solid $border;
+  }
+
+  // Links contained within the sidebar
+  .links {
+    list-style: none;
+    margin: 0;
+    padding: 1rem;
+    width: 100%;
+
+    .link {
+      font-weight: normal;
+      color: $gray;
+      padding: 0.4rem 0rem;
+      display: block;
+      width: 100%;
+      text-align: left;
+
+      &:hover {
+        color: $dark-gray;
+      }
+
+      &:focus,
+      &:active {
+        color: $primary;
+      }
+    }
+  }
+
+  .line {
+    margin: 0.5rem 0rem;
+  }
+
+  // Each individual link
+  .link {
+    color: $gray;
+
+    &:hover,
+    &:active,
+    &:focus {
+      color: $dark-gray !important;
+    }
+  }
+
+  .col-6 {
+    padding-right: 0.5rem;
+  }
+
+  .col-6 + .col-6 {
+    padding-right: 15px;
+    padding-left: 0.5rem;
+  }
+
+  .profile-info {
+    display: flex;
+
+    .profile-picture {
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+    .profile-content {
+      padding-left: 1rem;
+      flex: 1;
+      font-weight: normal;
+      color: black;
+
+      p {
+        margin-bottom: 0.5rem;
+        color: $gray-text;
+      }
+
+      a {
+        font-size: 0.8rem;
+        margin-right: 0.8rem;
+      }
+    }
+  }
+}
+
+// Oscillating spin transition for the compass rendered on the sidebar
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+
+  50% {
+    -webkit-transform: rotate(-20deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(0deg);
+  }
+}
+
+/**
+ * Make sidebar full-screen on smaller screens
+ */
+@media screen and (max-width: 448px) {
+  #sidebar #side-menu {
+    width: 100% !important;
+    min-width: inherit !important;
+    height: 100% !important;
+    overflow-y: scroll;
+    overflow-x: hidden;
+  }
+}
+
+@media screen and (max-device-width: 448px) {
+  #sidebar #side-menu {
+    width: 100% !important;
+    min-width: inherit !important;
+    height: 100% !important;
+    overflow-y: scroll;
+    overflow-x: hidden;
+  }
+}

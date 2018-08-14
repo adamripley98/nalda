@@ -238,7 +238,7 @@ class RegisterModalForm extends Component {
           <i className="fa fa-envelope fa-fw in-input" aria-hidden />
 
           <div className="row">
-            <div className="col-12 col-sm-6">
+            <div className="col-6">
               <input
                 type="text"
                 className="form-control marg-bot-1"
@@ -247,7 +247,7 @@ class RegisterModalForm extends Component {
                 placeholder="First name"
               />
             </div>
-            <div className="col-12 col-sm-6">
+            <div className="col-6">
               <input
                 type="text"
                 className="form-control marg-bot-1"

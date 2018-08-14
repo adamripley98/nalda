@@ -1,19 +1,11 @@
 /**
  * Import SCSS files for specific components of the applciation
  */
-@import './colors';
-@import './strapper';
-@import './nav';
-@import './footer';
-@import './article';
-@import './listing';
-@import './profile';
-@import './video';
-@import './home';
-@import './form';
-@import './notification';
-@import './admin';
-@import './account';
+@import './general/general';
+@import './nav/nav';
+@import './content/content';
+@import './user/user';
+@import './footer/footer';
 
 /**
  * General styles relevant to the whole application
@@ -182,118 +174,21 @@ html, body {
   }
 }
 
-// Make buttons clickable with bold text
-// Additionally, set button colors and transition styles
-.btn {
-  cursor: hand;
-  cursor: pointer;
-  font-weight: bold !important;
-  border: 0px solid transparent;
-
-  // Make buttons white as necessary
-  &.white {
-    background: white !important;
-  }
-
-  // Helper class to make the button take up the full width of its container
-  &.full-width {
-    width: 100%;
-  }
-
-  // Primary buttons are blue with white text
-  &.btn-primary {
-    background: $primary;
-    color: white !important;
-    border: 0px solid transparent;
-
-    &:hover,
-    &:active,
-    &:focus {
-      background: $dark-primary;
-    }
-
-    // Left-aligned icons translate to the left upon hover, focus, etc.
-    .fa-chevron-left {
-      transition: all 0.2s ease;
-      margin-right: 0.5rem;
-    }
-
-    // Right-aligned icons translate to the right upon hover, focus, etc.
-    .fa-chevron-right {
-      transition: all 0.2s ease;
-      margin-left: 0.5rem;
-    }
-
-    &:hover,
-    &:focus,
-    &:active {
-      .fa-chevron-left {
-        transform: translateX(-0.2rem);
-      }
-
-      .fa-chevron-right {
-        transform: translateX(0.2rem);
-      }
-    }
-  }
-
-  &.facebook {
-    border: 2px solid #3b5998;
-    color: #3b5998;
-    background: transparent;
-    padding: 0.75rem;
-
-    &:hover,
-    &:focus,
-    &:active {
-      border: 2px solid #2c467c;
-      color: #2c467c;
-    }
-  }
-
-  &.google {
-    border: 2px solid $dark-gray;
-    color: $dark-gray;
-    background: transparent;
-    padding: 0.75rem;
-
-    &:hover,
-    &:focus,
-    &:active {
-      border: 2px solid $darker-gray;
-      color: $darker-gray;
-    }
-  }
-
-  // Secondary buttons are white with colored text
-  &.btn-secondary {
-    font-weight: bold;
-    color: $primary;
-    background: white;
-    border: 1px solid white;
-
-    &:hover,
-    &:active,
-    &:focus {
-      background: white;
-      color: $dark-primary;
-      border: 1px solid white;
-    }
-  }
-}
-
 // Modular helper class to denote that the element is clickable
 .cursor {
   cursor: hand;
   cursor: pointer;
 }
 
-// Remove underline on all anchor tags
 a {
   cursor: hand;
   cursor: pointer;
   text-decoration: none !important;
   color: $primary;
+
+  &:visited {
+    color: $primary;
+  }
 
   &:active,
   &:focus,
@@ -742,152 +637,6 @@ a {
     &:active,
     &.active {
       opacity: 1;
-    }
-  }
-}
-
-/**
- * Style modals
- */
-.fade-wrapper {
-  background-color: rgba(0, 0, 0, 0.3);
-
-  // If the modal is a form, as is the case with login / register modal
-  .form {
-    .modal-header {
-      padding: 2rem 2rem 1rem 2rem;
-    }
-
-    .modal-body {
-      padding: 1rem 2rem;
-    }
-
-    .modal-footer {
-      padding: 1rem 2rem 2rem 2rem;
-    }
-
-    .modal-body {
-      font-size: 1.2rem;
-
-      .alert {
-        font-size: 1rem;
-      }
-
-      .form-control {
-        padding: 0.75rem;
-        border-width: 2px;
-
-        &:hover {
-          & + .in-input {
-            color: $gray;
-          }
-        }
-
-        &:active,
-        &:focus {
-          & + .in-input {
-            color: $primary;
-          }
-        }
-      }
-
-      .in-input {
-        transition: all 0.2s ease;
-        position: absolute;
-        color: $border;
-        right: 3rem;
-        font-size: 1.4rem;
-        margin-top: 0.75rem;
-        transform: translateY(-4rem);
-      }
-
-      .btn {
-        padding: 0.75rem;
-        font-size: 1rem;
-      }
-    }
-  }
-
-  .modal-content {
-    border-radius: 0px;
-    border: 0px solid transparent;
-    margin-top: 6rem;
-    box-shadow: 0px 28px 72px rgba(0, 0, 0, 0.3);
-
-    .modal-header {
-      border-bottom: 1px solid $border;
-      color: black;
-    }
-
-    .modal-footer {
-      border-top: 1px solid $border;
-      color: black;
-    }
-
-    button.close {
-      border-radius: 50%;
-      padding: 0.3rem;
-      border: 1px solid $gray;
-      outline: 0 !important;
-      transition: all 0.2s ease;
-
-      .bars {
-        display: block;
-        width: 0.56568rem;
-        height: 0.56568rem;
-        transform: translateY(0.27rem) translateX(-0.12rem);
-      }
-
-      .bar {
-        position: absolute;
-        display: block;
-        background: $gray;
-        height: 1px;
-        width: 0.8rem;
-        transition: all 0.2s ease;
-
-        &:first-child {
-          transform: rotate(45deg);
-        }
-
-        &:last-child {
-          transform: rotate(-45deg);
-        }
-      }
-
-      &:hover {
-        border: 1px solid $dark-gray;
-
-        .bar {
-          background: $dark-gray;
-        }
-      }
-
-      &:active,
-      &:focus {
-        border: 1px solid $dark-gray;
-
-        .bar {
-          background: $dark-gray;
-        }
-      }
-    }
-  }
-}
-
-// Make the modal full-screen on larger screens
-@media screen and (max-width: 648px) {
-  .fade .modal-dialog {
-    .modal-content {
-      margin-top: 4rem;
-    }
-  }
-}
-
-@media screen and (max-device-width: 648px) {
-  .fade .modal-dialog {
-    .modal-content {
-      margin-top: 4rem;
     }
   }
 }
