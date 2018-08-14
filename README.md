@@ -4,7 +4,9 @@ A centralized source for information, food, activities, and fun on your campus. 
 
 ![Nalda](https://s3.amazonaws.com/nalda/nalda-overview.png)
 
-__Stack used:__
+-------------------
+
+### Stack
 * `React` JavaScript framework for all views
 * `Redux` overarching application state
 * `Passport` user authentication
@@ -14,7 +16,9 @@ __Stack used:__
 
 To run the application, run `npm start`. For more responsive hot-reloading on the backend and frontend, run `npm run frontend` and `npm run backend` concurrently.
 
-# API
+-------------------
+
+### API
 ```javascript
 /* General */
 GET '/api/'                    // Route to confirm the API is working
@@ -43,9 +47,13 @@ DELETE '/api/videos/:id'       // Delete a specific article
 ```
 API documentation can be found [here.](https://nalda-api.herokuapp.com/)
 
-# Feature tracking
+-------------------
 
-## By 2/17
+### Feature tracking
+
+Note: features are now tracked exclusively through Trello. All features listed below are here simply for reference and should not be treated as a source of truth.
+
+__By 2/17__
 - [X] Image upload
   - [X] Profile picture
   - [X] Listing multiple pictures
@@ -96,18 +104,18 @@ API documentation can be found [here.](https://nalda-api.herokuapp.com/)
   - [X] After upgrading from curator to admin, should refresh and show state instantaneously
 - [ ] Delete account functionality
 
-## Listings
+__Listings__
 - [ ] Free / other price option
 - [ ] Sort by date
 
-## Videos
+__Videos__
 - [ ] Individual video frontend updates
   - [ ] Show Location
   - [x] Show date created
   - [x] Show author data
 - [ ] Sort by date
 
-## Articles
+__Articles__
 - [X] Edit Articles view
 - [X] Delete Articles view
 - [X] Default sort in `Articles` needs to be reversed
@@ -117,14 +125,14 @@ API documentation can be found [here.](https://nalda-api.herokuapp.com/)
   - [x] Show date created
   - [x] Show author data
 
-## Frontend
+__Frontend__
 - [x] Icons for all amenities
 - [ ] Make it easier for an admin to enter hours (some sort of autofill)
 - [ ] Get rid of any userId passing from frontend unless it is for comparing to backend userId
 - [ ] Clear hashtag from url after google login
 - [X] Styling on the emails sent by Nalda: Welcome, reset, and verify.
 
-## Backend
+__Backend__
 - [ ] Sort reviews functionality (time, rating)
 - [X] Technical errors should not be displayed to frontend, should be vague.
 - [ ] Searching functionality
@@ -141,7 +149,7 @@ API documentation can be found [here.](https://nalda-api.herokuapp.com/)
 - [X] Have listing tag clicks lead to a page that displays all listings of that tag
 - [ ] Make sure file uploads are pictures and are appropriate sizes
 
-# TODO from Feb 11 meeting
+__TODO from Feb 11 meeting__
 - [ ] Listing changes
   - [X] Description text area
   - [X] Editor's review section (listings)
@@ -175,7 +183,7 @@ API documentation can be found [here.](https://nalda-api.herokuapp.com/)
 - [X] Make it scroll to the top when you load a new page
 - [ ] Media library of images from AWS already uploaded to make curators life easier
 
-## Code refactoring
+__Code refactoring__
 
 - [ ] Change title tag, description, other meta tags depending on the page
 - [ ] Go back and take care of all TODO's
@@ -194,16 +202,16 @@ API documentation can be found [here.](https://nalda-api.herokuapp.com/)
 - [ ] When content is edited, old images are deleted from AWS
 - [ ] Pass all errors back as `res.status(404).send`
 
-## Other
+__Other__
 - [ ] Google Analytics
 
-## Search
+__Search__
 - [ ] Search by Location
 - [X] Issue where "ada" doesn't populate "adam ripley" but "adam" does (I think best way to deal with this is search button)
 - [X] Don't let it search through reviews
 - [ ] Fix refresh hack
 
-## Potential features for future
+__Potential features for future__
 - [ ] Multiple curators on the same content
 - [ ] Recommending content for users to look at
   * To begin they can be location based and random, eventually custom based on user
