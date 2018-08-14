@@ -1,0 +1,142 @@
+/**
+ * Style modals
+ */
+.fade-wrapper {
+  background-color: rgba(0, 0, 0, 0.3);
+
+  // If the modal is a form, as is the case with login / register modal
+  .form {
+    .modal-header {
+      padding: 2rem 2rem 1rem 2rem;
+    }
+
+    .modal-body {
+      padding: 1rem 2rem;
+    }
+
+    .modal-footer {
+      padding: 1rem 2rem 2rem 2rem;
+    }
+
+    .modal-body {
+      font-size: 1.2rem;
+
+      .alert {
+        font-size: 1rem;
+      }
+
+      .form-control {
+        padding: 0.75rem;
+        border-width: 2px;
+
+        &:hover {
+          & + .in-input {
+            color: $gray;
+          }
+        }
+
+        &:active,
+        &:focus {
+          & + .in-input {
+            color: $primary;
+          }
+        }
+      }
+
+      .in-input {
+        transition: all 0.2s ease;
+        position: absolute;
+        color: $border;
+        right: 3rem;
+        font-size: 1.4rem;
+        margin-top: 0.75rem;
+        transform: translateY(-4rem);
+      }
+
+      .btn {
+        padding: 0.75rem;
+        font-size: 1rem;
+      }
+    }
+  }
+
+  .modal-content {
+    border-radius: 0px;
+    border: 0px solid transparent;
+    margin-top: 6rem;
+    box-shadow: 0px 28px 72px rgba(0, 0, 0, 0.3);
+
+    .modal-header {
+      border-bottom: 1px solid $border;
+      color: black;
+    }
+
+    .modal-footer {
+      border-top: 1px solid $border;
+      color: black;
+    }
+
+    button.close {
+      border-radius: 50%;
+      padding: 0.3rem;
+      border: 1px solid $gray;
+      outline: 0 !important;
+      transition: all 0.2s ease;
+
+      .bars {
+        display: block;
+        width: 0.56568rem;
+        height: 0.56568rem;
+        transform: translateY(0.27rem) translateX(-0.12rem);
+      }
+
+      .bar {
+        position: absolute;
+        display: block;
+        background: $gray;
+        height: 1px;
+        width: 0.8rem;
+        transition: all 0.2s ease;
+
+        &:first-child {
+          transform: rotate(45deg);
+        }
+
+        &:last-child {
+          transform: rotate(-45deg);
+        }
+      }
+
+      &:hover {
+        border: 1px solid $dark-gray;
+
+        .bar {
+          background: $dark-gray;
+        }
+      }
+
+      &:active,
+      &:focus {
+        border: 1px solid $dark-gray;
+
+        .bar {
+          background: $dark-gray;
+        }
+      }
+    }
+  }
+}
+
+// Make the modal full-screen on larger screens
+@media screen and (max-width: 648px) {
+  .fade .modal-dialog {
+    margin: 0;
+    min-height: 100%;
+
+    .modal-content {
+      margin-top: 0;
+      width: 100%;
+      min-height: 100vh;
+    }
+  }
+}
