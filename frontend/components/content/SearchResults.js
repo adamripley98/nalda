@@ -12,7 +12,7 @@ import Preview from './Preview';
 import Author from '../shared/Author';
 
 /**
- * Component to render search results
+ * Component to render search results in it's own page
  */
 class SearchResults extends Component {
   constructor(props) {
@@ -80,6 +80,21 @@ class SearchResults extends Component {
     // If there is data
     return (
       <div>
+        {this.isEmpty(this.state.listings) ? null : (
+          <div>
+            <h4 className="title section-title">Listings</h4>
+            {
+              this.state.listings.map(l => (
+                <Preview
+                  content={l}
+                  contentType="listing"
+                  key={l._id}
+                />
+              ))
+            }
+            <div className="space-2" />
+          </div>
+        )}
         {this.isEmpty(this.state.articles) ? null : (
           <div>
             <h4 className="title section-title">Articles</h4>
@@ -104,21 +119,6 @@ class SearchResults extends Component {
                   content={v}
                   contentType="video"
                   key={v._id}
-                />
-              ))
-            }
-            <div className="space-2" />
-          </div>
-        )}
-        {this.isEmpty(this.state.listings) ? null : (
-          <div>
-            <h4 className="title section-title">Listings</h4>
-            {
-              this.state.listings.map(l => (
-                <Preview
-                  content={l}
-                  contentType="listing"
-                  key={l._id}
                 />
               ))
             }

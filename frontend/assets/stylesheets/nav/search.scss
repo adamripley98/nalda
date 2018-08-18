@@ -103,22 +103,20 @@
       background: transparent;
       color: $dark-gray;
 
-      $color: $gray;
-
       &::-webkit-input-placeholder {
-        color: $color;
+        color: $gray;
       }
 
       &::-moz-placeholder {
-        color: $color;
+        color: $gray;
       }
 
       &:-ms-input-placeholder {
-        color: $color;
+        color: $gray;
       }
 
       &:-moz-placeholder {
-        color: $color;
+        color: $gray;
       }
     }
   }
@@ -165,6 +163,9 @@
   position: fixed;
   width: 100%;
   height: auto;
+  max-height: calc(92.5vh - 57.19px);
+  overflow-x: hidden;
+  overflow-y: auto;
   padding: 1rem;
   top: 57.19px;
   background: white;
@@ -186,6 +187,10 @@
   // Each result is a link to the corresponding content
   a {
     color: $gray;
+
+    &:visited {
+      color: $gray;
+    }
 
     &:hover,
     &:active,
