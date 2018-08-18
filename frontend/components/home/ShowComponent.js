@@ -11,7 +11,9 @@ class ShowComponent extends Component {
   }
 
   renderContent() {
-    if (this.props.component.contentType === 'Articles') {
+    const contentType = this.props.component.contentType;
+
+    if (contentType === 'Articles' || contentType === 'article') {
       return (
         <div>
           {
@@ -34,7 +36,7 @@ class ShowComponent extends Component {
         this.props.component.content.map(c => (
           <Preview
             content={c}
-            contentType={this.props.component.contentType}
+            contentType={contentType}
             key={`${this.props.component.title}-${c.contentId}`}
           />
         ))
@@ -47,10 +49,10 @@ class ShowComponent extends Component {
       this.props.component.content.map((c, index) => (
         <Preview
           content={c}
-          contentType={this.props.component.contentType}
+          contentType={contentType}
           key={`${this.props.component.title}-${c.contentId}`}
           index={index}
-          isVideo = {c.contentType === 'Videos'}
+          isVideo = {(contentType || c.contentType) === 'Videos'}
         />
       ))
     );

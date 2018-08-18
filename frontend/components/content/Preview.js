@@ -73,12 +73,9 @@ class Preview extends Component {
     // If there is no location, return null
     if (!this.props.location) return null;
 
-    // Else, if there is a location return it but make sure it is not too long
-    let location = this.props.location;
-    if (location.length > 32) location = location.substring(0, 32).trim() + '...';
     return (
       <p className="location">
-        {location}
+        {this.props.location}
       </p>
     );
   }
@@ -104,7 +101,7 @@ class Preview extends Component {
     // If an object was passed in, recursively render the preview
     if (this.props.content) {
       // Find the image for the content depending on its type
-      let image = "";
+      let image = '';
 
       let contentType = this.props.contentType;
 

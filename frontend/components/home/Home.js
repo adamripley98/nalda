@@ -77,10 +77,15 @@ class Home extends React.Component {
         <Tags />
         <Banner banners={this.state.banner} />
         <div className="container">
-          <div className="space-3"/>
+          <div className="space-2"/>
+          <div className="space-1 hidden-md-down"/>
+
           <ErrorMessage error={this.state.error} />
+
           <ListingCategories />
+
           <Components components={this.state.components} />
+
           <div className="space-2 hidden-md-down" />
         </div>
       </div>

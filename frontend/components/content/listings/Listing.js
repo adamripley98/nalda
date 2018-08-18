@@ -43,24 +43,8 @@ class Listing extends React.Component {
 
     // Set the state with dummy data
     this.state = {
-      _id: '',
-      image: "",
-      images: [],
-      title: "",
-      description: "",
-      naldaFavorite: "",
-      website: "",
-      price: "",
-      categories: {},
-      amenities: {},
-      additionalAmenities: [],
-      location: {
-        name: "",
-        lat: null,
-        lng: null,
-      },
-      reviews: [],
-      error: "",
+      error: '',
+      listing: {},
       pending: true,
       infoTrigger: false,
       canModify: false,
@@ -86,6 +70,7 @@ class Listing extends React.Component {
     this.renderButtons = this.renderButtons.bind(this);
     this.areHours = this.areHours.bind(this);
     this.deleteReview = this.deleteReview.bind(this);
+    this.renderLocation = this.renderLocation.bind(this);
   }
 
   // Pull the listing data from the database
@@ -102,8 +87,8 @@ class Listing extends React.Component {
         if (res.data.success) {
           // Set the state
           this.setState({
-            error: "",
-            ...res.data.data,
+            error: '',
+            listing: res.data.data,
             reviews: res.data.reviews,
             author: res.data.author,
             time: moment(res.data.timestamp).fromNow(),
@@ -158,6 +143,29 @@ class Listing extends React.Component {
     });
   }
 
+  renderLocation() {
+    if (
+        this.state.listing.location.name &&
+        this.state.listing.location.lat &&
+        this.state.listing.location.lng
+    ) {
+      return (
+        <div>
+          <div className="line" />
+          <h5 className="subtitle">
+            Location
+          </h5>
+          <p className="marg-bot-1">
+            { this.state.listing.location.name }
+          </p>
+          <div id="map" />
+        </div>
+      );
+    }
+
+    return null;
+  }
+
   // Helper method to delete specific listing
   deleteListing() {
     // Set the state
@@ -197,7 +205,7 @@ class Listing extends React.Component {
           // Update state with new review
           this.setState({
             error: "",
-            ...res.data.data,
+            listing: res.data.data,
             reviews: res.data.reviews,
             time: moment(res.data.timestamp).fromNow(),
             pending: false,
@@ -223,37 +231,35 @@ class Listing extends React.Component {
    * Helper method to render categories
    */
   renderCategories() {
+    const categories = this.state.listing.categories;
     // If there are categories to display
-    if (this.state.categories) {
+    if (categories) {
       // Get all keys from the object
-      const keys = Object.keys(this.state.categories);
+      const keys = Object.keys(categories);
 
-      // If there are any keys
-      if (keys.length) {
-        // Return an category div tag for each category which is true in the state
-        // That is, if the curator marked that the listing has said category
-        return keys.map(category => (
-          this.state.categories[category] ? (
-            <div className="category" key={ category }>
-              { categoryMap[category] ? categoryMap[category] : category }
-            </div>
-          ) : null
-        ));
-      }
-      return null;
+      // Return an category div tag for each category which is true in the state
+      // That is, if the curator marked that the listing has said category
+      return keys.map(category => (
+        categories[category] ? (
+          <div className="category" key={ category }>
+            { categoryMap[category] ? categoryMap[category] : category }
+          </div>
+        ) : null
+      ));
     }
 
-    // If there are no categories
-    return (null);
+    return null;
   }
 
   /**
    * Helper method to render amenities
    */
   renderAmenities() {
+    const amenities = this.state.listing.amenities;
+
     // If amenities are in the state (this should always be the case)
-    if (this.state.amenities) {
-      const keys = Object.keys(this.state.amenities);
+    if (amenities) {
+      const keys = Object.keys(amenities);
 
       // Map from keys to svgs
       const svgMap = {
@@ -270,7 +276,7 @@ class Listing extends React.Component {
       // Return an amenity div tag for each amenity which is true in the state
       // That is, if the curator marked that the listing has said amenity
       return keys.map(key => (
-        this.state.amenities[key] ? (
+        amenities[key] ? (
           <div className="amenity" key={ key }>
             { svgMap[key] }
             { amenityMap[key] }
@@ -296,11 +302,13 @@ class Listing extends React.Component {
    * Helper method to render additional amenities
    */
   renderAdditionalAmenities() {
+    const additionalAmenities = this.state.listing.additionalAmenities || [];
+
     // If amenities are in the state (this should always be the case)
-    if (this.state.additionalAmenities && this.state.additionalAmenities.length) {
+    if (additionalAmenities.length) {
       // Return an amenity div tag for each amenity which is true in the state
       // That is, if the curator marked that the listing has said amenity
-      return this.state.additionalAmenities.map(amenity => (
+      return additionalAmenities.map(amenity => (
         <div className="amenity no-icon" key={ amenity }>
           { amenity }
         </div>
@@ -326,12 +334,14 @@ class Listing extends React.Component {
         listingId: this.state.listingId,
       }
     })
-    .then(() => {
-      this.updateReviews();
-    })
-    .catch(err => {
-      this.setState({error: err.response.data.error || err.response.data});
-    });
+      .then(() => {
+        this.updateReviews();
+      })
+      .catch(err => {
+        this.setState({
+          error: err.response.data.error || err.response.data,
+        });
+      });
   }
 
   // Helper method to render the entire reviews section
@@ -411,7 +421,7 @@ class Listing extends React.Component {
         <div className="buttons right marg-bot-1">
           <Link
             className="btn btn-primary btn-sm"
-            to={`/listings/${this.state._id}/edit`}
+            to={`/listings/${this.state.listingId}/edit`}
           >
             Edit
           </Link>
@@ -468,20 +478,25 @@ class Listing extends React.Component {
 
   // Helper method to check if there are hours
   areHours() {
+    // Isolate variable
+    const hours = this.state.listing.hours;
+
     // Check to see if any hour is populated
-    const keys = Object.keys(this.state.hours);
+    const keys = Object.keys(hours);
+
     const reducer = (acc, curr) => {
       if (acc) return true;
-      const dayObj = this.state.hours[curr];
+      const dayObj = hours[curr];
       return !!(dayObj.start && dayObj.finish);
     };
+
     return keys.reduce(reducer, false);
   }
 
   // Helper method to render Hours
   renderHours() {
     // Isolate variable
-    const hours = this.state.hours;
+    const hours = this.state.listing.hours;
 
     // If hours are entered, display them
     if (this.areHours()) {
@@ -590,190 +605,172 @@ class Listing extends React.Component {
 
   // Render the component
   render() {
+    if (this.state.pending) {
+      return (<Loading />);
+    }
+
+    if (this.state.notFound) {
+      return (
+        <NotFoundSection
+          title="Listing not found"
+          content="Uh-oh! Looks like the listing you were looking for was either removed or does not exist."
+          url="/listings"
+          urlText="Back to all listings"
+        />
+      );
+    }
+
     // Return the component
     return (
-      this.state.pending ? (
-        <Loading />
-      ) : (
-        this.state.notFound ? (
-          <NotFoundSection
-            title="Listing not found"
-            content="Uh-oh! Looks like the listing you were looking for was either removed or does not exist."
-            url="/listings"
-            urlText="Back to all listings"
-          />
-        ) : (
-          <div className="listing">
-            {/* Render the head */}
-            <Tags title={this.state.title} description={this.state.naldaFavorite}/>
+      <div className="listing">
+        {/* Render the head */}
+        <Tags title={this.state.title} description={this.state.description} />
 
-            <div className="parallax-wrapper">
-              {/* <img src={ this.state.image } alt={ this.state.title } className="img-fluid" id="parallax" /> */}
-              <div className="background-image img" style={{backgroundImage: `url(${this.state.image})`}} id="parallax" />
+        <div className="parallax-wrapper">
+          <div className="background-image img" style={{backgroundImage: `url(${this.state.listing.image})`}} id="parallax" />
+        </div>
+
+        { this.state.redirectToHome && <Redirect to="/"/> }
+
+        <div className="container content">
+          <div className="row">
+            <div className="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-0">
+              { this.renderButtons() }
+
+              <div className="header">
+                <h1 className="title">
+                  { this.state.listing.title }
+                </h1>
+                <Author
+                  createdAt={ this.state.listing.createdAt }
+                  updatedAt={ this.state.listing.updatedAt }
+                  name={ this.state.author.name }
+                  _id={ this.state.author._id }
+                  profilePicture={ this.state.author.profilePicture }
+                />
+                <ErrorMessage error={this.state.error} />
+              </div>
+              <div className="categories">
+                { this.renderCategories() }
+              </div>
+              <p className="naldaFavorite">
+                <strong>
+                  Nalda's favorite:
+                </strong>
+                <br />
+                { this.state.listing.naldaFavorite }
+              </p>
+
+              <Carousel images={this.state.listing.images}/>
+
+              <div className="hidden-lg-up">
+                <div className="line" />
+                <h5 className="subtitle">
+                  Hours
+                </h5>
+                { this.renderHours() }
+              </div>
+
+              <div className="line" />
+
+              <h5 className="subtitle">
+                Amenities
+              </h5>
+
+              { this.renderAmenities() }
+              { this.renderAdditionalAmenities() }
+              { this.renderLocation() }
+
+              <div className="line" />
+              { this.renderReviewsSection() }
+
+              { /* Render a back to home button */ }
+              <div className="space-1" />
+              <Button />
             </div>
 
-            { this.state.redirectToHome && <Redirect to="/"/> }
-
-            <div className="container content">
-              <div className="row">
-                {/* Contains details about the listing */}
-                <div className="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-0">
-                  {/* Render buttons to edit or delete the listing if the user has permission */}
-                  { this.renderButtons() }
-
-                  <div className="header">
-                    <h1 className="title">
-                      { this.state.title }
-                    </h1>
-                    <Author
-                      createdAt={ this.state.createdAt }
-                      updatedAt={ this.state.updatedAt }
-                      name={ this.state.author.name }
-                      _id={ this.state.author._id }
-                      profilePicture={ this.state.author.profilePicture }
-                    />
-                    <ErrorMessage error={this.state.error} />
-                  </div>
-                  <div className="categories">
-                    { this.renderCategories() }
-                  </div>
-                  <p className="naldaFavorite">
-                    <strong>
-                      Nalda's favorite:
-                    </strong>
-                    <br />
-                    { this.state.naldaFavorite }
-                  </p>
-                  <Carousel images={this.state.images}/>
-                  {
-                    this.state.hours && (
-                      <div className="hidden-lg-up">
-                        <div className="line" />
-                        <h5 className="subtitle">
-                          Hours
-                        </h5>
-                        { this.renderHours() }
-                      </div>
-                    )
-                  }
-                  <div className="line" />
-                  <h5 className="subtitle">
-                    Amenities
-                  </h5>
-                  { this.renderAmenities() }
-                  { this.renderAdditionalAmenities() }
-
-                  {
-                    (
-                      this.state.location.name &&
-                      this.state.location.lat &&
-                      this.state.location.lng
-                    ) ? (
-                      <div>
-                        <div className="line" />
-                        <h5 className="subtitle">
-                          Location
-                        </h5>
-                        <p className="marg-bot-1">
-                          { this.state.location.name }
-                        </p>
-                        <div id="map" />
-                      </div>
-                    ) : null
-                  }
-
-                  <div className="line" />
-                  { this.renderReviewsSection() }
-
-                  { /* Render a back to home button */ }
-                  <div className="space-1" />
-                  <Button />
-                </div>
-
-                {/* Contains overview aboute the listing */}
-                <div
-                  id="listing-preview"
+            {/* Contains overview aboute the listing */}
+            <div
+              id="listing-preview"
+              className={
+                this.state.infoTrigger ? (
+                  "col-12 col-lg-4 listing-preview active"
+                ) : (
+                  "col-12 col-lg-4 listing-preview"
+                )
+              }
+              style={{
+                top: this.state.infoTrigger ? (window.innerHeight - document.getElementById('listing-preview').offsetHeight) : (window.innerHeight - 64)
+              }}
+            >
+              <div className="card">
+                <i
                   className={
                     this.state.infoTrigger ? (
-                      "col-12 col-lg-4 listing-preview active"
+                      "fa fa-chevron-down hidden-lg-up fa-lg info-trigger"
                     ) : (
-                      "col-12 col-lg-4 listing-preview"
+                      "fa fa-chevron-down hidden-lg-up fa-lg info-trigger active"
                     )
                   }
-                  style={{
-                    top: this.state.infoTrigger ? (window.innerHeight - document.getElementById('listing-preview').offsetHeight) : (window.innerHeight - 64)
-                  }}
-                >
-                  <div className="card">
-                    <i
-                      className={
-                        this.state.infoTrigger ? (
-                          "fa fa-chevron-down hidden-lg-up fa-lg info-trigger"
-                        ) : (
-                          "fa fa-chevron-down hidden-lg-up fa-lg info-trigger active"
-                        )
-                      }
-                      aria-hidden="true"
-                      onClick={ this.handleClickInfoTrigger }
-                    />
-                    <h2 className="title">
-                      { this.state.title }
-                    </h2>
-                    <p className="description">
-                      { this.state.description }
+                  aria-hidden="true"
+                  onClick={ this.handleClickInfoTrigger }
+                />
+                <h2 className="title">
+                  { this.state.listing. title }
+                </h2>
+                <p className="description">
+                  { this.state.listing. description }
+                </p>
+                {
+                  this.state.website && (
+                    <a
+                      href={ this.state.listing.website }
+                      className="website"
+                      target="_blank">
+                      <i className="fa fa-globe" aria-hidden="true" />
+                      &nbsp;
+                      Visit website
+                    </a>
+                  )
+                }
+                {
+                  this.state.listing.price && (
+                    <p className="price">
+                      <strong>
+                        Price:&nbsp;
+                      </strong>
+                      { this.state.listing.price }
                     </p>
-                    {
-                      this.state.website && (
-                        <a
-                          href={ this.state.website }
-                          className="website"
-                          target="_blank">
-                          <i className="fa fa-globe" aria-hidden="true" />
-                          &nbsp;
-                          Visit website
-                        </a>
-                      )
-                    }
-                    {
-                      this.state.price && (
-                        <p className="price">
-                          <strong>
-                            Price:&nbsp;
-                          </strong>
-                          { this.state.price }
-                        </p>
-                      )
-                    }
-                    {
-                      this.state.rating && (
-                        <div className="price">
-                          <strong>
-                            Nalda's Rating:&nbsp;
-                          </strong>
-                          <Stars rating={ this.state.rating } />
-                        </div>
-                      )
-                    }
-                    {
-                      this.state.hours && (
-                        <div className="price hidden-md-down">
-                          <p>
-                            <strong>
-                              Hours:&nbsp;
-                            </strong>
-                          </p>
-                          { this.renderHours() }
-                        </div>
-                      )
-                    }
-                  </div>
-                </div>
+                  )
+                }
+                {
+                  this.state.listing.rating && (
+                    <div className="price">
+                      <strong>
+                        Nalda's Rating:&nbsp;
+                      </strong>
+                      <Stars rating={ this.state.listing.rating } />
+                    </div>
+                  )
+                }
+                {
+                  this.state.listing.hours && (
+                    <div className="price hidden-md-down">
+                      <p>
+                        <strong>
+                          Hours:&nbsp;
+                        </strong>
+                      </p>
+                      { this.renderHours() }
+                    </div>
+                  )
+                }
               </div>
             </div>
-            <div className="space-2" />
           </div>
-        )
-      )
+        </div>
+        <div className="space-2" />
+      </div>
     );
   }
 }
