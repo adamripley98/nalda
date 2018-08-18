@@ -6,7 +6,7 @@ import axios from 'axios';
 import Loading from '../../shared/Loading';
 import ErrorMessage from '../../shared/ErrorMessage';
 import Button from '../../shared/Button';
-import Preview from '../Preview';
+import ArticlePreview from './ArticlePreview';
 import Blurb from '../../shared/Blurb';
 import Tags from '../../shared/Tags';
 
@@ -23,8 +23,8 @@ class Articles extends React.Component {
     this.state = {
       articles: [],
       pending: true,
-      error: "",
-      currentSort: "date",
+      error: '',
+      currentSort: 'date',
       isAscending: false,
     };
 
@@ -126,13 +126,13 @@ class Articles extends React.Component {
     // If articles are pulled from the database
     if (this.state.articles && this.state.articles.length) {
       return this.state.articles.map((art) => (
-        <Preview
-          _id={ art._id }
-          key={ art._id }
-          title={ art.title }
-          subtitle={ art.subtitle }
-          image={ art.imagePreview ? art.imagePreview : art.image }
-          isArticle
+        <ArticlePreview
+          _id={art._id || art.contentId}
+          key={art._id || art.contentId}
+          title={art.title}
+          subtitle={art.subtitle}
+          image={art.imagePreview ? art.imagePreview : art.image}
+          contentId={art.contentId}
         />
       ));
     }
