@@ -54,7 +54,7 @@ import Credits from '../components/Credits';
 import Terms from '../components/Terms';
 import Privacy from '../components/Privacy';
 import NotFoundSection from '../components/NotFoundSection';
-import Profile from '../components/Profile';
+import Profile from '../components/profile/Profile';
 import SearchResults from '../components/content/SearchResults';
 
 // Admin routes
