@@ -1,0 +1,84 @@
+// Styling preview for all forms of content (videos, articles, and listings)
+.content-preview-wrapper {
+	width: 50%;
+	display: inline-block;
+	clear: none;
+	margin: 0rem 0rem 1rem 0rem;
+	vertical-align: top;
+}
+
+.content-preview {
+  color: black;
+	width: calc(100% - 10px);
+	margin: 0 auto;
+
+  .background-image {
+    margin-bottom: 0.5rem;
+    width: 100%;
+		padding-top: 65%;
+  }
+
+  .location {
+    text-transform: uppercase;
+    margin-bottom: 0.2rem;
+    font-size: 0.8rem;
+    color: $gray;
+    font-weight: bold;
+  }
+
+  .title {
+    font-weight: bold;
+    margin-bottom: 0.25rem !important;
+    font-size: 1.6rem;
+  }
+
+  .subtitle {
+    margin-bottom: 0;
+    font-size: 1.2rem;
+    color: $dark-gray;
+  }
+}
+
+.content-preview-wrapper.video .content-preview .background-image {
+  padding-top: 0;
+
+  .image-wrapper {
+    z-index: 1;
+    height: 65%;
+    padding: 3rem 0rem;
+    display: block;
+
+    img {
+      margin: 0 auto;
+      height: 4rem;
+      width: auto;
+      display: block;
+      opacity: 0.6;
+      transition: all 0.2s ease;
+    }
+  }
+
+  &:hover {
+    .image-wrapper img {
+      opacity: 0.8;
+    }
+  }
+}
+
+@media only screen and (min-width: 768px) {
+	.content-preview-wrapper {
+		width: 33.3333%;
+	}
+}
+
+@media only screen and (min-width: 1069px) {
+	.content-preview-wrapper {
+		width: 25%;
+	}
+}
+
+@media only screen and (min-width: 1500px) {
+	.content-preview-wrapper {
+		width: 20%;
+	}
+}

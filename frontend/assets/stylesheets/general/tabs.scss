@@ -1,0 +1,31 @@
+// Styling the tabs at the top of content creation pages
+// ListingForm
+// ArticleForm
+// VideoForm
+.tabs {
+  width: 100%;
+  display: flex;
+  border-bottom: 1px solid $border;
+  transition: all 0.2s ease;
+
+  .tab {
+    flex: 1;
+    color: $gray;
+    padding: 0.5rem 1rem;
+    font-weight: bold;
+    font-size: 1.2rem;
+    text-align: center;
+    transition: all 0.2s ease;
+
+    &:hover {
+      color: $dark-gray;
+      border-bottom: 4px solid $border;
+    }
+
+    &.active {
+      background: white;
+      border-bottom: 4px solid $primary !important;
+      color: black;
+    }
+  }
+}

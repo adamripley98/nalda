@@ -1,0 +1,29 @@
+// Style compass for not found page
+.not-found-compass {
+  padding-bottom: 1rem;
+  text-align: center;
+
+  img {
+    width: 50%;
+    -webkit-animation: not-found 2s infinite ease-in;
+  }
+}
+
+// Transition for the not found page to rotate in an erratic manner
+@-webkit-keyframes not-found {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+
+  15% {
+    -webkit-transform: rotate(-50deg);
+  }
+
+  50% {
+    -webkit-transform: rotate(-270deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(0deg);
+  }
+}

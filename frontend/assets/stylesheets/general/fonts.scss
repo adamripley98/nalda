@@ -1,0 +1,23 @@
+// Setting the fonts for the application
+body,
+.form-control {
+  font-family: 'adelle-sans', sans-serif;
+}
+
+// Subtitles are the lighter font as well
+.subtitle {
+  font-family: 'adelle-sans', sans-serif !important;
+  font-weight: 400;
+}
+
+// Using a stronger font on all headers, titles
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.bold {
+  font-family: 'adelle-sans', sans-serif;
+  font-weight: bold;
+}

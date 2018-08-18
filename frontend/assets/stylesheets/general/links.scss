@@ -1,0 +1,45 @@
+// Modular class for underline
+.underline,
+a.underline {
+  text-decoration: underline;
+}
+
+// Modular helper class to denote that the element is clickable
+.cursor {
+  cursor: hand;
+  cursor: pointer;
+}
+
+a {
+  cursor: hand;
+  cursor: pointer;
+  text-decoration: none !important;
+  color: $primary;
+
+  &:visited {
+    color: $primary;
+  }
+
+  &:active,
+  &:focus,
+  &:hover {
+    color: $dark-primary;
+  }
+
+  &.link-style {
+    color: $primary !important;
+
+    &:active,
+    &:focus,
+    &:hover {
+      color: $dark-primary !important;
+    }
+  }
+
+  &:active,
+  &:focus,
+  &:hover,
+  &:visited {
+    text-decoration: none !important;
+  }
+}

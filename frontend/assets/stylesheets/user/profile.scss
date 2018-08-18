@@ -75,3 +75,52 @@
     background-position: center;
   }
 }
+
+/**
+ * Styling profile page
+ */
+.profile-wrapper {
+  .profile {
+    display: flex;
+
+    .profile-picture {
+      width: 4rem;
+      height: 4rem;
+      margin-right: 1rem;
+      border-radius: 50%;
+      background: $gray;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+
+    .profile-content {
+      flex: 1;
+
+      p {
+        margin-bottom: 0.5rem;
+
+        &:last-child {
+          margin-bottom: 0rem;
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Make the profile picture less wide on smaller screens
+ */
+@media screen and (max-width: 448px) {
+  .profile-wrapper .profile .profile-picture {
+    width: 3rem;
+    height: 3rem;
+  }
+}
+
+@media screen and (max-device-width: 448px) {
+  .profile-wrapper .profile .profile-picture {
+    width: 3rem;
+    height: 3rem;
+  }
+}

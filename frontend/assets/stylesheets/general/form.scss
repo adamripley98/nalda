@@ -146,3 +146,104 @@ label {
     border: 2px solid $primary;
   }
 }
+
+// Style placeholders as gray (a lighter color than the default)
+// This more strongly suggests that the placeholder text is temporary
+.form-control {
+  &::-webkit-input-placeholder {
+    color: $gray;
+  }
+
+  &::-moz-placeholder {
+    color: $gray;
+  }
+
+  &:-ms-input-placeholder {
+    color: $gray;
+  }
+
+  &:-moz-placeholder {
+    color: $gray;
+  }
+}
+
+// Format styling for picking hours
+// This is particularly relevant to listings though could be used elsewhere
+// The format is: label, time select 1, time select 2
+.time-select {
+  display: flex;
+  margin-bottom: 0.25rem;
+
+  p {
+    display: inline-block;
+    width: auto;
+    margin-bottom: 0rem;
+    padding: 0.25rem 0rem;
+    line-height: 1;
+    transform: translateY(0.25rem);
+
+    // This value is picked such that the label for each form can be (generally)
+    // the same width and everything lines up nicely
+    min-width: 6rem;
+  }
+
+  .form-control {
+    flex: 1;
+    width: auto;
+    margin-left: 1rem;
+  }
+}
+
+.amenities-form {
+  .bold {
+    width: 100%;
+    color: $gray;
+    margin-top: 0.8rem;
+    margin-bottom: 0.2rem;
+    text-decoration: none;
+    cursor: auto;
+  }
+
+  p {
+    text-decoration: line-through;
+    width: 100%;
+    color: $gray;
+    margin-bottom: 0.2rem;
+    cursor: hand;
+    cursor: pointer;
+
+    &.active {
+      color: $dark-gray;
+      text-decoration: none;
+    }
+  }
+}
+
+// Styling dropzones (image upload fields)
+.dropzone {
+  margin-bottom: 0rem;
+  padding: 0.75rem;
+  border: 1px solid $border;
+  border-radius: 0.4rem;
+  cursor: hand;
+  cursor: pointer;
+  color: $dark-gray;
+
+  .fa {
+    margin-right: 0.4rem;
+    color: $dark-gray !important;
+
+    &.fa-trash-o {
+      position: absolute;
+      right: 1rem;
+      color: $gray !important;
+      font-size: 1.2rem;
+
+      &:hover,
+      &:active,
+      &:focus {
+        color: $dark-gray !important;
+      }
+    }
+  }
+}
