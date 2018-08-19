@@ -15,9 +15,11 @@ import NotFoundSection from '../../NotFoundSection';
 import Stars from './Stars';
 import Carousel from './Carousel';
 import ErrorMessage from '../../shared/ErrorMessage';
-import Author from '../../shared/Author';
 import Blurb from '../../shared/Blurb';
 import Tags from '../../shared/Tags';
+import Location from './Location';
+import AdditionalAmenities from './AdditionalAmenities';
+import ListingHeader from './ListingHeader';
 
 // Import SVGs
 import CashOnly from '../../../assets/images/cash-only.svg';
@@ -30,7 +32,6 @@ import Wifi from '../../../assets/images/wifi.svg';
 import Wink from '../../../assets/images/wink.svg';
 
 // Import json
-import categoryMap from '../../json/categoryMap';
 import amenityMap from '../../json/amenityMap';
 
 /**
@@ -61,7 +62,6 @@ class Listing extends React.Component {
 
     // Bind this to helper methods
     this.renderAmenities = this.renderAmenities.bind(this);
-    this.renderAdditionalAmenities = this.renderAdditionalAmenities.bind(this);
     this.renderReviewsSection = this.renderReviewsSection.bind(this);
     this.renderReviews = this.renderReviews.bind(this);
     this.handleClickInfoTrigger = this.handleClickInfoTrigger.bind(this);
@@ -70,7 +70,6 @@ class Listing extends React.Component {
     this.renderButtons = this.renderButtons.bind(this);
     this.areHours = this.areHours.bind(this);
     this.deleteReview = this.deleteReview.bind(this);
-    this.renderLocation = this.renderLocation.bind(this);
   }
 
   // Pull the listing data from the database
@@ -119,7 +118,7 @@ class Listing extends React.Component {
         }
       })
       .catch(err => {
-        if (err.response.status === 404) {
+        if (err && err.response && err.response.status === 404) {
           // If the listing was not found
           this.setState({
             notFound: true,
@@ -141,29 +140,6 @@ class Listing extends React.Component {
         $('#parallax').css("transform", `translateY(${pos}px)`);
       });
     });
-  }
-
-  renderLocation() {
-    if (
-        this.state.listing.location.name &&
-        this.state.listing.location.lat &&
-        this.state.listing.location.lng
-    ) {
-      return (
-        <div>
-          <div className="line" />
-          <h5 className="subtitle">
-            Location
-          </h5>
-          <p className="marg-bot-1">
-            { this.state.listing.location.name }
-          </p>
-          <div id="map" />
-        </div>
-      );
-    }
-
-    return null;
   }
 
   // Helper method to delete specific listing
@@ -228,30 +204,6 @@ class Listing extends React.Component {
   }
 
   /**
-   * Helper method to render categories
-   */
-  renderCategories() {
-    const categories = this.state.listing.categories;
-    // If there are categories to display
-    if (categories) {
-      // Get all keys from the object
-      const keys = Object.keys(categories);
-
-      // Return an category div tag for each category which is true in the state
-      // That is, if the curator marked that the listing has said category
-      return keys.map(category => (
-        categories[category] ? (
-          <div className="category" key={ category }>
-            { categoryMap[category] ? categoryMap[category] : category }
-          </div>
-        ) : null
-      ));
-    }
-
-    return null;
-  }
-
-  /**
    * Helper method to render amenities
    */
   renderAmenities() {
@@ -296,27 +248,6 @@ class Listing extends React.Component {
     this.setState({
       infoTrigger: !this.state.infoTrigger,
     });
-  }
-
-  /**
-   * Helper method to render additional amenities
-   */
-  renderAdditionalAmenities() {
-    const additionalAmenities = this.state.listing.additionalAmenities || [];
-
-    // If amenities are in the state (this should always be the case)
-    if (additionalAmenities.length) {
-      // Return an amenity div tag for each amenity which is true in the state
-      // That is, if the curator marked that the listing has said amenity
-      return additionalAmenities.map(amenity => (
-        <div className="amenity no-icon" key={ amenity }>
-          { amenity }
-        </div>
-      ));
-    }
-
-    // If there are no additional amenities
-    return null;
   }
 
   // Helper method to handle a user clicking on the info trigger
@@ -637,29 +568,11 @@ class Listing extends React.Component {
             <div className="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-0">
               { this.renderButtons() }
 
-              <div className="header">
-                <h1 className="title">
-                  { this.state.listing.title }
-                </h1>
-                <Author
-                  createdAt={ this.state.listing.createdAt }
-                  updatedAt={ this.state.listing.updatedAt }
-                  name={ this.state.author.name }
-                  _id={ this.state.author._id }
-                  profilePicture={ this.state.author.profilePicture }
-                />
-                <ErrorMessage error={this.state.error} />
-              </div>
-              <div className="categories">
-                { this.renderCategories() }
-              </div>
-              <p className="naldaFavorite">
-                <strong>
-                  Nalda's favorite:
-                </strong>
-                <br />
-                { this.state.listing.naldaFavorite }
-              </p>
+              <ListingHeader
+                listing={this.state.listing}
+                error={(this.state.error && this.state.error.message) ? this.state.error.message : this.state.error }
+                author={this.state.author}
+              />
 
               <Carousel images={this.state.listing.images}/>
 
@@ -678,8 +591,10 @@ class Listing extends React.Component {
               </h5>
 
               { this.renderAmenities() }
-              { this.renderAdditionalAmenities() }
-              { this.renderLocation() }
+
+              <AdditionalAmenities amenities={this.state.listing.AdditionalAmenities} />
+
+              <Location location={this.state.listing.location || {}} />
 
               <div className="line" />
               { this.renderReviewsSection() }
@@ -716,13 +631,13 @@ class Listing extends React.Component {
                   onClick={ this.handleClickInfoTrigger }
                 />
                 <h2 className="title">
-                  { this.state.listing. title }
+                  { this.state.listing.title }
                 </h2>
                 <p className="description">
-                  { this.state.listing. description }
+                  { this.state.listing.description }
                 </p>
                 {
-                  this.state.website && (
+                  this.state.listing.website && (
                     <a
                       href={ this.state.listing.website }
                       className="website"
