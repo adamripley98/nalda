@@ -4,7 +4,7 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import uuid from 'uuid-v4';
-import { Link, Redirect} from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 // Import components
 import Review from './Review';
@@ -20,6 +20,7 @@ import Tags from '../../shared/Tags';
 import Location from './Location';
 import AdditionalAmenities from './AdditionalAmenities';
 import ListingHeader from './ListingHeader';
+import Hours from './Hours';
 
 // Import SVGs
 import CashOnly from '../../../assets/images/cash-only.svg';
@@ -68,7 +69,6 @@ class Listing extends React.Component {
     this.updateReviews = this.updateReviews.bind(this);
     this.deleteListing = this.deleteListing.bind(this);
     this.renderButtons = this.renderButtons.bind(this);
-    this.areHours = this.areHours.bind(this);
     this.deleteReview = this.deleteReview.bind(this);
   }
 
@@ -407,133 +407,6 @@ class Listing extends React.Component {
     return moment(hour, 'HH:mm').format('h:mm a');
   }
 
-  // Helper method to check if there are hours
-  areHours() {
-    // Isolate variable
-    const hours = this.state.listing.hours;
-
-    // Check to see if any hour is populated
-    const keys = Object.keys(hours);
-
-    const reducer = (acc, curr) => {
-      if (acc) return true;
-      const dayObj = hours[curr];
-      return !!(dayObj.start && dayObj.finish);
-    };
-
-    return keys.reduce(reducer, false);
-  }
-
-  // Helper method to render Hours
-  renderHours() {
-    // Isolate variable
-    const hours = this.state.listing.hours;
-
-    // If hours are entered, display them
-    if (this.areHours()) {
-      return (
-        // If a date has a start and end time, it will be displayed
-        <table className="table">
-          <tbody>
-            {
-              (hours.monday.start && hours.monday.finish) ? (
-                <tr>
-                  <td>
-                    Monday
-                  </td>
-                  <td>
-                    {this.formatHours(hours.monday.start)} - {this.formatHours(hours.monday.finish)}
-                  </td>
-                </tr>
-              ) : null
-            }
-            {
-              (hours.tuesday.start && hours.tuesday.finish) ? (
-                <tr>
-                  <td>
-                    Tuesday
-                  </td>
-                  <td>
-                    {this.formatHours(hours.tuesday.start)} - {this.formatHours(hours.tuesday.finish)}
-                  </td>
-                </tr>
-              ) : null
-            }
-            {
-              (hours.wednesday.start && hours.wednesday.finish) ? (
-                <tr>
-                  <td>
-                    Wednesday
-                  </td>
-                  <td>
-                    {this.formatHours(hours.wednesday.start)} - {this.formatHours(hours.wednesday.finish)}
-                  </td>
-                </tr>
-              ) : null
-            }
-            {
-              (hours.thursday.start && hours.thursday.finish) ? (
-                <tr>
-                  <td>
-                    Thursday
-                  </td>
-                  <td>
-                    {this.formatHours(hours.thursday.start)} - {this.formatHours(hours.thursday.finish)}
-                  </td>
-                </tr>
-              ) : null
-            }
-            {
-              (hours.friday.start && hours.friday.finish) ? (
-                <tr>
-                  <td>
-                    Friday
-                  </td>
-                  <td>
-                    {this.formatHours(hours.friday.start)} - {this.formatHours(hours.friday.finish)}
-                  </td>
-                </tr>
-              ) : null
-            }
-            {
-              (hours.saturday.start && hours.saturday.finish) ? (
-                <tr>
-                  <td>
-                    Saturday
-                  </td>
-                  <td>
-                    {this.formatHours(hours.saturday.start)} - {this.formatHours(hours.saturday.finish)}
-                  </td>
-                </tr>
-              ) : null
-            }
-            {
-              (hours.sunday.start && hours.sunday.finish) ? (
-                <tr>
-                  <td>
-                    Sunday
-                  </td>
-                  <td>
-                    {this.formatHours(hours.sunday.start)} - {this.formatHours(hours.sunday.finish)}
-                  </td>
-                </tr>
-              ) : null
-            }
-          </tbody>
-        </table>
-      );
-    }
-
-    // If there are no hours
-    return (
-      <div>
-        <p className="gray-text">
-          Hours are not published for this listing.
-        </p>
-      </div>
-    );
-  }
-
   // Render the component
   render() {
     if (this.state.pending) {
@@ -581,7 +454,7 @@ class Listing extends React.Component {
                 <h5 className="subtitle">
                   Hours
                 </h5>
-                { this.renderHours() }
+                <Hours hours={this.state.listing.hours} />
               </div>
 
               <div className="line" />
@@ -676,7 +549,7 @@ class Listing extends React.Component {
                           Hours:&nbsp;
                         </strong>
                       </p>
-                      { this.renderHours() }
+                      <Hours hours={this.state.listing.hours} />
                     </div>
                   )
                 }
