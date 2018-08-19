@@ -1,5 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
+
+// Helper method to convert from military to normal time
+const formatHours = (hour) => (
+  moment(hour, 'HH:mm').format('h:mm a')
+);
+
+const formatDay = (day) => (
+  `${formatHours(day.start)} - ${formatHours(day.finish)}`
+);
 
 const Hours = ({ hours }) => {
   // Helper method to check if there are hours
@@ -37,7 +47,7 @@ const Hours = ({ hours }) => {
                 Monday
               </td>
               <td>
-                {this.formatHours(hours.monday.start)} - {this.formatHours(hours.monday.finish)}
+                {formatDay(hours.monday)}
               </td>
             </tr>
           ) : null
@@ -49,7 +59,7 @@ const Hours = ({ hours }) => {
                 Tuesday
               </td>
               <td>
-                {this.formatHours(hours.tuesday.start)} - {this.formatHours(hours.tuesday.finish)}
+                {formatDay(hours.tuesday)}
               </td>
             </tr>
           ) : null
@@ -61,7 +71,7 @@ const Hours = ({ hours }) => {
                 Wednesday
               </td>
               <td>
-                {this.formatHours(hours.wednesday.start)} - {this.formatHours(hours.wednesday.finish)}
+                {formatDay(hours.wednesday)}
               </td>
             </tr>
           ) : null
@@ -73,7 +83,7 @@ const Hours = ({ hours }) => {
                 Thursday
               </td>
               <td>
-                {this.formatHours(hours.thursday.start)} - {this.formatHours(hours.thursday.finish)}
+                {formatDay(hours.thursday)}
               </td>
             </tr>
           ) : null
@@ -85,7 +95,7 @@ const Hours = ({ hours }) => {
                 Friday
               </td>
               <td>
-                {this.formatHours(hours.friday.start)} - {this.formatHours(hours.friday.finish)}
+                {formatDay(hours.friday)}
               </td>
             </tr>
           ) : null
@@ -97,7 +107,7 @@ const Hours = ({ hours }) => {
                 Saturday
               </td>
               <td>
-                {this.formatHours(hours.saturday.start)} - {this.formatHours(hours.saturday.finish)}
+                {formatDay(hours.saturday)}
               </td>
             </tr>
           ) : null
@@ -109,7 +119,7 @@ const Hours = ({ hours }) => {
                 Sunday
               </td>
               <td>
-                {this.formatHours(hours.sunday.start)} - {this.formatHours(hours.sunday.finish)}
+                {formatDay(hours.sunday)}
               </td>
             </tr>
           ) : null

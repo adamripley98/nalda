@@ -2,7 +2,6 @@
 import React from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
-import moment from 'moment';
 import uuid from 'uuid-v4';
 import { Link, Redirect } from 'react-router-dom';
 
@@ -400,11 +399,6 @@ class Listing extends React.Component {
 
     // Else, return nothing
     return null;
-  }
-
-  // Helper method to convert from military to normal time
-  formatHours(hour) {
-    return moment(hour, 'HH:mm').format('h:mm a');
   }
 
   // Render the component
