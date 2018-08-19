@@ -116,31 +116,24 @@ module.exports = () => {
             });
           }, asyncErr => {
             if (asyncErr) {
-              res.send({
-                success: false,
-                error: 'Error getting content',
-              });
-            } else {
-              // Check for error with reviews
-              if (reviewError) {
-                res.send({
-                  success: false,
-                  error: reviewError,
-                });
-              } else {
-                // Update the reviews
-                listing.reviews = null;
-                // Send back data
-                res.send({
-                  author,
-                  success: true,
-                  data: listing,
-                  reviews: reviews,
-                  timestamp: listing._id.getTimestamp(),
-                  canModify,
-                });
-              }
+              res.status(404).send({error: 'Error getting content'});
+              return;
             }
+            // Check for error with reviews
+            if (reviewError) {
+              res.status(404).send({error: reviewError});
+              return;
+            }
+            // Update the reviews
+            listing.reviews = null;
+            // Send back data
+            res.send({
+              author,
+              listing,
+              reviews: reviews,
+              timestamp: listing._id.getTimestamp(),
+              canModify,
+            });
           });
         })
         .catch(() => {

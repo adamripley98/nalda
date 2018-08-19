@@ -4,6 +4,7 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import uuid from 'uuid-v4';
 import { Link, Redirect } from 'react-router-dom';
+import moment from 'moment';
 
 // Import components
 import Review from './Review';
@@ -82,37 +83,29 @@ class Listing extends React.Component {
     // Find the listing
     axios.get(`/api/listings/${id}`)
       .then(res => {
-        if (res.data.success) {
-          // Set the state
-          this.setState({
-            error: '',
-            listing: res.data.data,
-            reviews: res.data.reviews,
-            author: res.data.author,
-            time: moment(res.data.timestamp).fromNow(),
-            pending: false,
-            canModify: res.data.canModify,
-            listingId: id,
-          });
+        // Set the state
+        this.setState({
+          error: '',
+          listing: res.data.listing,
+          reviews: res.data.reviews,
+          author: res.data.author,
+          time: moment(res.data.timestamp).fromNow(),
+          pending: false,
+          canModify: res.data.canModify,
+          listingId: id,
+        });
 
-          // If there is a location
-          if (res.data.data.location.lng && res.data.data.location.lat) {
-            $(document).ready(() => {
-              var map = new google.maps.Map(document.getElementById('map'), {
-                zoom: 17,
-                center: res.data.data.location,
-              });
-              var marker = new google.maps.Marker({
-                position: res.data.data.location,
-                map: map
-              });
+        // If there is a location
+        if (res.data.listing.location.lng && res.data.listing.location.lat) {
+          $(document).ready(() => {
+            var map = new google.maps.Map(document.getElementById('map'), {
+              zoom: 17,
+              center: res.data.listing.location,
             });
-          }
-        } else {
-          // If there was an error with the request
-          this.setState({
-            error: res.data.error,
-            pending: false,
+            var marker = new google.maps.Marker({
+              position: res.data.listing.location,
+              map: map
+            });
           });
         }
       })
@@ -176,22 +169,14 @@ class Listing extends React.Component {
     // Find the listing
     axios.get(`/api/listings/${this.state._id}`)
       .then(res => {
-        if (res.data.success) {
-          // Update state with new review
-          this.setState({
-            error: "",
-            listing: res.data.data,
-            reviews: res.data.reviews,
-            time: moment(res.data.timestamp).fromNow(),
-            pending: false,
-          });
-        } else {
-          // If there was an error with the request
-          this.setState({
-            error: res.data.error,
-            pending: false,
-          });
-        }
+        // Update state with new review
+        this.setState({
+          error: "",
+          listing: res.data.listing,
+          reviews: res.data.reviews,
+          time: moment(res.data.timestamp).fromNow(),
+          pending: false,
+        });
       })
       .catch(err => {
         // If there was an error making the request
@@ -461,7 +446,7 @@ class Listing extends React.Component {
 
               <AdditionalAmenities amenities={this.state.listing.AdditionalAmenities} />
 
-              <Location location={this.state.listing.location || {}} />
+              <Location location={this.state.listing && this.state.listing.location  ? this.state.listing.location : {}} />
 
               <div className="line" />
               { this.renderReviewsSection() }
