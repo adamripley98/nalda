@@ -13,6 +13,7 @@ const Article = require('./models/article');
 const Listing = require('./models/listing');
 const Video = require('./models/video');
 const User = require('./models/user');
+const Event = require('./models/event');
 
 // Import helper methods
 const {UserCheck} = require('./helperMethods/authChecking');
@@ -90,32 +91,35 @@ module.exports = () => {
   router.post('/search', (req, res) => {
     // Search through relevant data in Mongo
     Article.find({$or: [{"title": new RegExp(req.body.search, "i")}, {"subtitle": new RegExp(req.body.search, "i")}]}, (errArticle, articles) => {
-      Listing.find({$or: [{"title": new RegExp(req.body.search, "i")}, {"description": new RegExp(req.body.search, "i")}, {"naldaFavorite": new RegExp(req.body.search, "i")}]}, (errListing, listings) => {
+      Listing.find({$or: [{"title": new RegExp(req.body.search, "i")}, {"description": new RegExp(req.body.search, "i")}]}, (errListing, listings) => {
         Video.find({$or: [{"title": new RegExp(req.body.search, "i")}, {"description": new RegExp(req.body.search, "i")}]}, (errVideo, videos) => {
           User.find({name: new RegExp(req.body.search, "i")}, (errUser, users) => {
-            // Return any errors
-            if (errArticle || errListing || errVideo || errUser) {
-              res.status(400).send({
-                success: false,
-                error: 'Search error.',
-              });
-            } else {
-              // Only return curators or admins, only return relevant info
-              const curators = users.filter(user => user.userType !== 'user').map(x => {
-                return {name: x.name, _id: x._id, profilePicture: x.profilePicture};
-              });
-              // If there were no errors, send back all data
-              res.send({
-                success: true,
-                error: '',
-                data: {
-                  articles,
-                  listings,
-                  videos,
-                  curators,
-                },
-              });
-            }
+            Event.find({$or: [{"title": new RegExp(req.body.search, "i")}, {"description": new RegExp(req.body.search, "i")}]}, (errEvent, events) => {
+              // Return any errors
+              if (errArticle || errListing || errVideo || errUser || errEvent) {
+                res.status(400).send({
+                  success: false,
+                  error: 'Search error.',
+                });
+              } else {
+                // Only return curators or admins, only return relevant info
+                const curators = users.filter(user => user.userType !== 'user').map(x => {
+                  return {name: x.name, _id: x._id, profilePicture: x.profilePicture};
+                });
+                // If there were no errors, send back all data
+                res.send({
+                  success: true,
+                  error: '',
+                  data: {
+                    articles,
+                    listings,
+                    videos,
+                    curators,
+                    events,
+                  },
+                });
+              }
+            });
           });
         });
       });

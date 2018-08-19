@@ -141,7 +141,7 @@ class EditListingForm extends React.Component {
     // Pull existing data from the database
     axios.get(`/api/listings/${id}`)
       .then(res => {
-        const additionalAmenities = res.data.data.additionalAmenities;
+        const additionalAmenities = res.data.listing.additionalAmenities;
         let additionalAmenitiesString = "";
         if (additionalAmenities && additionalAmenities.length) {
           additionalAmenitiesString = additionalAmenities.join(", ");
@@ -150,9 +150,9 @@ class EditListingForm extends React.Component {
         this.setState({
           pending: false,
           error: "",
-          ...res.data.data,
+          ...res.data.listing,
           additionalAmenitiesString,
-          rating: res.data.data.rating,
+          rating: res.data.listing.rating,
           _id: id,
         });
       })
