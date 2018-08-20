@@ -16,8 +16,8 @@ const Video = require('../models/video');
 const Homepage = require('../models/homepage');
 
 // Import helper methods
-const {AdminCheck} = require('../helperMethods/authChecking');
-const {ResizeAndUploadImage} = require('../helperMethods/imageProcessing');
+const { AdminCheck } = require('../helperMethods/authChecking');
+const { ResizeAndUploadImage } = require('../helperMethods/imageProcessing');
 
 // Export the following methods for routing
 module.exports = () => {
@@ -124,32 +124,40 @@ module.exports = () => {
    */
   router.get('/', (req, res) => {
     Homepage.find({})
-    .then(home => {
-      const homepage = home[0];
-      if (homepage.components && homepage.components.length) {
+      .then((home) => {
+        const homepage = home[0];
+
+        if (!homepage || !homepage.components || !homepage.components.length) {
+          res.send({
+            banner: homepage.banner,
+            components: [],
+          });
+
+          return;
+        }
+
         pullData(homepage.components, (resp) => {
           if (!resp.success) {
-            res.status(404).send({error: resp.error});
+            res.status(404).send({
+              error: resp.error || 'Something went wrong.',
+            });
+
             return;
           }
+
           res.send({
             banner: homepage.banner,
             components: resp.returnComponents && resp.returnComponents.length ? resp.returnComponents : [],
           });
+
           return;
         });
-      } else {
-        res.send({
-          banner: homepage.banner,
-          components: [],
+      })
+      .catch(() => {
+        res.status(404).send({
+          error: 'Cannot return homepage.',
         });
-        return;
-      }
-    })
-    .catch(() => {
-      res.status(404).send({error: 'Cannot return homepage.'});
-      return;
-    });
+      });
   });
 
   /**

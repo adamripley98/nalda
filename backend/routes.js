@@ -40,47 +40,56 @@ module.exports = () => {
         success: false,
         data: 'States are not synced!'
       });
-    } else {
-      // User is logged in on backend, check if it is through facebook
-      const userId = req.session.passport.user;
-      User.findById(userId, (err, user) => {
-        if (err) {
-          res.send({
-            success: false,
-            error: 'State sync error.',
-          });
-        } else if (!user) {
-          res.send({
-            success: false,
-            error: 'User not found.',
-          });
-        } else {
-          // If user uses facebook or google login
-          if (user.facebookId || user.googleId) {
-            const userToLogIn = {
-              name: user.name,
-              profilePicture: user.profilePicture,
-              userType: user.userType,
-              userId: user._id,
-              location: user.location.name,
-            };
-            res.send({
-              success: true,
-              error: '',
-              oAuthLogin: true,
-              user: userToLogIn,
-            });
-          } else {
-            // User is logged in with email/password, don't need to do anything
-            res.send({
-              success: true,
-              error: '',
-              oAuthLogin: false,
-            });
-          }
-        }
-      });
+
+      return;
     }
+
+    // User is logged in on backend, check if it is through facebook
+    const userId = req.session.passport.user;
+    User.findById(userId, (err, user) => {
+      if (err) {
+        res.send({
+          success: false,
+          error: 'State sync error.',
+        });
+
+        return;
+      } else if (!user) {
+        res.send({
+          success: false,
+          error: 'User not found.',
+        });
+
+        return;
+      }
+
+      // If user uses facebook or google login
+      if (user.facebookId || user.googleId) {
+        const userToLogIn = {
+          name: user.name,
+          profilePicture: user.profilePicture,
+          userType: user.userType,
+          userId: user._id,
+          location: user.location.name,
+        };
+
+        res.send({
+          success: true,
+          error: '',
+          oAuthLogin: true,
+          user: userToLogIn,
+        });
+
+        return;
+      }
+
+      // User is logged in with email/password, don't need to do anything
+      res.send({
+        success: true,
+        error: '',
+        oAuthLogin: false,
+      });
+    });
   });
 
   /**

@@ -86,6 +86,8 @@ const options = {
   // sets the delay between every retry (milliseconds)
   reconnectInterval: 1000,
 };
+
+mongoose.Promise = global.Promise;
 mongoose.connect(MONGODB_URI, options);
 
 // Middleware
