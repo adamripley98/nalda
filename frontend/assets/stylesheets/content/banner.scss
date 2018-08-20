@@ -1,0 +1,61 @@
+#banner-carousel {
+  .banner-item {
+    height: 50vh;
+    padding: 1rem;
+    outline: 0 !important;
+
+    .background-image {
+      width: 100%;
+      height: 100%;
+      box-shadow: 0rem 0.2rem 0.5rem rgba(0, 0, 0, 0.25);
+    }
+  }
+
+  button.slick-arrow {
+    position: absolute;
+    background: transparent;
+    cursor: hand;
+    cursor: pointer;
+    color: $gray-text;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    box-shadow: 0;
+    top: calc(50vh + 1.5rem);
+    opacity: 0.75;
+    font-size: 0.8rem;
+    margin: 0rem 0.5rem;
+
+    &:hover,
+    &:focus,
+    &:active {
+      opacity: 1;
+    }
+
+    &.slick-next {
+      right: 0;
+
+      &::after {
+        content: "\00A0\2192";
+      }
+    }
+
+    &.slick-prev {
+      left: 0;
+
+      &::before {
+        content: "\2190\00A0";
+      }
+    }
+  }
+
+  .slick-list {
+    overflow-y: visible;
+  }
+}
+
+@media screen and (max-width: 492px) {
+  #banner-carousel .banner-item {
+    padding: 1rem 0rem;
+  }
+}

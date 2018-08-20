@@ -23,7 +23,7 @@ class Home extends React.Component {
     // Set the state
     this.state = {
       pending: true,
-      error: "",
+      error: '',
       banner: [],
       components: [],
     };
@@ -75,11 +75,9 @@ class Home extends React.Component {
     return (
       <div>
         <Tags />
-        <Banner banners={this.state.banner} />
+        <Banner banner={this.state.banner} />
+        {/* <Banner banners={this.state.banner} /> */}
         <div className="container">
-          <div className="space-2"/>
-          <div className="space-1 hidden-md-down"/>
-
           <ErrorMessage error={this.state.error} />
 
           <ListingCategories />
