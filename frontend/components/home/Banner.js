@@ -8,10 +8,16 @@ class Banner extends Component {
     $(document).ready(function initSlick() {
       $('#banner-carousel').slick({
         centerMode: true,
-        centerPadding: '10%',
+        centerPadding: '15%',
         slidesToShow: 1,
         arrows: true,
         responsive: [
+          {
+            breakpoint: 648,
+            settings: {
+              centerPadding: '10%',
+            },
+          },
           {
             breakpoint: 492,
             settings: {
