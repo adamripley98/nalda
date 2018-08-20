@@ -15,6 +15,7 @@ const Article = require('../models/article');
 const Listing = require('../models/listing');
 const Video = require('../models/video');
 const Homepage = require('../models/homepage');
+const Event = require('../models/event');
 
 // Import helper methods
 const {AdminCheck} = require('../helperMethods/authChecking');
@@ -34,6 +35,8 @@ const pullData = (components, callback) => {
       Model = Listing;
     } else if (component.contentType === 'Videos') {
       Model = Video;
+    } else if (component.contentType === 'Events') {
+      Model = Event;
     } else return;
 
     // Find all of the content associated with the component
@@ -141,6 +144,27 @@ module.exports = () => {
         }));
         res.send({
           videos,
+        });
+      })
+      .catch(err => {
+        res.status(404).send({
+          error: err.message,
+        });
+      });
+  });
+
+  /**
+   * Get a list of all videos
+   */
+  router.get('/admin/events', (req, res) => {
+    Event.find()
+      .then(fullEvents => {
+        const events = fullEvents.map(event => ({
+          _id: event._id,
+          title: event.title,
+        }));
+        res.send({
+          events,
         });
       })
       .catch(err => {

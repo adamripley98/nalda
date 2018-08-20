@@ -96,6 +96,7 @@ class NewComponent extends Component {
           <option>Listings</option>
           <option>Articles</option>
           <option>Videos</option>
+          <option>Events</option>
         </select>
         <button className="btn btn-primary marg-bot-1">
           Create component

@@ -42,7 +42,7 @@ const EventHeader = ({
         Requirements:
       </strong>
       <br />
-      {requirements}
+      {requirements.map(req => "-" + req + '\n')}
     </p>
   </div>
 );

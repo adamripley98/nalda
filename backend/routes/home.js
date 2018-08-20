@@ -14,6 +14,7 @@ const Article = require('../models/article');
 const Listing = require('../models/listing');
 const Video = require('../models/video');
 const Homepage = require('../models/homepage');
+const Event = require('../models/event');
 
 // Import helper methods
 const {AdminCheck} = require('../helperMethods/authChecking');
@@ -35,6 +36,8 @@ module.exports = () => {
         Model = Listing;
       } else if (component.contentType === 'Videos') {
         Model = Video;
+      } else if (component.contentType === 'Events') {
+        Model = Event;
       } else return;
 
       // Find all of the content associated with the component
@@ -69,6 +72,20 @@ module.exports = () => {
                   location: content.location,
                   image: content.image,
                   rating: content.rating,
+                  price: content.price,
+                  categories: content.categories,
+                };
+              } else if (component.contentType === 'Events') {
+                newContent = {
+                  contentType: component.contentType,
+                  contentId: cont.contentId,
+                  title: content.title,
+                  description: content.description,
+                  requirements: content.requirements,
+                  location: content.location,
+                  image: content.image,
+                  startDate: content.startDate,
+                  endDate: content.endDate,
                   price: content.price,
                   categories: content.categories,
                 };
@@ -192,6 +209,8 @@ module.exports = () => {
         Model = Listing;
       } else if (component.contentType === 'Videos') {
         Model = Video;
+      }  else if (component.contentType === 'Events') {
+        Model = Event;
       } else return;
 
       // Find all of the content associated with the component
@@ -224,6 +243,20 @@ module.exports = () => {
                   location: content.location,
                   image: content.image,
                   rating: content.rating,
+                  price: content.price,
+                  categories: content.categories,
+                };
+              } else if (component.contentType === 'Events') {
+                newContent = {
+                  contentType: component.contentType,
+                  contentId: cont.contentId,
+                  title: content.title,
+                  description: content.description,
+                  requirements: content.requirements,
+                  location: content.location,
+                  image: content.image,
+                  startDate: content.startDate,
+                  endDate: content.endDate,
                   price: content.price,
                   categories: content.categories,
                 };
@@ -285,88 +318,95 @@ module.exports = () => {
       .then(listing => {
         Article.findById(contentId)
         .then(article => {
-          let error = '';
-          if (!contentId.match(/^[0-9a-fA-F]{24}$/)) {
-            error = "No content with that id exists.";
-            // Make sure content with given id exists
-          } else if (!article && !listing) {
-            error = 'No article or listing with that ID exists.';
-          }
+          Event.findById(contentId)
+          .then(event => {
+            let error = '';
+            if (!contentId.match(/^[0-9a-fA-F]{24}$/)) {
+              error = "No content with that id exists.";
+              // Make sure content with given id exists
+            } else if (!article && !listing && !event) {
+              error = 'No article, event or listing with that ID exists.';
+            }
 
-          if (error) {
-            res.status(404).send({error});
-            return;
-          }
-
-          // Resize main article image
-          ResizeAndUploadImage(contentImage, 'bannerpictures', 1920, null, (resp) => {
-            if (resp.error) {
-              res.status(404).send({error: resp.error});
+            if (error) {
+              res.status(404).send({error});
               return;
             }
-            // Find homepage
-            Homepage.find({})
-            .then(home => {
-              // NOTE only to declare 1 time
-              if (!home.length) {
-                // Create new homepage
-                const newHomepage = new Homepage({
-                  banner: [],
-                  naldaVideos: [],
-                  categories: [],
-                  recommended: [],
-                  fromTheEditors: [],
-                });
-                // save new homepage in mongo
-                newHomepage.save()
-                .then(() => {
-                  res.status(404).send({error: 'You just created the first instance of a homepage, try adding a banner again.'});
-                  return;
-                })
-                .catch(() => {
-                  res.status(404).send({error: 'Error on homepage.'});
-                  return;
-                });
-              } else {
-                const homepage = home[0];
-                const banner = homepage.banner.slice();
-                // Error check for duplicate content in banner
-                let duplicate = false;
-                banner.forEach((item) => {
-                  if (item.contentId === contentId) {
-                    duplicate = true;
-                  }
-                });
-                if (duplicate) {
-                  res.status(404).send({error: 'This content is already in the banner.'});
-                  return;
-                }
-                // Create object to pass back, of type article or listing
-                const newBannerContent = {
-                  contentType: article ? "article" : "listing",
-                  contentId,
-                  contentImage: resp.resizedImg,
-                };
-                // Add to banner
-                banner.push(newBannerContent);
-                homepage.banner = banner;
-                // Save new banner to mongo
-                homepage.save()
-                .then(() => {
-                  // Send back success
-                  res.send({banner: homepage.banner});
-                  return;
-                })
-                .catch(() => {
-                  res.status(404).send({error: 'Error saving image.'});
-                  return;
-                });
+
+            // Resize main article image
+            ResizeAndUploadImage(contentImage, 'bannerpictures', 1920, null, (resp) => {
+              if (resp.error) {
+                res.status(404).send({error: resp.error});
+                return;
               }
-            })
-            .catch(() => {
-              res.status(404).send({error: 'Error finding homepage.'});
-              return;
+              // Find homepage
+              Homepage.find({})
+              .then(home => {
+                // NOTE only to declare 1 time
+                if (!home.length) {
+                  // Create new homepage
+                  const newHomepage = new Homepage({
+                    banner: [],
+                    naldaVideos: [],
+                    categories: [],
+                    recommended: [],
+                    fromTheEditors: [],
+                  });
+                  // save new homepage in mongo
+                  newHomepage.save()
+                  .then(() => {
+                    res.status(404).send({error: 'You just created the first instance of a homepage, try adding a banner again.'});
+                    return;
+                  })
+                  .catch(() => {
+                    res.status(404).send({error: 'Error on homepage.'});
+                    return;
+                  });
+                } else {
+                  const homepage = home[0];
+                  const banner = homepage.banner.slice();
+                  // Error check for duplicate content in banner
+                  let duplicate = false;
+                  banner.forEach((item) => {
+                    if (item.contentId === contentId) {
+                      duplicate = true;
+                    }
+                  });
+                  if (duplicate) {
+                    res.status(404).send({error: 'This content is already in the banner.'});
+                    return;
+                  }
+                  // Create object to pass back, of type article or listing
+                  const newBannerContent = {
+                    contentType: article ? "article" : listing ? "listing" : "event",
+                    contentId,
+                    contentImage: resp.resizedImg,
+                  };
+                  // Add to banner
+                  banner.push(newBannerContent);
+                  homepage.banner = banner;
+                  // Save new banner to mongo
+                  homepage.save()
+                  .then(() => {
+                    // Send back success
+                    res.send({banner: homepage.banner});
+                    return;
+                  })
+                  .catch(() => {
+                    res.status(404).send({error: 'Error saving image.'});
+                    return;
+                  });
+                }
+              })
+              .catch(() => {
+                res.status(404).send({error: 'Error finding homepage.'});
+                return;
+              });
             });
+          })
+          .catch(() => {
+            res.status(404).send({error: 'Error finding content'});
+            return;
           });
         })
         .catch(() => {
@@ -585,51 +625,61 @@ module.exports = () => {
         .then(listing => {
           Video.findById(contentId)
           .then(video => {
-            if (!article && !listing && !video) {
-              res.status(404).send({error: 'No content found with given id found.'});
-              return;
-            }
-            if (article) {
-              newContentType = 'Articles';
-            } else if (listing) {
-              newContentType = 'Listings';
-            } else if (video) {
-              newContentType = 'Videos';
-            }
-            Homepage.find({})
-            .then(home => {
-              const homepage = home[0];
-              let hasChanged = false;
-              let contentExists = false;
-              homepage.components.forEach((comp, i) => {
-                if (comp._id.toString() === component._id && comp.contentType === newContentType) {
-                  const newContent = homepage.components[i].content.slice();
-                  newContent.forEach(cont => {
-                    if (cont.contentId === contentId) {
-                      contentExists = true;
-                    }
-                  });
-                  if (!contentExists) {
-                    newContent.push({contentId});
-                    homepage.components[i].content = newContent;
-                    hasChanged = true;
-                  }
-                }
-              });
-              if (hasChanged && !contentExists) {
-                homepage.save()
-                .then(newHome => {
-                  res.send({components: newHome.components});
-                  return;
-                })
-                .catch(() => {
-                  res.status(404).send({error: 'Cannot add content.'});
-                  return;
-                });
-              } else {
-                res.status(404).send({error: 'Cannot add content. Make sure it is the right type and is not repeat.'});
+            Event.findById(contentId)
+            .then(event => {
+              if (!article && !listing && !video && !event) {
+                res.status(404).send({error: 'No content found with given id found.'});
                 return;
               }
+              if (article) {
+                newContentType = 'Articles';
+              } else if (listing) {
+                newContentType = 'Listings';
+              } else if (video) {
+                newContentType = 'Videos';
+              } else if (event) {
+                newContentType = 'Events';
+              }
+
+              Homepage.find({})
+              .then(home => {
+                const homepage = home[0];
+                let hasChanged = false;
+                let contentExists = false;
+                homepage.components.forEach((comp, i) => {
+                  if (comp._id.toString() === component._id && comp.contentType === newContentType) {
+                    const newContent = homepage.components[i].content.slice();
+                    newContent.forEach(cont => {
+                      if (cont.contentId === contentId) {
+                        contentExists = true;
+                      }
+                    });
+                    if (!contentExists) {
+                      newContent.push({contentId});
+                      homepage.components[i].content = newContent;
+                      hasChanged = true;
+                    }
+                  }
+                });
+                if (hasChanged && !contentExists) {
+                  homepage.save()
+                  .then(newHome => {
+                    res.send({components: newHome.components});
+                    return;
+                  })
+                  .catch(() => {
+                    res.status(404).send({error: 'Cannot add content.'});
+                    return;
+                  });
+                } else {
+                  res.status(404).send({error: 'Cannot add content. Make sure it is the right type and is not repeat.'});
+                  return;
+                }
+              })
+              .catch(() => {
+                res.status(404).send({error: 'Cannot add content.'});
+                return;
+              });
             })
             .catch(() => {
               res.status(404).send({error: 'Cannot add content.'});
