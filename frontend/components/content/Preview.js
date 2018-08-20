@@ -28,11 +28,12 @@ class Preview extends Component {
   // Return the subtitle of the content
   // This is dependent on the content type and the length of the subtitle
   getSubtitle() {
-    if (this.props.isListing || this.props.contentType === "listing") return null;
+    // if (this.props.isListing || this.props.contentType === "listing") return null;
 
-    // Update the subtitle to a shortened version if need be
     let subtitle = this.props.subtitle;
-    if (this.props.subtitle.length > 100) subtitle = this.props.subtitle.substring(0, 100) + "...";
+
+    if (subtitle.length > 100) subtitle = `${subtitle.substring(0, 97)}...`;
+
     return (
       <h6 className="subtitle">
         { subtitle }
@@ -41,7 +42,7 @@ class Preview extends Component {
   }
 
   isVideo() {
-    return (this.props.isVideo || this.props.contentType === "video");
+    return (this.props.isVideo || this.props.contentType === 'video');
   }
 
   // Get the type of the content as based on the props
@@ -49,7 +50,7 @@ class Preview extends Component {
     // Find the type of the content
     if (this.props.isArticle || this.props.contentType === 'article') {
       return 'articles';
-    } else if (this.props.isVideo || this.props.contentType === 'video') {
+    } else if (this.isVideo()) {
       return 'videos';
     }
 
@@ -90,7 +91,11 @@ class Preview extends Component {
     return (
       <div className="categories">
         {keys.map(key => (
-          this.props.categories[key] ? <span className="category" key={key}>{categoryMap[key]}</span> : null
+          this.props.categories[key] ? (
+            <span className="category" key={key}>
+              {categoryMap[key]}
+            </span>
+          ) : null
         ))}
       </div>
     );
@@ -155,9 +160,13 @@ class Preview extends Component {
           </div>
 
           {this.getLocation()}
+
           <h2 className="title">{this.props.title}</h2>
+
           {this.getCategories()}
+
           {this.props.rating && <Stars rating={this.props.rating} />}
+
           {this.getSubtitle()}
         </div>
       </Link>
