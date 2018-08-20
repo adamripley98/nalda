@@ -24,7 +24,11 @@
     font-size: 0.8rem;
     color: $gray;
     font-weight: bold;
+    white-space: nowrap;
     text-overflow: ellipsis;
+    width: 100%;
+    display: block;
+    overflow: hidden
   }
 
   .title {
