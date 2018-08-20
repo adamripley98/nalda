@@ -1,12 +1,14 @@
+$font: -apple-system, BlinkMacSystemFont, Roboto, Arial, "Helvetica Neue", Helvetica, sans-serif;
+
 // Setting the fonts for the application
 body,
 .form-control {
-  font-family: 'adelle-sans', sans-serif;
+  font-family: $font;
 }
 
 // Subtitles are the lighter font as well
 .subtitle {
-  font-family: 'adelle-sans', sans-serif !important;
+  font-family: $font;
   font-weight: 400;
 }
 
@@ -18,6 +20,6 @@ h4,
 h5,
 h6,
 .bold {
-  font-family: 'adelle-sans', sans-serif;
+  font-family: $font;
   font-weight: bold;
 }
