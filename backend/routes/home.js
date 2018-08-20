@@ -19,27 +19,60 @@ const Homepage = require('../models/homepage');
 const { AdminCheck } = require('../helperMethods/authChecking');
 const { ResizeAndUploadImage } = require('../helperMethods/imageProcessing');
 
+const getModel = (component) => {
+  const contentType = component && component.contentType;
+
+  if (!contentType) return undefined;
+
+  if (contentType === 'Articles') {
+    return Article;
+  } else if (contentType === 'Listings') {
+    return Listing;
+  } else if (contentType === 'Videos') {
+    return Video;
+  }
+
+  return undefined;
+};
+
 // Export the following methods for routing
 module.exports = () => {
   // Helper function to pull data for each of the different content types
   const pullData = (components, callback) => {
+    if (!callback) {
+      throw Error('Callback undefined');
+    }
+
+    if (!components || !components.length) {
+      callback({
+        success: false,
+        error: 'No components',
+      });
+
+      return;
+    }
+
     // Array of content to be returned
     const returnComponents = [];
+
     // Loop through array and pull pertinent data
     async.eachSeries(components, (component, cb) => {
       // Find the model for pulling data based on the content type
-      let Model = null;
-      if (component.contentType === 'Articles') {
-        Model = Article;
-      } else if (component.contentType === 'Listings') {
-        Model = Listing;
-      } else if (component.contentType === 'Videos') {
-        Model = Video;
-      } else return;
+      const Model = getModel(component);
+
+      if (!Model) {
+        callback({
+          success: false,
+          error: `Invalid component content type: ${component.contentType}`,
+        });
+
+        return;
+      }
 
       // Find all of the content associated with the component
       if (component.content && component.content.length) {
         const returnContent = [];
+
         async.forEach(component.content, (cont, contentCallback) => {
           Model.findById(cont.contentId, (errContent, content) => {
             if (errContent) {
@@ -47,8 +80,11 @@ module.exports = () => {
                 success: false,
                 error: 'Error fetching homepage content',
               });
+
+              return;
             } else if (content) {
               let newContent = {};
+
               if (component.contentType === 'Articles') {
                 newContent = {
                   contentType: component.contentType,
@@ -72,8 +108,7 @@ module.exports = () => {
                   price: content.price,
                   categories: content.categories,
                 };
-              } else {
-                // Content is a video
+              } else { // Content is a video
                 newContent = {
                   contentType: component.contentType,
                   contentId: cont.contentId,
@@ -85,18 +120,21 @@ module.exports = () => {
                   updatedAt: content.updatedAt,
                 };
               }
+
               returnContent.push(newContent);
+
               contentCallback();
             } else {
               contentCallback();
             }
           });
-        }, contentAsyncErr => {
+        }, (contentAsyncErr) => {
           if (contentAsyncErr) {
             cb();
           } else {
             component.content = returnContent;
             returnComponents.push(component);
+
             cb();
           }
         });
@@ -109,8 +147,10 @@ module.exports = () => {
           success: false,
           error: 'Error loading homepage.'
         });
+
         return;
       }
+
       callback({
         success: true,
         error: '',
