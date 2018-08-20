@@ -17,32 +17,65 @@ const Homepage = require('../models/homepage');
 const Event = require('../models/event');
 
 // Import helper methods
-const {AdminCheck} = require('../helperMethods/authChecking');
-const {ResizeAndUploadImage} = require('../helperMethods/imageProcessing');
+const { AdminCheck } = require('../helperMethods/authChecking');
+const { ResizeAndUploadImage } = require('../helperMethods/imageProcessing');
+
+const getModel = (component) => {
+  const contentType = component && component.contentType;
+
+  if (!contentType) return undefined;
+
+  if (contentType === 'Articles') {
+    return Article;
+  } else if (contentType === 'Listings') {
+    return Listing;
+  } else if (contentType === 'Videos') {
+    return Video;
+  } else if (contentType === 'Events') {
+    return Event;
+  }
+
+  return undefined;
+};
 
 // Export the following methods for routing
 module.exports = () => {
   // Helper function to pull data for each of the different content types
   const pullData = (components, callback) => {
+    if (!callback) {
+      throw Error('Callback undefined');
+    }
+
+    if (!components || !components.length) {
+      callback({
+        success: false,
+        error: 'No components',
+      });
+
+      return;
+    }
+
     // Array of content to be returned
     const returnComponents = [];
+
     // Loop through array and pull pertinent data
     async.eachSeries(components, (component, cb) => {
       // Find the model for pulling data based on the content type
-      let Model = null;
-      if (component.contentType === 'Articles') {
-        Model = Article;
-      } else if (component.contentType === 'Listings') {
-        Model = Listing;
-      } else if (component.contentType === 'Videos') {
-        Model = Video;
-      } else if (component.contentType === 'Events') {
-        Model = Event;
-      } else return;
+      const Model = getModel(component);
+
+      if (!Model) {
+        callback({
+          success: false,
+          error: `Invalid component content type: ${component.contentType}`,
+        });
+
+        return;
+      }
 
       // Find all of the content associated with the component
       if (component.content && component.content.length) {
         const returnContent = [];
+
         async.forEach(component.content, (cont, contentCallback) => {
           Model.findById(cont.contentId, (errContent, content) => {
             if (errContent) {
@@ -50,8 +83,11 @@ module.exports = () => {
                 success: false,
                 error: 'Error fetching homepage content',
               });
+
+              return;
             } else if (content) {
               let newContent = {};
+
               if (component.contentType === 'Articles') {
                 newContent = {
                   contentType: component.contentType,
@@ -102,18 +138,21 @@ module.exports = () => {
                   updatedAt: content.updatedAt,
                 };
               }
+
               returnContent.push(newContent);
+
               contentCallback();
             } else {
               contentCallback();
             }
           });
-        }, contentAsyncErr => {
+        }, (contentAsyncErr) => {
           if (contentAsyncErr) {
             cb();
           } else {
             component.content = returnContent;
             returnComponents.push(component);
+
             cb();
           }
         });
@@ -126,8 +165,10 @@ module.exports = () => {
           success: false,
           error: 'Error loading homepage.'
         });
+
         return;
       }
+
       callback({
         success: true,
         error: '',
@@ -141,32 +182,40 @@ module.exports = () => {
    */
   router.get('/', (req, res) => {
     Homepage.find({})
-    .then(home => {
-      const homepage = home[0];
-      if (homepage.components && homepage.components.length) {
+      .then((home) => {
+        const homepage = home[0];
+
+        if (!homepage || !homepage.components || !homepage.components.length) {
+          res.send({
+            banner: homepage.banner,
+            components: [],
+          });
+
+          return;
+        }
+
         pullData(homepage.components, (resp) => {
           if (!resp.success) {
-            res.status(404).send({error: resp.error});
+            res.status(404).send({
+              error: resp.error || 'Something went wrong.',
+            });
+
             return;
           }
+
           res.send({
             banner: homepage.banner,
             components: resp.returnComponents && resp.returnComponents.length ? resp.returnComponents : [],
           });
+
           return;
         });
-      } else {
-        res.send({
-          banner: homepage.banner,
-          components: [],
+      })
+      .catch(() => {
+        res.status(404).send({
+          error: 'Cannot return homepage.',
         });
-        return;
-      }
-    })
-    .catch(() => {
-      res.status(404).send({error: 'Cannot return homepage.'});
-      return;
-    });
+      });
   });
 
   /**
@@ -175,7 +224,10 @@ module.exports = () => {
   router.get('/components/:id', (req, res) => {
     const id = req.params.id;
     if (!id) {
-      res.status(404).send({error: "Invalid homepage component ID."});
+      res.status(404).send({
+        error: 'Invalid homepage component ID.',
+      });
+
       return;
     }
 
@@ -183,21 +235,27 @@ module.exports = () => {
     Homepage.findOne({})
     .then(home => {
       if (!home) {
-        res.status(404).send({error: 'There was an issue pulling homepage data. Refresh the page and try again.'});
+        res.status(404).send({
+          error: 'There was an issue pulling homepage data. Refresh the page and try again.',
+        });
+
         return;
       }
       // Find the component with the correct ID
       let component = null;
       home.components.forEach(c => {
-        // NOTE the ID must be cast to a string
-        if ('' + c._id === id) {
+        // NOTE the ID must be cast to a string to check equality
+        if (`${c._id}` === id) {
           component = c;
         }
       });
 
       // If we failed to find a component
       if (!component) {
-        res.status(404).send({error: 'There is no component with the passed in ID. Check the URL and try again.'});
+        res.status(404).send({
+          error: 'There is no component with the passed in ID. Check the URL and try again.',
+        });
+
         return;
       }
 
@@ -278,7 +336,10 @@ module.exports = () => {
             }
           })
           .catch(() => {
-            res.status(404).send({error: 'Error fetching homepage content'});
+            res.status(404).send({
+              error: 'Error fetching homepage content',
+            });
+
             return;
           });
         }, contentAsyncErr => {

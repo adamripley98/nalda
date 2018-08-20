@@ -33,11 +33,11 @@ class ShowComponent extends Component {
 
     if (this.props.showAll) {
       return (
-        this.props.component.content.map(c => (
+        this.props.component.content.map((c, index) => (
           <Preview
             content={c}
             contentType={contentType}
-            key={`${this.props.component.title}-${c.contentId}`}
+            key={`${this.props.component.title}-${c.contentId}-${index}`}
           />
         ))
       );
@@ -50,9 +50,9 @@ class ShowComponent extends Component {
         <Preview
           content={c}
           contentType={contentType}
-          key={`${this.props.component.title}-${c.contentId}`}
+          key={`${this.props.component.title}-${c.contentId}-${index}`}
           index={index}
-          isVideo = {(contentType || c.contentType) === 'Videos'}
+          isVideo={(contentType || c.contentType) === 'Videos'}
         />
       ))
     );
@@ -72,20 +72,33 @@ class ShowComponent extends Component {
             </Link>
           ) : null
         }
+
         <h2 className="home-section-title">
           {this.props.component.title}
         </h2>
         <p className="home-section-subtitle">
           {this.props.component.subtitle}
         </p>
+
         {this.renderContent()}
       </div>
     );
   }
 }
 
+ShowComponent.defaultProps = {
+  showAll: false,
+  showLink: false,
+};
+
 ShowComponent.propTypes = {
-  component: PropTypes.object,
+  component: PropTypes.shape({
+    title: PropTypes.string,
+    subtitle: PropTypes.string,
+    contentType: PropTypes.string,
+    _id: PropTypes.string,
+    content: PropTypes.array,
+  }).isRequired,
   showAll: PropTypes.bool,
   showLink: PropTypes.bool,
 };

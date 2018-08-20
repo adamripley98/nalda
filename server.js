@@ -86,6 +86,11 @@ const options = {
   // sets the delay between every retry (milliseconds)
   reconnectInterval: 1000,
 };
+
+// Use node Promise lib instead of deprecated mongoose one
+// https://stackoverflow.com/questions/38138445/node3341-deprecationwarning-mongoose-mpromise
+mongoose.Promise = global.Promise;
+
 mongoose.connect(MONGODB_URI, options);
 
 // Middleware

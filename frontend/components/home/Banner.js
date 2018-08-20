@@ -1,121 +1,89 @@
-// Import frameworks
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {Link} from 'react-router-dom';
 
-/**
- * Component to render the banner images at the top of the homepage
- */
+import BannerItem from './BannerItem';
+
 class Banner extends Component {
-  /**
-   * Constructor method
-   */
   constructor(props) {
     super(props);
 
-    // Find the new banners with first and last images as dummy banners
-    if (!this.props.banners) this.props.banners = [];
-    this.props.banners.push({ isEmpty: true, });
-    this.props.banners.unshift({ isEmpty: true, });
-
-    // Set the initial state depending on the number of banner images there are
-    if (this.props.banners.length <= 4) {
-      this.state = {
-        active: this.props.banners.length - 2,
-      };
-    } else {
-      this.state = {
-        active: this.props.banners.length - 3,
-      };
-    }
-
-    // Bind this to helper methods
-    this.shiftRight = this.shiftRight.bind(this);
-    this.shiftLeft = this.shiftLeft.bind(this);
+    this.state = {
+      ready: false,
+    };
   }
 
-  /**
-   * Helper method to shift the banner images when a user clicks right shift
-   */
-  shiftRight() {
-    // If we have not reached the right-most item
-    if (this.state.active > 1) {
-      this.setState({
-        active: this.state.active - 1,
-      });
-    }
-  }
+  componentDidMount() {
+    $(document).ready(function initSlick() {
+      $('#banner-carousel').removeClass('hidden');
 
-  /**
-   * Helper method to shift the banner images whena a user clicks left shift
-   */
-  shiftLeft() {
-    // If we have not reached the left most item
-    if (this.state.active < this.props.banners.length - 2) {
-      this.setState({
-        active: this.state.active + 1,
-      });
-    }
-  }
-
-  /**
-   * Render the banner and banner images
-   */
-  render() {
-    if (!this.props.banners || !this.props.banners.length) return null;
-    return (
-      <div className="banner">
-        { this.props.banners.map((banner, index) => {
-          let bannerClass = "";
-          if (this.state.active === index) bannerClass = "active";
-          else if (this.state.active - 1 === index) bannerClass = "toLeft";
-          else if (this.state.active + 1 === index) bannerClass = "toRight";
-          else if (this.state.active + 1 < index) bannerClass = "offRight";
-          else bannerClass = "offLeft";
-          if (bannerClass === "active") {
-            return (
-              <Link to={banner.isEmpty ? "/" : `/${banner.contentType}s/${banner.contentId}`}
-                key={index}
-                className={`banner-item background-image ${bannerClass}`}
-                style={{backgroundImage: `url(${banner.contentImage})`}}
-              />
-            );
+      $('#banner-carousel').slick({
+        centerMode: true,
+        centerPadding: '20%',
+        slidesToShow: 1,
+        arrows: true,
+        responsive: [
+          {
+            breakpoint: 784,
+            settings: {
+              centerPadding: '15%',
+            },
+          },
+          {
+            breakpoint: 648,
+            settings: {
+              centerPadding: '10%',
+            },
+          },
+          {
+            breakpoint: 492,
+            settings: {
+              arrows: false,
+              centerMode: true,
+              centerPadding: '18px',
+              slidesToShow: 1
+            }
           }
+        ]
+      });
+    });
+  }
 
-          return (
-            <Link to={`/`}
-              key={index}
-              className={`banner-item background-image ${bannerClass}`}
-              style={{backgroundImage: `url(${banner.contentImage})`}}
+  render() {
+    if (this.props.isLoading) {
+      return (
+        <div id="banner-carousel" className="hidden">
+          <BannerItem isLoading />
+          <BannerItem isLoading />
+          <BannerItem isLoading />
+        </div>
+      );
+    }
+
+    if (!this.props.banner || !this.props.banner.length) return null;
+
+    return (
+      <div id="banner-carousel">
+        {
+          this.props.banner.map((bannerItem, index) => (
+            <BannerItem
+              bannerItem={bannerItem}
+              key={`${bannerItem.contentId}-${index}`}
             />
-          );
-        })}
-        {
-          this.state.active === this.props.banners.length - 2 ? (
-            null
-          ) : (
-            <div className="shift left" onClick={this.shiftLeft}>
-              <i className="fa fa-chevron-left" aria-hidden="true" />
-            </div>
-          )
-        }
-        {
-          this.state.active === 1 ? (
-            null
-          ) : (
-            <div className="shift right" onClick={this.shiftRight}>
-              <i className="fa fa-chevron-right" aria-hidden="true" />
-            </div>
-          )
+          ))
         }
       </div>
     );
   }
 }
 
-// Prop validations
+Banner.defaultProps = {
+  isLoading: false,
+  banner: [],
+};
+
 Banner.propTypes = {
-  banners: PropTypes.array,
+  banner: PropTypes.array,
+  isLoading: PropTypes.bool,
 };
 
 export default Banner;

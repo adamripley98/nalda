@@ -24,7 +24,11 @@
     font-size: 0.8rem;
     color: $gray;
     font-weight: bold;
+    white-space: nowrap;
     text-overflow: ellipsis;
+    width: 100%;
+    display: block;
+    overflow: hidden
   }
 
   .title {
@@ -37,6 +41,13 @@
     margin-bottom: 0;
     font-size: 1.2rem;
     color: $dark-gray;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    line-height: 1.2rem;
+    max-height: 2.4rem;
   }
 }
 

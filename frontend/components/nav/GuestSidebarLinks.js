@@ -40,22 +40,22 @@ class GuestSidebarLinks extends Component {
 
         <div className="line" />
 
-        <Link onClick={this.toggleMenu} to="/" className="link">
+        <Link onClick={this.props.toggleMenu} to="/" className="link">
           Home
         </Link>
-        <Link onClick={this.toggleMenu} to="/articles" className="link">
+        <Link onClick={this.props.toggleMenu} to="/articles" className="link">
           Curator Articles
         </Link>
-        <Link onClick={this.toggleMenu} to="/listings" className="link">
+        <Link onClick={this.props.toggleMenu} to="/listings" className="link">
           Philadelphia Listings
         </Link>
-        <Link onClick={this.toggleMenu} to="/videos" className="link">
+        <Link onClick={this.props.toggleMenu} to="/videos" className="link">
           Videos
         </Link>
-        <Link onClick={this.toggleMenu} to="/about" className="link">
+        <Link onClick={this.props.toggleMenu} to="/about" className="link">
           About Nalda
         </Link>
-        <Link onClick={this.toggleMenu} to="/contact" className="link">
+        <Link onClick={this.props.toggleMenu} to="/contact" className="link">
           Contact Nalda
         </Link>
       </div>

@@ -1,0 +1,79 @@
+@keyframes loading {
+  0% { background-color: $light-gray; }
+  50% { background-color: $lighter-gray; }
+  100% { background-color: $light-gray; }
+}
+
+#banner-carousel {
+  &.hidden {
+    opacity: 0;
+  }
+
+  .banner-item {
+    padding: 1rem;
+    outline: 0 !important;
+
+    .background-image {
+      width: 100%;
+      height: auto;
+      padding-top: 56.25%;
+      box-shadow: 0rem 0.2rem 0.5rem rgba(0, 0, 0, 0.25);
+
+      &.isLoading {
+        background: $light-gray;
+        box-shadow: 0rem 0.2rem 0.5rem rgba(0, 0, 0, 0.125);
+        animation-name: loading;
+        animation-duration: 2s;
+        animation-iteration-count: infinite;
+      }
+    }
+  }
+
+  button.slick-arrow {
+    position: absolute;
+    background: transparent;
+    cursor: hand;
+    cursor: pointer;
+    color: $gray-text;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    box-shadow: 0;
+    top: calc(100% - 0.5rem);
+    opacity: 0.75;
+    font-size: 0.8rem;
+    margin: 0rem 0.5rem;
+
+    &:hover,
+    &:focus,
+    &:active {
+      opacity: 1;
+    }
+
+    &.slick-next {
+      right: 0;
+
+      &::after {
+        content: "\00A0\2192";
+      }
+    }
+
+    &.slick-prev {
+      left: 0;
+
+      &::before {
+        content: "\2190\00A0";
+      }
+    }
+  }
+
+  .slick-list {
+    overflow-y: visible;
+  }
+}
+
+@media screen and (max-width: 492px) {
+  #banner-carousel .banner-item {
+    padding: 1rem 0rem;
+  }
+}
