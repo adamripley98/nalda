@@ -28,6 +28,7 @@ class SearchResults extends Component {
       error: '',
       articles: [],
       listings: [],
+      events: [],
       videos: [],
       curators: [],
       search: string,
@@ -57,6 +58,7 @@ class SearchResults extends Component {
           listings: res.data.data.listings,
           videos: res.data.data.videos,
           curators: res.data.data.curators,
+          events: res.data.data.events,
         });
       })
       .catch(err => this.setState({error: err.message}));
@@ -72,6 +74,7 @@ class SearchResults extends Component {
     if (this.isEmpty(this.state.articles) &&
         this.isEmpty(this.state.videos) &&
         this.isEmpty(this.state.listings) &&
+        this.isEmpty(this.state.events) &&
         this.isEmpty(this.state.curators)
     ) {
       return (<Blurb message={`No search results for \"${this.state.search}\"`} />);
@@ -89,6 +92,21 @@ class SearchResults extends Component {
                   content={l}
                   contentType="listing"
                   key={l._id}
+                />
+              ))
+            }
+            <div className="space-2" />
+          </div>
+        )}
+        {this.isEmpty(this.state.events) ? null : (
+          <div>
+            <h4 className="title section-title">Events</h4>
+            {
+              this.state.events.map(e => (
+                <Preview
+                  content={e}
+                  contentType="listing"
+                  key={e._id}
                 />
               ))
             }

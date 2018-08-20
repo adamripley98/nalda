@@ -31,6 +31,8 @@ import Article from '../components/content/articles/Article';
 import Articles from '../components/content/articles/Articles';
 import Listing from '../components/content/listings/Listing';
 import Listings from '../components/content/listings/Listings';
+import Events from '../components/content/events/Events';
+import Event from '../components/content/events/Event';
 import Video from '../components/content/videos/Video';
 import Videos from '../components/content/videos/Videos';
 import Categories from '../components/content/listings/Categories';
@@ -66,6 +68,7 @@ import ListUsers from '../components/admin/tables/ListUsers';
 import ListArticles from '../components/admin/tables/ListArticles';
 import ListListings from '../components/admin/tables/ListListings';
 import ListVideos from '../components/admin/tables/ListVideos';
+import ListEvents from '../components/admin/tables/ListEvents';
 import ManageAdmins from '../components/admin/forms/ManageAdmins';
 import ManageHomepage from '../components/admin/forms/ManageHomepage';
 
@@ -78,6 +81,7 @@ import {
   adminArticlesPath,
   adminListingsPath,
   adminVideosPath,
+  adminEventsPath,
   manageAdminsPath,
   manageHomepagePath,
   searchResultsPath,
@@ -229,6 +233,14 @@ class AppContainer extends Component {
                   ))}
                 />
                 <Route
+                  exact path={adminEventsPath}
+                  component={requireAdmin(() => (
+                    <AdminWrapper>
+                      <ListEvents />
+                    </AdminWrapper>
+                  ))}
+                />
+                <Route
                   exact path={manageAdminsPath}
                   component={requireAdmin(() => (
                     <AdminWrapper>
@@ -267,6 +279,8 @@ class AppContainer extends Component {
                 { /* Routes for events */ }
                 <Route exact path="/events/new" component={requireCurator(EventForm)} />
                 <Route exact path="/events/:id/edit" component={requireCurator(EditEventForm)} />
+                <Route exact path="/events" component={Events} />
+                <Route exact path="/events/:id" component={Event} />
 
                 { /* 404 if no other route was matched */ }
                 <Route exact path="/*" component={NotFoundSection}/>

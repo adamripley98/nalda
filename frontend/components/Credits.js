@@ -19,7 +19,17 @@ const Credits = () => {
         Site credits
       </h4>
       <p>
-        Website developed by Cameron Cabo and Adam Ripley for Nalda.
+        Website developed by &nbsp;
+        <a href="https://www.cameroncabo.com">
+          Cameron Cabo
+        </a> and &nbsp;
+        <a href="http://www.adamripley.com">
+          Adam Ripley
+        </a>
+         &nbsp; for Nalda through &nbsp;
+         <a href="https://www.riplo.io">
+           Riplo Ventures
+         </a>.
       </p>
     </div>
   );

@@ -11,7 +11,6 @@ module.exports = (passport) => {
     passport.authenticate('local', (passportErr, user) => {
       // If there was an error in the authentication
       if (passportErr) {
-        console.log('pass err');
         res.status(404).send({error: passportErr});
         return;
       }
@@ -24,7 +23,6 @@ module.exports = (passport) => {
       req.logIn(user, (loginErr) => {
         // Error logging in
         if (loginErr) {
-          console.log('log err');
           res.status(404).send({error: loginErr});
           return;
         }

@@ -214,9 +214,12 @@ class Categories extends React.Component {
       <div className="container home">
         <Tags title="Categories" description="View all listings with a given category" />
         <div className="space-1"/>
-        <h3 className="title section-title">
+        {
+          this.state.pending ? null :
+          <h3 className="title section-title">
           Listings tagged with "{categoryMap[this.state.categoryName]}"
-        </h3>
+          </h3>
+        }
         {
           (this.state.listings && this.state.listings.length > 1) ? (
             <div className="sort-options">

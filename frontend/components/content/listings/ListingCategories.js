@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import categoryMap from '../../json/categoryMap';
 
-const ListingCategories = ({ categories }) => {
+const EventCategories = ({ categories }) => {
   if (!categories) return null;
 
   return (
@@ -21,8 +21,8 @@ const ListingCategories = ({ categories }) => {
   );
 };
 
-ListingCategories.propTypes = {
+EventCategories.propTypes = {
   categories: PropTypes.object.isRequired,
 };
 
-export default ListingCategories;
+export default EventCategories;

@@ -132,7 +132,7 @@ class Articles extends React.Component {
           title={art.title}
           subtitle={art.subtitle}
           image={art.imagePreview ? art.imagePreview : art.image}
-          contentId={art.contentId}
+          contentId={art._id || art.contentId}
         />
       ));
     }

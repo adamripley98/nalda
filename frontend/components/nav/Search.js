@@ -19,6 +19,7 @@ class Search extends Component {
         listings: [],
         videos: [],
         curators: [],
+        events: [],
       },
       active: false,
       pending: false,
@@ -109,6 +110,7 @@ class Search extends Component {
           listings: [],
           videos: [],
           curators: [],
+          events: [],
         },
         search: "",
       });
@@ -193,6 +195,22 @@ class Search extends Component {
                 ) : null
               }
               {
+                this.state.suggestions.events.length ? (
+                  <div className="col-12 col-md-6 col-xl-3">
+                    <h4>Events</h4>
+                    {
+                      this.state.suggestions.events.map(e => (
+                        // NOTE: Tempory fix issue where won't reload page
+                        <Link key={ e._id } onClick={location.reload} to={ `/articles/${e._id}` }>
+                          { e.title }
+                          <div/>
+                        </Link>
+                      ))
+                    }
+                  </div>
+                ) : null
+              }
+              {
                 this.state.suggestions.curators.length ? (
                   <div className="col-12 col-md-6 col-xl-3">
                     <h4>Curators</h4>
@@ -212,6 +230,7 @@ class Search extends Component {
                 !this.state.suggestions.articles.length &&
                 !this.state.suggestions.listings.length &&
                 !this.state.suggestions.videos.length &&
+                !this.state.suggestions.events.length &&
                 !this.state.suggestions.curators.length ? (
                   <div className="col-12">
                     <h4 className="gray-text">

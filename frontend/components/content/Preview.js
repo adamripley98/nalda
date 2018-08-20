@@ -52,6 +52,8 @@ class Preview extends Component {
       return 'articles';
     } else if (this.isVideo()) {
       return 'videos';
+    } else if (this.props.isEvent || this.props.contentType === 'event') {
+      return 'events';
     }
 
     // If none of the types match
@@ -113,6 +115,7 @@ class Preview extends Component {
       if (contentType === 'Videos') contentType = 'video';
       else if (contentType === 'Listings') contentType = 'listing';
       else if (contentType === 'Articles') contentType = 'article';
+      else if (contentType === 'Events') contentType = 'event';
 
       if (contentType === 'video' || contentType === 'Videos') {
         const videoId = this.props.content.url.substring(this.props.content.url.indexOf("v=") + 2);
@@ -183,6 +186,7 @@ Preview.propTypes = {
   isListing: PropTypes.bool,
   isVideo: PropTypes.bool,
   isArticle: PropTypes.bool,
+  isEvent: PropTypes.bool,
   isThin: PropTypes.bool,
   timestamp: PropTypes.number,
   content: PropTypes.object,

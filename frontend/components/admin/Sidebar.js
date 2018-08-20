@@ -13,6 +13,7 @@ import {
   adminAdminsPath,
   adminUsersPath,
   adminCuratorsPath,
+  adminEventsPath,
 } from '../../routes';
 
 /**
@@ -39,6 +40,7 @@ class Sidebar extends Component {
         {this.renderLink(adminArticlesPath, 'Articles')}
         {this.renderLink(adminListingsPath, 'Listings')}
         {this.renderLink(adminVideosPath, 'Videos')}
+        {this.renderLink(adminEventsPath, 'Events')}
       </div>
     );
   }

@@ -1,0 +1,87 @@
+.requirements {
+  margin: 1rem 0rem 2rem 0rem;
+  padding: 1rem;
+  background: $light-gray;
+  border-radius: 0.4rem;
+  white-space: pre-wrap;
+}
+
+.event {
+  color: $dark-gray;
+
+  .parallax-wrapper {
+    width: 100%;
+    height: 52vh;
+    overflow: hidden;
+
+    .img {
+      min-width: 100%;
+      min-height: 68vh;
+      height: auto;
+    }
+  }
+
+  // Style timstamp for the listing
+  .timestamp {
+    color: $gray;
+    font-style: italic;
+    font-size: 0.8rem;
+  }
+
+  .naldaFavorite {
+    margin: 1rem 0rem 2rem 0rem;
+    padding: 1rem;
+    background: $light-gray;
+    border-radius: 0.4rem;
+  }
+
+  .preview {
+    height: 40vh;
+    width: 100%;
+  }
+
+  .website {
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    margin-bottom: 0.5rem;
+  }
+
+  .table {
+    font-size: 0.8rem;
+
+    td {
+      padding: 0.25rem 0.5rem;
+    }
+  }
+
+  .content {
+    margin-top: 1.5rem;
+
+    .title {
+      font-weight: bold;
+      margin-bottom: 0rem;
+    }
+
+    .subtitle {
+      font-weight: bold;
+    }
+
+    .amenity {
+      margin-bottom: 0.5rem;
+
+      &.no-icon {
+        margin-left: 22px;
+      }
+
+      svg {
+        opacity: 0.9;
+        transform: translateY(2px);
+        width: 16px;
+        height: auto;
+        margin-right: 6px;
+      }
+    }
+  }
+}
