@@ -138,8 +138,7 @@ class Events extends React.Component {
     // If events were pulled from the database
     if (this.state.events && this.state.events.length) {
       return this.state.events.map(event => {
-        event.contentType = "event";
-        return (<Preview content={event} key={event._id} />);
+        return (<Preview contentType="event" content={event} key={event._id} />);
       });
     }
 

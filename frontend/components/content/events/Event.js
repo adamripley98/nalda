@@ -10,16 +10,11 @@ import moment from 'moment';
 import Loading from '../../shared/Loading';
 import Button from '../../shared/Button';
 import NotFoundSection from '../../NotFoundSection';
-import Carousel from './Carousel'; // TODO
+import Carousel from './Carousel';
 import ErrorMessage from '../../shared/ErrorMessage';
-import Blurb from '../../shared/Blurb';
 import Tags from '../../shared/Tags';
-import Location from './Location'; // TODO
-import EventHeader from './EventHeader'; // TODO create
-
-// Import json
-// import amenityMap from '../../json/amenityMap';
-// TODO create event category json potentially
+import Location from './Location';
+import EventHeader from './EventHeader';
 
 /**
  * Component to render a event
@@ -255,16 +250,12 @@ class Event extends React.Component {
               <div className="hidden-lg-up">
                 <div className="line" />
                 <h5 className="subtitle">
-                  Hours
+                  Date:
                 </h5>
-                {/* TODO */}
+                <strong>Start: </strong>{moment(this.state.event.startDate).format("dddd, M/D/YY, h:mm a")}
+                <br/>
+                <strong>End: </strong>{moment(this.state.event.endDate).format("dddd, M/D/YY, h:mm a")}
               </div>
-
-              <div className="line" />
-
-              <h5 className="subtitle">
-                Amenities
-              </h5>
 
               <Location location={this.state.event && this.state.event.location  ? this.state.event.location : {}} />
 
@@ -276,16 +267,16 @@ class Event extends React.Component {
 
             {/* Contains overview aboute the event */}
             <div
-              id="event-preview"
+              id="listing-preview"
               className={
                 this.state.infoTrigger ? (
-                  "col-12 col-lg-4 event-preview active"
+                  "col-12 col-lg-4 listing-preview active"
                 ) : (
-                  "col-12 col-lg-4 event-preview"
+                  "col-12 col-lg-4 listing-preview"
                 )
               }
               style={{
-                top: this.state.infoTrigger ? (window.innerHeight - document.getElementById('event-preview').offsetHeight) : (window.innerHeight - 64)
+                top: this.state.infoTrigger ? (window.innerHeight - document.getElementById('listing-preview').offsetHeight) : (window.innerHeight - 64)
               }}
             >
               <div className="card">
@@ -316,6 +307,21 @@ class Event extends React.Component {
                       &nbsp;
                       Visit website
                     </a>
+                  )
+                }
+                {
+                  this.state.event.startDate && this.state.event.endDate && (
+                    <div className="price hidden-md-down">
+                      <p>
+                        <strong>
+                          Start:&nbsp;
+                        </strong> {moment(this.state.event.startDate).format("dddd, M/D/YY, h:mm a")}
+                        <br/>
+                        <strong>
+                          End:&nbsp;
+                        </strong> {moment(this.state.event.endDate).format("dddd, M/D/YY, h:mm a")}
+                      </p>
+                    </div>
                   )
                 }
                 {
