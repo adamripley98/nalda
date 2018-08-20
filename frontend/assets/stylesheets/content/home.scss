@@ -2,6 +2,12 @@
  * Styling for the homepage
  */
 
+@keyframes loading {
+  0% { background-color: $light-gray; }
+  50% { background-color: $lighter-gray; }
+  100% { background-color: $light-gray; }
+}
+
 // Styling home sections in general
 .home-section {
   padding: 1.5rem 0rem;
@@ -27,6 +33,34 @@
     &:active,
     &:focus {
       color: $dark-gray;
+    }
+  }
+
+  &.isLoading {
+    .home-section-title,
+    .home-section-subtitle,
+    .home-categories span {
+      display: block;
+      background: $light-gray;
+      border-radius: 4px;
+      animation-name: loading;
+      animation-duration: 2s;
+      animation-iteration-count: infinite;
+    }
+
+    .home-section-title {
+      width: 40%;
+      height: 35px;
+    }
+
+    .home-section-subtitle {
+      width: 25%;
+      height: 24px;
+    }
+
+    .home-categories span {
+      width: 60%;
+      height: 24px;
     }
   }
 }

@@ -3,7 +3,7 @@ import React from 'react';
 import axios from 'axios';
 
 // Import components
-import Loading from '../shared/Loading';
+import LoadingHome from './LoadingHome';
 import ErrorMessage from '../shared/ErrorMessage';
 import Banner from './Banner';
 import ListingCategories from './ListingCategories';
@@ -71,13 +71,20 @@ class Home extends React.Component {
 
   // Function to render the component
   render() {
-    if (this.state.pending) return (<Loading />);
+    if (this.state.pending) return (<LoadingHome />);
+
     return (
       <div>
         <Tags />
         <Banner banner={this.state.banner} />
+
         {/* <Banner banners={this.state.banner} /> */}
+
         <div className="container">
+          {(!this.state.banner || !this.state.banner.length) && (
+            <div className="space-1" />
+          )}
+
           <ErrorMessage error={this.state.error} />
 
           <ListingCategories />
