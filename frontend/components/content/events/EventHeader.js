@@ -57,7 +57,7 @@ EventHeader.propTypes = {
     title: PropTypes.string,
     createdAt: PropTypes.number,
     updatedAt: PropTypes.number,
-    requirements: PropTypes.string,
+    requirements: PropTypes.array,
     categories: PropTypes.object,
   }).isRequired,
   author: PropTypes.shape({
