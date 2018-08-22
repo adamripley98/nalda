@@ -62,37 +62,41 @@ class Search extends Component {
     this.setState({
       pending: true,
     });
+    // Set timeout ensures that fast typers search won't be missed
+    setTimeout(() => {
+      if (this.state.search) {
+        // Get new search results
+        axios.post('/api/search', {
+          search: this.state.search,
+        })
+        .then((resp) => {
+          if (!resp.data.success) {
+            this.setState({
+              error: true,
+              pending: false,
+            });
+          } else {
+            // There is no error
+            this.setState({
+              error: false,
+              pending: false,
+            });
 
-    // Get new search results
-    axios.post('/api/search', {
-      search: this.state.search,
-    })
-      .then((resp) => {
-        if (!resp.data.success) {
+            // Update the suggestions
+            this.setState({
+              suggestions: resp.data.data,
+            });
+          }
+        })
+        .catch(() => {
+          // If there was an error
           this.setState({
             error: true,
             pending: false,
           });
-        } else {
-          // There is no error
-          this.setState({
-            error: false,
-            pending: false,
-          });
-
-          // Update the suggestions
-          this.setState({
-            suggestions: resp.data.data,
-          });
-        }
-      })
-      .catch(() => {
-        // If there was an error
-        this.setState({
-          error: true,
-          pending: false,
         });
-      });
+      }
+    }, 100);
   }
 
   /**
@@ -101,7 +105,6 @@ class Search extends Component {
   handleChangeSearch(event) {
     // Isolate the value from the event
     const value = event.target.value;
-
     // Check if the value is empty and update the state accordingly
     if (!value) {
       this.setState({
