@@ -98,10 +98,8 @@ module.exports = () => {
    * @param search (what term user searched for)
    */
   router.post('/search', (req, res) => {
-    console.log('enters');
     // If haven't typed yet, don't worry about pulling info
     if (!req.body.search) {
-      console.log('nah');
       res.send({success: true});
       return;
     }
