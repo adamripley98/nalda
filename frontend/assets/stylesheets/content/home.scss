@@ -96,12 +96,6 @@
       border-top: 1px solid #e4e4e4;
       padding-top: 1rem;
 
-      &:hover,
-      &:active,
-      &:focus {
-        color: $dark-gray;
-      }
-
       .img {
         width: 24px;
       	height: 24px;
@@ -112,8 +106,20 @@
       }
 
       span {
-        color: $gray;
+        color: darken($gray, 5%);
         margin-left: 2rem;
+      }
+
+      &:hover,
+      &:active,
+      &:focus {
+        .img {
+          background: darken($light-gray, 5%);
+        }
+
+        span {
+          color: $dark-gray;
+        }
       }
     }
   }

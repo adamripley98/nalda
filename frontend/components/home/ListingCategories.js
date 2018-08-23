@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 
 // Import json
 import categoryMap from '../json/categoryMap';
+import hiddenCategories from '../json/hiddenCategories';
 
 /**
  * Render the categories for all listings
@@ -18,12 +19,14 @@ const ListingCategories = ({ isLoading }) => {
         <ul className="home-categories">
           {
             Object.keys(categoryMap).map(key => (
-              <li className="category" key={key}>
-                <Link to="#">
-                  <div className="img" />
-                  <span />
-                </Link>
-              </li>
+              hiddenCategories[key] ? (null) : (
+                <li className="category" key={key}>
+                  <Link to="#">
+                    <div className="img" />
+                    <span />
+                  </Link>
+                </li>
+              )
             ))
           }
         </ul>
@@ -42,12 +45,14 @@ const ListingCategories = ({ isLoading }) => {
       <ul className="home-categories">
         {
           Object.keys(categoryMap).map(key => (
-            <li className="category" key={key}>
-              <Link to={`/listings/categories/${key}`}>
-                <div className="img" />
-                <span>{categoryMap[key]}</span>
-              </Link>
-            </li>
+            hiddenCategories[key] ? (null) : (
+              <li className="category" key={key}>
+                <Link to={`/listings/categories/${key}`}>
+                  <div className="img" />
+                  <span>{categoryMap[key]}</span>
+                </Link>
+              </li>
+            )
           ))
         }
       </ul>
