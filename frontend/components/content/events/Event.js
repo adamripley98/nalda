@@ -8,7 +8,7 @@ import moment from 'moment';
 // Import components
 import Loading from '../../shared/Loading';
 import Button from '../../shared/Button';
-import Carousel from './Carousel';
+import Carousel from '../Carousel';
 import ErrorMessage from '../../shared/ErrorMessage';
 import Tags from '../../shared/Tags';
 import Location from '../Location';

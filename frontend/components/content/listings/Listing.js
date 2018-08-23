@@ -13,7 +13,7 @@ import Loading from '../../shared/Loading';
 import Button from '../../shared/Button';
 import ListingNotFound from './ListingNotFound';
 import Stars from './Stars';
-import Carousel from './Carousel';
+import Carousel from '../Carousel';
 import ErrorMessage from '../../shared/ErrorMessage';
 import Blurb from '../../shared/Blurb';
 import Tags from '../../shared/Tags';

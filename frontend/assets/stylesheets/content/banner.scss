@@ -29,44 +29,6 @@
     }
   }
 
-  button.slick-arrow {
-    position: absolute;
-    background: transparent;
-    cursor: hand;
-    cursor: pointer;
-    color: $gray-text;
-    padding: 0;
-    margin: 0;
-    border: 0;
-    box-shadow: 0;
-    top: calc(100% - 0.5rem);
-    opacity: 0.75;
-    font-size: 0.8rem;
-    margin: 0rem 0.5rem;
-
-    &:hover,
-    &:focus,
-    &:active {
-      opacity: 1;
-    }
-
-    &.slick-next {
-      right: 0;
-
-      &::after {
-        content: "\00A0\2192";
-      }
-    }
-
-    &.slick-prev {
-      left: 0;
-
-      &::before {
-        content: "\2190\00A0";
-      }
-    }
-  }
-
   .slick-list {
     overflow-y: visible;
   }
@@ -74,6 +36,73 @@
 
 @media screen and (max-width: 492px) {
   #banner-carousel .banner-item {
-    padding: 1rem 0rem;
+    padding: 1rem 0.5rem;
+  }
+}
+
+button.slick-arrow {
+  position: absolute;
+  background: transparent;
+  cursor: hand;
+  cursor: pointer;
+  color: $gray-text;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  box-shadow: 0;
+  top: calc(100% - 0.5rem);
+  opacity: 0.75;
+  font-size: 0.8rem;
+  margin: 0rem 0.5rem;
+  z-index: 2;
+
+  &:hover,
+  &:focus,
+  &:active {
+    opacity: 1;
+  }
+
+  &.slick-next {
+    right: 0;
+
+    &::after {
+      content: "\00A0\2192";
+    }
+  }
+
+  &.slick-prev {
+    left: 0;
+
+    &::before {
+      content: "\2190\00A0";
+    }
+  }
+}
+
+#carousel {
+  &::before,
+  &::after {
+    content: '';
+    z-index: 1;
+    width: 10%;
+    height: 50vh;
+    display: block;
+    position: absolute;
+  }
+
+  &::before {
+    background-image: linear-gradient(to right, white, transparent);
+  }
+
+  &::after {
+    top: 0;
+    right: 0;
+    background-image: linear-gradient(to right, transparent, white);
+  }
+
+  img {
+    height: 50vh;
+    margin: 0rem 1rem 1rem 1rem;
+    width: auto;
   }
 }
