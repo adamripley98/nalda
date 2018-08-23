@@ -1,12 +1,11 @@
-// Import frameworks
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
-// Import components
 import Stars from './listings/Stars';
-import categoryMap from '../json/categoryMap';
+import TimeRange from './events/TimeRange';
 
+import categoryMap from '../json/categoryMap';
 
 /**
  * Renders an error message to the user
@@ -85,17 +84,21 @@ class Preview extends Component {
 
   // Get the categories of the content if there are any
   getCategories() {
+    const categories = this.props.categories;
+
     // If there are no categories, return null
-    if (!this.props.categories) return null;
-    const keys = Object.keys(this.props.categories);
+    if (!categories) return null;
+    const keys = Object.keys(categories);
+
+    if (!keys.some(key => categories[key])) return null;
 
     // If there are categories to return
     return (
       <div className="categories">
         {keys.map(key => (
-          this.props.categories[key] ? (
+          categories[key] ? (
             <span className="category" key={key}>
-              {categoryMap[key]}
+              {categoryMap[key] || key}
             </span>
           ) : null
         ))}
@@ -110,18 +113,21 @@ class Preview extends Component {
       // Find the image for the content depending on its type
       let image = '';
 
+      console.log('CONTENT', this.props.content);
+
       let contentType = this.props.contentType;
 
+      // Use consistently formatted text
       if (contentType === 'Videos') contentType = 'video';
       else if (contentType === 'Listings') contentType = 'listing';
       else if (contentType === 'Articles') contentType = 'article';
       else if (contentType === 'Events') contentType = 'event';
 
-      if (contentType === 'video' || contentType === 'Videos') {
+      if (contentType === 'video') {
         const videoId = this.props.content.url.substring(this.props.content.url.indexOf("v=") + 2);
         image = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
       } else {
-        image = this.props.content.imagePreview ? this.props.content.imagePreview : this.props.content.image;
+        image = this.props.content.imagePreview || this.props.content.image;
       }
 
       // Render a preview with the specific props
@@ -138,6 +144,8 @@ class Preview extends Component {
           image={image}
           index={this.props.index}
           contentType={contentType}
+          startDate={this.props.content.startDate}
+          endDate={this.props.content.endDate}
         />
       );
     }
@@ -170,7 +178,9 @@ class Preview extends Component {
 
           {this.getCategories()}
 
-          {this.props.rating && <Stars rating={this.props.rating} />}
+          <Stars rating={this.props.rating} />
+
+          <TimeRange startDate={this.props.startDate} endDate={this.props.endDate} />
 
           {this.getSubtitle()}
         </div>
@@ -198,6 +208,8 @@ Preview.propTypes = {
   categories: PropTypes.object,
   index: PropTypes.number,
   handleClick: PropTypes.func,
+  startDate: PropTypes.string,
+  endDate: PropTypes.string,
 };
 
 export default Preview;

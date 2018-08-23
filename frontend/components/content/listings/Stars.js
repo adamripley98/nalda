@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const Stars = ({ rating }) => {
+  if (rating === undefined || rating === null) return null;
+
   // Full star
   const fullStar = (
     <i className="fa fa-star fa-lg full" aria-hidden="true" />
@@ -63,6 +65,10 @@ const Stars = ({ rating }) => {
       </p>
     </div>
   );
+};
+
+Stars.defaultProps = {
+  rating: undefined,
 };
 
 Stars.propTypes = {
