@@ -47,7 +47,10 @@ class GuestSidebarLinks extends Component {
           Curator Articles
         </Link>
         <Link onClick={this.props.toggleMenu} to="/listings" className="link">
-          Philadelphia Listings
+          Philadelphia Food
+        </Link>
+        <Link onClick={this.props.toggleMenu} to="/events" className="link">
+          Philadelphia Events
         </Link>
         <Link onClick={this.props.toggleMenu} to="/videos" className="link">
           Videos

@@ -15,7 +15,7 @@ export default () => (
         </Link>
       </li>
       <li className="gf-social-item">
-        <Link to="https://www.instagram.com/naldacampus/" target="_blank" className="gf-youtube">
+        <Link to="https://www.youtube.com/channel/UCwND5nssp_nB7Zg7M2ve2sA/" target="_blank" className="gf-youtube">
           <i className="fa fa-youtube-play fa-lg" />
         </Link>
       </li>
