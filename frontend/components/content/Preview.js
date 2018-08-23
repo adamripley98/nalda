@@ -152,7 +152,7 @@ class Preview extends Component {
       <Link
         to={ `/${this.getType()}/${this.props._id}` }
         onClick={this.props.handleClick}
-        className={() => {console.log('wtf'); this.getClassName();}}>
+        className={this.getClassName()}>
         <div className="content-preview">
           <div
             className="background-image"
