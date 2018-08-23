@@ -125,7 +125,7 @@ module.exports = () => {
                   price: content.price,
                   categories: content.categories,
                 };
-              } else {
+              } else if (component.contentType === 'Videos') {
                 // Content is a video
                 newContent = {
                   contentType: component.contentType,
@@ -137,6 +137,13 @@ module.exports = () => {
                   createdAt: content.createdAt,
                   updatedAt: content.updatedAt,
                 };
+              } else {
+                callback({
+                  success: false,
+                  error: `Invalid component content type: ${component.contentType}`,
+                });
+
+                return;
               }
 
               returnContent.push(newContent);
@@ -182,7 +189,7 @@ module.exports = () => {
    */
   router.get('/', (req, res) => {
     Homepage.find({})
-      .then((home) => {
+      .then(home => {
         const homepage = home[0];
 
         if (!homepage || !homepage.components || !homepage.components.length) {
@@ -202,7 +209,6 @@ module.exports = () => {
 
             return;
           }
-
           res.send({
             banner: homepage.banner,
             components: resp.returnComponents && resp.returnComponents.length ? resp.returnComponents : [],

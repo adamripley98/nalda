@@ -98,12 +98,17 @@ module.exports = () => {
    * @param search (what term user searched for)
    */
   router.post('/search', (req, res) => {
+    // If haven't typed yet, don't worry about pulling info
+    if (!req.body.search) {
+      res.send({success: true});
+      return;
+    }
     // Search through relevant data in Mongo
     Article.find({$or: [{"title": new RegExp(req.body.search, "i")}, {"subtitle": new RegExp(req.body.search, "i")}]}, (errArticle, articles) => {
-      Listing.find({$or: [{"title": new RegExp(req.body.search, "i")}, {"description": new RegExp(req.body.search, "i")}]}, (errListing, listings) => {
-        Video.find({$or: [{"title": new RegExp(req.body.search, "i")}, {"description": new RegExp(req.body.search, "i")}]}, (errVideo, videos) => {
+      Listing.find({$or: [{"title": new RegExp(req.body.search, "i")}]}, (errListing, listings) => {
+        Video.find({$or: [{"title": new RegExp(req.body.search, "i")}]}, (errVideo, videos) => {
           User.find({name: new RegExp(req.body.search, "i")}, (errUser, users) => {
-            Event.find({$or: [{"title": new RegExp(req.body.search, "i")}, {"description": new RegExp(req.body.search, "i")}]}, (errEvent, events) => {
+            Event.find({$or: [{"title": new RegExp(req.body.search, "i")}]}, (errEvent, events) => {
               // Return any errors
               if (errArticle || errListing || errVideo || errUser || errEvent) {
                 res.status(400).send({
