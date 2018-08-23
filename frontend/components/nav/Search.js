@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import Loading from '../shared/Loading';
+import Preview from '../content/Preview';
+import ArticlePreview from '../content/articles/ArticlePreview';
 
 class Search extends Component {
   // Constructor method
@@ -161,14 +163,18 @@ class Search extends Component {
             <div className="row">
               {
                 this.state.suggestions.articles.length ? (
-                  <div className="col-12 col-md-6 col-xl-3">
+                  <div className="col-12">
                     <h4>Articles</h4>
                     {
                       this.state.suggestions.articles.map(a => (
-                        <Link key={ a._id } onClick={this.handleClick} to={ `/articles/${a._id}` }>
-                          { a.title }
-                          <div/>
-                        </Link>
+                        <ArticlePreview
+                          handleClick={this.handleClick}
+                          key={`search-article-${a._id}`}
+                          title={a.title}
+                          image={a.imagePreview || a.image}
+                          subtitle={a.subtitle}
+                          contentId={a._id || a.contentId}
+                        />
                       ))
                     }
                   </div>
@@ -176,14 +182,15 @@ class Search extends Component {
               }
               {
                 this.state.suggestions.listings.length ? (
-                  <div className="col-12 col-md-6 col-xl-3">
+                  <div className="col-12">
                     <h4>Listings</h4>
                     {
                       this.state.suggestions.listings.map(l => (
-                        <Link key={ l._id } onClick={this.handleClick} to={ `/listings/${l._id}` }>
-                          { l.title }
-                          <div/>
-                        </Link>
+                        <Preview
+                          handleClick={this.handleClick}
+                          content={l}
+                          contentType="listing"
+                          key={`search-listing-${l._id}`} />
                       ))
                     }
                   </div>
@@ -191,15 +198,16 @@ class Search extends Component {
               }
               {
                 this.state.suggestions.videos.length ? (
-                  <div className="col-12 col-md-6 col-xl-3">
+                  <div className="col-12">
                     <h4>Videos</h4>
                     {
                       this.state.suggestions.videos.map(v => (
-                        // NOTE: Tempory fix issue where won't reload page
-                        <Link key={ v._id } onClick={this.handleClick} to={ `/videos/${v._id}` }>
-                          { v.title }
-                          <div/>
-                        </Link>
+                        <Preview
+                          key={`search-video-${v._id}`}
+                          handleClick={this.handleClick}
+                          content={v}
+                          contentType="video"
+                        />
                       ))
                     }
                   </div>
@@ -207,15 +215,16 @@ class Search extends Component {
               }
               {
                 this.state.suggestions.events.length ? (
-                  <div className="col-12 col-md-6 col-xl-3">
+                  <div className="col-12">
                     <h4>Events</h4>
                     {
                       this.state.suggestions.events.map(e => (
-                        // NOTE: Tempory fix issue where won't reload page
-                        <Link key={ e._id } onClick={this.handleClick} to={ `/articles/${e._id}` }>
-                          { e.title }
-                          <div/>
-                        </Link>
+                        <Preview
+                          key={`search-event-${e._id}`}
+                          content={e}
+                          contentType="event"
+                          handleClick={this.handleClick}
+                        />
                       ))
                     }
                   </div>
@@ -223,11 +232,12 @@ class Search extends Component {
               }
               {
                 this.state.suggestions.curators.length ? (
-                  <div className="col-12 col-md-6 col-xl-3">
+                  <div className="col-12">
                     <h4>Curators</h4>
                     {
                       this.state.suggestions.curators.map(c => (
                         // NOTE: Tempory fix issue where won't reload page
+                        // TODO better preview for curators
                         <Link key={ c._id } onClick={this.handleClick} to={ `/users/${c._id}` }>
                           { c.name }
                           <div/>

@@ -127,6 +127,7 @@ class Preview extends Component {
       // Render a preview with the specific props
       return (
         <Preview
+          handleClick={this.props.handleClick}
           _id={this.props.content.contentId ? this.props.content.contentId : this.props.content._id}
           key={this.props.content.contentId}
           title={this.props.content.title}
@@ -145,6 +146,7 @@ class Preview extends Component {
     return (
       <Link
         to={ `/${this.getType()}/${this.props._id}` }
+        onClick={this.props.handleClick}
         className={this.getClassName()}>
         <div className="content-preview">
           <div
@@ -195,6 +197,7 @@ Preview.propTypes = {
   location: PropTypes.string,
   categories: PropTypes.object,
   index: PropTypes.number,
+  handleClick: PropTypes.func,
 };
 
 export default Preview;
