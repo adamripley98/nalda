@@ -78,8 +78,6 @@ class Home extends React.Component {
         <Tags />
         <Banner banner={this.state.banner} />
 
-        {/* <Banner banners={this.state.banner} /> */}
-
         <div className="container">
           {(!this.state.banner || !this.state.banner.length) && (
             <div className="space-1" />

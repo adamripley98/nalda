@@ -30,6 +30,7 @@ class Search extends Component {
     this.renderSuggestions = this.renderSuggestions.bind(this);
     this.getSearchResults = this.getSearchResults.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   /**
@@ -62,6 +63,7 @@ class Search extends Component {
     this.setState({
       pending: true,
     });
+
     // Set timeout ensures that fast typers search won't be missed
     setTimeout(() => {
       if (this.state.search) {
@@ -69,32 +71,32 @@ class Search extends Component {
         axios.post('/api/search', {
           search: this.state.search,
         })
-        .then((resp) => {
-          if (!resp.data.success) {
+          .then((resp) => {
+            if (!resp.data.success) {
+              this.setState({
+                error: true,
+                pending: false,
+              });
+            } else {
+              // There is no error
+              this.setState({
+                error: false,
+                pending: false,
+              });
+
+              // Update the suggestions
+              this.setState({
+                suggestions: resp.data.data,
+              });
+            }
+          })
+          .catch(() => {
+            // If there was an error
             this.setState({
               error: true,
               pending: false,
             });
-          } else {
-            // There is no error
-            this.setState({
-              error: false,
-              pending: false,
-            });
-
-            // Update the suggestions
-            this.setState({
-              suggestions: resp.data.data,
-            });
-          }
-        })
-        .catch(() => {
-          // If there was an error
-          this.setState({
-            error: true,
-            pending: false,
           });
-        });
       }
     }, 100);
   }
@@ -105,8 +107,9 @@ class Search extends Component {
   handleChangeSearch(event) {
     // Isolate the value from the event
     const value = event.target.value;
-    // Check if the value is empty and update the state accordingly
+
     if (!value) {
+      // If the user deleted what they were searching for
       this.setState({
         suggestions: {
           articles: [],
@@ -115,7 +118,7 @@ class Search extends Component {
           curators: [],
           events: [],
         },
-        search: "",
+        search: '',
       });
     } else {
       this.setState({
@@ -124,8 +127,14 @@ class Search extends Component {
     }
   }
 
+  handleClick() {
+    this.setState({
+      active: false,
+    });
+  }
+
   /**
-   * Handle the user submitting the form
+   * Handle the user submitting the form by pressing enter
    */
   handleSubmit(event) {
     event.preventDefault();
@@ -140,7 +149,7 @@ class Search extends Component {
       return (
         <div className="suggestions">
           <div className="container-fluid">
-            {
+            { /* This will only be populated if the user is logged in */
               this.props.location ? (
                 <p className="location small">
                   Results in { this.props.location }
@@ -172,7 +181,7 @@ class Search extends Component {
                     {
                       this.state.suggestions.listings.map(l => (
                         // NOTE: Tempory fix issue where won't reload page
-                        <Link key={ l._id } onClick={location.reload} to={ `/listings/${l._id}` }>
+                        <Link key={ l._id } onClick={this.handleClick} to={ `/listings/${l._id}` }>
                           { l.title }
                           <div/>
                         </Link>

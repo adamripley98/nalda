@@ -70,10 +70,21 @@ class Listing extends React.Component {
     this.deleteListing = this.deleteListing.bind(this);
     this.renderButtons = this.renderButtons.bind(this);
     this.deleteReview = this.deleteReview.bind(this);
+    this.init = this.init.bind(this);
   }
 
   // Pull the listing data from the database
   componentDidMount() {
+    this.init();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.match.params.id !== prevProps.match.params.id) {
+      this.init();
+    }
+  }
+
+  init() {
     // Scroll to the top of the screen
     window.scrollTo(0, 0);
 
