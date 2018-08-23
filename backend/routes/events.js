@@ -25,15 +25,15 @@ module.exports = () => {
   router.get('/', (req, res) => {
     // Pulls events from mongo
     Event.find({})
-    .then(events => {
-      // Send events back in correct order
-      events.reverse();
-      // If everything went as planned
-      res.send({events});
-    })
-    .catch(() => {
-      res.status(404).send({error: 'Error finding events.'});
-    });
+      .then(events => {
+        // Send events back in correct order
+        events.reverse();
+        // If everything went as planned
+        res.send({events});
+      })
+      .catch(() => {
+        res.status(404).send({error: 'Error finding events.'});
+      });
   });
 
   /**
@@ -42,8 +42,9 @@ module.exports = () => {
   router.get('/:id', (req, res) => {
     // Find the id from the event url
     const id = req.params.id;
+
     // Check if user is logged in
-    const userId = req.session.passport ? req.session.passport.user : null;
+    const userId = req.session.passport && req.session.passport.user;
 
     if (!id) {
       res.status(404).send({error: 'Error pulling event'});
@@ -51,49 +52,57 @@ module.exports = () => {
     }
 
     Event.findById(id)
-    .then(event => {
-      if (!event) {
-        res.status(404).send({error: 'Error pulling event.'});
-        return;
-      }
-      User.findById(event.author)
-      .then(author => {
-        if (!author) {
-          res.status(404).send({error: 'Error pulling event.'});
+      .then(event => {
+        if (!event) {
+          res.status(404).send({error: 'Event not found.'});
           return;
         }
-        // Default: users can't change event
-        let canModify = false;
-        User.findById(userId)
-        .then(user => {
-          if (user) {
-            // Check if given user is either an admin or the curator of the event
-            if (user.userType === 'admin' || user.userType === 'curator') {
-              canModify = true;
+
+        User.findById(event.author)
+          .then(author => {
+            if (!author) {
+              res.status(404).send({error: 'Error pulling event.'});
+              return;
             }
-            // Send back data
-            res.send({
-              author,
-              event,
-              timestamp: event._id.getTimestamp(),
-              canModify,
+
+            // By default: users can't change event
+            const awaitCanModify = new Promise((resolve) => {
+              if (!userId) resolve(false);
+
+              User.findById(userId)
+                .then(user => {
+                  if (user) {
+                    // Check if given user is either an admin or the curator of the event
+                    if (user.userType === 'admin' || user.userType === 'curator') {
+                      resolve(true);
+                    } else {
+                      resolve(false);
+                    }
+                  }
+                })
+                .catch(() => {
+                  resolve(false);
+                });
             });
-          }
-        })
-        .catch(() => {
-          res.status(404).send({error: 'Error pulling event.'});
-          return;
-        });
+
+            awaitCanModify.then(canModify => (
+              res.send({
+                author,
+                event,
+                timestamp: event._id.getTimestamp(),
+                canModify,
+              })
+            ));
+          })
+          .catch(() => {
+            res.status(404).send({error: 'Error pulling event.'});
+            return;
+          });
       })
       .catch(() => {
         res.status(404).send({error: 'Error pulling event.'});
         return;
       });
-    })
-    .catch(() => {
-      res.status(404).send({error: 'Error pulling event.'});
-      return;
-    });
   });
 
   // Route to create a new event
