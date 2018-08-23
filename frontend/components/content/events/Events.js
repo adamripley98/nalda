@@ -159,7 +159,7 @@ class Events extends React.Component {
         <Tags title="Events" description="View all events" />
         <div className="space-1"/>
         <h3 className="title section-title">
-          Events
+          Philadelphia Events
         </h3>
         {
           (this.state.events && this.state.events.length > 1) ? (

@@ -190,7 +190,7 @@ class Listings extends React.Component {
         <Tags title="Listings" description="View all listings" />
         <div className="space-1"/>
         <h3 className="title section-title">
-          Listings
+          Philadelphia Food
         </h3>
         {
           (this.state.listings && this.state.listings.length > 1) ? (

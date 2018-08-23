@@ -39,19 +39,19 @@ class Articles extends React.Component {
 
     // Pull the data
     axios.get('/api/articles')
-    .then((resp) => {
-      this.setState({
-        articles: resp.data.articles,
-        pending: false,
-        error: "",
+      .then((resp) => {
+        this.setState({
+          articles: resp.data.articles,
+          pending: false,
+          error: "",
+        });
+      })
+      .catch(error => {
+        this.setState({
+          pending: false,
+          error: error.response.data.error || error.response.data,
+        });
       });
-    })
-    .catch(error => {
-      this.setState({
-        pending: false,
-        error: error.response.data.error || error.response.data,
-      });
-    });
   }
 
   // Method to sort by date
@@ -152,7 +152,7 @@ class Articles extends React.Component {
         <Tags title="Articles" description="View all articles." keywords="Nalda,articles,all" />
         <div className="space-1"/>
         <h3 className="title section-title">
-          Articles
+          Curator Articles
         </h3>
         {
           (this.state.articles && this.state.articles.length > 1) ? (

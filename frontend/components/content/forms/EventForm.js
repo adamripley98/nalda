@@ -273,8 +273,13 @@ class EventForm extends React.Component {
 
   // Helper method to ensure all required fields are filled in validly
   inputValid() {
-    return (this.state.title && this.state.description &&
-      this.state.image && this.state.website && this.state.startDate && this.state.endDate && document.getElementById("location").value);
+    return (
+      this.state.title &&
+      this.state.description &&
+      this.state.image &&
+      this.state.website &&
+      document.getElementById("location").value
+    );
   }
 
   /**

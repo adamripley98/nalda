@@ -125,14 +125,8 @@ module.exports = () => {
         error = "Title must be populated.";
       } else if (!description) {
         error = "Description must be populated.";
-      } else if (!startDate) {
-        error = "Start Date must be populated.";
-      } else if (!endDate) {
-        error = "End Date must be populated.";
       } else if (!image) {
         error = "Hero image must be populated.";
-      } else if (!requirements || !requirements.length) {
-        error = "Requirements must be populated.";
       } else if (images && images.length > 10) {
         error = "Maximum of 10 images.";
       } else if (!price) {
