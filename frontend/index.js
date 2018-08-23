@@ -6,7 +6,6 @@ import { render } from 'react-dom';
 import { persistStore } from 'redux-persist';
 import { compose, createStore } from 'redux';
 import rootReducer from './reducers';
-// import logger from 'redux-logger';
 import Root from './containers/Root';
 
 // Imported for styling
@@ -16,9 +15,7 @@ import './assets/stylesheets/base.scss';
 const store = createStore(
   rootReducer,
   undefined,
-  compose(
-    // applyMiddleware(logger),
-  )
+  compose()
 );
 
 // Allows persisting between refreshes
