@@ -30,7 +30,7 @@ class Carousel extends Component {
     if (!this.areImages()) return null;
 
     return (
-      <div id="carousel">
+      <div id="carousel" className="full-width-mobile">
         {
           this.props.images.map((img, index) => (
             <img src={img} alt={`carousel-${index}`} key={`carousel-image-${index}`} />
