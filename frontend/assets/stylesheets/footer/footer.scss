@@ -29,8 +29,6 @@
 	width: 100px;
 	height: 26px;
 	background-size: 100px 26px;
-	// Pull the background image from AWS as an SVG
-	background-image: url('https://s3.amazonaws.com/nalda/footer-logo.svg');
   margin-right: 1rem;
 	background-position: center center;
 	opacity: 1;
@@ -205,8 +203,7 @@
 
 	.nalda-logo {
 		width: 150px;
-		height: 39px;
-		background-size: 150px 39px;
+		height: auto;
 	}
 
 	.footer-menus {
