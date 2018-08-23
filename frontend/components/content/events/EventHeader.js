@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import Author from '../../shared/Author';
 import ErrorMessage from '../../shared/ErrorMessage';
-import EventCategories from './EventCategories';
+import Categories from '../Categories';
 import Requirements from './Requirements';
 
 const EventHeader = ({
@@ -36,7 +36,7 @@ const EventHeader = ({
 
     <ErrorMessage error={error} />
 
-    <EventCategories categories={categories} />
+    <Categories categories={categories} />
 
     <Requirements requirements={requirements} />
   </div>

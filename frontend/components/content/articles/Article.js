@@ -5,12 +5,12 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 
 // Import shared components
-import Button from '../../shared/Button';
 import Loading from '../../shared/Loading';
-import NotFoundSection from '../../NotFoundSection';
+import ArticleNotFound from './ArticleNotFound';
 import ErrorMessage from '../../shared/ErrorMessage';
 import Author from '../../shared/Author';
 import Tags from '../../shared/Tags';
+import ArticleBody from './ArticleBody';
 
 /**
  * Component to render an article
@@ -22,20 +22,13 @@ class Article extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      error: "",
-      author: {
-        name: "",
-        _id: "",
-        profilePicture: "",
-      },
-      title: "",
-      subtitle: "",
-      image: "",
-      body: [],
+      error: '',
+      author: {},
+      article: {},
       pending: true,
       canModify: false,
       redirectToHome: false,
-      deleteError: "",
+      deleteError: '',
       pendingDelete: false,
     };
 
@@ -72,15 +65,15 @@ class Article extends React.Component {
     axios.get(`/api/articles/${id}`)
       .then(res => {
         this.setState({
-          error: "",
-          ...res.data.article,
-          author: res.data.author,
+          error: '',
+          article: res.data.article || {},
+          author: res.data.author || {},
           pending: false,
-          canModify: res.data.canModify,
+          canModify: res.data.canModify || false,
         });
       })
       .catch(err => {
-        if (err.response.status === 404) {
+        if (err && err.response && err.response.status === 404) {
           this.setState({
             pending: false,
             notFound: true,
@@ -88,7 +81,7 @@ class Article extends React.Component {
         } else {
           // If there was an error making the request
           this.setState({
-            error: err,
+            error: (err && err.message) ? err.message : err,
             pending: false,
           });
         }
@@ -121,8 +114,14 @@ class Article extends React.Component {
         });
       })
       .catch(error => {
+        let errMessage = 'Something went wrong. Please try again.';
+
+        if (error && error.response) {
+          errMessage = error.response.data && error.response.data.error;
+        }
+
         this.setState({
-          deleteError: error.response.data.error || error.response.data,
+          deleteError: errMessage,
           pendingDelete: false,
         });
       });
@@ -138,7 +137,7 @@ class Article extends React.Component {
         <div className="buttons right marg-bot-1">
           <Link
             className="btn btn-primary btn-sm"
-            to={`/articles/${this.state._id}/edit`}
+            to={`/articles/${this.state.article._id}/edit`}
           >
             Edit
           </Link>
@@ -194,103 +193,47 @@ class Article extends React.Component {
   // Render the component
   render() {
     // If the article is not found
-    if (!this.state.pending && this.state.notFound) {
-      return (
-        <NotFoundSection
-          title="Article not found"
-          content="Uh-oh! Looks like this article you are looking for was either moved or does not exist."
-          url="/articles"
-          urlText="Back to all articles"
-        />
-      );
-    }
+    if (this.state.pending) return (<Loading />);
+    if ((!this.state.pending && this.state.notFound) || this.state.error) return (<ArticleNotFound />);
 
     return (
       <div className="container">
-        <Tags title={this.state.title} description={this.state.subtitle} image={this.state.image} />
-        {
-          (this.state.pending) ? (
-            <div>
-              <Loading />
-            </div>
-          ) : (
-            this.state.error ? (
-              <NotFoundSection
-                title="Article not found"
-                content="Uh-oh! Looks like the article you were looking for was either removed or does not exist."
-                url="/articles"
-                urlText="Back to all articles"
-              />
-            ) : (
-              <div className="row article">
-                <div className="col-12 col-md-10 offset-md-1">
-                  { this.state.redirectToHome && <Redirect to="/"/> }
-                  { this.renderButtons() }
-                  <h1 className="title">
-                    { this.state.title }
-                  </h1>
-                  <h3 className="subtitle">
-                    { this.state.subtitle }
-                  </h3>
+        <Tags
+          title={this.state.article.title}
+          description={this.state.article.subtitle}
+          image={this.state.article.image}
+        />
 
-                  <Author
-                    createdAt={ this.state.createdAt }
-                    updatedAt={ this.state.updatedAt }
-                    name={ this.state.author.name }
-                    profilePicture={ this.state.author.profilePicture }
-                    _id={ this.state.author._id }
-                  />
+        <div className="row article">
+          <div className="col-12 col-md-10 offset-md-1">
+            { this.state.redirectToHome && (<Redirect to="/"/>) }
 
-                  <img
-                    src={ this.state.image }
-                    alt={ this.state.title }
-                    className="img-fluid"
-                  />
-                </div>
+            { this.renderButtons() }
 
-                <div className="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-                  {
-                    this.state.body.map((component, index) => {
-                      if (component.componentType === "text") {
-                        return (
-                          <p key={ index } className="p-formatted">
-                            {component.body}
-                          </p>
-                        );
-                      } else if (component.componentType === "image") {
-                        return (
-                          <img
-                            key={ index }
-                            src={ component.body }
-                            alt={ this.state.title }
-                            className="img-fluid"
-                          />
-                        );
-                      } else if (component.componentType === "quote") {
-                        return (
-                          <p key={ index } className="quote">
-                            { component.body }
-                          </p>
-                        );
-                      } else if (component.componentType === "header") {
-                        return (
-                          <h3 key={ index } className="header">
-                            { component.body }
-                          </h3>
-                        );
-                      }
+            <h1 className="title">
+              { this.state.article.title }
+            </h1>
+            <h3 className="subtitle">
+              { this.state.article.subtitle }
+            </h3>
 
-                      // If there was not a component type match
-                      return null;
-                    })
-                  }
-                  <div className="space-1" />
-                  <Button />
-                </div>
-              </div>
-            )
-          )
-        }
+            <Author
+              createdAt={ this.state.article.createdAt }
+              updatedAt={ this.state.article.updatedAt }
+              name={ this.state.author.name }
+              profilePicture={ this.state.author.profilePicture }
+              _id={ this.state.author._id }
+            />
+
+            <img
+              src={ this.state.article.image }
+              alt={ this.state.article.title }
+              className="img-fluid"
+            />
+          </div>
+
+          <ArticleBody body={this.state.article.body} />
+        </div>
       </div>
     );
   }

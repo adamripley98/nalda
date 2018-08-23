@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import Author from '../../shared/Author';
 import ErrorMessage from '../../shared/ErrorMessage';
-import ListingCategories from './ListingCategories';
+import Categories from '../Categories';
 
 const ListingHeader = ({
   listing: {
@@ -35,7 +35,7 @@ const ListingHeader = ({
 
     <ErrorMessage error={error} />
 
-    <ListingCategories categories={categories} />
+    <Categories categories={categories} />
 
     <p className="naldaFavorite">
       <strong>

@@ -35,7 +35,7 @@ import Events from '../components/content/events/Events';
 import Event from '../components/content/events/Event';
 import Video from '../components/content/videos/Video';
 import Videos from '../components/content/videos/Videos';
-import Categories from '../components/content/listings/Categories';
+import CategoriesPage from '../components/content/listings/CategoriesPage';
 
 // Content creation components
 import ArticleForm from '../components/content/forms/ArticleForm';
@@ -268,7 +268,7 @@ class AppContainer extends Component {
                 <Route exact path="/listings/new" component={requireCurator(ListingForm)} />
                 <Route exact path="/listings/:id" component={Listing} />
                 <Route exact path="/listings/:id/edit" component={requireCurator(EditListingForm)} />
-                <Route exact path="/listings/categories/:categoryName" component={Categories} />
+                <Route exact path="/listings/categories/:categoryName" component={CategoriesPage} />
 
                 { /* Routes for videos */ }
                 <Route exact path="/videos" component={Videos} />
