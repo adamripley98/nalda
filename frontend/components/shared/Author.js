@@ -9,11 +9,13 @@ import Timestamp from './Timestamp';
 /**
  * Component to render a timestamp with created at and updated at fields
  */
-const Author = ({ createdAt, updatedAt, name, _id, profilePicture }) => (
+const Author = ({ createdAt, updatedAt, name, _id, profilePicture, handleClick }) => (
   <div className="author">
     <div className="author-img" style={{ backgroundImage: `url(${profilePicture})` }}/>
     <div className="text">
-      <Link className={ createdAt ? "name" : "name no-timestamp" } to={`/users/${_id}`}>
+      <Link
+        className={ createdAt ? "name" : "name no-timestamp" } to={`/users/${_id}`}
+        onClick={handleClick}>
         { name }
       </Link>
       {
@@ -34,6 +36,7 @@ Author.propTypes = {
   profilePicture: PropTypes.string,
   createdAt: PropTypes.number,
   updatedAt: PropTypes.number,
+  handleClick: PropTypes.func,
 };
 
 export default Author;

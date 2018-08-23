@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import Loading from '../shared/Loading';
 import Preview from '../content/Preview';
-import ArticlePreview from '../content/articles/ArticlePreview';
+import ArticleSearchResults from './ArticleSearchResults';
+import ListingSearchResults from './ListingSearchResults';
+import VideoSearchResults from './VideoSearchResults';
+import Author from '../shared/Author';
 
 class Search extends Component {
   // Constructor method
@@ -33,6 +35,7 @@ class Search extends Component {
     this.getSearchResults = this.getSearchResults.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.areNoResults = this.areNoResults.bind(this);
   }
 
   /**
@@ -103,6 +106,26 @@ class Search extends Component {
     }, 100);
   }
 
+  areNoResults() {
+    const {
+      articles,
+      listings,
+      videos,
+      events,
+      curators,
+    } = this.state.suggestions;
+
+    const data = [
+      articles,
+      listings,
+      videos,
+      events,
+      curators,
+    ];
+
+    return !data.some((arr) => (arr && arr.length));
+  }
+
   /**
    * Handle when a user types into search bar
    */
@@ -160,107 +183,63 @@ class Search extends Component {
               ) : null
             }
 
-            <div className="row">
-              {
-                this.state.suggestions.articles.length ? (
-                  <div className="col-12">
-                    <h4>Articles</h4>
-                    {
-                      this.state.suggestions.articles.map(a => (
-                        <ArticlePreview
-                          handleClick={this.handleClick}
-                          key={`search-article-${a._id}`}
-                          title={a.title}
-                          image={a.imagePreview || a.image}
-                          subtitle={a.subtitle}
-                          contentId={a._id || a.contentId}
-                        />
-                      ))
-                    }
-                  </div>
-                ) : null
-              }
-              {
-                this.state.suggestions.listings.length ? (
-                  <div className="col-12">
-                    <h4>Listings</h4>
-                    {
-                      this.state.suggestions.listings.map(l => (
-                        <Preview
-                          handleClick={this.handleClick}
-                          content={l}
-                          contentType="listing"
-                          key={`search-listing-${l._id}`} />
-                      ))
-                    }
-                  </div>
-                ) : null
-              }
-              {
-                this.state.suggestions.videos.length ? (
-                  <div className="col-12">
-                    <h4>Videos</h4>
-                    {
-                      this.state.suggestions.videos.map(v => (
-                        <Preview
-                          key={`search-video-${v._id}`}
-                          handleClick={this.handleClick}
-                          content={v}
-                          contentType="video"
-                        />
-                      ))
-                    }
-                  </div>
-                ) : null
-              }
-              {
-                this.state.suggestions.events.length ? (
-                  <div className="col-12">
-                    <h4>Events</h4>
-                    {
-                      this.state.suggestions.events.map(e => (
-                        <Preview
-                          key={`search-event-${e._id}`}
-                          content={e}
-                          contentType="event"
-                          handleClick={this.handleClick}
-                        />
-                      ))
-                    }
-                  </div>
-                ) : null
-              }
-              {
-                this.state.suggestions.curators.length ? (
-                  <div className="col-12">
-                    <h4>Curators</h4>
-                    {
-                      this.state.suggestions.curators.map(c => (
-                        // NOTE: Tempory fix issue where won't reload page
-                        // TODO better preview for curators
-                        <Link key={ c._id } onClick={this.handleClick} to={ `/users/${c._id}` }>
-                          { c.name }
-                          <div/>
-                        </Link>
-                      ))
-                    }
-                  </div>
-                ) : null
-              }
-              {
-                !this.state.suggestions.articles.length &&
-                !this.state.suggestions.listings.length &&
-                !this.state.suggestions.videos.length &&
-                !this.state.suggestions.events.length &&
-                !this.state.suggestions.curators.length ? (
-                  <div className="col-12">
-                    <h4 className="gray-text">
-                      ...
-                    </h4>
-                  </div>
-                ) : null
-              }
-            </div>
+            <ArticleSearchResults
+              handleClick={this.handleClick}
+              articles={this.state.suggestions.articles} />
+
+            <ListingSearchResults
+              handleClick={this.handleClick}
+              listings={this.state.suggestions.listings} />
+
+            <VideoSearchResults
+              handleClick={this.handleClick}
+              videos={this.state.suggestions.videos} />
+
+            {
+              this.state.suggestions.events.length ? (
+                <div>
+                  <h4>Events</h4>
+                  {
+                    this.state.suggestions.events.map(e => (
+                      <Preview
+                        key={`search-event-${e._id}`}
+                        content={e}
+                        contentType="event"
+                        handleClick={this.handleClick}
+                      />
+                    ))
+                  }
+                </div>
+              ) : null
+            }
+
+            {
+              this.state.suggestions.curators.length ? (
+                <div>
+                  <h4>Curators</h4>
+                  {
+                    this.state.suggestions.curators.map(c => (
+                      <Author
+                        key={`search-curator-${c._id}`}
+                        name={c.name}
+                        _id={c._id}
+                        handleClick={this.handleClick}
+                        profilePicture={c.profilePicture}
+                      />
+                    ))
+                  }
+                </div>
+              ) : null
+            }
+            {
+              this.areNoResults() ? (
+                <div>
+                  <h4 className="gray-text">
+                    ...
+                  </h4>
+                </div>
+              ) : null
+            }
 
             { this.state.pending && <Loading /> }
           </div>
