@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Author from '../../shared/Author';
 import ErrorMessage from '../../shared/ErrorMessage';
 import EventCategories from './EventCategories';
+import Requirements from './Requirements';
 
 const EventHeader = ({
   event: {
@@ -37,13 +38,7 @@ const EventHeader = ({
 
     <EventCategories categories={categories} />
 
-    <p className="requirements">
-      <strong>
-        Requirements:
-      </strong>
-      <br />
-      {requirements.map(req => "-" + req + '\n')}
-    </p>
+    <Requirements requirements={requirements} />
   </div>
 );
 

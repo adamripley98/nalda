@@ -11,9 +11,10 @@ import Button from '../../shared/Button';
 import Carousel from './Carousel';
 import ErrorMessage from '../../shared/ErrorMessage';
 import Tags from '../../shared/Tags';
-import Location from './Location';
+import Location from '../Location';
 import EventHeader from './EventHeader';
 import EventNotFound from './EventNotFound';
+import ParallaxImage from '../ParallaxImage';
 
 /**
  * Component to render a event
@@ -82,20 +83,6 @@ class Event extends React.Component {
           canModify: res.data.canModify,
           eventId: id,
         });
-
-        // If there is a location
-        if (res.data.event.location.lng && res.data.event.location.lat) {
-          $(document).ready(() => {
-            var map = new google.maps.Map(document.getElementById('map'), {
-              zoom: 17,
-              center: res.data.event.location,
-            });
-            var marker = new google.maps.Marker({
-              position: res.data.event.location,
-              map: map
-            });
-          });
-        }
       })
       .catch(err => {
         if (err && err.response && err.response.status === 404) {
@@ -112,14 +99,6 @@ class Event extends React.Component {
           });
         }
       });
-
-    // Style parallax scrolling
-    $(document).ready(() => {
-      $(window).scroll(() => {
-        const pos = - $(window).scrollTop() / 4;
-        $('#parallax').css("transform", `translateY(${pos}px)`);
-      });
-    });
   }
 
   // Helper method to delete specific event
@@ -228,9 +207,7 @@ class Event extends React.Component {
         {/* Render the head */}
         <Tags title={this.state.title} description={this.state.description} />
 
-        <div className="parallax-wrapper">
-          <div className="background-image img" style={{backgroundImage: `url(${this.state.event.image})`}} id="parallax" />
-        </div>
+        <ParallaxImage image={this.state.event.image} />
 
         { this.state.redirectToHome && <Redirect to="/"/> }
 

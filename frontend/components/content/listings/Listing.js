@@ -11,29 +11,18 @@ import Review from './Review';
 import ReviewForm from './ReviewForm';
 import Loading from '../../shared/Loading';
 import Button from '../../shared/Button';
-import NotFoundSection from '../../NotFoundSection';
+import ListingNotFound from './ListingNotFound';
 import Stars from './Stars';
 import Carousel from './Carousel';
 import ErrorMessage from '../../shared/ErrorMessage';
 import Blurb from '../../shared/Blurb';
 import Tags from '../../shared/Tags';
-import Location from './Location';
+import Location from '../Location';
+import Amenities from './Amenities';
 import AdditionalAmenities from './AdditionalAmenities';
 import ListingHeader from './ListingHeader';
 import Hours from './Hours';
-
-// Import SVGs
-import CashOnly from '../../../assets/images/cash-only.svg';
-import Formal from '../../../assets/images/formal.svg';
-import OutdoorSeating from '../../../assets/images/outdoor-seating.svg';
-import Parking from '../../../assets/images/parking.svg';
-import Reservation from '../../../assets/images/reservation.svg';
-import Waiter from '../../../assets/images/waiter.svg';
-import Wifi from '../../../assets/images/wifi.svg';
-import Wink from '../../../assets/images/wink.svg';
-
-// Import json
-import amenityMap from '../../json/amenityMap';
+import ParallaxImage from '../ParallaxImage';
 
 /**
  * Component to render a listing
@@ -62,7 +51,6 @@ class Listing extends React.Component {
     };
 
     // Bind this to helper methods
-    this.renderAmenities = this.renderAmenities.bind(this);
     this.renderReviewsSection = this.renderReviewsSection.bind(this);
     this.renderReviews = this.renderReviews.bind(this);
     this.handleClickInfoTrigger = this.handleClickInfoTrigger.bind(this);
@@ -109,20 +97,6 @@ class Listing extends React.Component {
           canModify: res.data.canModify,
           listingId: id,
         });
-
-        // If there is a location
-        if (res.data.listing.location.lng && res.data.listing.location.lat) {
-          $(document).ready(() => {
-            var map = new google.maps.Map(document.getElementById('map'), {
-              zoom: 17,
-              center: res.data.listing.location,
-            });
-            var marker = new google.maps.Marker({
-              position: res.data.listing.location,
-              map: map
-            });
-          });
-        }
       })
       .catch(err => {
         if (err && err.response && err.response.status === 404) {
@@ -139,14 +113,6 @@ class Listing extends React.Component {
           });
         }
       });
-
-    // Style parallax scrolling
-    $(document).ready(() => {
-      $(window).scroll(() => {
-        const pos = - $(window).scrollTop() / 4;
-        $('#parallax').css("transform", `translateY(${pos}px)`);
-      });
-    });
   }
 
   // Helper method to delete specific listing
@@ -161,22 +127,22 @@ class Listing extends React.Component {
 
     // Post to backend
     axios.delete(`/api/listings/${id}`)
-    .then(() => {
-      // Collapse the modal upon success
-      $('#deleteModal').modal('toggle');
+      .then(() => {
+        // Collapse the modal upon success
+        $('#deleteModal').modal('toggle');
 
-      // Update the state and direct the user away
-      this.setState({
-        redirectToHome: true,
-        deletePending: false,
+        // Update the state and direct the user away
+        this.setState({
+          redirectToHome: true,
+          deletePending: false,
+        });
+      })
+      .catch((err) => {
+        this.setState({
+          deleteError: err.response.data.error || err.response.data,
+          deletePending: false,
+        });
       });
-    })
-    .catch((err) => {
-      this.setState({
-        deleteError: err.response.data.error || err.response.data,
-        deletePending: false,
-      });
-    });
   }
 
   // Helper method which will be called by child component (ReviewForm) to update state
@@ -200,46 +166,6 @@ class Listing extends React.Component {
           pending: false,
         });
       });
-  }
-
-  /**
-   * Helper method to render amenities
-   */
-  renderAmenities() {
-    const amenities = this.state.listing.amenities;
-
-    // If amenities are in the state (this should always be the case)
-    if (amenities) {
-      const keys = Object.keys(amenities);
-
-      // Map from keys to svgs
-      const svgMap = {
-        outdoorSeating: <OutdoorSeating />,
-        wifi: <Wifi />,
-        formal: <Formal />,
-        cashOnly: <CashOnly />,
-        parking: <Parking />,
-        reservation: <Reservation />,
-        wink: <Wink />,
-        waiter: <Waiter />,
-      };
-
-      // Return an amenity div tag for each amenity which is true in the state
-      // That is, if the curator marked that the listing has said amenity
-      return keys.map(key => (
-        amenities[key] ? (
-          <div className="amenity" key={ key }>
-            { svgMap[key] }
-            { amenityMap[key] }
-          </div>
-        ) : null
-      ));
-    }
-
-    // If there are no amentities
-    return (
-      <Blurb message="No amenities have been marked for this listing." />
-    );
   }
 
   // Helper method to handle a user clicking on the info trigger
@@ -407,16 +333,7 @@ class Listing extends React.Component {
       return (<Loading />);
     }
 
-    if (this.state.notFound) {
-      return (
-        <NotFoundSection
-          title="Listing not found"
-          content="Uh-oh! Looks like the listing you were looking for was either removed or does not exist."
-          url="/listings"
-          urlText="Back to all listings"
-        />
-      );
-    }
+    if (this.state.notFound) return (<ListingNotFound />);
 
     // Return the component
     return (
@@ -424,9 +341,7 @@ class Listing extends React.Component {
         {/* Render the head */}
         <Tags title={this.state.title} description={this.state.description} />
 
-        <div className="parallax-wrapper">
-          <div className="background-image img" style={{backgroundImage: `url(${this.state.listing.image})`}} id="parallax" />
-        </div>
+        <ParallaxImage image={this.state.listing.image} />
 
         { this.state.redirectToHome && <Redirect to="/"/> }
 
@@ -457,7 +372,7 @@ class Listing extends React.Component {
                 Amenities
               </h5>
 
-              { this.renderAmenities() }
+              <Amenities amenities={this.state.listing.amenities} />
 
               <AdditionalAmenities amenities={this.state.listing.AdditionalAmenities} />
 
