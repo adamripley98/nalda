@@ -164,8 +164,7 @@ class Search extends Component {
                     <h4>Articles</h4>
                     {
                       this.state.suggestions.articles.map(a => (
-                        // NOTE: Tempory fix issue where won't reload page
-                        <Link key={ a._id } onClick={location.reload} to={ `/articles/${a._id}` }>
+                        <Link key={ a._id } onClick={this.handleClick} to={ `/articles/${a._id}` }>
                           { a.title }
                           <div/>
                         </Link>
@@ -180,7 +179,6 @@ class Search extends Component {
                     <h4>Listings</h4>
                     {
                       this.state.suggestions.listings.map(l => (
-                        // NOTE: Tempory fix issue where won't reload page
                         <Link key={ l._id } onClick={this.handleClick} to={ `/listings/${l._id}` }>
                           { l.title }
                           <div/>

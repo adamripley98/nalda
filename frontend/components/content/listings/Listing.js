@@ -88,6 +88,10 @@ class Listing extends React.Component {
     // Scroll to the top of the screen
     window.scrollTo(0, 0);
 
+    this.setState({
+      pending: true,
+    });
+
     // Find the id in the url
     const id = this.props.match.params.id;
 

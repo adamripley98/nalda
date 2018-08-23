@@ -42,13 +42,29 @@ class Article extends React.Component {
     // Bind this to helper methods
     this.deleteArticle = this.deleteArticle.bind(this);
     this.renderButtons = this.renderButtons.bind(this);
+    this.init = this.init.bind(this);
   }
 
   /**
    * Pull the article data from the database
    */
   componentDidMount() {
+    this.init();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.match.params.id !== prevProps.match.params.id) {
+      this.init();
+    }
+  }
+
+  init() {
     window.scrollTo(0, 0);
+
+    this.setState({
+      pending: true,
+    });
+
     // Find the id in the url
     const id = this.props.match.params.id;
 
