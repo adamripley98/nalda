@@ -62,7 +62,7 @@ class Preview extends Component {
   getClassName() {
     let className;
 
-    if (this.props.index) className = `content-preview-wrapper grid-item-${this.props.index}`;
+    if (this.props.index >= 0) className = `content-preview-wrapper grid-item-${this.props.index}`;
     else className = 'content-preview-wrapper';
 
     if (this.isVideo()) className += ' video';
@@ -152,7 +152,7 @@ class Preview extends Component {
       <Link
         to={ `/${this.getType()}/${this.props._id}` }
         onClick={this.props.handleClick}
-        className={this.getClassName()}>
+        className={() => {console.log('wtf'); this.getClassName();}}>
         <div className="content-preview">
           <div
             className="background-image"
