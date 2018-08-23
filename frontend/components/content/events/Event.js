@@ -8,12 +8,12 @@ import moment from 'moment';
 // Import components
 import Loading from '../../shared/Loading';
 import Button from '../../shared/Button';
-import NotFoundSection from '../../NotFoundSection';
 import Carousel from './Carousel';
 import ErrorMessage from '../../shared/ErrorMessage';
 import Tags from '../../shared/Tags';
 import Location from './Location';
 import EventHeader from './EventHeader';
+import EventNotFound from './EventNotFound';
 
 /**
  * Component to render a event
@@ -134,22 +134,22 @@ class Event extends React.Component {
 
     // Post to backend
     axios.delete(`/api/events/${id}`)
-    .then(() => {
-      // Collapse the modal upon success
-      $('#deleteModal').modal('toggle');
+      .then(() => {
+        // Collapse the modal upon success
+        $('#deleteModal').modal('toggle');
 
-      // Update the state and direct the user away
-      this.setState({
-        redirectToHome: true,
-        deletePending: false,
+        // Update the state and direct the user away
+        this.setState({
+          redirectToHome: true,
+          deletePending: false,
+        });
+      })
+      .catch((err) => {
+        this.setState({
+          deleteError: err.response.data.error || err.response.data,
+          deletePending: false,
+        });
       });
-    })
-    .catch((err) => {
-      this.setState({
-        deleteError: err.response.data.error || err.response.data,
-        deletePending: false,
-      });
-    });
   }
 
   // Helper method to handle a user clicking on the info trigger
@@ -219,20 +219,8 @@ class Event extends React.Component {
 
   // Render the component
   render() {
-    if (this.state.pending) {
-      return (<Loading />);
-    }
-
-    if (this.state.notFound) {
-      return (
-        <NotFoundSection
-          title="Event not found"
-          content="Uh-oh! Looks like the event you were looking for was either removed or does not exist."
-          url="/events"
-          urlText="Back to all events"
-        />
-      );
-    }
+    if (this.state.pending) return (<Loading />);
+    if (this.state.notFound) return (<EventNotFound />);
 
     // Return the component
     return (

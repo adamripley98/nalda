@@ -112,9 +112,6 @@ class Preview extends Component {
     if (this.props.content) {
       // Find the image for the content depending on its type
       let image = '';
-
-      console.log('CONTENT', this.props.content);
-
       let contentType = this.props.contentType;
 
       // Use consistently formatted text
