@@ -32,40 +32,55 @@ class Profile extends Component {
 
     // Bind this to helper methods
     this.renderInfo = this.renderInfo.bind(this);
+    this.init = this.init.bind(this);
   }
 
   /**
    * Pull the user's information from the database then render it
    */
   componentDidMount() {
+    this.init();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.match.params.id !== prevProps.match.params.id) {
+      this.init();
+    }
+  }
+
+  init() {
     window.scrollTo(0, 0);
+
     // Find the id in the url
     const id = this.props.match.params.id;
+
+    this.setState({ pending: true });
+
     // Call to backend to get profile information
     axios.get(`/api/users/${id}`)
-    .then(resp => {
-      // If successful, will set state with user's information
-      this.setState({
-        name: resp.data.user.name,
-        email: resp.data.user.username,
-        bio: resp.data.user.bio,
-        userType: resp.data.user.userType,
-        profilePicture: resp.data.user.profilePicture,
-        error: "",
-        content: {
-          articles: resp.data.content ? resp.data.content.articles : [],
-          listings: resp.data.content ? resp.data.content.listings : [],
-          videos: resp.data.content ? resp.data.content.videos : [],
-        },
-        location: resp.data.user.location ? resp.data.user.location.name : "",
-        pending: false,
+      .then(resp => {
+        // If successful, will set state with user's information
+        this.setState({
+          name: resp.data.user.name,
+          email: resp.data.user.username,
+          bio: resp.data.user.bio,
+          userType: resp.data.user.userType,
+          profilePicture: resp.data.user.profilePicture,
+          error: "",
+          content: {
+            articles: resp.data.content ? resp.data.content.articles : [],
+            listings: resp.data.content ? resp.data.content.listings : [],
+            videos: resp.data.content ? resp.data.content.videos : [],
+          },
+          location: resp.data.user.location ? resp.data.user.location.name : "",
+          pending: false,
+        });
+      }).catch(err => {
+        this.setState({
+          pending: false,
+          error: err.response.data.error || err.response.data,
+        });
       });
-    }).catch(err => {
-      this.setState({
-        pending: false,
-        error: err.response.data.error || err.response.data,
-      });
-    });
   }
 
   /**

@@ -138,6 +138,7 @@ class Search extends Component {
    */
   handleSubmit(event) {
     event.preventDefault();
+
     window.location.href = `/search?search=${this.state.search}`;
   }
 
@@ -195,7 +196,7 @@ class Search extends Component {
                     {
                       this.state.suggestions.videos.map(v => (
                         // NOTE: Tempory fix issue where won't reload page
-                        <Link key={ v._id } onClick={location.reload} to={ `/videos/${v._id}` }>
+                        <Link key={ v._id } onClick={this.handleClick} to={ `/videos/${v._id}` }>
                           { v.title }
                           <div/>
                         </Link>
@@ -211,7 +212,7 @@ class Search extends Component {
                     {
                       this.state.suggestions.events.map(e => (
                         // NOTE: Tempory fix issue where won't reload page
-                        <Link key={ e._id } onClick={location.reload} to={ `/articles/${e._id}` }>
+                        <Link key={ e._id } onClick={this.handleClick} to={ `/articles/${e._id}` }>
                           { e.title }
                           <div/>
                         </Link>
@@ -227,7 +228,7 @@ class Search extends Component {
                     {
                       this.state.suggestions.curators.map(c => (
                         // NOTE: Tempory fix issue where won't reload page
-                        <Link key={ c._id } onClick={location.reload} to={ `/users/${c._id}` }>
+                        <Link key={ c._id } onClick={this.handleClick} to={ `/users/${c._id}` }>
                           { c.name }
                           <div/>
                         </Link>

@@ -2,7 +2,6 @@
 import React from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
-import uuid from 'uuid-v4';
 import { Link, Redirect } from 'react-router-dom';
 import moment from 'moment';
 
@@ -46,12 +45,25 @@ class Event extends React.Component {
     this.handleClickInfoTrigger = this.handleClickInfoTrigger.bind(this);
     this.deleteEvent = this.deleteEvent.bind(this);
     this.renderButtons = this.renderButtons.bind(this);
+    this.init = this.init.bind(this);
   }
 
   // Pull the event data from the database
   componentDidMount() {
+    this.init();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.match.params.id !== prevProps.match.params.id) {
+      this.init();
+    }
+  }
+
+  init() {
     // Scroll to the top of the screen
     window.scrollTo(0, 0);
+
+    this.setState({ pending: true });
 
     // Find the id in the url
     const id = this.props.match.params.id;
