@@ -62,7 +62,7 @@ class Preview extends Component {
   getClassName() {
     let className;
 
-    if (this.props.index >= 0) className = `content-preview-wrapper grid-item-${this.props.index}`;
+    if (this.props.index >= 0) className = `content-preview-wrapper grid-item-${this.props.index + 1}`;
     else className = 'content-preview-wrapper';
 
     if (this.isVideo()) className += ' video';
