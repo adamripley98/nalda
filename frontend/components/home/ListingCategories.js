@@ -22,7 +22,7 @@ const ListingCategories = ({ isLoading }) => {
               hiddenCategories[key] ? (null) : (
                 <li className="category" key={key}>
                   <Link to="#">
-                    <div className="img" />
+                    {/* <div className="img" /> */}
                     <span />
                   </Link>
                 </li>
@@ -48,7 +48,7 @@ const ListingCategories = ({ isLoading }) => {
             hiddenCategories[key] ? (null) : (
               <li className="category" key={key}>
                 <Link to={`/listings/categories/${key}`}>
-                  <div className="img" />
+                  {/* <div className="img" /> */}
                   <span>{categoryMap[key]}</span>
                 </Link>
               </li>
