@@ -80,29 +80,16 @@ button.slick-arrow {
 }
 
 #carousel {
-  &::before,
-  &::after {
-    content: '';
-    z-index: 1;
-    width: 10%;
-    height: 50vh;
-    display: block;
-    position: absolute;
-  }
-
-  &::before {
-    background-image: linear-gradient(to right, white, transparent);
-  }
-
-  &::after {
-    top: 0;
-    right: 0;
-    background-image: linear-gradient(to right, transparent, white);
-  }
-
   img {
     height: 50vh;
     margin: 0rem 1rem 1rem 1rem;
     width: auto;
+    opacity: 0.6;
+    transition: all 0.3s ease;
+    box-shadow: 0rem 0.1rem 0.4rem rgba(0, 0, 0, 0.15);
+
+    &.slick-active {
+      opacity: 1;
+    }
   }
 }
