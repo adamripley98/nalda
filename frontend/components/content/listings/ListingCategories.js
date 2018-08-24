@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import categoryMap from '../json/categoryMap';
 
-const Categories = ({ categories }) => {
+import categoryMap from '../../json/categoryMap';
+
+const EventCategories = ({ categories }) => {
   if (!categories) return null;
 
   return (
@@ -20,8 +21,8 @@ const Categories = ({ categories }) => {
   );
 };
 
-Categories.propTypes = {
+EventCategories.propTypes = {
   categories: PropTypes.object.isRequired,
 };
 
-export default Categories;
+export default EventCategories;
