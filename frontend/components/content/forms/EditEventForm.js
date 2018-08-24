@@ -45,9 +45,18 @@ class EditEventForm extends React.Component {
       redirectToHome: "",
       website: "",
       categories: {
-        nightTime: false,
-        concerts: false,
-        dateNights: false,
+        nightYouWontRemember: false,
+        classyEvening: false,
+        haveToStudyTomorrow: false,
+        somethingABitDifferent: false,
+        soCultured: false,
+        activeLifestyle: false,
+        adulting: false,
+        spring: false,
+        summer: false,
+        fall: false,
+        winter: false,
+        noMoneyNoProblem: false,
       },
       requirements: [],
       requirementsString: "",
@@ -319,7 +328,7 @@ class EditEventForm extends React.Component {
   // Helper method to ensure all required fields are filled in validly
   inputValid() {
     return (this.state.title && this.state.description &&
-      this.state.image && this.state.website && this.state.startDate && this.state.endDate);
+      this.state.image && this.state.website);
   }
 
   /**
@@ -576,22 +585,76 @@ class EditEventForm extends React.Component {
                     </label>
                     <div className="categories-form marg-bot-1">
                       <p
-                        onClick={ (e) => this.handleClickCategory(e, "nightTime") }
-                        className={ this.state.categories.nightTime && "active" }
+                        onClick={ (e) => this.handleClickCategory(e, "nightYouWontRemember") }
+                        className={ this.state.categories.nightYouWontRemember && "active" }
                       >
-                        Night Time
+                        Night you won't remember
                       </p>
                       <p
-                        onClick={ (e) => this.handleClickCategory(e, "concerts") }
-                        className={ this.state.categories.concerts && "active" }
+                        onClick={ (e) => this.handleClickCategory(e, "classyEvening") }
+                        className={ this.state.categories.classyEvening && "active" }
                       >
-                        Concerts
+                        Classy Evening
                       </p>
                       <p
-                        onClick={ (e) => this.handleClickCategory(e, "dateNights") }
-                        className={ this.state.categories.dateNights && "active" }
+                        onClick={ (e) => this.handleClickCategory(e, "haveToStudyTomorrow") }
+                        className={ this.state.categories.haveToStudyTomorrow && "active" }
                       >
-                        Date Nights
+                        Have to Study Tomorrow
+                      </p>
+                      <p
+                        onClick={ (e) => this.handleClickCategory(e, "somethingABitDifferent") }
+                        className={ this.state.categories.somethingABitDifferent && "active" }
+                      >
+                        Something a Bit Different
+                      </p>
+                      <p
+                        onClick={ (e) => this.handleClickCategory(e, "soCultured") }
+                        className={ this.state.categories.soCultured && "active" }
+                      >
+                        So Cultured
+                      </p>
+                      <p
+                        onClick={ (e) => this.handleClickCategory(e, "activeLifestyle") }
+                        className={ this.state.categories.activeLifestyle && "active" }
+                      >
+                        Active Lifestyle
+                      </p>
+                      <p
+                        onClick={ (e) => this.handleClickCategory(e, "adulting") }
+                        className={ this.state.categories.adulting && "active" }
+                      >
+                        #Adulting
+                      </p>
+                      <p
+                        onClick={ (e) => this.handleClickCategory(e, "spring") }
+                        className={ this.state.categories.spring && "active" }
+                      >
+                        Spring
+                      </p>
+                      <p
+                        onClick={ (e) => this.handleClickCategory(e, "summer") }
+                        className={ this.state.categories.summer && "active" }
+                      >
+                        Summer
+                      </p>
+                      <p
+                        onClick={ (e) => this.handleClickCategory(e, "fall") }
+                        className={ this.state.categories.fall && "active" }
+                      >
+                        Fall
+                      </p>
+                      <p
+                        onClick={ (e) => this.handleClickCategory(e, "winter") }
+                        className={ this.state.categories.winter && "active" }
+                      >
+                        Winter
+                      </p>
+                      <p
+                        onClick={ (e) => this.handleClickCategory(e, "noMoneyNoProblem") }
+                        className={ this.state.categories.noMoneyNoProblem && "active" }
+                      >
+                        No Money No Problem
                       </p>
                     </div>
                     <input
