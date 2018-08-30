@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
 import categoryMap from '../json/categoryMap';
 
 const Categories = ({ categories }) => {

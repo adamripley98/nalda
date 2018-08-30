@@ -21,4 +21,15 @@ export default {
   forTheGram: '#forTheGram',
   nightTime: 'nighttime',
   concerts: 'concerts',
+  nightYouWontRemember: 'Night you won’t remember',
+  classyEvening: 'Classy evening',
+  haveToStudyTomorrow: 'Have to study tomorrow',
+  somethingABitDifferent: 'Something a bit different',
+  soCultured: 'So cultured',
+  activeLifestyle: 'Active lifestyle',
+  spring: 'Spring',
+  summer: 'Summer',
+  fall: 'Fall',
+  winter: 'Winter',
+  noMoneyNoProblem: 'No money, no problem'
 };

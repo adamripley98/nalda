@@ -65,15 +65,35 @@ module.exports = () => {
         }
         // By default, user's cannot edit videos
         let canModify = false;
-        User.findById(userId)
-        .then(user => {
-          if (user) {
-            // Check if given user is either an admin or the curator of the video
-            if (user.userType === 'admin' || user.userType === 'curator') {
-              canModify = true;
+        if (userId) {
+          User.findById(userId)
+          .then(user => {
+            if (user) {
+              // Check if given user is either an admin or the curator of the video
+              if (user.userType === 'admin' || user.userType === 'curator') {
+                canModify = true;
+              }
             }
-          }
 
+            // Add the author's information to the video
+            const authorObj = {
+              name: author.name,
+              _id: author._id,
+              profilePicture: author.profilePicture,
+            };
+
+            // Send back data
+            res.send({
+              video,
+              author: authorObj,
+              canModify,
+            });
+          })
+          .catch(() => {
+            res.status(404).send({error: 'Cannot find video'});
+            return;
+          });
+        } else {
           // Add the author's information to the video
           const authorObj = {
             name: author.name,
@@ -87,11 +107,7 @@ module.exports = () => {
             author: authorObj,
             canModify,
           });
-        })
-        .catch(() => {
-          res.status(404).send({error: 'Cannot find video'});
-          return;
-        });
+        }
       })
       .catch(() => {
         res.status(404).send({error: 'Cannot find video'});
