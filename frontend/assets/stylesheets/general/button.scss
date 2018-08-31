@@ -1,31 +1,26 @@
 // Make buttons clickable with bold text
 // Additionally, set button colors and transition styles
+
 .btn {
-  cursor: hand;
+  border: 0 solid transparent;
   cursor: pointer;
-  font-weight: bold !important;
-  border: 0px solid transparent;
+  font-weight: bold !important; // sass-lint:disable-line no-important
 
   &.full-width {
-    width: 100%;
     text-align: center;
+    width: 100%;
   }
 
   // Make buttons white as necessary
   &.white {
-    background: white !important;
-  }
-
-  // Helper class to make the button take up the full width of its container
-  &.full-width {
-    width: 100%;
+    background: $white !important; // sass-lint:disable-line no-important
   }
 
   // Primary buttons are blue with white text
   &.btn-primary {
     background: $primary;
-    color: white !important;
-    border: 0px solid transparent;
+    border: 0 solid transparent;
+    color: $white !important; // sass-lint:disable-line no-important
 
     &:hover,
     &:active,
@@ -36,23 +31,23 @@
 
   // Secondary buttons are white with colored text
   &.btn-secondary {
+    background: $white;
+    border: 1px solid $white;
     color: $primary;
-    background: white;
-    border: 1px solid white;
 
     &:hover,
     &:active,
     &:focus {
-      background: white;
+      background: $white;
+      border: 1px solid $white;
       color: $dark-primary;
-      border: 1px solid white;
     }
   }
 
   &.btn-blue {
     background: $secondary;
-    color: white !important;
-    border: 0px solid transparent;
+    border: 0 solid transparent;
+    color: $white !important; // sass-lint:disable-line no-important
 
     &:hover,
     &:active,
@@ -62,24 +57,24 @@
   }
 
   &.facebook {
-    border: 2px solid #3b5998;
-    color: #3b5998;
     background: transparent;
-    padding: 0.75rem;
+    border: 2px solid $fb-light;
+    color: $fb-light;
+    padding: .75rem;
 
     &:hover,
     &:focus,
     &:active {
-      border: 2px solid #2c467c;
-      color: #2c467c;
+      border: 2px solid $fb-dark;
+      color: $fb-dark;
     }
   }
 
   &.google {
+    background: transparent;
     border: 2px solid $dark-gray;
     color: $dark-gray;
-    background: transparent;
-    padding: 0.75rem;
+    padding: .75rem;
 
     &:hover,
     &:focus,
@@ -91,25 +86,25 @@
 
   // Left-aligned icons translate to the left upon hover, focus, etc.
   .fa-chevron-left {
-    transition: all 0.2s ease;
-    margin-right: 0.5rem;
+    margin-right: .5rem;
+    transition: transform .2s ease;
   }
 
   // Right-aligned icons translate to the right upon hover, focus, etc.
   .fa-chevron-right {
-    transition: all 0.2s ease;
-    margin-left: 0.5rem;
+    margin-left: .5rem;
+    transition: transform .2s ease;
   }
 
   &:hover,
   &:focus,
   &:active {
     .fa-chevron-left {
-      transform: translateX(-0.2rem);
+      transform: translateX(-.2rem);
     }
 
     .fa-chevron-right {
-      transform: translateX(0.2rem);
+      transform: translateX(.2rem);
     }
   }
 }

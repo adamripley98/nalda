@@ -1,17 +1,15 @@
-/**
- * Color palette for all styles in the application
- */
+// Color palette for all styles in the application
 
 // Shades of gray
 $solid-border: #e4e4e4;
 $black: #000;
-$transparent: rgba(255, 255, 255, 0.3);
+$transparent: rgba(255, 255, 255, .3);
 $lighter-gray: #f7f7f7;
 $light-gray: #efefef;
-$gray: #BEBEBE;
+$gray: #bebebe;
 $dark-gray: #606060;
 $darker-gray: #4c4c4c;
-$border: rgba(0, 0, 0, 0.1);
+$border: rgba(0, 0, 0, .1);
 $gray-text: #888;
 $white: #fff;
 $article-preview-bg: rgba(0, 0, 0, .5);
@@ -26,33 +24,33 @@ $lighter-shadow: rgba(0, 0, 0, .0625);
 $alternate-light-primary: #3377a1;
 $lighter-primary: #d6dde2;
 $light-primary: #afdcf8;
-$primary: #66ccff;
+$primary: #6cf;
 $dark-primary: #54b0dd;
 $secondary: #004976;
 
 // Additional colors
 $gold: #ffd633;
+$fb-light: #3b5998;
+$fb-dark: #2c467c;
 
-/**
- * Styles and modular classes relating to the colors defined above
- */
+// Styles and modular classes relating to the colors defined above
 
 // Modular class to make some text gray
 .gray {
-  color: $gray !important;
+  color: $gray !important; // sass-lint:disable-line no-important
 }
 
 // Modular class to style text in the primary color
 .primary-text {
-  color: $primary !important;
+  color: $primary !important; // sass-lint:disable-line no-important
 }
 
 // Modular class to style text gray
 .gray-text {
-  color: $gray !important;
+  color: $gray !important; // sass-lint:disable-line no-important
 }
 
 // Modular class to style text dark gray
 .dark-gray-text {
-  color: $dark-gray !important;
+  color: $dark-gray !important; // sass-lint:disable-line no-important
 }

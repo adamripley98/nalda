@@ -1,12 +1,11 @@
-/**
- * Additional styling for forms
- */
+// Styling for forms
+
 label {
   font-weight: bold;
 }
 
 .form-control.border {
-  border: 2px solid rgba(0, 0, 0, 0.1);
+  border: 2px solid rgba(0, 0, 0, .1);
   border-radius: 0.4rem;
   padding: 0.75rem;
 
