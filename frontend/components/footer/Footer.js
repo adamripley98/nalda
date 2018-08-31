@@ -5,10 +5,10 @@ import Bottom from './Bottom';
 
 class Footer extends React.Component {
   componentDidMount() {
-    const expandables = document.querySelectorAll(".expandable-toggle");
+    const expandables = document.querySelectorAll('.expandable-toggle');
     expandables.forEach(expandable => {
       expandable.addEventListener('click', () => {
-        expandable.parentNode.classList.toggle("expanded");
+        expandable.parentNode.classList.toggle('expanded');
       });
     });
   }

@@ -10,7 +10,10 @@ class CategoryMenu extends Component {
           <p className="footer-menu-heading">
             {this.props.menu.title}
           </p>
-          <div className="footer-expand-icon" />
+          <div
+            className="footer-expand-icon"
+            style={{ backgroundImage: "url('https://s3.amazonaws.com/nalda/gf-expand-toggle.svg')" }}
+          />
         </div>
         <nav className="footer-menu-list">
           {

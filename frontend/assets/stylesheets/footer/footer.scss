@@ -1,281 +1,290 @@
 #nalda-footer {
-	width: 100%;
-	background: $secondary;
-	z-index: 1;
-	overflow: auto;
-	padding-top: 40px;
-	padding-bottom: 40px;
-	min-height: 130px;
+  background: $secondary;
+  min-height: 130px;
+  overflow: auto;
+  padding-bottom: 40px;
+  padding-top: 40px;
+  width: 100%;
+  z-index: 1;
 
-  ul, nav {
-    list-style: none !important;
+  ul,
+  nav {
+    list-style: none !important; // sass-lint:disable-line no-important
     padding-left: 0;
   }
 
   .section-content {
-  	padding: 20px 0;
+    padding: 20px 0;
   }
 }
 
 .nalda-logo-container {
-	width: 100px;
-	height: 26px;
-	display: block;
-	margin: 0 0 30px 0;
+  display: block;
+  height: 26px;
+  margin: 0 0 30px;
+  width: 100px;
 }
 
 // Style the logo
 .nalda-logo {
-	width: 100px;
-	height: 26px;
-	background-size: 100px 26px;
+  background-position: center center;
+  background-size: 100px 26px;
+  height: 26px;
   margin-right: 1rem;
-	background-position: center center;
-	opacity: 1;
-	transition: opacity 0.2s ease-in;
+  opacity: 1;
+  transition: opacity .2s ease-in;
+  width: 100px;
 
   &:hover {
-  	opacity: 0.85;
+    opacity: .85;
   }
 }
 
-.footer-menus {
-	width: 100%;
+.footer-menus,
+.footer-menu-single {
+  width: 100%;
 }
 
-.footer-menu-single {
-	width: 100%;
+.footer-expand-icon {
+  background-size: 0;
 }
 
 .footer-flex {
-	display: flex;
-	justify-content: flex-start;
-	flex-wrap: wrap;
-	align-items: flex-start;
+  align-items: flex-start;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
 }
 
 .footer-menu-heading {
-	font-size: 18px;
-	font-weight: 700;
-	color: #fff;
-	margin-bottom: 0em;
+  color: $white;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 0;
 }
 
-.footer-menu-list li {
-	margin-bottom: 0;
+.footer-menu-list {
+  li {
+    margin-bottom: 0;
 
-  a {
-  	color: $light-primary;
-  	font-size: 16px;
+    a {
+      color: $light-primary;
+      font-size: 16px;
 
-    &:hover {
-    	color: $lighter-primary;
+      &:hover {
+        color: $lighter-primary;
+      }
     }
   }
 }
 
 .footer-menu-single {
-	display: inline-block;
-	vertical-align: top;
-	margin-bottom: 3em;
+  display: inline-block;
+  margin-bottom: 3em;
+  vertical-align: top;
 }
 
 .footer-legal-content {
-	width: 100%;
-	display: block;
+  display: block;
+  width: 100%;
 }
 
 .footer-social-links {
-	width: 100%;
-	display: block;
-	margin-top: 30px;
-	vertical-align: bottom;
+  display: block;
+  margin-top: 30px;
+  vertical-align: bottom;
+  width: 100%;
 }
 
 .footer-nav-item {
-	list-style-type: none;
-	display: block;
-	padding: 0 20px 0 0;
+  display: block;
+  list-style-type: none;
+  padding: 0 20px 0 0;
 
   a {
-  	color: #fff;
-  	font-weight: 700;
-  	font-size: 18px;
+    color: $white;
+    font-size: 18px;
+    font-weight: 700;
 
     &:hover {
-    	color: $lighter-primary;
+      color: $lighter-primary;
     }
   }
 }
 
 .footer-nav-item + .footer-nav-item {
-  margin: 0 0 0.3em 0;
+  margin: 0 0 .3em;
 }
 
 .gf-social-item {
-	display: inline-block;
-	padding: 0 30px 0 0;
-	margin: 0 0 0.3em 0;
+  display: inline-block;
+  margin: 0 0 .3em;
+  padding: 0 30px 0 0;
 
   a {
-  	color: $light-primary;
+    color: $light-primary;
 
     &:hover {
-    	color: #fff;
+      color: $white;
     }
   }
 }
 
 .legal-copy {
-	font-size: 14px;
-	color: $light-primary;
-	margin: 20px 0 0 0;
+  color: $light-primary;
+  font-size: 14px;
+  margin: 20px 0 0;
 }
 
 // Mobile responsive footer styling
 @media only screen and (max-width: 499px) {
-	.footer-menu-single {
-		border-top: 1px solid $alternate-light-primary;
-		padding: 10px 0;
-		margin-bottom: 10px;
-		height: 40px;
-		overflow: hidden;
-	}
+  .footer-menu-single {
+    border-top: 1px solid $alternate-light-primary;
+    height: 40px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    padding: 10px 0;
 
-	.footer-menu-single.expanded {
-		height: auto;
-	}
+    &.expanded {
+      height: auto;
 
-	.footer-expand-icon {
-		position: absolute;
-		right: 1rem;
-		background: url('https://s3.amazonaws.com/nalda/gf-expand-toggle.svg');
-		background-size: 15px 15px;
-		height: 15px;
-		width: 15px;
+      .footer-expand-icon {
+        transform: rotate(45deg);
+      }
+    }
+  }
+
+  .footer-expand-icon {
+    background-size: 15px 15px;
+    height: 15px;
     margin-top: -2rem;
-		transition: transform 0.1s ease-in;
-	}
+    position: absolute;
+    right: 1rem;
+    transition: transform .1s ease-in;
+    width: 15px;
+  }
 
-	.footer-menu-single.expanded .footer-expand-icon {
-		transform: rotate(45deg);
-	}
-
-	.footer-menu-heading {
-		margin-bottom: 0.5em;
-	}
+  .footer-menu-heading {
+    margin-bottom: .5em;
+  }
 }
 
 @media only screen and (min-width: 500px) {
-	.footer-menu-single {
-		width: 50%;
-	}
+  .footer-menu-single {
+    width: 50%;
+  }
 }
 
 @media only screen and (max-width: 767px) {
-	.footer-nav {
-		margin-top: 40px;
-	}
+  .footer-nav {
+    margin-top: 40px;
+  }
 
-	.footer-nav-item a {
-		color: $light-primary;
-		font-weight: 400;
-		font-size: 16px;
-	}
+  .footer-nav-item {
+    a {
+      color: $light-primary;
+      font-size: 16px;
+      font-weight: 400;
+    }
+  }
 }
 
 @media only screen and (min-width: 768px) {
-	.footer-navigation {
-		display: flex;
-		justify-content: flex-start;
-		flex-wrap: wrap;
-		align-items: flex-start;
-	}
+  .footer-navigation {
+    align-items: flex-start;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
 
-	.nalda-logo-container {
-		width: 150px;
-		height: 39px;
-    margin-right: 1rem;
-		margin-bottom: 100px;
-		display: inline-block;
+  .nalda-logo-container {
+    display: inline-block;
     flex: 1;
-	}
+    height: 39px;
+    margin-bottom: 100px;
+    margin-right: 1rem;
+    width: 150px;
+  }
 
-	.nalda-logo {
-		width: 150px;
-		height: auto;
-	}
+  .nalda-logo {
+    height: auto;
+    width: 150px;
+  }
 
-	.footer-menus {
-		display: inline-block;
-		width: calc(100% - 250px);
-		left: 100px;
-		margin-bottom: 30px;
-	}
+  .footer-menus {
+    display: inline-block;
+    left: 100px;
+    margin-bottom: 30px;
+    width: calc(100% - 250px);
+  }
 
-	.footer-menu-list li a {
-		font-size: 18px;
-	}
+  .footer-menu-list {
+    li {
+      a {
+        font-size: 18px;
+      }
+    }
+  }
 
-	.footer-legal-content {
-		width: calc(100% - 300px);
-		display: inline-block;
-	}
+  .footer-legal-content {
+    display: inline-block;
+    width: calc(100% - 300px);
+  }
 
-	.footer-nav-item {
-		display: inline-block;
-	}
+  .footer-nav-item {
+    display: inline-block;
+  }
 
-	.footer-social-links {
-		width: 300px;
-		display: inline-block;
-		vertical-align: bottom;
-		margin-top: 10px;
-	}
+  .footer-social-links {
+    display: inline-block;
+    margin-top: 10px;
+    vertical-align: bottom;
+    width: 300px;
+  }
 
-	.footer-social-icons {
-		right: 0;
-		text-align: right;
-	}
+  .footer-social-icons {
+    right: 0;
+    text-align: right;
+  }
 
-	.gf-social-item {
-		display: inline-block;
-		padding: 0 0 0 30px;
-		margin: 0 0 0.3em 0;
-	}
+  .gf-social-item {
+    display: inline-block;
+    margin: 0 0 .3em;
+    padding: 0 0 0 30px;
+  }
 }
 
 @media only screen and (min-width: 860px) {
-	.footer-menu-single {
-		width: 33%;
-	}
+  .footer-menu-single {
+    width: 33%;
+  }
 
-	.legal-copy {
-		font-size: 16px;
-		margin: 0;
-	}
+  .legal-copy {
+    font-size: 16px;
+    margin: 0;
+  }
 }
 
 @media only screen and (min-width: 1069px) {
-	#nalda-footer {
-		padding: 60px 0;
-	}
+  #nalda-footer {
+    padding: 60px 0;
+  }
 
-	.footer-menu-single {
-		width: 25%;
-	}
+  .footer-menu-single {
+    width: 25%;
+  }
 
-	.footer-menus {
-		width: calc(100% - 300px);
-		left: 150px;
-		margin-bottom: 30px;
-	}
+  .footer-menus {
+    left: 150px;
+    margin-bottom: 30px;
+    width: calc(100% - 300px);
+  }
 }
 
 @media only screen and (min-width: 1280px) {
-	.footer-menus {
-		width: calc(100% - 350px);
-		left: 200px;
-		margin-bottom: 30px;
-	}
+  .footer-menus {
+    left: 200px;
+    margin-bottom: 30px;
+    width: calc(100% - 350px);
+  }
 }
