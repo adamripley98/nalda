@@ -13,7 +13,7 @@ const BannerItem = ({
   if (isLoading) {
     return (
       <div className="banner-item">
-        <div className="background-image isLoading" />
+        <div className="background-image is-loading" />
       </div>
     );
   }

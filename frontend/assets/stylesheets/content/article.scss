@@ -1,23 +1,22 @@
-/**
- * Styling for all components related to articles
- */
+// Styling for all components related to articles
+
 .article {
-  margin-top: 1rem;
   margin-bottom: 1rem;
+  margin-top: 1rem;
 
   // Titles
   .title {
-    font-weight: bold !important;
-    font-size: 3rem !important;
-    margin-bottom: 0.5rem;
+    font-size: 3rem !important; // sass-lint:disable-line no-important
+    font-weight: bold !important; // sass-lint:disable-line no-important
+    margin-bottom: .5rem;
   }
 
   // Subtitles
   .subtitle {
-    font-weight: bold;
     color: $gray;
     font-style: italic;
-    margin-bottom: 0rem;
+    font-weight: bold;
+    margin-bottom: 0;
   }
 
   // Images
@@ -33,11 +32,11 @@
 
   // Styling block quotes
   .quote {
-    color: $gray;
-    font-style: italic;
     border-left: 4px solid $light-gray;
-    padding-left: 0.5rem;
+    color: $gray;
     font-size: 1.2rem;
+    font-style: italic;
+    padding-left: .5rem;
   }
 
   // Styling headers
@@ -48,54 +47,54 @@
   }
 }
 
-/**
- * Style form for creating and editing articles
- */
+// Style form for creating and editing articles
 #article-form {
-  .form-control.special {
-    border: 0px solid transparent;
-    padding: 0rem;
-    border-left: 2px solid transparent;
+  .form-control {
+    &.special {
+      border: 0 solid transparent;
+      border-left: 2px solid transparent;
+      padding: 0;
 
-    &:active,
-    &:focus,
-    &:hover {
-      border-left: 2px solid $border;
+      &:active,
+      &:focus,
+      &:hover {
+        border-left: 2px solid $border;
+      }
     }
   }
 
   // Style the title
   #title {
+    color: $black;
     font-size: 2rem;
     font-weight: bold;
-    color: black;
   }
 
   // Style the subtitle
   #subtitle {
+    color: $dark-gray;
     font-size: 1.4rem;
     font-weight: bold;
-    color: $dark-gray;
   }
 
   // Style images
   img {
-    width: 100% !important;
-    margin-bottom: 0.5rem;
+    margin-bottom: .5rem;
+    width: 100% !important; // sass-lint:disable-line no-important
   }
 
   // Style blockquote components
   .quote {
-    padding-left: 1rem !important;
-    border-left: 4px solid $border !important;
-    color: gray;
-    font-style: italic;
+    border-left: 4px solid $border !important; // sass-lint:disable-line no-important
+    color: $gray;
     font-size: 1.2rem;
+    font-style: italic;
+    padding-left: 1rem !important; // sass-lint:disable-line no-important
   }
 
   // Style headers
   .header {
-    font-weight: bold;
     font-size: 1.4rem;
+    font-weight: bold;
   }
 }

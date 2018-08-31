@@ -37,7 +37,7 @@ const ListingHeader = ({
 
     <Categories categories={categories} />
 
-    <p className="naldaFavorite">
+    <p className="nalda-favorite">
       <strong>
         Nalda's favorite:
       </strong>

@@ -1,13 +1,12 @@
-/**
- * Styling display of videos
- */
+// Styling display of videos
+
 .video {
   iframe {
-    width: 100%;
-    min-height: 60vh;
-    max-height: 100vh;
+    margin-bottom: .5rem;
     margin-top: 1.5rem;
-    margin-bottom: 0.5rem;
+    max-height: 100vh;
+    min-height: 60vh;
+    width: 100%;
   }
 
   .title {

@@ -3,6 +3,8 @@
  */
 
 // Shades of gray
+$solid-border: #e4e4e4;
+$black: #000;
 $transparent: rgba(255, 255, 255, 0.3);
 $lighter-gray: #f7f7f7;
 $light-gray: #efefef;
@@ -11,6 +13,14 @@ $dark-gray: #606060;
 $darker-gray: #4c4c4c;
 $border: rgba(0, 0, 0, 0.1);
 $gray-text: #888;
+$white: #fff;
+$article-preview-bg: rgba(0, 0, 0, .5);
+$article-preview-bg-dark: rgba(0, 0, 0, .7);
+
+// Shadows
+$shadow: rgba(0, 0, 0, .25);
+$light-shadow: rgba(0, 0, 0, .125);
+$lighter-shadow: rgba(0, 0, 0, .0625);
 
 // Primary colors
 $alternate-light-primary: #3377a1;

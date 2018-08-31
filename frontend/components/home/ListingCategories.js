@@ -13,7 +13,7 @@ import hiddenCategories from '../json/hiddenCategories';
 const ListingCategories = ({ isLoading }) => {
   if (isLoading) {
     return (
-      <div className="home-section isLoading">
+      <div className="home-section is-loading">
         <h2 className="home-section-title" />
         <p className="home-section-subtitle" />
         <ul className="home-categories">

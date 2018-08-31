@@ -1,101 +1,104 @@
 // Styling preview for all forms of content (videos, articles, and listings)
+
 .content-preview-wrapper {
-	width: 50%;
-	display: inline-block;
-	clear: none;
-	margin: 0rem 0rem 1rem 0rem;
-	vertical-align: top;
+  clear: none;
+  display: inline-block;
+  margin: 0 0 1rem;
+  vertical-align: top;
+  width: 50%;
 }
 
 .content-preview {
-  color: black;
-	width: calc(100% - 10px);
-	margin: 0 auto;
+  color: $black;
+  margin: 0 auto;
+  width: calc(100% - 10px);
 
   .background-image {
-    margin-bottom: 0.5rem;
+    margin-bottom: .5rem;
+    padding-top: 65%;
     width: 100%;
-		padding-top: 65%;
   }
 
   .location {
-    text-transform: uppercase;
-    margin-bottom: 0.2rem;
-    font-size: 0.8rem;
     color: $gray;
-    font-weight: bold;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    width: 100%;
     display: block;
+    font-size: .8rem;
+    font-weight: bold;
+    margin-bottom: .2rem;
     overflow: hidden
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+    width: 100%;
   }
 
   .timerange {
     color: darken($gray, 5%);
-    margin-bottom: 0.5rem;
+    margin-bottom: .5rem;
   }
 
   .title {
-    font-weight: bold;
-    margin-bottom: 0.25rem !important;
     font-size: 1.6rem;
+    font-weight: bold;
+    margin-bottom: .25rem !important; // sass-lint:disable-line no-important
   }
 
   .subtitle {
-    margin-bottom: 0;
-    font-size: 1.2rem;
+    -webkit-box-orient: vertical; // sass-lint:disable-line no-vendor-prefixes
+    -webkit-line-clamp: 2; // sass-lint:disable-line no-vendor-prefixes
     color: $dark-gray;
+    display: -webkit-box; // sass-lint:disable-line no-vendor-prefixes
+    font-size: 1.2rem;
+    line-height: 1.2rem;
+    margin-bottom: 0;
+    max-height: 2.4rem;
     overflow: hidden;
     text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    line-height: 1.2rem;
-    max-height: 2.4rem;
   }
 }
 
-.content-preview-wrapper.video .content-preview .background-image {
+.content-preview-wrapper.video .content-preview .background-image { // sass-lint:disable-line force-element-nesting
   padding-top: 0;
 
   .image-wrapper {
-    z-index: 1;
-    height: 65%;
-    padding: 3rem 0rem;
     display: block;
+    height: 65%;
+    padding: 3rem 0;
+    z-index: 1;
 
     img {
-      margin: 0 auto;
-      height: 4rem;
-      width: auto;
       display: block;
-      opacity: 0.6;
-      transition: all 0.2s ease;
+      height: 4rem;
+      margin: 0 auto;
+      opacity: .6;
+      transition: opacity .2s ease;
+      width: auto;
     }
   }
 
   &:hover {
-    .image-wrapper img {
-      opacity: 0.8;
+    .image-wrapper {
+      img {
+        opacity: .8;
+      }
     }
   }
 }
 
 @media only screen and (min-width: 768px) {
-	.content-preview-wrapper {
-		width: 33.3333%;
-	}
+  .content-preview-wrapper {
+    width: 33.3333%;
+  }
 }
 
 @media only screen and (min-width: 1069px) {
-	.content-preview-wrapper {
-		width: 25%;
-	}
+  .content-preview-wrapper {
+    width: 25%;
+  }
 }
 
 @media only screen and (min-width: 1500px) {
-	.content-preview-wrapper {
-		width: 20%;
-	}
+  .content-preview-wrapper {
+    width: 20%;
+  }
 }

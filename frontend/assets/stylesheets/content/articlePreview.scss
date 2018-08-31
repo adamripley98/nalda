@@ -1,12 +1,11 @@
-/**
- * Styling article previews
- */
+// Styling article previews
+
 .article-preview-wrapper {
-  width: 100%;
+  clear: none;
   display: inline-block;
-	clear: none;
-	margin: 0rem 0rem 1rem 0rem;
-	vertical-align: top;
+  margin: 0 0 1rem;
+  vertical-align: top;
+  width: 100%;
 }
 
 @media screen and (min-width: 720px) {
@@ -28,32 +27,33 @@
 }
 
 .article-preview {
+  background-color: $article-preview-bg;
+  color: $white;
   height: 60vh;
-  overflow-y: hidden;
-  color: white;
-  width: calc(100% - 10px) !important;
   margin: 0 auto;
-  background-color: rgba(0, 0, 0, 0.5);
   margin-bottom: 1rem;
+  overflow-y: hidden;
   vertical-align: bottom;
+  width: calc(100% - 10px) !important; // sass-lint:disable-line no-important
 
   .content {
+    background: $article-preview-bg;
+    background: linear-gradient(transparent, $article-preview-bg-dark); // sass-lint:disable-line no-duplicate-properties
     height: 100%;
-    width: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
     padding: 1rem;
     vertical-align: bottom;
+    width: 100%;
 
-    h4, p {
-      width: 100%;
+    h4,
+    p {
+      color: $white;
       display: block;
-      color: white;
-      margin-bottom: 0.4rem;
+      margin-bottom: .4rem;
+      width: 100%;
     }
 
     p {
-      margin-bottom: 0rem;
+      margin-bottom: 0;
     }
 
     h4 {

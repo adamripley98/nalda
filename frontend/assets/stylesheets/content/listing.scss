@@ -1,33 +1,32 @@
-/**
- * Styling for all components related to listings
- */
+// Styling for all components related to listings
+
 .listing {
   color: $dark-gray;
 
   .parallax-wrapper {
-    width: 100%;
     height: 52vh;
     overflow: hidden;
+    width: 100%;
 
     .img {
-      min-width: 100%;
-      min-height: 68vh;
       height: auto;
+      min-height: 68vh;
+      min-width: 100%;
     }
   }
 
   // Style timstamp for the listing
   .timestamp {
     color: $gray;
+    font-size: .8rem;
     font-style: italic;
-    font-size: 0.8rem;
   }
 
-  .naldaFavorite {
-    margin: 1rem 0rem 2rem 0rem;
-    padding: 1rem;
+  .nalda-favorite {
     background: $light-gray;
-    border-radius: 0.4rem;
+    border-radius: .4rem;
+    margin: 1rem 0 2rem;
+    padding: 1rem;
   }
 
   .preview {
@@ -36,18 +35,18 @@
   }
 
   .website {
-    margin-bottom: 0.5rem;
+    margin-bottom: .5rem;
   }
 
   p {
-    margin-bottom: 0.5rem;
+    margin-bottom: .5rem;
   }
 
   .table {
-    font-size: 0.8rem;
+    font-size: .8rem;
 
     td {
-      padding: 0.25rem 0.5rem;
+      padding: .25rem .5rem;
     }
   }
 
@@ -56,7 +55,7 @@
 
     .title {
       font-weight: bold;
-      margin-bottom: 0rem;
+      margin-bottom: 0;
     }
 
     .subtitle {
@@ -64,208 +63,104 @@
     }
 
     .amenity {
-      margin-bottom: 0.5rem;
+      margin-bottom: .5rem;
 
       &.no-icon {
         margin-left: 22px;
       }
 
       svg {
-        opacity: 0.9;
-        transform: translateY(2px);
-        width: 16px;
         height: auto;
         margin-right: 6px;
+        opacity: .9;
+        transform: translateY(2px);
+        width: 16px;
       }
     }
   }
 }
 
-/**
- * Styling for reviews on listings
- */
-.review-wrapper {
-  display: flex;
+// Style stars for rating
+.rating {
+  color: $light-gray;
+  display: inline-block;
+  margin-bottom: 0;
+  width: auto;
 
-  .profile-picture {
-    display: inline-block;
-    width: 2.5rem;
-    height: 2.5rem;
-    margin-right: 1rem;
-    margin-bottom: 0.25rem;
-    z-index: 2;
-    border-radius: 50%;
-    background: $gray;
-    background-position: center !important;
-    background-repeat: no-repeat !important;
-    background-size: cover !important;
-  }
+  .fa {
+    margin-right: .25rem;
 
-  .review {
-    flex: 1;
-    border: 1px solid $border;
-    border-radius: 0.4rem;
-    padding: 1rem;
-    margin-bottom: 1rem;
-
-    .name {
-      color: $gray;
-      font-weight: bold;
-      font-size: 0.8rem;
-      margin-bottom: 0.5rem;
+    &.full {
+      color: $gold;
     }
 
-    .title-and-rating {
-      display: flex;
-      flex-direction: row-reverse;
-
-      h6 {
-        margin-top: 0.4rem;
-        margin-bottom: 0.4rem;
-        flex: 1;
-      }
-    }
-
-    p {
-      margin-bottom: 0rem;
-    }
-
-    h6 {
-      font-weight: bold;
-    }
-
-    .timestamp {
-      text-align: right;
-      font-style: italic;
-      color: $gray;
-      opacity: 0.8;
+    &.fa-star-half {
       position: absolute;
-      right: 2rem;
-      font-size: 0.8rem;
+      transform: translate(-1.48rem, .3rem);
     }
-  }
-
-  .delete {
-    text-align: right;
-    display: inline-block;
-    margin-left: 0.5rem;
-    cursor: hand;
-    cursor: pointer;
-    font-size: 1rem;
-
-    .fa {
-      color: $gray;
-
-      &:hover,
-      &:focus,
-      &:active {
-        color: $dark-gray;
-      }
-    }
-  }
-}
-
-/**
- * Left-justify review ratings on smaller screens
- */
-@media screen and (max-width: 712px) {
-  .review-wrapper .review .title-and-rating {
-    display: block;
-  }
-}
-
-@media screen and (max-device-width: 712px) {
-  .review-wrapper .review .title-and-rating {
-    display: block;
-  }
-}
-
-/**
- * Style stars for rating
- */
- .rating {
-   color: $light-gray;
-   margin-bottom: 0rem;
-   width: auto;
-   display: inline-block;
-
-   .fa {
-     margin-right: 0.25rem;
-
-     &.full {
-       color: $gold;
-     }
-
-     &.fa-star-half {
-       transform: translate(-1.48rem, 0.3rem);
-       position: absolute;
-     }
-   }
-
-   p {
-     display: inline-block;
-     color: $gray;
-     margin-left: 0.5rem;
-   }
- }
-
-/**
- * Styling the form for amenities for listings in the ListingForm component
- */
-.amenities-form,
-.categories-form {
-  .bold {
-    width: 100%;
-    color: $gray;
-    margin-top: 0.8rem;
-    margin-bottom: 0.2rem;
-    text-decoration: none;
-    cursor: auto;
   }
 
   p {
-    img, svg {
-      width: 16px;
-      height: auto;
-      margin-right: 6px;
-      opacity: 0.4;
-    }
+    color: $gray;
+    display: inline-block;
+    margin-left: .5rem;
+  }
+}
 
+// Styling the form for amenities for listings in the ListingForm component
+.amenities-form,
+.categories-form {
+  .bold {
+    color: $gray;
+    cursor: auto;
+    margin-bottom: .2rem;
+    margin-top: .8rem;
+    text-decoration: none;
+    width: 100%;
+  }
+
+  p {
+    color: $gray;
+    cursor: pointer;
+    margin-bottom: .2rem;
     text-decoration: line-through;
     width: 100%;
-    color: $gray;
-    margin-bottom: 0.2rem;
-    cursor: hand;
-    cursor: pointer;
+
+    img,
+    svg {
+      height: auto;
+      margin-right: 6px;
+      opacity: .4;
+      width: 16px;
+    }
 
     &.active {
       color: $dark-gray;
       text-decoration: none;
 
-      img, svg {
+      img,
+      svg {
         opacity: 1;
       }
     }
   }
 }
 
-/**
- * Styling category tags
- */
+// Styling category tags
 .categories,
 .tags {
-  margin-bottom: 0.1rem;
+  margin-bottom: .1rem;
 
   .category,
   .tag {
     background: $light-gray;
-    font-size: 0.8rem;
+    border-radius: .2rem;
     display: inline-block;
+    font-size: .8rem;
+    margin-bottom: .4rem;
+    margin-right: .4rem;
+    padding: .2rem .4rem;
     width: auto;
-    padding: 0.2rem 0.4rem;
-    border-radius: 0.2rem;
-    margin-right: 0.4rem;
-    margin-bottom: 0.4rem;
   }
 
   &.big {
@@ -277,27 +172,29 @@
 }
 
 // Style list of carousel previews
-ul.carousel-preview {
-  list-style: none;
-  margin-left: 0;
-  padding-left: 0;
+ul {
+  &.carousel-preview {
+    list-style: none;
+    margin-left: 0;
+    padding-left: 0;
 
-  li {
-    display: inline-block;
-    margin-right: 1rem;
+    li {
+      display: inline-block;
+      margin-right: 1rem;
 
-    img {
-      height: 3rem;
-      border-radius: 0.2rem;
-    }
+      img {
+        border-radius: .2rem;
+        height: 3rem;
+      }
 
-    .fa {
-      color: $gray;
+      .fa {
+        color: $gray;
 
-      &:hover,
-      &:focus,
-      &:active {
-        color: $dark-gray;
+        &:hover,
+        &:focus,
+        &:active {
+          color: $dark-gray;
+        }
       }
     }
   }

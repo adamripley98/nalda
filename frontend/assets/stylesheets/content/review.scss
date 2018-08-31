@@ -1,0 +1,92 @@
+// Styling for reviews on listings
+
+.review-wrapper {
+  display: flex;
+
+  .profile-picture {
+    background: $gray;
+    background-position: center !important; // sass-lint:disable-line no-important
+    background-repeat: no-repeat !important; // sass-lint:disable-line no-important
+    background-size: cover !important; // sass-lint:disable-line no-important
+    border-radius: 50%;
+    display: inline-block;
+    height: 2.5rem;
+    margin-bottom: .25rem;
+    margin-right: 1rem;
+    width: 2.5rem;
+    z-index: 2;
+  }
+
+  .review {
+    border: 1px solid $border;
+    border-radius: .4rem;
+    flex: 1;
+    margin-bottom: 1rem;
+    padding: 1rem;
+
+    .name {
+      color: $gray;
+      font-size: .8rem;
+      font-weight: bold;
+      margin-bottom: .5rem;
+    }
+
+    .title-and-rating {
+      display: flex;
+      flex-direction: row-reverse;
+
+      h6 {
+        flex: 1;
+        margin-bottom: .4rem;
+        margin-top: .4rem;
+      }
+    }
+
+    p {
+      margin-bottom: 0;
+    }
+
+    h6 {
+      font-weight: bold;
+    }
+
+    .timestamp {
+      color: $gray;
+      font-size: .8rem;
+      font-style: italic;
+      opacity: .8;
+      position: absolute;
+      right: 2rem;
+      text-align: right;
+    }
+  }
+
+  .delete {
+    cursor: pointer;
+    display: inline-block;
+    font-size: 1rem;
+    margin-left: .5rem;
+    text-align: right;
+
+    .fa {
+      color: $gray;
+
+      &:hover,
+      &:focus,
+      &:active {
+        color: $dark-gray;
+      }
+    }
+  }
+}
+
+// Left-justify review ratings on smaller screens
+@media screen and (max-width: 712px) {
+  .review-wrapper {
+    .review {
+      .title-and-rating {
+        display: block;
+      }
+    }
+  }
+}

@@ -1,7 +1,15 @@
 @keyframes loading {
-  0% { background-color: $light-gray; }
-  50% { background-color: $lighter-gray; }
-  100% { background-color: $light-gray; }
+  0% {
+    background-color: $light-gray;
+  }
+
+  50% {
+    background-color: $lighter-gray;
+  }
+
+  100% {
+    background-color: $light-gray;
+  }
 }
 
 #banner-carousel {
@@ -10,21 +18,21 @@
   }
 
   .banner-item {
+    outline: 0 !important; // sass-lint:disable-line no-important
     padding: 1rem;
-    outline: 0 !important;
 
     .background-image {
-      width: 100%;
+      box-shadow: 0 .2rem .5rem $shadow;
       height: auto;
       padding-top: 56.25%;
-      box-shadow: 0rem 0.2rem 0.5rem rgba(0, 0, 0, 0.25);
+      width: 100%;
 
-      &.isLoading {
-        background: $light-gray;
-        box-shadow: 0rem 0.2rem 0.5rem rgba(0, 0, 0, 0.125);
-        animation-name: loading;
+      &.is-loading {
         animation-duration: 2s;
         animation-iteration-count: infinite;
+        animation-name: loading;
+        background: $light-gray;
+        box-shadow: 0 .2rem .5rem $light-shadow;
       }
     }
   }
@@ -35,58 +43,60 @@
 }
 
 @media screen and (max-width: 492px) {
-  #banner-carousel .banner-item {
-    padding: 1rem 0.5rem;
+  #banner-carousel {
+    .banner-item {
+      padding: 1rem .5rem;
+    }
   }
 }
 
-button.slick-arrow {
-  position: absolute;
-  background: transparent;
-  cursor: hand;
-  cursor: pointer;
-  color: $gray-text;
-  padding: 0;
-  margin: 0;
-  border: 0;
-  box-shadow: 0;
-  top: calc(100% - 0.5rem);
-  opacity: 0.75;
-  font-size: 0.8rem;
-  margin: 0rem 0.5rem;
-  z-index: 2;
+button {
+  &.slick-arrow {
+    background: transparent;
+    border: 0;
+    box-shadow: 0;
+    color: $gray-text;
+    cursor: pointer;
+    font-size: .8rem;
+    margin: 0 .5rem;
+    opacity: .75;
+    padding: 0;
+    position: absolute;
+    top: calc(100% - .5rem);
+    z-index: 2;
 
-  &:hover,
-  &:focus,
-  &:active {
-    opacity: 1;
-  }
-
-  &.slick-next {
-    right: 0;
-
-    &::after {
-      content: "\00A0\2192";
+    &:hover,
+    &:focus,
+    &:active {
+      opacity: 1;
     }
-  }
 
-  &.slick-prev {
-    left: 0;
+    &.slick-next {
+      right: 0;
 
-    &::before {
-      content: "\2190\00A0";
+      &::after {
+        content: '\00A0\2192'; // Space with right-facing arrow
+      }
+    }
+
+    &.slick-prev {
+      left: 0;
+
+      &::before {
+        content: '\2190\00A0'; // Space with left-facing arrow
+      }
     }
   }
 }
 
 #carousel {
   img {
+    box-shadow: 0 .1rem .4rem $light-shadow;
     height: 50vh;
-    margin: 0rem 1rem 1rem 1rem;
+    margin: 0 1rem 1rem;
+    opacity: .6;
+    transition: opacity .3s ease;
     width: auto;
-    opacity: 0.6;
-    transition: all 0.3s ease;
-    box-shadow: 0rem 0.1rem 0.4rem rgba(0, 0, 0, 0.15);
 
     &.slick-active {
       opacity: 1;

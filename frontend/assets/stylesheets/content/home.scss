@@ -1,22 +1,28 @@
-/**
- * Styling for the homepage
- */
+// Styling for the homepage
 
 @keyframes loading {
-  0% { background-color: $light-gray; }
-  50% { background-color: $lighter-gray; }
-  100% { background-color: $light-gray; }
+  0% {
+    background-color: $light-gray;
+  }
+
+  50% {
+    background-color: $lighter-gray;
+  }
+
+  100% {
+    background-color: $light-gray;
+  }
 }
 
 // Styling home sections in general
 .home-section {
-  padding: 1.5rem 0rem;
+  padding: 1.5rem 0;
 
   .home-section-title {
-    letter-spacing: -0.5px;
+    color: $black;
     font-size: 24px;
-    margin-bottom: 0.5rem;
-    color: black;
+    letter-spacing: -.5px;
+    margin-bottom: .5rem;
   }
 
   .home-section-subtitle {
@@ -24,85 +30,90 @@
     font-size: 16px;
   }
 
-  a.view-all-link {
-    color: $gray;
-    position: absolute;
-    right: 0;
+  a {
+    &.view-all-link {
+      color: $gray;
+      position: absolute;
+      right: 0;
 
-    &:hover,
-    &:active,
-    &:focus {
-      color: $dark-gray;
+      &:hover,
+      &:active,
+      &:focus {
+        color: $dark-gray;
+      }
     }
   }
 
-  &.isLoading {
+  &.is-loading {
     .home-section-title,
     .home-section-subtitle,
-    .home-categories span {
-      display: block;
-      background: $light-gray;
-      border-radius: 4px;
-      animation-name: loading;
+    .home-categories span { // sass-lint:disable-line force-element-nesting
       animation-duration: 2s;
       animation-iteration-count: infinite;
+      animation-name: loading;
+      background: $light-gray;
+      border-radius: 4px;
+      display: block;
     }
 
     .home-section-title {
-      width: 40%;
       height: 35px;
+      width: 40%;
     }
 
     .home-section-subtitle {
-      width: 25%;
       height: 24px;
+      width: 25%;
     }
 
-    .home-categories span {
-      width: 60%;
-      height: 24px;
+    .home-categories {
+      span {
+        height: 24px;
+        width: 60%;
+      }
     }
   }
 }
 
 @media only screen and (min-width: 768px) {
-  .home-section .home-section-title {
-    font-size: 32px;
-    letter-spacing: -1px;
+  .home-section {
+    .home-section-title {
+      font-size: 32px;
+      letter-spacing: -1px;
+    }
   }
 }
 
 // Styling categories
 .home-categories {
-  padding-left: 0;
-  margin-left: 0;
-  width: 100%;
-  list-style: none;
+  align-items: flex-start;
   color: $gray;
   display: flex;
-	justify-content: flex-start;
-	flex-wrap: wrap;
-	align-items: flex-start;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0;
+  width: 100%;
 
   li {
+    display: inline-block;
     list-style-type: none;
-  	display: inline-block;
-  	width: 100%;
-  	margin-bottom: 0.8rem;
+    margin-bottom: .8rem;
+    width: 100%;
 
     a {
+      border-top: 1px solid $solid-border;
       display: block;
-      width: 90%;
-      border-top: 1px solid #e4e4e4;
       padding-top: 1rem;
+      width: 90%;
 
       .img {
-        width: 24px;
-      	height: 24px;
-      	border-radius: 50%;
-        position: absolute;
-        border-radius: 50%;
         background: $light-gray;
+        border-radius: 50%;
+        height: 24px;
+        position: absolute;
+        width: 24px;
       }
 
       span {
@@ -126,15 +137,19 @@
 }
 
 @media only screen and (min-width: 768px) {
-	.home-categories li {
-		width: 33.333%;
-	}
+  .home-categories {
+    li {
+      width: 33.333%;
+  	}
+  }
 }
 
 @media only screen and (min-width: 1069px) {
-	.home-categories li {
-		width: 25%;
-	}
+  .home-categories {
+    li {
+      width: 25%;
+  	}
+  }
 }
 
 .inline-header-link {
@@ -145,10 +160,10 @@
   }
 
   a {
-    float: right;
-    display: inline-block;
     color: $gray;
-    transition: all 0.2s ease;
+    display: inline-block;
+    float: right;
+    transition: color .2s ease;
 
     &:hover {
       color: $dark-gray;
@@ -157,34 +172,44 @@
 }
 
 @media screen and (min-width: 748px) and (min-device-width: 748px) {
-  .home-categories .category {
-    display: inline-block;
-    width: 50%;
+  .home-categories {
+    .category {
+      display: inline-block;
+      width: 50%;
+    }
   }
 }
 
 @media screen and (min-width: 1024px) and (min-device-width: 1024px) {
-  .home-categories .category {
-    display: inline-block;
-    width: 33%;
+  .home-categories {
+    .category {
+      display: inline-block;
+      width: 33%;
+    }
   }
 }
 
 // Conditional rendering of different content
 @media only screen and (max-width: 767px) {
-	.grid-item-5, .grid-item-6, .grid-item-7, .grid-item-8 {
-		display: none !important;
-	}
+  .grid-item-5,
+  .grid-item-6,
+  .grid-item-7,
+  .grid-item-8 {
+    display: none !important; // sass-lint:disable-line no-important
+  }
 }
 
 @media only screen and (min-width: 768px) and (max-width: 1068px) {
-	.grid-item-7, .grid-item-8 {
-		display: none !important;
-	}
+  .grid-item-7,
+  .grid-item-8 {
+    display: none !important; // sass-lint:disable-line no-important
+  }
 }
 
 @media only screen and (min-width: 1500px) {
-	.grid-item-6, .grid-item-7, .grid-item-8 {
-		display: none !important;
-	}
+  .grid-item-6,
+  .grid-item-7,
+  .grid-item-8 {
+    display: none !important; // sass-lint:disable-line no-important
+  }
 }
