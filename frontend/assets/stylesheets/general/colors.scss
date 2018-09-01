@@ -1,19 +1,19 @@
 // Color palette for all styles in the application
 
 // Shades of gray
-$solid-border: #e4e4e4;
-$black: #000;
+$white: #fff;
 $transparent: rgba(255, 255, 255, .3);
 $lighter-gray: #f7f7f7;
 $light-gray: #efefef;
+$gray-text: #888;
 $gray: #bebebe;
 $dark-gray: #606060;
 $darker-gray: #4c4c4c;
+$black: #000;
+
+// Borders and lines
 $border: rgba(0, 0, 0, .1);
-$gray-text: #888;
-$white: #fff;
-$article-preview-bg: rgba(0, 0, 0, .5);
-$article-preview-bg-dark: rgba(0, 0, 0, .7);
+$solid-border: #e4e4e4;
 
 // Shadows
 $shadow: rgba(0, 0, 0, .25);
@@ -33,7 +33,9 @@ $gold: #ffd633;
 $fb-light: #3b5998;
 $fb-dark: #2c467c;
 
-// Styles and modular classes relating to the colors defined above
+// Misc
+$article-preview-bg: rgba(0, 0, 0, .5);
+$article-preview-bg-dark: rgba(0, 0, 0, .7);
 
 // Modular class to make some text gray
 .gray {

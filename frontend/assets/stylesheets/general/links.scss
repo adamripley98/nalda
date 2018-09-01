@@ -1,38 +1,43 @@
 // Modular class for underline
-.underline,
-a.underline {
+.underline {
   text-decoration: underline;
 }
 
 // Modular helper class to denote that the element is clickable
 .cursor {
   cursor: hand;
-  cursor: pointer;
+  cursor: pointer; // sass-lint:disable-line no-duplicate-properties
 }
 
 a {
-  cursor: hand;
-  cursor: pointer;
-  text-decoration: none !important;
   color: $primary;
+  cursor: hand;
+  cursor: pointer; // sass-lint:disable-line no-duplicate-properties
+  text-decoration: none;
 
   &:visited {
     color: $primary;
+    text-decoration: none;
   }
 
   &:active,
   &:focus,
   &:hover {
     color: $dark-primary;
+    text-decoration: none;
+  }
+
+  &.underline {
+    text-decoration: underline;
   }
 
   &.link-style {
-    color: $primary !important;
+    color: $primary !important; // sass-lint:disable-line no-important
 
     &:active,
     &:focus,
     &:hover {
-      color: $dark-primary !important;
+      color: $dark-primary !important; // sass-lint:disable-line no-important
     }
   }
 
@@ -40,6 +45,6 @@ a {
   &:focus,
   &:hover,
   &:visited {
-    text-decoration: none !important;
+    text-decoration: none; // sass-lint:disable-line no-important
   }
 }

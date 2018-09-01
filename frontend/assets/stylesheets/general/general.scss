@@ -1,3 +1,6 @@
+// Import all other files
+// NOTE the ordering of these imports is IMPORTANT: later styles use variables
+// and overwrite more general styles applied earlier
 @import './strapper';
 @import './colors';
 @import './fonts';
@@ -16,17 +19,18 @@
 @import './sort';
 
 // Hide overflow for body
-html, body {
+html,
+body {
   max-width: 100%;
+  overflow-x: hidden !important; // sass-lint:disable-line no-important
   width: 100%;
-  overflow-x: hidden !important;
 }
 
 // Make each page take up the full-height of the screen (at least)
 .app-content {
+  margin: 0 !important; // sass-lint:disable-line no-important
   min-height: calc(100vh - 56.27px);
-  width: 100% !important;
-  overflow-x: hidden !important;
-  margin: 0rem !important;
-  padding: 0rem !important;
+  overflow-x: hidden !important; // sass-lint:disable-line no-important
+  padding: 0 !important; // sass-lint:disable-line no-important
+  width: 100% !important; // sass-lint:disable-line no-important
 }

@@ -1,47 +1,47 @@
 // Style the loading circle used on a wide variety of pages when content is
 // pending arrival from the database
 .loading {
-  width: 100%;
+  padding: 1rem 0;
   text-align: center;
-  padding: 1rem 0rem;
+  width: 100%;
 
   .loader {
-    width: 4rem;
-    height: 4rem;
-    border-radius: 50%;
-    display: inline-block;
-    border-right: 6px solid $light-gray;
+    animation: right 2s infinite linear;
     border-bottom: 6px solid $light-gray;
     border-left: 6px solid transparent;
+    border-radius: 50%;
+    border-right: 6px solid $light-gray;
     border-top: 6px solid transparent;
-    -webkit-animation: right 2s infinite linear;
+    display: inline-block;
+    height: 4rem;
+    width: 4rem;
 
     &.reverse {
+      animation: right 1s infinite linear;
       position: absolute;
       transform: translateX(-4rem);
-      -webkit-animation: right 1s infinite linear;
     }
   }
 }
 
 // Transition to rotate an item smoothly clockwise
-@-webkit-keyframes right {
+@keyframes right {
   0% {
-    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
   }
 
   100% {
-    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
   }
 }
 
 // Transition to rotate an item smoothly counter-clockwise
-@-webkit-keyframes left {
+@keyframes left {
   0% {
-    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
   }
 
   100% {
-    -webkit-transform: rotate(-360deg);
+    transform: rotate(-360deg);
   }
 }

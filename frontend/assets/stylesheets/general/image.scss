@@ -1,14 +1,16 @@
 // General styling for images
-img.img {
-  margin-bottom: 1rem;
+img {
+  &.img {
+    margin-bottom: 1rem;
+  }
 }
 
 // Modular class for letting background images display optimally on all sizes
 .background-image {
-  width: 100%;
-  background-size: cover;
-  background-repeat: no-repeat;
   background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 100%;
 
   &.background-fixed {
     background-attachment: fixed;
@@ -17,15 +19,17 @@ img.img {
 
 // Style profile pictures
 .profile-picture {
-  width: 4rem;
-  height: 4rem;
   border-radius: 50%;
+  height: 4rem;
+  width: 4rem;
 }
 
 // On phones, parallax scrolling is buggy
 // Thus, we disable the parallax scrolling for smaller screen sizes
 @media screen and (max-device-width: 848px) {
-  .background-image.background-fixed {
-    background-attachment: inherit;
+  .background-image {
+    &.background-fixed {
+      background-attachment: inherit;
+    }
   }
 }
