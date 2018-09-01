@@ -1,33 +1,31 @@
-/**
- * Styling the sidebar which renders triggered by the navbar
- */
+// Styling the sidebar which renders triggered by the navbar
+
 #sidebar {
   // Clickable shade to the left of the triggered sidebar
   // Clicking the shade hides the sidebar
   .shade {
-    z-index: 1300;
-    background: rgba(0, 0, 0, 0.4);
-    width: 100vw;
+    background: $sidebar-bg;
+    cursor: pointer;
     height: 100%;
     left: 0;
-    cursor: hand;
-    cursor: pointer;
-    top: 0;
     position: fixed;
+    top: 0;
+    width: 100vw;
+    z-index: 1300;
   }
 
   // The actual sidebar with links
   #side-menu {
-    z-index: 1301;
-    transition: all 0.4s ease;
-    position: fixed;
-    height: 100%;
-    background: white;
-    top: 0;
-    right: 0;
-    min-width: 20rem !important;
-    max-width: 100%;
+    background: $white;
     border-left: 1px solid $border;
+    height: 100%;
+    max-width: 100%;
+    min-width: 20 !important; // sass-lint:disable-line no-important
+    position: fixed;
+    right: 0;
+    top: 0;
+    transition: all .4s ease; // sass-lint:disable-line no-transition-all
+    z-index: 1301;
   }
 
   // Links contained within the sidebar
@@ -38,12 +36,12 @@
     width: 100%;
 
     .link {
-      font-weight: normal;
       color: $gray;
-      padding: 0.4rem 0rem;
       display: block;
-      width: 100%;
+      font-weight: normal;
+      padding: .4rem 0;
       text-align: left;
+      width: 100%;
 
       &:hover {
         color: $dark-gray;
@@ -57,7 +55,7 @@
   }
 
   .line {
-    margin: 0.5rem 0rem;
+    margin: .5rem 0;
   }
 
   // Each individual link
@@ -67,81 +65,57 @@
     &:hover,
     &:active,
     &:focus {
-      color: $dark-gray !important;
+      color: $dark-gray !important; // sass-lint:disable-line no-important
     }
   }
 
   .col-6 {
-    padding-right: 0.5rem;
+    padding-right: .5rem;
   }
 
   .col-6 + .col-6 {
+    padding-left: .5rem;
     padding-right: 15px;
-    padding-left: 0.5rem;
   }
 
   .profile-info {
     display: flex;
 
     .profile-picture {
-      background-size: cover;
-      background-repeat: no-repeat;
       background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
     }
 
     .profile-content {
-      padding-left: 1rem;
+      color: $black;
       flex: 1;
       font-weight: normal;
-      color: black;
+      padding-left: 1rem;
 
       p {
-        margin-bottom: 0.5rem;
         color: $gray-text;
+        margin-bottom: .5rem;
       }
 
       a {
-        font-size: 0.8rem;
-        margin-right: 0.8rem;
+        font-size: .8rem;
+        margin-right: .8rem;
       }
     }
   }
 }
 
-// Oscillating spin transition for the compass rendered on the sidebar
-@-webkit-keyframes spin {
-  0% {
-    -webkit-transform: rotate(0deg);
-  }
+// Make sidebar full-screen on smaller screens
 
-  50% {
-    -webkit-transform: rotate(-20deg);
-  }
-
-  100% {
-    -webkit-transform: rotate(0deg);
-  }
-}
-
-/**
- * Make sidebar full-screen on smaller screens
- */
 @media screen and (max-width: 448px) {
-  #sidebar #side-menu {
-    width: 100% !important;
-    min-width: inherit !important;
-    height: 100% !important;
-    overflow-y: scroll;
-    overflow-x: hidden;
-  }
-}
-
-@media screen and (max-device-width: 448px) {
-  #sidebar #side-menu {
-    width: 100% !important;
-    min-width: inherit !important;
-    height: 100% !important;
-    overflow-y: scroll;
-    overflow-x: hidden;
+  #sidebar {
+    #side-menu {
+      height: 100% !important; // sass-lint:disable-line no-important
+      min-width: inherit !important; // sass-lint:disable-line no-important
+      overflow-x: hidden;
+      overflow-y: scroll;
+      width: 100% !important; // sass-lint:disable-line no-important
+    }
   }
 }

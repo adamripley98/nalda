@@ -4,36 +4,34 @@
 
 $height: 57.19px;
 
-/**
- * Spacer put at the top of the page to make room for the fixed navbar
- * Essentially, this pushes the page content down the height of the navbar
- */
+// Spacer put at the top of the page to make room for the fixed navbar
+// Essentially, this pushes the page content down the height of the navbar
 .nav-space {
   height: $height;
-  width: 100%;
   position: relative;
+  width: 100%;
 }
 
 .nav {
-  border-bottom: 1px solid $border;
-  font-weight: bold;
   background: $secondary;
+  border-bottom: 1px solid $border;
+  box-shadow: 0 .1rem .05rem $lighter-shadow;
   color: $gray;
-  padding: 0rem 0.5rem;
   display: flex;
+  font-weight: bold;
+  padding: 0 .5rem;
   position: fixed;
   width: 100%;
-  z-index: 1299 !important;
-  box-shadow: 0rem 0.1rem 0.05rem rgba(0, 0, 0, 0.05);
+  z-index: 1299 !important; // sass-lint:disable-line no-important
 
   // Style the logo
   .logo {
-    padding: 0.25rem 1rem 0rem 1rem;
+    padding: .25rem 1rem 0;
 
     svg {
-      padding-top: 0.3rem;
-      width: auto;
       height: 2.8rem;
+      padding-top: .3rem;
+      width: auto;
     }
   }
 
@@ -41,99 +39,108 @@ $height: 57.19px;
   // This includes the user's name, location, and profile picture
   // The amount of information shown depends on the width of the screen
   .user-info {
+    display: flex;
+    height: 57.19px;
     margin: 0;
     padding: 0;
-    height: 57.19px;
-    display: flex;
 
     .user-text {
-      flex: 1;
-      text-align: right;
+      color: $white;
       display: flex;
-      padding: 1rem 0rem;
-      color: white;
+      flex: 1;
+      padding: 1rem 0;
+      text-align: right;
     }
 
     .user-img {
-      height: 2rem;
-      margin: 0.8rem;
-      width: 2rem;
-      border-radius: 50%;
       background: $gray;
-      display: inline-block;
       background-position: center;
       background-repeat: no-repeat;
       background-size: cover;
+      border-radius: 50%;
       display: inline-block;
+      height: 2rem;
+      margin: .8rem;
+      width: 2rem;
     }
 
     // If the user is not signed in, then there is no information to display
     // Instead, there are links to login and register
     .sign-in-links {
       height: 100%;
-      text-align: right;
-      padding-top: 1rem;
+      padding-left: 0;
       padding-right: 1rem;
-      padding-left: 0rem;
+      padding-top: 1rem;
+      text-align: right;
 
       a {
-        color: white;
+        color: $white;
         margin-left: 1rem;
 
         &:hover {
-          opacity: 0.8;
+          opacity: .8;
         }
       }
     }
   }
 }
 
-/**
- * Hide user name when the screen is below 928px
- */
+// Hide user name when the screen is below 928px
 @media screen and (max-width: 928px) {
-  .nav .user-info .user-text .name {
-    display: none;
+  .nav {
+    .user-info {
+      .user-text {
+        .name {
+          display: none;
+        }
+      }
+    }
   }
 }
 
 @media screen and (max-device-width: 928px) {
-  .nav .user-info .user-text .name {
-    display: none;
+  .nav {
+    .user-info {
+      .user-text {
+        .name {
+          display: none;
+        }
+      }
+    }
   }
 }
 
-/**
- * Hide the user text when the screen is below 848px
- */
+// Hide the user text when the screen is below 848px
 @media screen and (max-width: 848px) {
-  .nav .user-info {
-    display: block;
-    text-align: right;
-    border-right: 1px solid $border;
+  .nav {
+    .user-info {
+      border-right: 1px solid $border;
+      display: block;
+      text-align: right;
 
-    .user-text {
-      display: none;
+      .user-text {
+        display: none;
+      }
     }
   }
 }
 
 @media screen and (max-device-width: 848px) {
-  .nav .user-info {
-    display: block;
-    text-align: right;
-    border-right: 1px solid $border;
+  .nav {
+    .user-info {
+      border-right: 1px solid $border;
+      display: block;
+      text-align: right;
 
-    .user-text {
-      display: none;
+      .user-text {
+        display: none;
+      }
     }
   }
 }
 
-/**
- * Also hide links prompting the user to login and register on smaller screens
- * NOTE these links can still be accessed by toggling the side menu
- **/
+// Also hide links prompting the user to login and register on smaller screens
+// NOTE these links can still be accessed by toggling the side menu
 @media screen and (max-width: 718px) {
   .sign-in-links {
     display: none;

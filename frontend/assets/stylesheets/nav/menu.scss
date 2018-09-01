@@ -1,54 +1,51 @@
 .menu {
-  padding: 1.2rem 0.6rem 0rem 1rem;
-  z-index: 1301;
+  padding: 1.2rem .6rem 0 1rem;
   width: 3.6rem;
+  z-index: 1301;
 
   // Three menu bars which toggle the menu
   .bars {
-    width: 1.5rem;
-    cursor: hand;
     cursor: pointer;
-    z-index: 1302;
     position: absolute;
+    width: 1.5rem;
+    z-index: 1302;
 
     .bar {
-      width: 100%;
-      background: white;
-      height: 2px;
+      background: $white;
       display: block;
-      transition: all 0.2s ease;
+      height: 2px;
+      transition: background .2s ease;
+      width: 100%;
     }
 
     &:hover,
     &:focus,
     &:active {
       .bar {
-        background: white;
+        background: $white;
       }
+    }
+
+    // Apply a margin top to all bars except the first one
+    .bar + .bar {
+      margin-top: .33333333333333rem;
     }
 
     &.active {
       .bar {
         background: $gray;
       }
-    }
 
-    // Apply a margin top to all bars except the first one
-    .bar + .bar {
-      margin-top: 0.33333333333333rem;
-    }
-
-    &.active {
       #first {
-        transform: translateY(7.33333333px) translateX(0.1333333rem) rotate(135deg);
+        transform: translateY(7.33333333px) translateX(.1333333rem) rotate(135deg);
       }
 
       #second {
-        transform: rotate(-135deg) translateX(-0.094280904rem) translateY(0.094280904rem);
+        transform: rotate(-135deg) translateX(-.094280904rem) translateY(.094280904rem);
       }
 
       #third {
-        transform: translateY(-7.33333333px) translateX(0.13333333rem) rotate(135deg);
+        transform: translateY(-7.33333333px) translateX(.13333333rem) rotate(135deg);
       }
     }
   }

@@ -1,91 +1,90 @@
 // Styling the serachbar
 .search {
-  margin: 0.5rem 0rem;
   background: $transparent;
   border-radius: 3px;
-  padding: 0.1rem 0.5rem;
-  flex: 1;
-  max-width: 100% !important;
   display: flex;
-  transition: all 0.2s ease;
+  flex: 1;
+  margin: .5rem 0;
+  max-width: 100% !important; // sass-lint:disable-line no-important
+  padding: .1rem .5rem;
+  transition: background .2s ease;
 
   // Search icon to the left of the search bar
   .fa-search {
-    color: white;
-    padding-right: 0.7rem;
+    color: $white;
     font-size: 1rem;
-    padding-top: 0.6rem;
-    padding-left: 0.2rem;
+    padding-left: .2rem;
+    padding-right: .7rem;
+    padding-top: .6rem;
   }
 
   // Have the search bar take up the entire space it occupies
   form {
-    width: 100%;
     display: block;
+    width: 100%;
 
     .location {
-      color: white;
+      color: $white;
       font-weight: normal;
-      text-align: right;
       height: 0;
-      overflow: visible;
       margin: 0;
-      transform: translateY(0.4rem);
-      transition: all 0.2s ease;
+      overflow: visible;
+      text-align: right;
+      transform: translateY(.4rem);
+      transition: transform .2s ease;
     }
   }
 
   // Smaller icon and search bar with a shorter placeholder
   // NOTE this only displays on mobile
   .small {
-    display: none !important;
+    display: none !important; // sass-lint:disable-line no-important
   }
 
   // Styling the form control within the form
   .form-control {
-    border: 0px solid !important;
-    flex: 1;
-    padding-left: 0rem;
-    padding-right: 0rem;
     background: transparent;
-    color: white;
+    border: 0 solid !important; // sass-lint:disable-line no-important
+    color: $white;
+    flex: 1;
+    padding-left: 0;
+    padding-right: 0;
 
-    &::-webkit-input-placeholder {
-      color: white;
-      opacity: 0.7;
+    &::-webkit-input-placeholder { // sass-lint:disable-line no-vendor-prefixes
+      color: $white;
+      opacity: .7;
     }
 
-    &::-moz-placeholder {
-      color: white;
-      opacity: 0.7;
+    &::-moz-placeholder { // sass-lint:disable-line no-vendor-prefixes
+      color: $white;
+      opacity: .7;
     }
 
-    &:-ms-input-placeholder {
-      color: white;
-      opacity: 0.7;
+    &:-ms-input-placeholder { // sass-lint:disable-line no-vendor-prefixes
+      color: $white;
+      opacity: .7;
     }
 
-    &:-moz-placeholder {
-      color: white;
-      opacity: 0.7;
+    &:-moz-placeholder { // sass-lint:disable-line no-vendor-prefixes
+      color: $white;
+      opacity: .7;
     }
   }
 
   // Clickable shade that renders below the navbar when the user is searching
   .search-shade {
-    position: fixed;
-    left: 0;
-    z-index: -2;
-    cursor: hand;
+    background: $search-bg;
     cursor: pointer;
-    background: rgba(0, 0, 0, 0.4);
-    width: 100%;
     height: 100%;
+    left: 0;
+    position: fixed;
     top: 57.19px;
+    width: 100%;
+    z-index: -2;
   }
 
   &.active {
-    background: white;
+    background: $white;
 
     .fa-search {
       color: $gray;
@@ -96,26 +95,26 @@
     }
 
     .form-control {
-      border: 0px solid !important;
-      flex: 1;
-      padding-left: 0rem;
-      padding-right: 0rem;
       background: transparent;
+      border: 0 solid !important; // sass-lint:disable-line no-important
       color: $dark-gray;
+      flex: 1;
+      padding-left: 0;
+      padding-right: 0;
 
-      &::-webkit-input-placeholder {
+      &::-webkit-input-placeholder { // sass-lint:disable-line no-vendor-prefixes
         color: $gray;
       }
 
-      &::-moz-placeholder {
+      &::-moz-placeholder { // sass-lint:disable-line no-vendor-prefixes
         color: $gray;
       }
 
-      &:-ms-input-placeholder {
+      &:-ms-input-placeholder { // sass-lint:disable-line no-vendor-prefixes
         color: $gray;
       }
 
-      &:-moz-placeholder {
+      &:-moz-placeholder { // sass-lint:disable-line no-vendor-prefixes
         color: $gray;
       }
     }
@@ -128,54 +127,55 @@
     .logo,
     .sidebar-wrapper,
     .user-info {
-      transition: all 0.4s ease;
+      transition: transform .4s ease, width .4s ease, padding .4s ease;
     }
 
     .fa-search {
-      transition: all 0.4s ease;
+      transition: transform .4s ease;
     }
 
     #search {
-      transition: all 0.4s ease;
+      transition: transform .4s ease;
       width: 100%;
     }
-  }
 
-  .nav.search-active {
-    .logo {
-      transform: translateX(-5rem);
-    }
+    &.search-active {
+      .logo {
+        transform: translateX(-5rem);
+      }
 
-    .sidebar-wrapper,
-    .user-info {
-      transform: translateX(5rem);
-    }
+      .sidebar-wrapper,
+      .user-info {
+        transform: translateX(5rem);
+      }
 
-    .logo, .sidebar-wrapper {
-      width: 0 !important;
-      padding: 0 !important;
+      .logo,
+      .sidebar-wrapper {
+        padding: 0 !important; // sass-lint:disable-line no-important
+        width: 0 !important; // sass-lint:disable-line no-important
+      }
     }
   }
 }
 
 // Styling search suggestions
 .suggestions {
-  position: fixed;
-  width: 100%;
+  background: $white;
+  border-bottom: 1px solid $border;
+  border-top: 1px solid $border;
+  box-shadow: 0 .1rem .05rem $lighter-shadow;
   height: auto;
+  left: 0;
   max-height: calc(92.5vh - 57.19px);
   overflow-x: hidden;
   overflow-y: auto;
   padding: 1rem;
+  position: fixed;
   top: 57.19px;
-  background: white;
-  left: 0;
-  border-top: 1px solid $border;
-  box-shadow: 0rem 0.1rem 0.05rem rgba(0, 0, 0, 0.05);
-  border-bottom: 1px solid $border;
+  width: 100%;
 
   .col-12 {
-    margin-bottom: 0.5rem;
+    margin-bottom: .5rem;
   }
 
   // Section titles at the top of each category of search results
@@ -200,18 +200,18 @@
   }
 }
 
-/**
- * Swap the placeholder on smaller screen sizes for a shorter version
- * NOTE the only way to do this is with a new input field
- */
+// Swap the placeholder on smaller screen sizes for a shorter version
+//  NOTE the only way to do this is with a new input field
 @media screen and (max-width: 718px) {
-  .nav .search {
-    .small {
-      display: block !important;
-    }
+  .nav {
+    .search {
+      .small {
+        display: block !important; // sass-lint:disable-line no-important
+      }
 
-    .large {
-      display: none !important;
+      .large {
+        display: none !important; // sass-lint:disable-line no-important
+      }
     }
   }
 }
