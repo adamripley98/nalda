@@ -2,30 +2,30 @@
 // ListingForm
 // ArticleForm
 // VideoForm
+
 .tabs {
-  width: 100%;
-  display: flex;
   border-bottom: 1px solid $border;
-  transition: all 0.2s ease;
+  display: flex;
+  width: 100%;
 
   .tab {
-    flex: 1;
     color: $gray;
-    padding: 0.5rem 1rem;
-    font-weight: bold;
+    flex: 1;
     font-size: 1.2rem;
+    font-weight: bold;
+    padding: .5rem 1rem;
     text-align: center;
-    transition: all 0.2s ease;
+    transition: color .2s ease, border-bottom .2s ease;
 
     &:hover {
-      color: $dark-gray;
       border-bottom: 4px solid $border;
+      color: $dark-gray;
     }
 
     &.active {
-      background: white;
-      border-bottom: 4px solid $primary !important;
-      color: black;
+      background: $white;
+      border-bottom: 4px solid $primary !important; // sass-lint:disable-line no-important
+      color: $black;
     }
   }
 }

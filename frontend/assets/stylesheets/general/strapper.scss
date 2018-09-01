@@ -1,8 +1,11 @@
-/**
- * Spacing and padding
- */
+// Colors
+$black: #000;
+$white: #fff;
+
+// Spacing and padding
+
 .pad-0 {
-  padding: 0 !important;
+  padding: 0 !important; // sass-lint:disable-line no-important
 }
 
 .pad-1 {
@@ -47,7 +50,7 @@
 }
 
 .space-0 {
-  height: 0rem;
+  height: 0;
 }
 
 .space-1 {
@@ -67,7 +70,7 @@
 }
 
 .marg-0 {
-  margin: 0 !important;
+  margin: 0 !important; // sass-lint:disable-line no-important
 }
 
 .marg-top-0 {
@@ -87,15 +90,15 @@
 }
 
 .marg-bot-0 {
-  margin-bottom: 0rem !important;
+  margin-bottom: 0 !important; // sass-lint:disable-line no-important
 }
 
 .marg-bot-05 {
-  margin-bottom: 0.5rem !important;
+  margin-bottom: .5rem !important; // sass-lint:disable-line no-important
 }
 
 .marg-bot-1 {
-  margin-bottom: 1rem !important;
+  margin-bottom: 1rem !important; // sass-lint:disable-line no-important
 }
 
 .marg-bot-15 {
@@ -115,7 +118,7 @@
 }
 
 .marg-right-05 {
-  margin-right: 0.5rem;
+  margin-right: .5rem;
 }
 
 .marg-right-1 {
@@ -127,70 +130,79 @@
 }
 
 .marg-left-05 {
-  margin-left: 0.5rem;
+  margin-left: .5rem;
 }
 
 .marg-left-1 {
   margin-left: 1rem;
 }
 
-/**
- * Coloring and typography
- */
+// Coloring and typography
+
 .black {
-  background: black;
+  background: $black;
 }
 
 .white {
-  background: white;
+  background: $white;
 }
 
 .black-text-important {
-  color: black !important;
+  color: $black !important; // sass-lint:disable-line no-important
 
   &:hover,
   &:active,
   &:visited,
   &:focus {
-    color: black !important;
+    color: $black !important; // sass-lint:disable-line no-important
   }
 }
 
 .white-text-important {
-  color: white !important;
+  color: $white !important; // sass-lint:disable-line no-important
 
   &:hover,
   &:active,
   &:visited,
   &:focus {
-    color: white !important;
+    color: $white !important; // sass-lint:disable-line no-important
   }
 }
 
 .black-text,
-a.black-text {
-  color: black;
+a.black-text { // sass-lint:disable-line no-qualifying-elements force-element-nesting
+  color: $black;
 }
 
 .white-text,
-a.white-text {
-  color: white;
+a.white-text { // sass-lint:disable-line no-qualifying-elements force-element-nesting
+  color: $white;
 }
 
-.black-text-hover:hover,
-a.black-text-hover:hover {
-  color: black;
+.black-text-hover,
+a.black-text-hover { // sass-lint:disable-line no-qualifying-elements force-element-nesting
+  &:hover {
+    color: $black;
+  }
 }
 
-.white-text-hover:hover,
-a.white-text-hover:hover {
-  color: white;
+.white-text-hover,
+a.white-text-hover { // sass-lint:disable-line no-qualifying-elements force-element-nesting
+  &:hover {
+    color: $white;
+  }
 }
 
 .no-decoration,
-a.no-decoration,
-a.no-decoration:hover {
+a.no-decoration { // sass-lint:disable-line no-qualifying-elements force-element-nesting
   text-decoration: none;
+
+  &:hover,
+  &:focus,
+  &:active,
+  &:visited {
+    text-decoration: none;
+  }
 }
 
 .caps {
@@ -202,29 +214,27 @@ a.no-decoration:hover {
 }
 
 .normal {
-  font-weight: normal !important;
+  font-weight: normal !important; // sass-lint:disable-line no-important
 }
 
 .italic {
   font-style: italic;
 }
 
-/**
- * Further functionallity
- */
+// Further functionality
+
 .cursor,
 button {
   cursor: pointer;
-  cursor: hand;
+  cursor: hand; // sass-lint:disable-line no-duplicate-properties
 }
 
 .animate {
-  transition: all 0.2s ease !important;
+  transition: all .2s ease !important; // sass-lint:disable-line no-important no-transition-all
 }
 
-/**
- * Positioning
- */
+//  Positioning
+
 .absolute {
   position: absolute;
 
@@ -242,8 +252,8 @@ button {
 }
 
 .inline {
-  display: inline-block !important;
-  width: auto !important;
+  display: inline-block !important; // sass-lint:disable-line no-important
+  width: auto !important; // sass-lint:disable-line no-important
 }
 
 .block {
@@ -266,15 +276,11 @@ button {
   text-align: right;
 }
 
-.left {
-  text-align: left;
-}
-
 .float-right {
   float: right;
 }
 
 .center {
-  width: 100%;
   text-align: center;
+  width: 100%;
 }

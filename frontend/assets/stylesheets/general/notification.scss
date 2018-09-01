@@ -1,23 +1,22 @@
-/**
- * Styling flash notifications
- */
+// Styling flash notifications
+
 .notification {
   position: fixed;
-  top: 4.6rem;
   right: 1rem;
+  top: 4.6rem;
+  transition: right .2s ease;
   z-index: 10;
-  transition: all 0.2s ease;
 
   &.hidden {
-    right: -50rem;
+    right: -50;
   }
 
   .alert {
     border-width: 2px;
-    box-shadow: 0rem 0.1rem 0.15rem rgba(0, 0, 0, 0.05);
+    box-shadow: 0 .1rem .15rem $lighter-shadow;
 
     p {
-      margin-bottom: 0rem;
+      margin-bottom: 0;
     }
   }
 }

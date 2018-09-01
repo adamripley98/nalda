@@ -1,26 +1,24 @@
-/**
- * Style sorting options
- */
+// Style sorting options
+
 .sort-options {
-  width: 100%;
   margin-bottom: 1rem;
+  width: 100%;
 
   .sort-option {
-    font-weight: bold;
-    display: inline-block;
-    padding: 0rem 0.5rem;
     color: $gray;
-    opacity: 0.5;
-    min-width: 9rem;
-    cursor: hand;
     cursor: pointer;
+    display: inline-block;
+    font-weight: bold;
+    min-width: 9rem;
+    opacity: .5;
+    padding: 0 .5rem;
 
     .fa {
-      margin-left: 0.25rem;
-      transition: all 0.2s ease;
+      margin-left: .25rem;
+      transition: transform .2s ease;
 
       &.rotated {
-        transform: rotate(180deg) translateY(-0.2rem);;
+        transform: rotate(180deg) translateY(-.2rem);
       }
     }
 
