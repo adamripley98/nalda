@@ -4,13 +4,18 @@
   "description": "Nalda",
   "main": "server.js",
   "scripts": {
+    "clear-hot-update": "find . -name '*.hot-update.json' -delete",
     "build": "webpack --config webpack.prod.config.js",
+    "js-lint": "eslint server.js backend/**/*.js frontend/**/*.js",
+    "sass-lint": "sass-lint -c .sass-lint.yml 'frontend/**/*.scss' -v -q",
+    "lint": "yarn js-lint && yarn sass-lint",
     "dev": "source env.sh && concurrently 'yarn frontend' 'yarn backend'",
     "frontend": "webpack -d --watch",
     "backend": "nodemon server.js",
     "go": "nodemon --exec npm start",
     "start": "NODE_ENV=production node server.js",
-    "test": "mocha --compilers js:babel-core/register ./test/**/*.js --require ignore-styles"
+    "test": "mocha --compilers js:babel-core/register ./test/**/*.js --require ignore-styles",
+    "pre-commit": "yarn lint"
   },
   "author": "Adam Ripley, Cameron Cabo",
   "license": "ISC",
@@ -71,6 +76,7 @@
     "eslint-plugin-react": "^7.11.1",
     "eslint-watch": "^4.0.2",
     "file-loader": "^1.1.11",
+    "husky": "^0.14.3",
     "ignore-styles": "^5.0.1",
     "install": "^0.11.0",
     "moment-locales-webpack-plugin": "^1.0.7",
