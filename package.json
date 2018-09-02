@@ -14,14 +14,14 @@
     "backend": "nodemon server.js",
     "go": "nodemon --exec npm start",
     "start": "NODE_ENV=production node server.js",
-    "test": "mocha --compilers js:babel-core/register ./test/**/*.js --require ignore-styles",
+    "test": "mocha --compilers js:babel-core/register ./test/**/*.js --require ignore-styles"
   },
   "author": "Adam Ripley, Cameron Cabo",
   "license": "ISC",
   "husky": {
     "hooks": {
       "pre-commit": "yarn lint"
-    },
+    }
   },
   "dependencies": {
     "@sendgrid/mail": "^6.2.1",
@@ -80,7 +80,7 @@
     "eslint-plugin-react": "^7.11.1",
     "eslint-watch": "^4.0.2",
     "file-loader": "^1.1.11",
-    "husky": "^0.14.3",
+    "husky": "next",
     "ignore-styles": "^5.0.1",
     "install": "^0.11.0",
     "moment-locales-webpack-plugin": "^1.0.7",
