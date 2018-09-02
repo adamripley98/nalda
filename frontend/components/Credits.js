@@ -4,9 +4,7 @@ import React from 'react';
 // Import components
 import Tags from './shared/Tags';
 
-/**
- * Component to render site credits
- */
+// Component to render site credits
 const Credits = () => {
   // Update the title
   window.scrollTo(0, 0);
@@ -26,10 +24,10 @@ const Credits = () => {
         <a href="http://www.adamripley.com">
           Adam Ripley
         </a>
-         &nbsp; for Nalda through &nbsp;
-         <a href="https://www.riplo.io">
-           Riplo Ventures
-         </a>.
+        &nbsp; for Nalda through &nbsp;
+        <a href="https://www.riplo.io">
+          Riplo Ventures
+        </a>.
       </p>
     </div>
   );

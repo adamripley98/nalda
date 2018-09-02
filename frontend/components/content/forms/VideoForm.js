@@ -1,3 +1,4 @@
+/* global google */
 import React from 'react';
 import Medium from '../../shared/Medium';
 import autosize from 'autosize';
@@ -13,13 +14,7 @@ import Tags from '../../shared/Tags';
 // Import actions
 import {notifyMessage} from '../../../actions/notification';
 
-/**
- * Component to render the new video form
- */
 class VideoForm extends React.Component {
-  /**
-   * Constructor method
-   */
   constructor(props) {
     super(props);
     this.state = {
@@ -40,9 +35,6 @@ class VideoForm extends React.Component {
     this.inputValid = this.inputValid.bind(this);
   }
 
-  /**
-   * Handle resizing textarea
-   */
   componentDidMount() {
     window.scrollTo(0, 0);
 
@@ -54,12 +46,9 @@ class VideoForm extends React.Component {
     const options = {
       componentRestrictions: {country: 'us'},
     };
-    new google.maps.places.Autocomplete(location, options);
+    const marker = new google.maps.places.Autocomplete(location, options);
   }
 
-  /**
-   * Helper method to handle a change to the title state
-   */
   handleChangeTitle(event) {
     this.setState({
       title: event.target.value,

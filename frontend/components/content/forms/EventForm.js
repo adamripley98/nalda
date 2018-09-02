@@ -1,3 +1,4 @@
+/* global google */
 // Import frameworks
 import React from 'react';
 import autosize from 'autosize';

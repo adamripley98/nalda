@@ -9,13 +9,8 @@ import axios from 'axios';
 import ErrorMessage from '../../shared/ErrorMessage';
 import Blurb from '../../shared/Blurb';
 
-/**
- * Component to render the form to review applications
- */
+// Component to render the form to review applications
 class ReviewForm extends React.Component {
-  /**
-   * Constructor method
-   */
   constructor(props) {
     super(props);
 
@@ -36,52 +31,34 @@ class ReviewForm extends React.Component {
     this.handleClickForm = this.handleClickForm.bind(this);
   }
 
-  /**
-   * Handle when the component mounts
-   */
   componentDidMount() {
     autosize(document.querySelectorAll('textarea'));
   }
 
-  /**
-   * Handle change to rating state
-   */
   handleChangeRating(event) {
     this.setState({
       rating: event.target.value,
     });
   }
 
-  /**
-   * Handle change to title state
-   */
   handleChangeTitle(event) {
     this.setState({
       title: event.target.value,
     });
   }
 
-  /**
-   * Handle change to content state
-   */
   handleChangeContent(event) {
     this.setState({
       content: event.target.value,
     });
   }
 
-  /**
-   * Handle when the form is first clicked
-   */
   handleClickForm() {
     this.setState({
       active: true,
     });
   }
 
-  /**
-   * Handle when a user submits the form
-   */
   handleSubmit(event) {
     // Prevent the default form action
     event.preventDefault();
@@ -102,28 +79,25 @@ class ReviewForm extends React.Component {
         userId: this.props.userId,
         listingId: this.props.listingId,
       })
-      .then(() => {
-        // Calls parent component (Listing.js) method to display new review
-        this.props.updateReviews();
+        .then(() => {
+          // Calls parent component (Listing.js) method to display new review
+          this.props.updateReviews();
 
-        // Clear fields after submission
-        this.setState({
-          rating: 0.0,
-          title: '',
-          content: '',
+          // Clear fields after submission
+          this.setState({
+            rating: 0.0,
+            title: '',
+            content: '',
+          });
+        })
+        .catch((err) => {
+          this.setState({
+            error: err.response.data.error || err.response.data,
+          });
         });
-      })
-      .catch((err) => {
-        this.setState({
-          error: err.response.data.error || err.response.data,
-        });
-      });
     }
   }
 
-  /**
-   * Function to render the component
-   */
   render() {
     // If the user is not logged in, they cannot leave a review.
     // Thus, the form does not display but rather text prompting the user
@@ -218,7 +192,7 @@ const mapStateToProps = state => {
 
 // Redux config
 ReviewForm = connect(
-    mapStateToProps,
+  mapStateToProps,
 )(ReviewForm);
 
 export default ReviewForm;

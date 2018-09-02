@@ -18,7 +18,6 @@ import ErrorMessage from '../shared/ErrorMessage';
  * Component to render the form for a user logging in
  */
 class Login extends Component {
-    // Constructor method
   constructor(props) {
     super(props);
     this.state = {
@@ -29,16 +28,12 @@ class Login extends Component {
       success: '',
     };
 
-    // Bindings so 'this' refers to component
     this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
     this.handleChangeEmail = this.handleChangeEmail.bind(this);
     this.handleChangePassword = this.handleChangePassword.bind(this);
     this.handlePasswordReset = this.handlePasswordReset.bind(this);
   }
 
-  /**
-   * When the component mounts
-   */
   componentDidMount() {
     window.scrollTo(0, 0);
   }
@@ -105,25 +100,25 @@ class Login extends Component {
     axios.post('/api/forgot', {
       username: this.state.username,
     })
-    .then((resp) => {
-      if (resp.data.success) {
-        this.setState({
-          success: 'Please check your email for a link to reset your password.',
-          error: '',
-        });
-      } else {
-        this.setState({
-          error: resp.data.error,
-        });
-      }
-    })
-    .catch((err) => {
-      if (err) {
-        this.setState({
-          error: err.message,
-        });
-      }
-    });
+      .then((resp) => {
+        if (resp.data.success) {
+          this.setState({
+            success: 'Please check your email for a link to reset your password.',
+            error: '',
+          });
+        } else {
+          this.setState({
+            error: resp.data.error,
+          });
+        }
+      })
+      .catch((err) => {
+        if (err) {
+          this.setState({
+            error: err.message,
+          });
+        }
+      });
   }
 
     // Handle when a user types into the email

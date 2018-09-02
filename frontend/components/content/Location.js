@@ -1,3 +1,4 @@
+/* global $, google */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
@@ -10,6 +11,7 @@ class Location extends Component {
           zoom: 17,
           center: this.props.location,
         });
+
         var marker = new google.maps.Marker({
           position: this.props.location,
           map: map

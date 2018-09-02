@@ -1,3 +1,4 @@
+/* global $ */
 // Import frameworks
 import React from 'react';
 import axios from 'axios';

@@ -1,3 +1,5 @@
+/* global $ */
+
 // Import frameworks
 import React from 'react';
 import axios from 'axios';
@@ -22,17 +24,17 @@ class Video extends React.Component {
 
     // Set the state with dummy data
     this.state = {
-      title: "",
-      url: "",
-      description: "",
+      title: '',
+      url: '',
+      description: '',
       pending: true,
       error: '',
       canModify: false,
       redirectToHome: false,
       author: {
-        name: "",
+        name: '',
         _id: null,
-        profilePicture: "",
+        profilePicture: '',
       },
     };
 
@@ -54,7 +56,7 @@ class Video extends React.Component {
         this.setState({
           ...res.data.video,
           author: res.data.author,
-          error: "",
+          error: '',
           pending: false,
           canModify: res.data.canModify,
         });
@@ -70,7 +72,7 @@ class Video extends React.Component {
           this.setState({
             error: err.response.data.error || err.response.data,
             pending: false,
-            deleteError: "",
+            deleteError: '',
             deletePending: false,
           });
         }
@@ -89,23 +91,23 @@ class Video extends React.Component {
 
     // Post to backend
     axios.delete(`/api/videos/${id}`)
-    .then(() => {
-      // If the request was successful
-      // Collapse the modal upon success
-      $('#deleteModal').modal('toggle');
+      .then(() => {
+        // If the request was successful
+        // Collapse the modal upon success
+        $('#deleteModal').modal('toggle');
 
-      // Update the state
-      this.setState({
-        redirectToHome: true,
-        deletePending: false,
+        // Update the state
+        this.setState({
+          redirectToHome: true,
+          deletePending: false,
+        });
+      })
+      .catch(err => {
+        this.setState({
+          deleteError: err.response.data.error || err.response.data,
+          deletePending: false,
+        });
       });
-    })
-    .catch(err => {
-      this.setState({
-        deleteError: err.response.data.error || err.response.data,
-        deletePending: false,
-      });
-    });
   }
 
   // Helper method to render buttons to edit and delete the video

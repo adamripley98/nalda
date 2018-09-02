@@ -7,9 +7,6 @@ import axios from 'axios';
 import Tags from './shared/Tags';
 import ErrorMessage from './shared/ErrorMessage';
 
-/**
- * Component for contacting Nalda
- */
 class Contact extends Component {
   // Constructor method
   constructor(props) {
@@ -17,10 +14,10 @@ class Contact extends Component {
 
     // Set the state
     this.state = {
-      name: "",
-      email: "",
-      message: "",
-      error: "",
+      name: '',
+      email: '',
+      message: '',
+      error: '',
       success: '',
     };
 
@@ -73,7 +70,7 @@ class Contact extends Component {
     } else {
       // Remove any errors from a prior attempt
       this.setState({
-        error: "",
+        error: '',
       });
       // Send request to backend
       axios.post('/api/contact', {
@@ -81,21 +78,21 @@ class Contact extends Component {
         email: this.state.email,
         message: this.state.message,
       })
-      .then(() => {
-        // Display success and clear fields
-        this.setState({
-          success: 'Your message has been sent!',
-          error: '',
-          name: '',
-          email: '',
-          message: '',
+        .then(() => {
+          // Display success and clear fields
+          this.setState({
+            success: 'Your message has been sent!',
+            error: '',
+            name: '',
+            email: '',
+            message: '',
+          });
+        })
+        .catch(error => {
+          this.setState({
+            error: error.response.data.error || error.response.data,
+          });
         });
-      })
-      .catch(error => {
-        this.setState({
-          error: error.response.data.error || error.response.data,
-        });
-      });
     }
   }
 

@@ -1,3 +1,5 @@
+/* global google */
+
 // Import frameworks
 import React from 'react';
 import autosize from 'autosize';
@@ -16,10 +18,10 @@ import Medium from '../../shared/Medium';
 import Tags from '../../shared/Tags';
 
 // Import helper functions
-import {processImg, getTargetSize} from '../../../helperMethods/imageUploading';
+import { processImg, getTargetSize } from '../../../helperMethods/imageUploading';
 
 // Import actions
-import {notifyMessage} from '../../../actions/notification';
+import { notifyMessage } from '../../../actions/notification';
 
 // Import SVGs
 import CashOnly from '../../../assets/images/cash-only.svg';
@@ -31,13 +33,7 @@ import Waiter from '../../../assets/images/waiter.svg';
 import Wifi from '../../../assets/images/wifi.svg';
 import Wink from '../../../assets/images/wink.svg';
 
-/**
- * Component to render the new listing form
- */
 class ListingForm extends React.Component {
-  /**
-   * Constructor method
-   */
   constructor(props) {
     super(props);
     this.state = {
@@ -140,9 +136,6 @@ class ListingForm extends React.Component {
     this.onDrop = this.onDrop.bind(this);
   }
 
-  /**
-   * When the component mounts
-   */
   componentDidMount() {
     window.scrollTo(0, 0);
 
@@ -154,57 +147,39 @@ class ListingForm extends React.Component {
     const options = {
       componentRestrictions: {country: 'us'},
     };
-    new google.maps.places.Autocomplete(location, options);
+    const marker = new google.maps.places.Autocomplete(location, options);
   }
 
-  /**
-   * Helper method to handle a change to the title state
-   */
   handleChangeTitle(event) {
     this.setState({
       title: event.target.value,
     });
   }
 
-  /**
-   * Helper method to handle a change to the description state
-   */
   handleChangeDescription(event) {
     this.setState({
       description: event.target.value,
     });
   }
 
-  /**
-   * Helper method to handle a change to the Nalda's Favorite state
-   */
   handleChangeNaldaFavorite(event) {
     this.setState({
       naldaFavorite: event.target.value,
     });
   }
 
-  /**
-   * Helper method to handle a change to the image state
-   */
   handleChangeImage(event) {
     this.setState({
       image: event.target.value,
     });
   }
 
-  /**
-   * Helper method to handle a change to the rating state
-   */
   handleChangeRating(event) {
     this.setState({
       rating: event.target.value,
     });
   }
 
-  /**
-   * Helper method to handle a change to the price state
-   */
   handleChangePrice(event) {
     this.setState({
       price: event.target.value,
@@ -224,28 +199,26 @@ class ListingForm extends React.Component {
     currentHours[day][startOrFinish] = event.target.value;
 
     // Update the finish if the start is now later than the finish
-    if (startOrFinish === "start" && (
-          !currentHours[day].finish ||
-          currentHours[day].finish < event.target.value
-        )
-    ) {
+    if (startOrFinish === 'start' && (
+      !currentHours[day].finish ||
+      currentHours[day].finish < event.target.value
+    )) {
       currentHours[day].finish = event.target.value;
     }
+
     this.setState({
       hours: currentHours,
     });
   }
 
-  /**
-   * Handle change additional amenities
-   */
+  // Handle change additional amenities
   handleChangeAdditionalAmenities(event) {
     // Prevent the default action
     event.preventDefault();
 
     // Create the tag array, removing whitespace and uppercase letters
     const additionalAmenitiesString = event.target.value;
-    let additionalAmenities = additionalAmenitiesString.split(",").map(tag => tag.trim().toLowerCase());
+    let additionalAmenities = additionalAmenitiesString.split(',').map(tag => tag.trim().toLowerCase());
 
     // Remove all duplicate items
     additionalAmenities = additionalAmenities.filter((value, index, self) => {
@@ -521,7 +494,6 @@ class ListingForm extends React.Component {
    * Helper method to check if all input is valid, returns true or false
    * Frontend validations
    */
-   // TODO check for hero image
   inputValid() {
     // Begin error checking
     if (!this.state.title) {
@@ -571,10 +543,12 @@ class ListingForm extends React.Component {
       });
       return false;
     }
+
     // Set the error to the empty string if everything is valid
     this.setState({
-      error: "",
+      error: '',
     });
+
     return true;
   }
 

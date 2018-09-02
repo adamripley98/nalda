@@ -29,6 +29,6 @@ persistStore(
 );
 
 render(
-    <Root store={store} persistor={persistor} />,
-    document.getElementById('root')
+  <Root store={store} persistor={persistor} />,
+  document.getElementById('root')
 );

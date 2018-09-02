@@ -121,7 +121,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Using the flash middleware provided by connect-flash to store messages in session
- // and displaying in templates
+// and displaying in templates
 const flash = require('connect-flash');
 app.use(flash());
 
@@ -215,8 +215,8 @@ passport.use(
         }
       });
     });
-  }
-));
+  })
+);
 
 // Google OAuth Strategy setup
 passport.use(new GoogleStrategy({
@@ -309,8 +309,10 @@ app.get('*', (request, response) => {
   response.sendFile(__dirname + '/public/index.html'); // For React/Redux
 });
 
-app.listen(PORT, error => {
-  error
-  ? console.error(error)
-  : console.info(`==> 🌎 Listening on port ${PORT}. Visit http://localhost:${PORT}/ in your browser.`);
-});
+app.listen(PORT, error => (
+  error ? (
+    console.error(error)
+  ) : (
+    console.info(`==> 🌎 Listening on port ${PORT}. Visit http://localhost:${PORT}/ in your browser.`)
+  )
+));
