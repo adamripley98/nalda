@@ -35,35 +35,35 @@ const ResizeAndUploadImage = (image, keyName, newSize, title, cb) => {
 
   // Resize to be appropriate size
   sharp(imageConverted)
-  .resize(newSize, null)
-  .toBuffer()
-  .then(resized => {
+    .resize(newSize, null)
+    .toBuffer()
+    .then(resized => {
     // Create bucket
-    var params = {
-      Bucket: AWS_BUCKET_NAME,
-      Key: `${keyName}/${title ? title + '/' : null}${uuid()}`,
-      ContentType: 'image/jpeg',
-      Body: resized,
-      ContentEncoding: 'base64',
-      ACL: 'public-read',
-    };
-    // Upload photo
-    s3bucket.upload(params, (errUpload, data) => {
-      if (errUpload) {
+      var params = {
+        Bucket: AWS_BUCKET_NAME,
+        Key: `${keyName}/${title ? title + '/' : null}${uuid()}`,
+        ContentType: 'image/jpeg',
+        Body: resized,
+        ContentEncoding: 'base64',
+        ACL: 'public-read',
+      };
+      // Upload photo
+      s3bucket.upload(params, (errUpload, data) => {
+        if (errUpload) {
+          cb({
+            success: false,
+            error: 'Error uploading image.',
+          });
+          return;
+        }
         cb({
-          success: false,
-          error: 'Error uploading image.',
+          success: true,
+          error: '',
+          resizedImg: data.Location,
         });
         return;
-      }
-      cb({
-        success: true,
-        error: '',
-        resizedImg: data.Location,
       });
-      return;
     });
-  });
 };
 
 // Helper method to delete images from s3

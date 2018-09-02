@@ -26,15 +26,15 @@ module.exports = () => {
   router.get('/', (req, res) => {
     // Pulls articles from mongo
     Listing.find({})
-    .then(listings => {
+      .then(listings => {
       // Send listings back in correct order
-      listings.reverse();
-      // If everything went as planned
-      res.send({listings});
-    })
-    .catch(() => {
-      res.status(404).send({error: 'Error finding listings.'});
-    });
+        listings.reverse();
+        // If everything went as planned
+        res.send({listings});
+      })
+      .catch(() => {
+        res.status(404).send({error: 'Error finding listings.'});
+      });
   });
 
   /**
@@ -48,108 +48,108 @@ module.exports = () => {
     const userId = req.session.passport ? req.session.passport.user : null;
 
     Listing.findById(id)
-    .then(listing => {
-      if (!listing) {
-        res.status(404).send({error: 'Error pulling listing.'});
-        return;
-      }
-      User.findById(listing.author)
-      .then(author => {
-        if (!author) {
+      .then(listing => {
+        if (!listing) {
           res.status(404).send({error: 'Error pulling listing.'});
           return;
         }
-        // Default: users can't change listing
-        let canModify = false;
-        User.findById(userId)
-        .then(user => {
-          if (user) {
-            // Check if given user is either an admin or the curator of the listing
-            if (user.userType === 'admin' || user.userType === 'curator') {
-              canModify = true;
-            }
-          }
-          // Go through each review and change the author data being passed to frontend
-          const reviews = [];
-          let reviewError = "";
-          async.each(listing.reviews, (review, callback) => {
-            // Copy the review object
-            const newRev = {
-              _id: review._id,
-              authorId: review.authorId,
-              createdAt: review.createdAt,
-              content: review.content,
-              title: review.title,
-              rating: review.rating,
-              author: {
-                name: "",
-                _id: "",
-                profilePicture: "",
-              },
-              canChange: false,
-            };
-
-            // Find author in Mongo
-            User.findById(review.authorId)
-            .then(revAuthor => {
-              if (!revAuthor) {
-                reviewError = 'Cannot find author.';
-              }
-              // Successfully found author, update so review contains author's name
-              newRev.author = {
-                name: revAuthor.name,
-                _id: revAuthor._id,
-                profilePicture: revAuthor.profilePicture,
-              };
-
-              // Check if user has review delete privileges: admin, listing author, or review author
-              if (canModify || userId === review.authorId) {
-                newRev.canChange = true;
-              }
-
-              // Return the review
-              reviews.push(newRev);
-              callback();
-            })
-            .catch(() => {
-              reviewError = 'Cannot find author.';
-            });
-          }, asyncErr => {
-            if (asyncErr) {
-              res.status(404).send({error: 'Error getting content'});
+        User.findById(listing.author)
+          .then(author => {
+            if (!author) {
+              res.status(404).send({error: 'Error pulling listing.'});
               return;
             }
-            // Check for error with reviews
-            if (reviewError) {
-              res.status(404).send({error: reviewError});
-              return;
-            }
-            // Update the reviews
-            listing.reviews = null;
-            // Send back data
-            res.send({
-              author,
-              listing,
-              reviews: reviews,
-              timestamp: listing._id.getTimestamp(),
-              canModify,
-            });
+            // Default: users can't change listing
+            let canModify = false;
+            User.findById(userId)
+              .then(user => {
+                if (user) {
+                  // Check if given user is either an admin or the curator of the listing
+                  if (user.userType === 'admin' || user.userType === 'curator') {
+                    canModify = true;
+                  }
+                }
+                // Go through each review and change the author data being passed to frontend
+                const reviews = [];
+                let reviewError = "";
+                async.each(listing.reviews, (review, callback) => {
+                  // Copy the review object
+                  const newRev = {
+                    _id: review._id,
+                    authorId: review.authorId,
+                    createdAt: review.createdAt,
+                    content: review.content,
+                    title: review.title,
+                    rating: review.rating,
+                    author: {
+                      name: "",
+                      _id: "",
+                      profilePicture: "",
+                    },
+                    canChange: false,
+                  };
+
+                  // Find author in Mongo
+                  User.findById(review.authorId)
+                    .then(revAuthor => {
+                      if (!revAuthor) {
+                        reviewError = 'Cannot find author.';
+                      }
+                      // Successfully found author, update so review contains author's name
+                      newRev.author = {
+                        name: revAuthor.name,
+                        _id: revAuthor._id,
+                        profilePicture: revAuthor.profilePicture,
+                      };
+
+                      // Check if user has review delete privileges: admin, listing author, or review author
+                      if (canModify || userId === review.authorId) {
+                        newRev.canChange = true;
+                      }
+
+                      // Return the review
+                      reviews.push(newRev);
+                      callback();
+                    })
+                    .catch(() => {
+                      reviewError = 'Cannot find author.';
+                    });
+                }, asyncErr => {
+                  if (asyncErr) {
+                    res.status(404).send({error: 'Error getting content'});
+                    return;
+                  }
+                  // Check for error with reviews
+                  if (reviewError) {
+                    res.status(404).send({error: reviewError});
+                    return;
+                  }
+                  // Update the reviews
+                  listing.reviews = null;
+                  // Send back data
+                  res.send({
+                    author,
+                    listing,
+                    reviews: reviews,
+                    timestamp: listing._id.getTimestamp(),
+                    canModify,
+                  });
+                });
+              })
+              .catch(() => {
+                res.status(404).send({error: 'Error pulling listing.'});
+                return;
+              });
+          })
+          .catch(() => {
+            res.status(404).send({error: 'Error pulling listing.'});
+            return;
           });
-        })
-        .catch(() => {
-          res.status(404).send({error: 'Error pulling listing.'});
-          return;
-        });
       })
       .catch(() => {
         res.status(404).send({error: 'Error pulling listing.'});
         return;
       });
-    })
-    .catch(() => {
-      res.status(404).send({error: 'Error pulling listing.'});
-      return;
-    });
   });
 
   /**
@@ -167,7 +167,7 @@ module.exports = () => {
   router.post('/:id/edit', (req, res) => {
     // Check to make sure user is an admin or the author
     CuratorOrAdminCheck(req, (authRes) => {
-        // Auth error
+      // Auth error
       if (!authRes.success) {
         res.status(404).send({error: authRes.error});
         return;
@@ -257,60 +257,60 @@ module.exports = () => {
           }
           // Find the author
           User.findById(userId)
-          .then(author => {
-            if (!author) {
-              res.status(404).send({error: 'Error editting listing'});
-              return;
-            }
-            Listing.findById(listingId)
-            .then(listing => {
-              // Make changes to given listing
-              listing.title = title;
-              listing.description = description;
-              listing.naldaFavorite = naldaFavorite;
-              listing.image = mainImg;
-              listing.imagePreview = previewImg;
-              listing.images = newImages;
-              listing.rating = rating;
-              listing.price = price;
-              listing.location = location;
-              listing.categories = categories;
-              listing.amenities = amenities;
-              listing.additionalAmenities = additionalAmenities;
-              listing.hours = hours;
-              listing.website = website;
-              listing.updatedAt = new Date().getTime();
-
-              // Save changes in mongo
-              listing.save()
-              .then(() => {
-                res.send({listing});
-                return;
-              })
-              .catch(() => {
+            .then(author => {
+              if (!author) {
                 res.status(404).send({error: 'Error editting listing'});
                 return;
-              });
+              }
+              Listing.findById(listingId)
+                .then(listing => {
+                  // Make changes to given listing
+                  listing.title = title;
+                  listing.description = description;
+                  listing.naldaFavorite = naldaFavorite;
+                  listing.image = mainImg;
+                  listing.imagePreview = previewImg;
+                  listing.images = newImages;
+                  listing.rating = rating;
+                  listing.price = price;
+                  listing.location = location;
+                  listing.categories = categories;
+                  listing.amenities = amenities;
+                  listing.additionalAmenities = additionalAmenities;
+                  listing.hours = hours;
+                  listing.website = website;
+                  listing.updatedAt = new Date().getTime();
+
+                  // Save changes in mongo
+                  listing.save()
+                    .then(() => {
+                      res.send({listing});
+                      return;
+                    })
+                    .catch(() => {
+                      res.status(404).send({error: 'Error editting listing'});
+                      return;
+                    });
+                })
+                .catch(() => {
+                  res.status(404).send({error: 'Error editting listing'});
+                  return;
+                });
             })
             .catch(() => {
               res.status(404).send({error: 'Error editting listing'});
               return;
             });
-          })
-          .catch(() => {
-            res.status(404).send({error: 'Error editting listing'});
-            return;
-          });
         });
       })
-      .catch(() => {
-        res.status(404).send({error: 'Error editting listing'});
-        return;
-      });
+        .catch(() => {
+          res.status(404).send({error: 'Error editting listing'});
+          return;
+        });
     });
   });
 
-/**
+  /**
  * Route to handle deleting a specific listing
  */
   router.delete('/:id', (req, res) => {
@@ -319,74 +319,74 @@ module.exports = () => {
 
     // Check to make sure user is an admin or the author
     CuratorOrAdminCheck(req, (authRes) => {
-        // Auth error
+      // Auth error
       if (!authRes.success) {
         res.status(404).send({error: authRes.error});
         return;
       }
       Listing.findById(listingId)
-      .then(listing => {
-        listing.remove()
-        .then(() => {
-          Homepage.find({})
-          .then(homepage => {
-            const home = homepage[0];
-            const banner = home.banner.slice();
-            // Remove content from banner
-            for (var j = 0; j < banner.length; j++) {
-              if (banner[j].contentId === listingId) {
-                banner.splice(j, 1);
-                break;
-              }
-            }
-            // Delete component from homepage
-            const components = home.components.slice();
-            components.forEach((comp, i) => {
-              comp.content.forEach((content, k) => {
-                if (content.contentId === listingId) {
-                  components[i].content.splice(k, 1);
-                }
-              });
-            });
-            // Save changes
-            home.banner = banner;
-            home.components = components;
-            home.save()
+        .then(listing => {
+          listing.remove()
             .then(() => {
-              // Delete images from AWS
-              DeleteImages('listingpictures', listing.title, resp => {
-                if (resp.error) {
-                  res.status(400).send({error: resp.error});
+              Homepage.find({})
+                .then(homepage => {
+                  const home = homepage[0];
+                  const banner = home.banner.slice();
+                  // Remove content from banner
+                  for (var j = 0; j < banner.length; j++) {
+                    if (banner[j].contentId === listingId) {
+                      banner.splice(j, 1);
+                      break;
+                    }
+                  }
+                  // Delete component from homepage
+                  const components = home.components.slice();
+                  components.forEach((comp, i) => {
+                    comp.content.forEach((content, k) => {
+                      if (content.contentId === listingId) {
+                        components[i].content.splice(k, 1);
+                      }
+                    });
+                  });
+                  // Save changes
+                  home.banner = banner;
+                  home.components = components;
+                  home.save()
+                    .then(() => {
+                      // Delete images from AWS
+                      DeleteImages('listingpictures', listing.title, resp => {
+                        if (resp.error) {
+                          res.status(400).send({error: resp.error});
+                          return;
+                        }
+                        // No errors
+                        res.send({'error': ''});
+                        return;
+                      });
+                    })
+                    .catch(() => {
+                      res.status(404).send({error: 'Error deleting listing.'});
+                      return;
+                    });
+                })
+                .catch(() => {
+                  res.status(404).send({error: 'Error deleting listing.'});
                   return;
-                }
-                // No errors
-                res.send({'error': ''});
-                return;
-              });
+                });
             })
             .catch(() => {
               res.status(404).send({error: 'Error deleting listing.'});
               return;
             });
-          })
-          .catch(() => {
-            res.status(404).send({error: 'Error deleting listing.'});
-            return;
-          });
         })
         .catch(() => {
           res.status(404).send({error: 'Error deleting listing.'});
           return;
         });
-      })
-      .catch(() => {
-        res.status(404).send({error: 'Error deleting listing.'});
-        return;
-      });
     });
   });
 
-/**
+  /**
  * Route to handle creating new listings
  * @param title
  * @param description
@@ -484,14 +484,14 @@ module.exports = () => {
 
             // Save the new article in mongo
             newListing.save()
-            .then(listing => {
+              .then(listing => {
               // Send the data along if it was successfully stored
-              res.send({listing});
-            })
-            .catch(() => {
-              res.status(400).send({error: 'Error posting listing.'});
-              return;
-            });
+                res.send({listing});
+              })
+              .catch(() => {
+                res.status(400).send({error: 'Error posting listing.'});
+                return;
+              });
           });
         });
       });
@@ -503,26 +503,26 @@ module.exports = () => {
     const categoryName = req.params.categoryName;
     const filteredListings = [];
     Listing.find({})
-    .then(listings => {
+      .then(listings => {
       // Loop through all listings to check if filters match
-      async.eachSeries(listings, (listing, cb) => {
-        const categories = listing.categories;
-        if (categories[categoryName]) {
-          filteredListings.push(listing);
-        }
-        cb();
-      }, (asyncErr) => {
-        if (asyncErr) {
-          res.status(400).send({error: 'Error finding listings.'});
+        async.eachSeries(listings, (listing, cb) => {
+          const categories = listing.categories;
+          if (categories[categoryName]) {
+            filteredListings.push(listing);
+          }
+          cb();
+        }, (asyncErr) => {
+          if (asyncErr) {
+            res.status(400).send({error: 'Error finding listings.'});
+            return;
+          }
+          res.send({filteredListings});
           return;
-        }
-        res.send({filteredListings});
-        return;
+        });
+      })
+      .catch(() => {
+        res.status(400).send({error: 'Error finding listings.'});
       });
-    })
-    .catch(() => {
-      res.status(400).send({error: 'Error finding listings.'});
-    });
   });
 
   return router;

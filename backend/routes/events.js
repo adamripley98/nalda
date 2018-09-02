@@ -188,14 +188,14 @@ module.exports = () => {
 
             // Save the new article in mongo
             newEvent.save()
-            .then(event => {
+              .then(event => {
               // Send the data along if it was successfully stored
-              res.send({event});
-            })
-            .catch(() => {
-              res.status(400).send({error: 'Error posting event.'});
-              return;
-            });
+                res.send({event});
+              })
+              .catch(() => {
+                res.status(400).send({error: 'Error posting event.'});
+                return;
+              });
           });
         });
       });
@@ -206,7 +206,7 @@ module.exports = () => {
   router.post('/:id/edit', (req, res) => {
     // Check to make sure user is an admin or the author
     CuratorOrAdminCheck(req, (authRes) => {
-        // Auth error
+      // Auth error
       if (!authRes.success) {
         res.status(404).send({error: authRes.error});
         return;
@@ -294,54 +294,54 @@ module.exports = () => {
           }
           // Find the author
           User.findById(userId)
-          .then(author => {
-            if (!author) {
-              res.status(404).send({error: 'Error editting event'});
-              return;
-            }
-            Event.findById(eventId)
-            .then(event => {
-              // Make changes to given event
-              event.title = title;
-              event.description = description;
-              event.image = mainImg;
-              event.imagePreview = previewImg;
-              event.images = newImages;
-              event.price = price;
-              event.location = location;
-              event.categories = categories;
-              event.website = website;
-              event.requirements = requirements;
-              event.startDate = startDate;
-              event.endDate = endDate;
-              event.updatedAt = new Date().getTime();
-
-              // Save changes in mongo
-              event.save()
-              .then(() => {
-                res.send({event});
-                return;
-              })
-              .catch(() => {
+            .then(author => {
+              if (!author) {
                 res.status(404).send({error: 'Error editting event'});
                 return;
-              });
+              }
+              Event.findById(eventId)
+                .then(event => {
+                  // Make changes to given event
+                  event.title = title;
+                  event.description = description;
+                  event.image = mainImg;
+                  event.imagePreview = previewImg;
+                  event.images = newImages;
+                  event.price = price;
+                  event.location = location;
+                  event.categories = categories;
+                  event.website = website;
+                  event.requirements = requirements;
+                  event.startDate = startDate;
+                  event.endDate = endDate;
+                  event.updatedAt = new Date().getTime();
+
+                  // Save changes in mongo
+                  event.save()
+                    .then(() => {
+                      res.send({event});
+                      return;
+                    })
+                    .catch(() => {
+                      res.status(404).send({error: 'Error editting event'});
+                      return;
+                    });
+                })
+                .catch(() => {
+                  res.status(404).send({error: 'Error editting event'});
+                  return;
+                });
             })
             .catch(() => {
               res.status(404).send({error: 'Error editting event'});
               return;
             });
-          })
-          .catch(() => {
-            res.status(404).send({error: 'Error editting event'});
-            return;
-          });
         });
       })
-      .catch(() => {
-        res.status(404).send({error: 'Error editting event'});
-        return;
-      });
+        .catch(() => {
+          res.status(404).send({error: 'Error editting event'});
+          return;
+        });
     });
   });
 
@@ -354,70 +354,70 @@ module.exports = () => {
 
     // Check to make sure user is an admin or the author
     CuratorOrAdminCheck(req, (authRes) => {
-        // Auth error
+      // Auth error
       if (!authRes.success) {
         res.status(404).send({error: authRes.error});
         return;
       }
       Event.findById(eventId)
-      .then(event => {
-        event.remove()
-        .then(() => {
-          Homepage.find({})
-          .then(homepage => {
-            const home = homepage[0];
-            const banner = home.banner.slice();
-            // Remove content from banner
-            for (var j = 0; j < banner.length; j++) {
-              if (banner[j].contentId === eventId) {
-                banner.splice(j, 1);
-                break;
-              }
-            }
-            // Delete component from homepage
-            const components = home.components.slice();
-            components.forEach((comp, i) => {
-              comp.content.forEach((content, k) => {
-                if (content.contentId === eventId) {
-                  components[i].content.splice(k, 1);
-                }
-              });
-            });
-            // Save changes
-            home.banner = banner;
-            home.components = components;
-            home.save()
+        .then(event => {
+          event.remove()
             .then(() => {
-              // Delete images from AWS
-              DeleteImages('eventpictures', event.title, resp => {
-                if (resp.error) {
-                  res.status(400).send({error: resp.error});
+              Homepage.find({})
+                .then(homepage => {
+                  const home = homepage[0];
+                  const banner = home.banner.slice();
+                  // Remove content from banner
+                  for (var j = 0; j < banner.length; j++) {
+                    if (banner[j].contentId === eventId) {
+                      banner.splice(j, 1);
+                      break;
+                    }
+                  }
+                  // Delete component from homepage
+                  const components = home.components.slice();
+                  components.forEach((comp, i) => {
+                    comp.content.forEach((content, k) => {
+                      if (content.contentId === eventId) {
+                        components[i].content.splice(k, 1);
+                      }
+                    });
+                  });
+                  // Save changes
+                  home.banner = banner;
+                  home.components = components;
+                  home.save()
+                    .then(() => {
+                      // Delete images from AWS
+                      DeleteImages('eventpictures', event.title, resp => {
+                        if (resp.error) {
+                          res.status(400).send({error: resp.error});
+                          return;
+                        }
+                        // No errors
+                        res.send({'error': ''});
+                        return;
+                      });
+                    })
+                    .catch(() => {
+                      res.status(404).send({error: 'Error deleting event.'});
+                      return;
+                    });
+                })
+                .catch(() => {
+                  res.status(404).send({error: 'Error deleting event.'});
                   return;
-                }
-                // No errors
-                res.send({'error': ''});
-                return;
-              });
+                });
             })
             .catch(() => {
               res.status(404).send({error: 'Error deleting event.'});
               return;
             });
-          })
-          .catch(() => {
-            res.status(404).send({error: 'Error deleting event.'});
-            return;
-          });
         })
         .catch(() => {
           res.status(404).send({error: 'Error deleting event.'});
           return;
         });
-      })
-      .catch(() => {
-        res.status(404).send({error: 'Error deleting event.'});
-        return;
-      });
     });
   });
 

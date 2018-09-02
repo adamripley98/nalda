@@ -31,7 +31,7 @@ module.exports = () => {
         res.status(404).send({error: 'Error finding articles.'});
         return;
       }
-        // Add a timestamp field for sorting
+      // Add a timestamp field for sorting
       fullArticles.forEach((article) => {
         article.createdAt = article._id.getTimestamp();
       });
@@ -114,73 +114,73 @@ module.exports = () => {
 
       // Find the author
       User.findById(userId)
-      .then(author => {
+        .then(author => {
         // Error check
-        if (!author) {
-          res.status(404).send({error: 'You must be an author.'});
-          return;
-        }
-        // Resize main article image
-        ResizeAndUploadImage(image, 'articlepictures', 1920, title, (resp1) => {
-          if (resp1.error) {
-            res.status(404).send({error: resp1.error});
+          if (!author) {
+            res.status(404).send({error: 'You must be an author.'});
             return;
           }
-          // Resize preview article image
-          ResizeAndUploadImage(image, 'articlepictures', 600, title, (resp2) => {
-            if (resp2.error) {
-              res.status(404).send({error: resp2.error});
+          // Resize main article image
+          ResizeAndUploadImage(image, 'articlepictures', 1920, title, (resp1) => {
+            if (resp1.error) {
+              res.status(404).send({error: resp1.error});
               return;
             }
-            // Resize all article images from body
-            const newBody = [];
-            async.eachSeries(body, (comp, cb) => {
-              if (comp.componentType === 'image') {
-                ResizeAndUploadImage(comp.body, 'articlepictures', 1280, title, (resp3) => {
-                  if (resp3.error) {
-                    res.status(404).send({error: resp3.error});
-                    return;
-                  }
-                  newBody.push({componentType: comp.componentType, body: resp3.resizedImg});
-                  cb();
-                });
-              } else {
+            // Resize preview article image
+            ResizeAndUploadImage(image, 'articlepictures', 600, title, (resp2) => {
+              if (resp2.error) {
+                res.status(404).send({error: resp2.error});
+                return;
+              }
+              // Resize all article images from body
+              const newBody = [];
+              async.eachSeries(body, (comp, cb) => {
+                if (comp.componentType === 'image') {
+                  ResizeAndUploadImage(comp.body, 'articlepictures', 1280, title, (resp3) => {
+                    if (resp3.error) {
+                      res.status(404).send({error: resp3.error});
+                      return;
+                    }
+                    newBody.push({componentType: comp.componentType, body: resp3.resizedImg});
+                    cb();
+                  });
+                } else {
                 // If component is not an image, simply add it to body
-                newBody.push({componentType: comp.componentType, body: comp.body});
-                cb();
-              }
-            }, (asyncErr) => {
-              if (asyncErr) {
-                res.status(404).send({error: 'Error posting article.'});
-                return;
-              }
-              // Creates a new article with given params
-              const newArticle = new Article({
-                title,
-                subtitle,
-                image: resp1.resizedImg,
-                imagePreview: resp2.resizedImg,
-                body: newBody,
-                location,
-                author: userId,
-                createdAt: Date.now(),
-                updatedAt: Date.now(),
-              });
-              // Save article
-              newArticle.save()
-              .then(article => {
-                // Successfully send back data
-                res.send({article});
-                return;
-              })
-              .catch(() => {
-                res.status(404).send({error: 'Error posting article.'});
-                return;
+                  newBody.push({componentType: comp.componentType, body: comp.body});
+                  cb();
+                }
+              }, (asyncErr) => {
+                if (asyncErr) {
+                  res.status(404).send({error: 'Error posting article.'});
+                  return;
+                }
+                // Creates a new article with given params
+                const newArticle = new Article({
+                  title,
+                  subtitle,
+                  image: resp1.resizedImg,
+                  imagePreview: resp2.resizedImg,
+                  body: newBody,
+                  location,
+                  author: userId,
+                  createdAt: Date.now(),
+                  updatedAt: Date.now(),
+                });
+                // Save article
+                newArticle.save()
+                  .then(article => {
+                    // Successfully send back data
+                    res.send({article});
+                    return;
+                  })
+                  .catch(() => {
+                    res.status(404).send({error: 'Error posting article.'});
+                    return;
+                  });
               });
             });
           });
         });
-      });
     });
   });
 
@@ -307,48 +307,48 @@ module.exports = () => {
           }
           // Find the author
           User.findById(userId)
-          .then(author => {
-            if (!author) {
-              res.status(404).send({error: 'Error editting article'});
-              return;
-            }
-            // Find article in Mongo
-            Article.findById(articleId, (articleErr, article) => {
-              if (articleErr) {
+            .then(author => {
+              if (!author) {
                 res.status(404).send({error: 'Error editting article'});
                 return;
               }
-              // Make changes to given article
-              article.title = title;
-              article.subtitle = subtitle;
-              article.image = articleImg;
-              article.imagePreview = articlePrevImg;
-              article.body = newBody;
-              article.location = location;
-              article.author = userId;
-              article.updatedAt = new Date().getTime();
-              // Save changes in mongo
-              article.save()
-              .then(() => {
-                // Success
-                res.send({article});
-              })
-              .catch(() => {
-                res.status(404).send({error: 'Error editting article'});
-                return;
+              // Find article in Mongo
+              Article.findById(articleId, (articleErr, article) => {
+                if (articleErr) {
+                  res.status(404).send({error: 'Error editting article'});
+                  return;
+                }
+                // Make changes to given article
+                article.title = title;
+                article.subtitle = subtitle;
+                article.image = articleImg;
+                article.imagePreview = articlePrevImg;
+                article.body = newBody;
+                article.location = location;
+                article.author = userId;
+                article.updatedAt = new Date().getTime();
+                // Save changes in mongo
+                article.save()
+                  .then(() => {
+                    // Success
+                    res.send({article});
+                  })
+                  .catch(() => {
+                    res.status(404).send({error: 'Error editting article'});
+                    return;
+                  });
               });
+            })
+            .catch(() => {
+              res.status(404).send({error: 'Error finding author'});
+              return;
             });
-          })
-          .catch(() => {
-            res.status(404).send({error: 'Error finding author'});
-            return;
-          });
         });
       })
-      .catch(() => {
-        res.status(404).send({error: 'Error editting author'});
-        return;
-      });
+        .catch(() => {
+          res.status(404).send({error: 'Error editting author'});
+          return;
+        });
     });
   });
 
@@ -361,53 +361,53 @@ module.exports = () => {
 
     // Pull specific article from mongo
     Article.findById(id)
-    .then(article => {
-      if (!article) {
-        res.status(404).send({error: "Article not found."});
-        return;
-      }
-      // Fetch author data
-      User.findById(article.author)
-      .then(author => {
-        if (!author) {
+      .then(article => {
+        if (!article) {
           res.status(404).send({error: "Article not found."});
           return;
         }
-        // Default: users can't change article
-        let canModify = false;
-        // Check to see if user is logged in, admin/curator
-        User.findById(req.session.passport ? req.session.passport.user : null)
-        .then(user => {
-          if (user) {
-            // Check if given user is either an admin or the curator of the article
-            if (user.userType === 'admin' || user.userType === 'curator') {
-              canModify = true;
+        // Fetch author data
+        User.findById(article.author)
+          .then(author => {
+            if (!author) {
+              res.status(404).send({error: "Article not found."});
+              return;
             }
-          }
-          res.send({
-            article,
-            author: {
-              name: author.name,
-              profilePicture: author.profilePicture,
-              _id: author._id,
-            },
-            canModify,
+            // Default: users can't change article
+            let canModify = false;
+            // Check to see if user is logged in, admin/curator
+            User.findById(req.session.passport ? req.session.passport.user : null)
+              .then(user => {
+                if (user) {
+                  // Check if given user is either an admin or the curator of the article
+                  if (user.userType === 'admin' || user.userType === 'curator') {
+                    canModify = true;
+                  }
+                }
+                res.send({
+                  article,
+                  author: {
+                    name: author.name,
+                    profilePicture: author.profilePicture,
+                    _id: author._id,
+                  },
+                  canModify,
+                });
+              })
+              .catch(() => {
+                res.status(404).send({error: "Article not found."});
+                return;
+              });
+          })
+          .catch(() => {
+            res.status(404).send({error: "Article not found."});
+            return;
           });
-        })
-        .catch(() => {
-          res.status(404).send({error: "Article not found."});
-          return;
-        });
       })
       .catch(() => {
         res.status(404).send({error: "Article not found."});
         return;
       });
-    })
-    .catch(() => {
-      res.status(404).send({error: "Article not found."});
-      return;
-    });
   });
 
   /**
@@ -426,61 +426,61 @@ module.exports = () => {
       }
       // Find given article
       Article.findById(articleId)
-      .then(article => {
+        .then(article => {
         // User CAN delete articles, remove from mongo
-        article.remove()
-        .then(() => {
-          // Remove it from homepage
-          Homepage.find({})
-          .then((homepage) => {
-            const home = homepage[0];
-            const banner = home.banner.slice();
-            // Remove content from banner
-            for (var j = 0; j < banner.length; j++) {
-              if (banner[j].contentId === articleId) {
-                banner.splice(j, 1);
-                break;
-              }
-            }
-            // Delete component from homepage
-            const components = home.components.slice();
-            components.forEach((comp, i) => {
-              comp.content.forEach((content, k) => {
-                if (content.contentId === articleId) {
-                  components[i].content.splice(k, 1);
-                }
-              });
-            });
-            // Save changes
-            home.banner = banner;
-            home.components = components;
-
-            // Save in mongo
-            home.save()
+          article.remove()
             .then(() => {
-              // On success, return
-              res.send({error: ''});
-              return;
+              // Remove it from homepage
+              Homepage.find({})
+                .then((homepage) => {
+                  const home = homepage[0];
+                  const banner = home.banner.slice();
+                  // Remove content from banner
+                  for (var j = 0; j < banner.length; j++) {
+                    if (banner[j].contentId === articleId) {
+                      banner.splice(j, 1);
+                      break;
+                    }
+                  }
+                  // Delete component from homepage
+                  const components = home.components.slice();
+                  components.forEach((comp, i) => {
+                    comp.content.forEach((content, k) => {
+                      if (content.contentId === articleId) {
+                        components[i].content.splice(k, 1);
+                      }
+                    });
+                  });
+                  // Save changes
+                  home.banner = banner;
+                  home.components = components;
+
+                  // Save in mongo
+                  home.save()
+                    .then(() => {
+                      // On success, return
+                      res.send({error: ''});
+                      return;
+                    })
+                    .catch(() => {
+                      res.status(400).send({error: 'Cannot delete article.'});
+                      return;
+                    });
+                })
+                .catch(() => {
+                  res.status(400).send({error: 'Cannot delete article.'});
+                  return;
+                });
             })
             .catch(() => {
               res.status(400).send({error: 'Cannot delete article.'});
               return;
             });
-          })
-          .catch(() => {
-            res.status(400).send({error: 'Cannot delete article.'});
-            return;
-          });
         })
         .catch(() => {
           res.status(400).send({error: 'Cannot delete article.'});
           return;
         });
-      })
-      .catch(() => {
-        res.status(400).send({error: 'Cannot delete article.'});
-        return;
-      });
     });
   });
 

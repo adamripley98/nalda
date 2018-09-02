@@ -153,7 +153,7 @@ module.exports = () => {
           error: authRes.error,
         });
       } else {
-          // Find user in Mongo
+        // Find user in Mongo
         User.findById(req.session.passport.user, (err, user) => {
           if (err) {
           // If there was an error with the request

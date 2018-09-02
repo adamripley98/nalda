@@ -56,55 +56,55 @@ module.exports = () => {
       }
 
       User.findById(req.session.passport.user)
-      .then(user => {
-        if (!user) {
-          res.status(404).send({error: 'Error editting user.'});
-          return;
-        }
-        if (!profilePictureChanged) {
-          // Update user with new name
-          user.name = name;
-          user.location = location;
-          user.bio = bio;
-
-          // Save in Mongo
-          user.save()
-          .then(() => {
-            res.send({error: ''});
-            return;
-          })
-          .catch(() => {
+        .then(user => {
+          if (!user) {
             res.status(404).send({error: 'Error editting user.'});
             return;
-          });
-        } else {
-          ResizeAndUploadImage(profilePicture, 'profilepictures', 240, null, (resp) => {
-            if (resp.error) {
-              res.status(404).send({error: resp.error});
-              return;
-            }
-            // Update the user
-            user.profilePicture = resp.resizedImg;
+          }
+          if (!profilePictureChanged) {
+          // Update user with new name
             user.name = name;
             user.location = location;
             user.bio = bio;
 
-            // Save the changes
+            // Save in Mongo
             user.save()
-            .then(() => {
-              res.send({profilePicture: user.profilePicture});
-            })
-            .catch(() => {
-              res.status(404).send({error: 'Error editting user.'});
-              return;
+              .then(() => {
+                res.send({error: ''});
+                return;
+              })
+              .catch(() => {
+                res.status(404).send({error: 'Error editting user.'});
+                return;
+              });
+          } else {
+            ResizeAndUploadImage(profilePicture, 'profilepictures', 240, null, (resp) => {
+              if (resp.error) {
+                res.status(404).send({error: resp.error});
+                return;
+              }
+              // Update the user
+              user.profilePicture = resp.resizedImg;
+              user.name = name;
+              user.location = location;
+              user.bio = bio;
+
+              // Save the changes
+              user.save()
+                .then(() => {
+                  res.send({profilePicture: user.profilePicture});
+                })
+                .catch(() => {
+                  res.status(404).send({error: 'Error editting user.'});
+                  return;
+                });
             });
-          });
-        }
-      })
-      .catch(() => {
-        res.status(404).send({error: 'Error editting user.'});
-        return;
-      });
+          }
+        })
+        .catch(() => {
+          res.status(404).send({error: 'Error editting user.'});
+          return;
+        });
     });
   });
 
@@ -118,14 +118,14 @@ module.exports = () => {
         return;
       }
       User.findById(req.session.passport.user)
-      .then(user => {
-        res.send({username: user.username});
-        return;
-      })
-      .catch(() => {
-        res.status(404).send({error: 'Error finding user'});
-        return;
-      });
+        .then(user => {
+          res.send({username: user.username});
+          return;
+        })
+        .catch(() => {
+          res.status(404).send({error: 'Error finding user'});
+          return;
+        });
     });
   });
 
@@ -138,53 +138,53 @@ module.exports = () => {
 
     // Find user's profile in Mongo
     User.findById(id)
-    .then(user => {
-      if (!user || user.userType === 'user') {
-        res.status(404).send({error: 'User does not exist'});
-        return;
-      }
-      Article.find({author: id})
-      .then(articles => {
-        Listing.find({author: id})
-        .then(listings => {
-          Video.find({author: id})
-          .then(videos => {
-            res.send({
-              user: {
-                name: user.name,
-                email: user.email,
-                bio: user.bio,
-                userType: user.userType,
-                profilePicture: user.profilePicture,
-                location: user.location,
-              },
-              content: {
-                articles,
-                listings,
-                videos,
-              }
-            });
-            return;
+      .then(user => {
+        if (!user || user.userType === 'user') {
+          res.status(404).send({error: 'User does not exist'});
+          return;
+        }
+        Article.find({author: id})
+          .then(articles => {
+            Listing.find({author: id})
+              .then(listings => {
+                Video.find({author: id})
+                  .then(videos => {
+                    res.send({
+                      user: {
+                        name: user.name,
+                        email: user.email,
+                        bio: user.bio,
+                        userType: user.userType,
+                        profilePicture: user.profilePicture,
+                        location: user.location,
+                      },
+                      content: {
+                        articles,
+                        listings,
+                        videos,
+                      }
+                    });
+                    return;
+                  })
+                  .catch(() => {
+                    res.status(404).send({error: 'Error finding user content.'});
+                    return;
+                  });
+              })
+              .catch(() => {
+                res.status(404).send({error: 'Error finding user content.'});
+                return;
+              });
           })
           .catch(() => {
             res.status(404).send({error: 'Error finding user content.'});
             return;
           });
-        })
-        .catch(() => {
-          res.status(404).send({error: 'Error finding user content.'});
-          return;
-        });
       })
       .catch(() => {
         res.status(404).send({error: 'Error finding user content.'});
         return;
       });
-    })
-    .catch(() => {
-      res.status(404).send({error: 'Error finding user content.'});
-      return;
-    });
   });
 
   return router;

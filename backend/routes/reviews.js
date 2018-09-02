@@ -51,14 +51,14 @@ module.exports = () => {
       listing.reviews = reviews;
       // Save in mongo
       listing.save()
-      .then(() => {
-        res.send({error: ''});
-        return;
-      })
-      .catch(() => {
-        res.status(404).send({error: 'Error deleting review'});
-        return;
-      });
+        .then(() => {
+          res.send({error: ''});
+          return;
+        })
+        .catch(() => {
+          res.status(404).send({error: 'Error deleting review'});
+          return;
+        });
     });
   });
 
@@ -86,72 +86,72 @@ module.exports = () => {
         return;
       }
       User.findById(userId)
-      .then(user => {
+        .then(user => {
         // If user doesn't exist
-        if (!user) {
-          res.status(404).send({error: 'User does not exist.'});
-          return;
-        }
-        // If no errors can now save new reviews
-        Listing.findById(req.body.listingId)
-        .then(listing => {
-          // Listing doesn't exist for some reason
-          if (!listing) {
-            res.status(404).send({error: 'Error posting review.'});
+          if (!user) {
+            res.status(404).send({error: 'User does not exist.'});
             return;
           }
-          // If listing has been found, update it with review
-          const currentReviews = listing.reviews;
+          // If no errors can now save new reviews
+          Listing.findById(req.body.listingId)
+            .then(listing => {
+              // Listing doesn't exist for some reason
+              if (!listing) {
+                res.status(404).send({error: 'Error posting review.'});
+                return;
+              }
+              // If listing has been found, update it with review
+              const currentReviews = listing.reviews;
 
-          // Check if user has already left a review
-          let leftReviewAlready = false;
-          async.each(currentReviews, (review, callback) => {
-            if (review.authorId === user._id.toString()) {
-              leftReviewAlready = true;
-            }
-            // Continue looping
-            callback();
-          }, asyncErr => {
-            if (asyncErr) {
-              res.status(404).send({error: 'Error posting review.'});
-              return;
-            }
-            // If already left a review send back error
-            if (leftReviewAlready) {
-              res.status(404).send({error: "Users may only leave one review."});
-              return;
-            }
-            // Add new review to array of current reviews
-            currentReviews.push({
-              rating: req.body.rating,
-              title: req.body.title,
-              content: req.body.content,
-              createdAt: new Date().getTime(),
-              authorId: userId,
-            });
-            // Update listing with new review
-            listing.reviews = currentReviews;
-            // Resave listing in Mongo
-            listing.save()
-            .then(() => {
-              res.send({error: ''});
-              return;
+              // Check if user has already left a review
+              let leftReviewAlready = false;
+              async.each(currentReviews, (review, callback) => {
+                if (review.authorId === user._id.toString()) {
+                  leftReviewAlready = true;
+                }
+                // Continue looping
+                callback();
+              }, asyncErr => {
+                if (asyncErr) {
+                  res.status(404).send({error: 'Error posting review.'});
+                  return;
+                }
+                // If already left a review send back error
+                if (leftReviewAlready) {
+                  res.status(404).send({error: "Users may only leave one review."});
+                  return;
+                }
+                // Add new review to array of current reviews
+                currentReviews.push({
+                  rating: req.body.rating,
+                  title: req.body.title,
+                  content: req.body.content,
+                  createdAt: new Date().getTime(),
+                  authorId: userId,
+                });
+                // Update listing with new review
+                listing.reviews = currentReviews;
+                // Resave listing in Mongo
+                listing.save()
+                  .then(() => {
+                    res.send({error: ''});
+                    return;
+                  })
+                  .catch(() => {
+                    res.status(404).send({error: 'Error saving review'});
+                    return;
+                  });
+              });
             })
             .catch(() => {
               res.status(404).send({error: 'Error saving review'});
               return;
             });
-          });
         })
         .catch(() => {
           res.status(404).send({error: 'Error saving review'});
           return;
         });
-      })
-      .catch(() => {
-        res.status(404).send({error: 'Error saving review'});
-        return;
-      });
     });
   });
 

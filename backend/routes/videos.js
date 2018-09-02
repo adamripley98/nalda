@@ -24,16 +24,16 @@ module.exports = () => {
   router.get('/', (req, res) => {
     // Pulls videos from mongo
     Video.find({})
-    .then(videos => {
+      .then(videos => {
       // Send videos back in correct order
-      videos.reverse();
-      // If everything went as planned
-      res.send({videos});
-    })
-    .catch(() => {
-      res.status(404).send({error: 'Error finding videos'});
-      return;
-    });
+        videos.reverse();
+        // If everything went as planned
+        res.send({videos});
+      })
+      .catch(() => {
+        res.status(404).send({error: 'Error finding videos'});
+        return;
+      });
   });
 
   /**
@@ -51,73 +51,73 @@ module.exports = () => {
 
     // Pull specific video from mongo
     Video.findById(id)
-    .then(video => {
-      if (!video) {
-        res.status(404).send({error: 'Cannot find video'});
-        return;
-      }
-      // Fetch author data
-      User.findById(video.author)
-      .then(author => {
-        if (!author) {
+      .then(video => {
+        if (!video) {
           res.status(404).send({error: 'Cannot find video'});
           return;
         }
-        // By default, user's cannot edit videos
-        let canModify = false;
-        if (userId) {
-          User.findById(userId)
-          .then(user => {
-            if (user) {
-              // Check if given user is either an admin or the curator of the video
-              if (user.userType === 'admin' || user.userType === 'curator') {
-                canModify = true;
-              }
+        // Fetch author data
+        User.findById(video.author)
+          .then(author => {
+            if (!author) {
+              res.status(404).send({error: 'Cannot find video'});
+              return;
             }
+            // By default, user's cannot edit videos
+            let canModify = false;
+            if (userId) {
+              User.findById(userId)
+                .then(user => {
+                  if (user) {
+                    // Check if given user is either an admin or the curator of the video
+                    if (user.userType === 'admin' || user.userType === 'curator') {
+                      canModify = true;
+                    }
+                  }
 
-            // Add the author's information to the video
-            const authorObj = {
-              name: author.name,
-              _id: author._id,
-              profilePicture: author.profilePicture,
-            };
+                  // Add the author's information to the video
+                  const authorObj = {
+                    name: author.name,
+                    _id: author._id,
+                    profilePicture: author.profilePicture,
+                  };
 
-            // Send back data
-            res.send({
-              video,
-              author: authorObj,
-              canModify,
-            });
+                  // Send back data
+                  res.send({
+                    video,
+                    author: authorObj,
+                    canModify,
+                  });
+                })
+                .catch(() => {
+                  res.status(404).send({error: 'Cannot find video'});
+                  return;
+                });
+            } else {
+              // Add the author's information to the video
+              const authorObj = {
+                name: author.name,
+                _id: author._id,
+                profilePicture: author.profilePicture,
+              };
+
+              // Send back data
+              res.send({
+                video,
+                author: authorObj,
+                canModify,
+              });
+            }
           })
           .catch(() => {
             res.status(404).send({error: 'Cannot find video'});
             return;
           });
-        } else {
-          // Add the author's information to the video
-          const authorObj = {
-            name: author.name,
-            _id: author._id,
-            profilePicture: author.profilePicture,
-          };
-
-          // Send back data
-          res.send({
-            video,
-            author: authorObj,
-            canModify,
-          });
-        }
       })
       .catch(() => {
         res.status(404).send({error: 'Cannot find video'});
         return;
       });
-    })
-    .catch(() => {
-      res.status(404).send({error: 'Cannot find video'});
-      return;
-    });
   });
 
   /**
@@ -135,52 +135,52 @@ module.exports = () => {
         return;
       }
       Video.findById(videoId)
-      .then(video => {
-        video.remove()
-        .then(() => {
-          // Remove from homepage
-          Homepage.find({})
-          .then(homepage => {
-            const home = homepage[0];
-            const videos = home.naldaVideos || [];
-            const banner = home.banner || [];
-            // Delete video from homepage
-            for (var i = 0; i < videos.length; i++) {
-              if (videos[i].contentId === videoId) {
-                videos.splice(i, 1);
-                break;
-              }
-            }
-            for (var j = 0; j < banner.length; j++) {
-              if (banner[j].contentId === videoId) {
-                banner.splice(j, 1);
-                break;
-              }
-            }
-            home.save()
+        .then(video => {
+          video.remove()
             .then(() => {
-              res.send({error: ''});
-              return;
+              // Remove from homepage
+              Homepage.find({})
+                .then(homepage => {
+                  const home = homepage[0];
+                  const videos = home.naldaVideos || [];
+                  const banner = home.banner || [];
+                  // Delete video from homepage
+                  for (var i = 0; i < videos.length; i++) {
+                    if (videos[i].contentId === videoId) {
+                      videos.splice(i, 1);
+                      break;
+                    }
+                  }
+                  for (var j = 0; j < banner.length; j++) {
+                    if (banner[j].contentId === videoId) {
+                      banner.splice(j, 1);
+                      break;
+                    }
+                  }
+                  home.save()
+                    .then(() => {
+                      res.send({error: ''});
+                      return;
+                    })
+                    .catch(() => {
+                      res.status(404).send({error: 'Error deleting video.'});
+                      return;
+                    });
+                })
+                .catch(() => {
+                  res.status(404).send({error: 'Error deleting video.'});
+                  return;
+                });
             })
             .catch(() => {
               res.status(404).send({error: 'Error deleting video.'});
               return;
             });
-          })
-          .catch(() => {
-            res.status(404).send({error: 'Error deleting video.'});
-            return;
-          });
         })
         .catch(() => {
           res.status(404).send({error: 'Error deleting video.'});
           return;
         });
-      })
-      .catch(() => {
-        res.status(404).send({error: 'Error deleting video.'});
-        return;
-      });
     });
   });
 
@@ -226,42 +226,42 @@ module.exports = () => {
         res.status(404).send({error});
         return;
       }
-        // Find the author
+      // Find the author
       User.findById(userId)
-      .then(author => {
-        if (!author) {
-          res.status(404).send({error: 'Error editting video'});
-          return;
-        }
-        Video.findById(videoId)
-        .then(video => {
-          // Make changes to given video
-          video.title = title;
-          video.description = description;
-          video.url = url;
-          video.location = location;
-          video.updatedAt = new Date().getTime();
-
-          // Save changes in mongo
-          video.save()
-          .then(() => {
-            res.send({video});
-            return;
-          })
-          .catch(() => {
+        .then(author => {
+          if (!author) {
             res.status(404).send({error: 'Error editting video'});
             return;
-          });
+          }
+          Video.findById(videoId)
+            .then(video => {
+              // Make changes to given video
+              video.title = title;
+              video.description = description;
+              video.url = url;
+              video.location = location;
+              video.updatedAt = new Date().getTime();
+
+              // Save changes in mongo
+              video.save()
+                .then(() => {
+                  res.send({video});
+                  return;
+                })
+                .catch(() => {
+                  res.status(404).send({error: 'Error editting video'});
+                  return;
+                });
+            })
+            .catch(() => {
+              res.status(404).send({error: 'Error editting video'});
+              return;
+            });
         })
         .catch(() => {
           res.status(404).send({error: 'Error editting video'});
           return;
         });
-      })
-      .catch(() => {
-        res.status(404).send({error: 'Error editting video'});
-        return;
-      });
     });
   });
 
@@ -311,16 +311,16 @@ module.exports = () => {
         location,
       });
 
-    // Save the new video in Mongo
+      // Save the new video in Mongo
       newVideo.save()
-      .then(video => {
-        res.send({video});
-        return;
-      })
-      .catch(() => {
-        res.status(404).send({error: 'Error posting video'});
-        return;
-      });
+        .then(video => {
+          res.send({video});
+          return;
+        })
+        .catch(() => {
+          res.status(404).send({error: 'Error posting video'});
+          return;
+        });
     });
   });
 

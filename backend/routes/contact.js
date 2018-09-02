@@ -43,14 +43,14 @@ module.exports = () => {
 
     // Send message
     sgMail.send(msg)
-    .then(() => {
-      res.send({error: ''});
-      return;
-    })
-    .catch(() => {
-      res.status(400).send({error: 'Cannot send email'});
-      return;
-    });
+      .then(() => {
+        res.send({error: ''});
+        return;
+      })
+      .catch(() => {
+        res.status(400).send({error: 'Cannot send email'});
+        return;
+      });
   });
 
   return router;
