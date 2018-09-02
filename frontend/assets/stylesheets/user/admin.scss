@@ -23,7 +23,7 @@
     &:active,
     &:focus,
     &.active {
-      background: darken($light-gray, 1%) !important;
+      background: darken($light-gray, 1%) !important; // sass-lint:disable-line no-important
     }
   }
 }
@@ -46,16 +46,17 @@
 
   // Give every other row a slightly darker color
   tbody {
-    tr:nth-child(even) {
-      background: lighten($lighter-gray, 1%);
+    tr {
+      &:nth-child(even) {
+        background: lighten($lighter-gray, 1%);
+      }
     }
   }
 
   // Style icons used in tables
   .fa-close {
-    cursor: hand;
-    cursor: pointer;
     color: $gray;
+    cursor: pointer;
 
     &:hover,
     &:focus,

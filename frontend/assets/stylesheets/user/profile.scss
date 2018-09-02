@@ -1,126 +1,70 @@
-/**
- * Styling profile page
- */
+// Styling profile page
+
 .profile-wrapper {
   .profile {
     display: flex;
 
     .profile-picture {
-      width: 4rem;
+      background: $gray;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      border-radius: 50%;
       height: 4rem;
       margin-right: 1rem;
-      border-radius: 50%;
-      background: $gray;
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-position: center;
+      width: 4rem;
     }
 
     .profile-content {
       flex: 1;
 
       p {
-        margin-bottom: 0.5rem;
+        margin-bottom: .5rem;
 
         &:last-child {
-          margin-bottom: 0rem;
+          margin-bottom: 0;
         }
       }
     }
   }
 }
 
-/**
- * Make the profile picture less wide on smaller screens
- */
+// Make the profile picture less wide on smaller screens
 @media screen and (max-width: 448px) {
-  .profile-wrapper .profile .profile-picture {
-    width: 3rem;
-    height: 3rem;
-  }
-}
-
-@media screen and (max-device-width: 448px) {
-  .profile-wrapper .profile .profile-picture {
-    width: 3rem;
-    height: 3rem;
-  }
-}
-
-/**
- * Styling relating to account information on the edit account page
- */
-.account.table {
-  font-size: 0.8rem;
-
-  .fa {
-    color: $gray;
-    cursor: hand;
-    cursor: pointer;
-
-    &:hover,
-    &:focus,
-    &:active {
-      color: $dark-gray;
+  .profile-wrapper {
+    .profile {
+      .profile-picture {
+        height: 3rem;
+        width: 3rem;
+      }
     }
   }
-
-  .profile-picture {
-    height: 2rem;
-    width: 2rem;
-    background: $gray;
-    border-radius: 50%;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-  }
 }
 
-/**
- * Styling profile page
- */
-.profile-wrapper {
-  .profile {
-    display: flex;
+// Styling relating to account information on the edit account page
+.account {
+  &.table {
+    font-size: .8rem;
+
+    .fa {
+      color: $gray;
+      cursor: pointer;
+
+      &:hover,
+      &:focus,
+      &:active {
+        color: $dark-gray;
+      }
+    }
 
     .profile-picture {
-      width: 4rem;
-      height: 4rem;
-      margin-right: 1rem;
-      border-radius: 50%;
       background: $gray;
       background-position: center;
       background-repeat: no-repeat;
       background-size: cover;
+      border-radius: 50%;
+      height: 2rem;
+      width: 2rem;
     }
-
-    .profile-content {
-      flex: 1;
-
-      p {
-        margin-bottom: 0.5rem;
-
-        &:last-child {
-          margin-bottom: 0rem;
-        }
-      }
-    }
-  }
-}
-
-/**
- * Make the profile picture less wide on smaller screens
- */
-@media screen and (max-width: 448px) {
-  .profile-wrapper .profile .profile-picture {
-    width: 3rem;
-    height: 3rem;
-  }
-}
-
-@media screen and (max-device-width: 448px) {
-  .profile-wrapper .profile .profile-picture {
-    width: 3rem;
-    height: 3rem;
   }
 }
