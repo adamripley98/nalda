@@ -1,3 +1,4 @@
+/* global google, $ */
 // Import frameworks
 import React, { Component } from 'react';
 import axios from 'axios';
@@ -47,7 +48,7 @@ class RegisterModalForm extends Component {
       types: ['(cities)'],
       componentRestrictions: {country: 'us'},
     };
-    new google.maps.places.Autocomplete(location, options);
+    const place = new google.maps.places.Autocomplete(location, options);
   }
 
   /**
@@ -297,10 +298,10 @@ class RegisterModalForm extends Component {
                 document.getElementById('location').value &&
                 this.state.password === this.state.verPassword
               ) ? (
-                "btn btn-primary full-width"
-              ) : (
-                "btn btn-primary full-width disabled"
-              )
+                  "btn btn-primary full-width"
+                ) : (
+                  "btn btn-primary full-width disabled"
+                )
             }
             value={ this.state.pending ? "Registering..." : "Register" }
           />
@@ -360,8 +361,8 @@ const mapDispatchToProps = dispatch => {
 
 // Redux config
 RegisterModalForm = connect(
-    mapStateToProps,
-    mapDispatchToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(RegisterModalForm);
 
 export default RegisterModalForm;

@@ -261,10 +261,10 @@ class VideoForm extends React.Component {
                   this.state.title &&
                   this.state.url &&
                   this.state.description ? (
-                    "btn btn-primary full-width"
-                  ) : (
-                    "btn btn-primary disabled full-width"
-                  )
+                      "btn btn-primary full-width"
+                    ) : (
+                      "btn btn-primary disabled full-width"
+                    )
                 }
               />
             </form>

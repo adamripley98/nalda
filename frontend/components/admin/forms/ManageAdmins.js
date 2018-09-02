@@ -28,16 +28,16 @@ class ManageAdmins extends Component {
     window.scrollTo(0, 0);
     // Pull admins, curators, and users
     axios.get('api/admin/all')
-    .then(resp => {
-      this.setState({
-        admins: resp.data.admins,
-        curators: resp.data.curators,
-        users: resp.data.users,
+      .then(resp => {
+        this.setState({
+          admins: resp.data.admins,
+          curators: resp.data.curators,
+          users: resp.data.users,
+        });
+      })
+      .catch(error => {
+        this.setState({error: error.response.data.error || error.response.data });
       });
-    })
-    .catch(error => {
-      this.setState({error: error.response.data.error || error.response.data });
-    });
   }
 
   handleChange(event) {
@@ -60,18 +60,18 @@ class ManageAdmins extends Component {
     axios.post('/api/admin/new', {
       userToAdd: this.state.email,
     })
-    .then(() => {
-      this.setState({
-        error: '',
-        success: 'Successfully added new admin',
-        email: '',
+      .then(() => {
+        this.setState({
+          error: '',
+          success: 'Successfully added new admin',
+          email: '',
+        });
+      }).catch(error => {
+        this.setState({
+          error: error.response.data.error || error.response.data,
+          success: '',
+        });
       });
-    }).catch(error => {
-      this.setState({
-        error: error.response.data.error || error.response.data,
-        success: '',
-      });
-    });
   }
 
   // Handle a user submitting the form to add a content curator
@@ -84,18 +84,18 @@ class ManageAdmins extends Component {
     axios.post('/api/curator/new', {
       userToAdd: this.state.email,
     })
-    .then(() => {
-      this.setState({
-        error: '',
-        success: "Successfully added curator.",
-        email: '',
+      .then(() => {
+        this.setState({
+          error: '',
+          success: "Successfully added curator.",
+          email: '',
+        });
+      }).catch((error) => {
+        this.setState({
+          error: error.response.data.error || error.response.data,
+          success: '',
+        });
       });
-    }).catch((error) => {
-      this.setState({
-        error: error.response.data.error || error.response.data,
-        success: '',
-      });
-    });
   }
 
   onSubmitRemoveCurator(event) {
@@ -107,26 +107,26 @@ class ManageAdmins extends Component {
     axios.post('/api/curator/remove', {
       userToRemove: this.state.email,
     })
-    .then((resp) => {
-      const newUsers = this.state.users && this.state.users.length ? this.state.users.slice() : [];
+      .then((resp) => {
+        const newUsers = this.state.users && this.state.users.length ? this.state.users.slice() : [];
 
-      // Add new user (revoke from curator)
-      newUsers.push(resp.data.removedCurator);
-      // Remove curator
-      const newCurators = this.state.curators && this.state.curators.length ? this.state.curators.filter(user => user.userId !== resp.data.removedCurator.userId) : [];
-      this.setState({
-        error: "",
-        success: 'Successfully removed curator',
-        curators: newCurators,
-        users: newUsers,
-        email: '',
+        // Add new user (revoke from curator)
+        newUsers.push(resp.data.removedCurator);
+        // Remove curator
+        const newCurators = this.state.curators && this.state.curators.length ? this.state.curators.filter(user => user.userId !== resp.data.removedCurator.userId) : [];
+        this.setState({
+          error: "",
+          success: 'Successfully removed curator',
+          curators: newCurators,
+          users: newUsers,
+          email: '',
+        });
+      }).catch(err => {
+        this.setState({
+          error: err.response.data.error,
+          success: '',
+        });
       });
-    }).catch(err => {
-      this.setState({
-        error: err.response.data.error,
-        success: '',
-      });
-    });
   }
 
   render() {

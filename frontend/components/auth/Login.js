@@ -121,7 +121,7 @@ class Login extends Component {
       });
   }
 
-    // Handle when a user types into the email
+  // Handle when a user types into the email
   handleChangeEmail(event) {
     this.setState({
       username: event.target.value,
@@ -250,8 +250,8 @@ const mapDispatchToProps = dispatch => {
 
 // Redux config
 Login = connect(
-    mapStateToProps,
-    mapDispatchToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(Login);
 
 export default Login;

@@ -1,3 +1,4 @@
+/* global $ */
 // Import frameworks
 import React, { Component } from 'react';
 import axios from 'axios';
@@ -101,25 +102,25 @@ class LoginModalForm extends Component {
     axios.post('/api/forgot', {
       username: this.state.username,
     })
-    .then((resp) => {
-      if (resp.data.success) {
-        this.setState({
-          success: 'Please check your email for a link to reset your password.',
-          error: '',
-        });
-      } else {
-        this.setState({
-          error: resp.data.error,
-        });
-      }
-    })
-    .catch((err) => {
-      if (err) {
-        this.setState({
-          error: err.message,
-        });
-      }
-    });
+      .then((resp) => {
+        if (resp.data.success) {
+          this.setState({
+            success: 'Please check your email for a link to reset your password.',
+            error: '',
+          });
+        } else {
+          this.setState({
+            error: resp.data.error,
+          });
+        }
+      })
+      .catch((err) => {
+        if (err) {
+          this.setState({
+            error: err.message,
+          });
+        }
+      });
   }
 
   // Handle when a user types into the email
@@ -244,8 +245,8 @@ const mapDispatchToProps = dispatch => {
 
 // Redux config
 LoginModalForm = connect(
-    mapStateToProps,
-    mapDispatchToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(LoginModalForm);
 
 export default LoginModalForm;

@@ -60,20 +60,20 @@ class ManageHomepage extends Component {
 
     // Pull data to display on admin panel
     axios.get('/api/admin')
-    .then((resp) => {
-      this.setState({
-        banner: resp.data.homepageContent ? resp.data.homepageContent.banner : [],
-        components: resp.data.homepageContent ? resp.data.homepageContent.components : [],
-        pending: false,
-        to: '',
+      .then((resp) => {
+        this.setState({
+          banner: resp.data.homepageContent ? resp.data.homepageContent.banner : [],
+          components: resp.data.homepageContent ? resp.data.homepageContent.components : [],
+          pending: false,
+          to: '',
+        });
+      })
+      .catch(error => {
+        this.setState({
+          error: error.response.data.error || error.response.data,
+          pending: false,
+        });
       });
-    })
-    .catch(error => {
-      this.setState({
-        error: error.response.data.error || error.response.data,
-        pending: false,
-      });
-    });
   }
 
   // Handle when a user types into the email field
@@ -112,45 +112,45 @@ class ManageHomepage extends Component {
         bannerContentId,
         bannerImageToAdd,
       })
-      .then(resp => {
+        .then(resp => {
         // Notify success to the user
-        this.props.notifyMessage("Successfully added banner image.");
+          this.props.notifyMessage("Successfully added banner image.");
 
-        // Set the state
-        this.setState({
-          error: '',
-          banner: resp.data.banner,
-          bannerContentId: '',
-          bannerImageToAdd: '',
-          bannerImageName: '',
-          bannerImagePreview: '',
+          // Set the state
+          this.setState({
+            error: '',
+            banner: resp.data.banner,
+            bannerContentId: '',
+            bannerImageToAdd: '',
+            bannerImageName: '',
+            bannerImagePreview: '',
+          });
+        })
+        .catch(err => {
+          this.setState({
+            error: err.response.data.error || err.response.data,
+            bannerContentId: '',
+            bannerImageToAdd: '',
+          });
         });
-      })
-      .catch(err => {
-        this.setState({
-          error: err.response.data.error || err.response.data,
-          bannerContentId: '',
-          bannerImageToAdd: '',
-        });
-      });
     }
   }
 
   // Helper method to remove a banner item
   onSubmitRemoveBannerContent(bannerContentId) {
     axios.post(`/api/home/banner/remove/${bannerContentId}`)
-    .then(resp => {
-      this.props.notifyMessage("Successfully removed banner image");
-      this.setState({
-        error: '',
-        banner: resp.data.data,
+      .then(resp => {
+        this.props.notifyMessage("Successfully removed banner image");
+        this.setState({
+          error: '',
+          banner: resp.data.data,
+        });
+      })
+      .catch(err => {
+        this.setState({
+          error: err.response.data.error || err.response.data,
+        });
       });
-    })
-    .catch(err => {
-      this.setState({
-        error: err.response.data.error || err.response.data,
-      });
-    });
   }
 
   // Helper method for image uploads
@@ -271,13 +271,13 @@ class ManageHomepage extends Component {
         component,
         contentId,
       })
-      .then(resp => {
-        this.props.notifyMessage('Successfully added content.');
-        this.setState({
-          components: resp.data.components,
-        });
-      })
-      .catch(error => this.setState({error: error.response.data.error || error.response.data}));
+        .then(resp => {
+          this.props.notifyMessage('Successfully added content.');
+          this.setState({
+            components: resp.data.components,
+          });
+        })
+        .catch(error => this.setState({error: error.response.data.error || error.response.data}));
     } else {
       this.setState({
         error: 'Content Id must be provided.',
@@ -292,14 +292,14 @@ class ManageHomepage extends Component {
         componentId: component._id,
         contentId,
       })
-      .then(resp => {
-        this.props.notifyMessage("Content removed.");
-        this.setState({
-          components: resp.data.components,
-          error: '',
-        });
-      })
-      .catch(error => this.setState({error: error.response.data.error || error.response.data}));
+        .then(resp => {
+          this.props.notifyMessage("Content removed.");
+          this.setState({
+            components: resp.data.components,
+            error: '',
+          });
+        })
+        .catch(error => this.setState({error: error.response.data.error || error.response.data}));
     } else {
       this.setState({error: 'Error removing content.'});
     }
@@ -311,14 +311,14 @@ class ManageHomepage extends Component {
       axios.post('/api/home/component/remove', {
         componentId: component._id,
       })
-      .then(resp => {
-        this.props.notifyMessage("Component removed!");
-        this.setState({
-          error: '',
-          components: resp.data.components,
-        });
-      })
-      .catch(error => this.setState({error: error.response.data.error || error.response.data}));
+        .then(resp => {
+          this.props.notifyMessage("Component removed!");
+          this.setState({
+            error: '',
+            components: resp.data.components,
+          });
+        })
+        .catch(error => this.setState({error: error.response.data.error || error.response.data}));
     } else {
       this.setState({error: 'Error removing component.'});
     }
@@ -416,7 +416,7 @@ class ManageHomepage extends Component {
         {/* Render a form to create a new homepage component*/}
         <NewComponent
           updateComponents={this.updateComponents}
-         />
+        />
       </div>
     );
   }

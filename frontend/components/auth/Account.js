@@ -1,3 +1,4 @@
+/* global google */
 // Import framworks
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
@@ -22,9 +23,6 @@ import Tags from '../shared/Tags';
  * Component to render a user's account information
   */
 class Account extends Component {
-  /**
-   * Constructor method
-   */
   constructor(props) {
     super(props);
 
@@ -66,42 +64,42 @@ class Account extends Component {
     axios.get('/api/account', {
       params: {userId: this.props.userId}
     })
-    .then(resp => {
+      .then(resp => {
       // If successful, will set state with user's information
-      if (resp.data.success) {
+        if (resp.data.success) {
         // Update the state
-        this.setState({
-          name: resp.data.data.name,
-          email: resp.data.data.username,
-          type: resp.data.data.userType,
-          bio: resp.data.data.bio || '',
-          profilePicture: resp.data.data.profilePicture,
-          accountVerified: resp.data.data.accountVerified,
-          location: resp.data.data.location || {},
-          error: "",
-          pending: false,
-          loading: false,
-        });
+          this.setState({
+            name: resp.data.data.name,
+            email: resp.data.data.username,
+            type: resp.data.data.userType,
+            bio: resp.data.data.bio || '',
+            profilePicture: resp.data.data.profilePicture,
+            accountVerified: resp.data.data.accountVerified,
+            location: resp.data.data.location || {},
+            error: "",
+            pending: false,
+            loading: false,
+          });
 
-        // Set the location
-        if (resp.data.data.location && resp.data.data.location.name) {
-          document.getElementById('location').value = resp.data.data.location.name;
+          // Set the location
+          if (resp.data.data.location && resp.data.data.location.name) {
+            document.getElementById('location').value = resp.data.data.location.name;
+          }
+        } else {
+          this.setState({
+            error: resp.data.error,
+            pending: false,
+            loading: false,
+          });
         }
-      } else {
+      })
+      .catch(err => {
         this.setState({
-          error: resp.data.error,
           pending: false,
           loading: false,
+          error: err,
         });
-      }
-    })
-    .catch(err => {
-      this.setState({
-        pending: false,
-        loading: false,
-        error: err,
       });
-    });
   }
 
   /**
@@ -116,7 +114,7 @@ class Account extends Component {
         types: ['(cities)'],
         componentRestrictions: {country: 'us'},
       };
-      new google.maps.places.Autocomplete(location, options);
+      const place = new google.maps.places.Autocomplete(location, options);
     }
 
     // Autosize textareas (for example, the bio textarea)

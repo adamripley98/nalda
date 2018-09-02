@@ -1,6 +1,6 @@
 // Import framworks
 import React, { Component } from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import axios from 'axios';
@@ -39,14 +39,14 @@ class EditPassword extends Component {
   componentDidMount() {
     window.scrollTo(0, 0);
     axios.get('/api/users/username')
-    .then((resp) => {
-      this.setState({
-        username: resp.data.username,
+      .then((resp) => {
+        this.setState({
+          username: resp.data.username,
+        });
+      })
+      .catch(e => {
+        this.setState({error: e.response.data.error || e.response.data});
       });
-    })
-    .catch(e => {
-      this.setState({error: e.response.data.error || e.response.data});
-    });
   }
 
   /**
@@ -74,25 +74,25 @@ class EditPassword extends Component {
     axios.post('/api/forgot', {
       username: this.state.username,
     })
-    .then((resp) => {
-      if (resp.data.success) {
-        this.setState({
-          info: 'Please check your email for a link to reset your password.',
-          error: '',
-        });
-      } else {
-        this.setState({
-          error: resp.data.error,
-        });
-      }
-    })
-    .catch((err) => {
-      if (err) {
-        this.setState({
-          error: err.message,
-        });
-      }
-    });
+      .then((resp) => {
+        if (resp.data.success) {
+          this.setState({
+            info: 'Please check your email for a link to reset your password.',
+            error: '',
+          });
+        } else {
+          this.setState({
+            error: resp.data.error,
+          });
+        }
+      })
+      .catch((err) => {
+        if (err) {
+          this.setState({
+            error: err.message,
+          });
+        }
+      });
   }
 
   /**
@@ -169,10 +169,10 @@ class EditPassword extends Component {
 
             {
               this.state.info ?
-              <div className="alert alert-warning marg-bot-1" onClick={this.handleVerifyEmail}>
-                {this.state.info}
-              </div>
-              : null
+                <div className="alert alert-warning marg-bot-1" onClick={this.handleVerifyEmail}>
+                  {this.state.info}
+                </div>
+                : null
             }
 
             <label>
@@ -212,10 +212,10 @@ class EditPassword extends Component {
                   this.state.oldPassword !== this.state.newPassword &&
                   this.state.newPassword === this.state.newPasswordConfirm
                 ) ? (
-                  "btn btn-primary"
-                ) : (
-                  "btn btn-primary disabled"
-                )
+                    "btn btn-primary"
+                  ) : (
+                    "btn btn-primary disabled"
+                  )
               }
             />
             <div className="marg-top-1">
@@ -246,7 +246,7 @@ const mapStateToProps = state => {
 
 // Redux config
 EditPassword = connect(
-    mapStateToProps,
+  mapStateToProps,
 )(EditPassword);
 
 export default EditPassword;

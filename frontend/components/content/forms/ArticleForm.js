@@ -1,3 +1,4 @@
+/* global $, google */
 // Import frameworks
 import React from 'react';
 import autosize from 'autosize';
@@ -20,13 +21,7 @@ import {processImg, getTargetSize} from '../../../helperMethods/imageUploading';
 // Import actions
 import {notifyMessage} from '../../../actions/notification';
 
-/**
- * Component to render the new article form
- */
 class ArticleForm extends React.Component {
-  /**
-   * Constructor method
-   */
   constructor(props) {
     super(props);
     this.state = {
@@ -37,10 +32,10 @@ class ArticleForm extends React.Component {
       body: [
         {
           componentType: "text",
-          body: "",
+          body: '',
         },
       ],
-      error: "",
+      error: '',
       redirectToHome: false,
       pendingSubmit: false,
       changeOrder: false,
@@ -71,7 +66,7 @@ class ArticleForm extends React.Component {
     const options = {
       componentRestrictions: {country: 'us'},
     };
-    new google.maps.places.Autocomplete(location, options);
+    const place = new google.maps.places.Autocomplete(location, options);
 
     // Add tooltips
     $(() => {
@@ -142,7 +137,7 @@ class ArticleForm extends React.Component {
   /**
    * Helper method to make sure all input is valid
    */
-   // TODO check image is present
+  // TODO check image is present
   inputValid() {
     // Begin error checking
     if (!this.state.title) {
@@ -590,10 +585,10 @@ class ArticleForm extends React.Component {
                   this.state.image &&
                   this.state.subtitle &&
                   this.state.body[0].body ? (
-                    "btn btn-primary full-width"
-                  ) : (
-                    "btn btn-primary disabled full-width"
-                  )
+                      "btn btn-primary full-width"
+                    ) : (
+                      "btn btn-primary disabled full-width"
+                    )
                 }
                 onSubmit={(e) => this.handleSubmit(e)}
               />

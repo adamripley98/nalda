@@ -1,3 +1,4 @@
+/* global $ */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -7,9 +8,6 @@ import { login } from '../../actions/index.js';
 import LoginModalForm from './LoginModalForm';
 import RegisterModalForm from './RegisterModalForm';
 
-/**
- * Component to render the form for a user logging in or registering
- */
 class Modal extends Component {
   // Constructor method
   constructor(props) {
@@ -88,14 +86,14 @@ class Modal extends Component {
             <div className="modal-footer">
               {
                 this.state.isLogin ? (
-                    <p className="marg-bot-0 center gray-text">
+                  <p className="marg-bot-0 center gray-text">
                       Don't have an account? <a
-                        className="link-style"
-                        onClick={ () => this.setState({ isLogin: false }) }
-                      >
+                      className="link-style"
+                      onClick={ () => this.setState({ isLogin: false }) }
+                    >
                         Register here.
-                      </a>
-                    </p>
+                    </a>
+                  </p>
                 ) : (
                   <p className="marg-bot-0 center gray-text">
                     Already have an account? <a

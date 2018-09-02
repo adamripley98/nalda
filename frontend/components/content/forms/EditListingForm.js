@@ -1,3 +1,4 @@
+/* global google */
 // Import frameworks
 import React from 'react';
 import autosize from 'autosize';
@@ -177,7 +178,7 @@ class EditListingForm extends React.Component {
         const options = {
           componentRestrictions: { country: 'us' },
         };
-        new google.maps.places.Autocomplete(location, options);
+        const place = new google.maps.places.Autocomplete(location, options);
 
         // Populate the location field with the existing database value
         document.getElementById('location').value = this.state.location.name;
@@ -256,9 +257,9 @@ class EditListingForm extends React.Component {
 
     // Update the finish if the start is now later than the finish
     if (startOrFinish === "start" && (
-          !currentHours[day].finish ||
+      !currentHours[day].finish ||
           currentHours[day].finish < event.target.value
-        )) {
+    )) {
       currentHours[day].finish = event.target.value;
     }
     this.setState({
@@ -635,521 +636,521 @@ class EditListingForm extends React.Component {
                   <Loading />
                 ) : (
                   <div>
-                  <label>
+                    <label>
                     Title
-                  </label>
-                  <input
-                    name="title"
-                    type="text"
-                    className="form-control marg-bot-1"
-                    value={ this.state.title }
-                    onChange={ this.handleChangeTitle }
-                  />
-                  <label>
+                    </label>
+                    <input
+                      name="title"
+                      type="text"
+                      className="form-control marg-bot-1"
+                      value={ this.state.title }
+                      onChange={ this.handleChangeTitle }
+                    />
+                    <label>
                     Hero Image
-                  </label>
-                  {
-                    this.state.imagePreview && (
-                      <img src={ this.state.imagePreview } alt={ this.state.title } className="img-fluid img" />
-                    )
-                  }
-                  <Dropzone
-                    onDrop={(acceptedFiles, rejectedFiles) => this.onDrop(acceptedFiles, rejectedFiles, "hero")}
-                    accept="image/*"
-                    style={{ marginBottom: "1rem" }}
+                    </label>
+                    {
+                      this.state.imagePreview && (
+                        <img src={ this.state.imagePreview } alt={ this.state.title } className="img-fluid img" />
+                      )
+                    }
+                    <Dropzone
+                      onDrop={(acceptedFiles, rejectedFiles) => this.onDrop(acceptedFiles, rejectedFiles, "hero")}
+                      accept="image/*"
+                      style={{ marginBottom: "1rem" }}
                     >
-                    <p className="dropzone">
+                      <p className="dropzone">
                       Drop a hero image here, or click to select an image to upload.
-                    </p>
-                  </Dropzone>
-                  <label>
+                      </p>
+                    </Dropzone>
+                    <label>
                     Carousel Images
-                  </label>
-                  {this.displayImages()}
-                  <Dropzone
-                    onDrop={(acceptedFiles, rejectedFiles) => this.onDrop(acceptedFiles, rejectedFiles)}
-                    accept="image/*"
-                    style={{ marginBottom: "1rem" }}
+                    </label>
+                    {this.displayImages()}
+                    <Dropzone
+                      onDrop={(acceptedFiles, rejectedFiles) => this.onDrop(acceptedFiles, rejectedFiles)}
+                      accept="image/*"
+                      style={{ marginBottom: "1rem" }}
                     >
-                    <p className="dropzone">
+                      <p className="dropzone">
                       Try dropping some images here, or click to select images to upload.
-                    </p>
-                  </Dropzone>
-                  <label>
+                      </p>
+                    </Dropzone>
+                    <label>
                     Location
-                  </label>
-                  <input
-                    name="title"
-                    type="text"
-                    id="location"
-                    className="form-control marg-bot-1"
-                  />
-                  <label>
+                    </label>
+                    <input
+                      name="title"
+                      type="text"
+                      id="location"
+                      className="form-control marg-bot-1"
+                    />
+                    <label>
                     Description
-                  </label>
-                  <textarea
-                    name="body"
-                    type="text"
-                    className="form-control marg-bot-1"
-                    rows="4"
-                    value={ this.state.description }
-                    onChange={ this.handleChangeDescription }
-                  />
-                  <label>
+                    </label>
+                    <textarea
+                      name="body"
+                      type="text"
+                      className="form-control marg-bot-1"
+                      rows="4"
+                      value={ this.state.description }
+                      onChange={ this.handleChangeDescription }
+                    />
+                    <label>
                     Nalda's Favorite
-                  </label>
-                  <textarea
-                    name="body"
-                    type="text"
-                    className="form-control marg-bot-1"
-                    rows="4"
-                    value={ this.state.naldaFavorite }
-                    onChange={ this.handleChangeNaldaFavorite }
-                  />
-                  <label>
+                    </label>
+                    <textarea
+                      name="body"
+                      type="text"
+                      className="form-control marg-bot-1"
+                      rows="4"
+                      value={ this.state.naldaFavorite }
+                      onChange={ this.handleChangeNaldaFavorite }
+                    />
+                    <label>
                     Hours
-                  </label>
-                  <div className="time-select">
-                    <p>
+                    </label>
+                    <div className="time-select">
+                      <p>
                       Monday
-                    </p>
-                    <input
-                      type="time"
-                      onChange={(e) => { this.handleChangeHours(e, "start", "monday");}}
-                      className="form-control"
-                      value={this.state.hours.monday.start}
-                    />
-                    <input
-                      type="time"
-                      onChange={(e) => { this.handleChangeHours(e, "finish", "monday");}}
-                      className="form-control"
-                      value={this.state.hours.monday.finish}
-                    />
-                  </div>
-                  <div className="time-select">
-                    <p>
+                      </p>
+                      <input
+                        type="time"
+                        onChange={(e) => { this.handleChangeHours(e, "start", "monday");}}
+                        className="form-control"
+                        value={this.state.hours.monday.start}
+                      />
+                      <input
+                        type="time"
+                        onChange={(e) => { this.handleChangeHours(e, "finish", "monday");}}
+                        className="form-control"
+                        value={this.state.hours.monday.finish}
+                      />
+                    </div>
+                    <div className="time-select">
+                      <p>
                       Tuesday
-                    </p>
-                    <input
-                    type="time"
-                    onChange={(e) => { this.handleChangeHours(e, "start", "tuesday");}}
-                    className="form-control"
-                    value={this.state.hours.tuesday.start}
-                  />
-                    <input
-                    type="time"
-                    onChange={(e) => { this.handleChangeHours(e, "finish", "tuesday");}}
-                    className="form-control"
-                    value={this.state.hours.tuesday.finish}
-                  />
-                  </div>
-                  <div className="time-select">
-                    <p>
+                      </p>
+                      <input
+                        type="time"
+                        onChange={(e) => { this.handleChangeHours(e, "start", "tuesday");}}
+                        className="form-control"
+                        value={this.state.hours.tuesday.start}
+                      />
+                      <input
+                        type="time"
+                        onChange={(e) => { this.handleChangeHours(e, "finish", "tuesday");}}
+                        className="form-control"
+                        value={this.state.hours.tuesday.finish}
+                      />
+                    </div>
+                    <div className="time-select">
+                      <p>
                       Wednesday
-                    </p>
-                    <input
-                      type="time"
-                      onChange={(e) => { this.handleChangeHours(e, "start", "wednesday");}}
-                      className="form-control"
-                      value={this.state.hours.wednesday.start}
-                    />
-                    <input
-                      type="time"
-                      onChange={(e) => { this.handleChangeHours(e, "finish", "wednesday");}}
-                      className="form-control"
-                      value={this.state.hours.wednesday.finish}
-                    />
-                  </div>
-                  <div className="time-select">
-                    <p>
+                      </p>
+                      <input
+                        type="time"
+                        onChange={(e) => { this.handleChangeHours(e, "start", "wednesday");}}
+                        className="form-control"
+                        value={this.state.hours.wednesday.start}
+                      />
+                      <input
+                        type="time"
+                        onChange={(e) => { this.handleChangeHours(e, "finish", "wednesday");}}
+                        className="form-control"
+                        value={this.state.hours.wednesday.finish}
+                      />
+                    </div>
+                    <div className="time-select">
+                      <p>
                       Thursday
-                    </p>
-                    <input
-                      type="time"
-                      onChange={(e) => { this.handleChangeHours(e, "start", "thursday");}}
-                      className="form-control"
-                      value={this.state.hours.thursday.start}
-                    />
-                    <input
-                      type="time"
-                      onChange={(e) => { this.handleChangeHours(e, "finish", "thursday");}}
-                      className="form-control"
-                      value={this.state.hours.thursday.finish}
-                    />
-                  </div>
-                  <div className="time-select">
-                    <p>
+                      </p>
+                      <input
+                        type="time"
+                        onChange={(e) => { this.handleChangeHours(e, "start", "thursday");}}
+                        className="form-control"
+                        value={this.state.hours.thursday.start}
+                      />
+                      <input
+                        type="time"
+                        onChange={(e) => { this.handleChangeHours(e, "finish", "thursday");}}
+                        className="form-control"
+                        value={this.state.hours.thursday.finish}
+                      />
+                    </div>
+                    <div className="time-select">
+                      <p>
                       Friday
-                    </p>
-                    <input
-                      type="time"
-                      onChange={(e) => { this.handleChangeHours(e, "start", "friday");}}
-                      className="form-control"
-                      value={this.state.hours.friday.start}
-                    />
-                    <input
-                      type="time"
-                      onChange={(e) => { this.handleChangeHours(e, "finish", "friday");}}
-                      className="form-control"
-                      value={this.state.hours.friday.finish}
-                    />
-                  </div>
-                  <div className="time-select">
-                    <p>
+                      </p>
+                      <input
+                        type="time"
+                        onChange={(e) => { this.handleChangeHours(e, "start", "friday");}}
+                        className="form-control"
+                        value={this.state.hours.friday.start}
+                      />
+                      <input
+                        type="time"
+                        onChange={(e) => { this.handleChangeHours(e, "finish", "friday");}}
+                        className="form-control"
+                        value={this.state.hours.friday.finish}
+                      />
+                    </div>
+                    <div className="time-select">
+                      <p>
                       Saturday
-                    </p>
-                    <input
-                      type="time"
-                      onChange={(e) => { this.handleChangeHours(e, "start", "saturday");}}
-                      className="form-control"
-                      value={this.state.hours.saturday.start}
-                    />
-                    <input
-                      type="time"
-                      onChange={(e) => { this.handleChangeHours(e, "finish", "saturday");}}
-                      className="form-control"
-                      value={this.state.hours.saturday.finish}
-                    />
-                  </div>
-                  <div className="time-select marg-bot-1">
-                    <p>
+                      </p>
+                      <input
+                        type="time"
+                        onChange={(e) => { this.handleChangeHours(e, "start", "saturday");}}
+                        className="form-control"
+                        value={this.state.hours.saturday.start}
+                      />
+                      <input
+                        type="time"
+                        onChange={(e) => { this.handleChangeHours(e, "finish", "saturday");}}
+                        className="form-control"
+                        value={this.state.hours.saturday.finish}
+                      />
+                    </div>
+                    <div className="time-select marg-bot-1">
+                      <p>
                       Sunday
-                    </p>
-                    <input
-                      type="time"
-                      onChange={(e) => { this.handleChangeHours(e, "start", "sunday");}}
-                      className="form-control"
-                      value={this.state.hours.sunday.start}
-                    />
-                    <input
-                      type="time"
-                      onChange={(e) => { this.handleChangeHours(e, "finish", "sunday");}}
-                      className="form-control"
-                      value={this.state.hours.sunday.finish}
-                    />
-                  </div>
-                  <div className="row">
-                    <div className="col-12 col-md-6">
-                      <label>
+                      </p>
+                      <input
+                        type="time"
+                        onChange={(e) => { this.handleChangeHours(e, "start", "sunday");}}
+                        className="form-control"
+                        value={this.state.hours.sunday.start}
+                      />
+                      <input
+                        type="time"
+                        onChange={(e) => { this.handleChangeHours(e, "finish", "sunday");}}
+                        className="form-control"
+                        value={this.state.hours.sunday.finish}
+                      />
+                    </div>
+                    <div className="row">
+                      <div className="col-12 col-md-6">
+                        <label>
                         Rating
-                      </label>
-                      <select
-                        className="form-control marg-bot-1"
-                        value={ this.state.rating }
-                        onChange={ this.handleChangeRating }
-                      >
-                        <option>0.0</option>
-                        <option>0.5</option>
-                        <option>1.0</option>
-                        <option>1.5</option>
-                        <option>2.0</option>
-                        <option>2.5</option>
-                        <option>3.0</option>
-                        <option>3.5</option>
-                        <option>4.0</option>
-                        <option>4.5</option>
-                        <option>5.0</option>
-                      </select>
-                    </div>
-                    <div className="col-12 col-md-6">
-                      <label>
+                        </label>
+                        <select
+                          className="form-control marg-bot-1"
+                          value={ this.state.rating }
+                          onChange={ this.handleChangeRating }
+                        >
+                          <option>0.0</option>
+                          <option>0.5</option>
+                          <option>1.0</option>
+                          <option>1.5</option>
+                          <option>2.0</option>
+                          <option>2.5</option>
+                          <option>3.0</option>
+                          <option>3.5</option>
+                          <option>4.0</option>
+                          <option>4.5</option>
+                          <option>5.0</option>
+                        </select>
+                      </div>
+                      <div className="col-12 col-md-6">
+                        <label>
                         Price
-                      </label>
-                      <select
-                        className="form-control marg-bot-1"
-                        id="exampleFormControlSelect1"
-                        value={ this.state.price }
-                        onChange={ this.handleChangePrice }
-                      >
-                        <option>$</option>
-                        <option>$$</option>
-                        <option>$$$</option>
-                        <option>$$$$</option>
-                      </select>
+                        </label>
+                        <select
+                          className="form-control marg-bot-1"
+                          id="exampleFormControlSelect1"
+                          value={ this.state.price }
+                          onChange={ this.handleChangePrice }
+                        >
+                          <option>$</option>
+                          <option>$$</option>
+                          <option>$$$</option>
+                          <option>$$$$</option>
+                        </select>
+                      </div>
                     </div>
-                  </div>
 
-                  <label>
+                    <label>
                     Website
-                  </label>
-                  <input
-                    name="image"
-                    type="url"
-                    className="form-control marg-bot-1"
-                    value={ this.state.website }
-                    onChange={ this.handleChangeWebsite }
-                  />
+                    </label>
+                    <input
+                      name="image"
+                      type="url"
+                      className="form-control marg-bot-1"
+                      value={ this.state.website }
+                      onChange={ this.handleChangeWebsite }
+                    />
 
-                  <label>
+                    <label>
                     Categories
-                  </label>
-                  <div className="categories-form marg-bot-1">
-                    {/* Begin first row of categories */}
-                    <div className="row">
-                      <div className="col-12 col-md-6">
-                        <p className="bold">
+                    </label>
+                    <div className="categories-form marg-bot-1">
+                      {/* Begin first row of categories */}
+                      <div className="row">
+                        <div className="col-12 col-md-6">
+                          <p className="bold">
                           No time, gotta run
-                        </p>
-                        <p
-                          onClick={ (e) => this.handleClickCategory(e, "foodTrucks") }
-                          className={ this.state.categories.foodTrucks && "active" }
-                        >
+                          </p>
+                          <p
+                            onClick={ (e) => this.handleClickCategory(e, "foodTrucks") }
+                            className={ this.state.categories.foodTrucks && "active" }
+                          >
                           Food trucks
-                        </p>
-                        <p
-                          onClick={ (e) => this.handleClickCategory(e, "lateNights") }
-                          className={ this.state.categories.lateNights && "active" }
-                        >
+                          </p>
+                          <p
+                            onClick={ (e) => this.handleClickCategory(e, "lateNights") }
+                            className={ this.state.categories.lateNights && "active" }
+                          >
                           Late nights
-                        </p>
-                        <p
-                          onClick={ (e) => this.handleClickCategory(e, "healthy") }
-                          className={ this.state.categories.healthy && "active" }
-                        >
+                          </p>
+                          <p
+                            onClick={ (e) => this.handleClickCategory(e, "healthy") }
+                            className={ this.state.categories.healthy && "active" }
+                          >
                           Healthy
-                        </p>
-                      </div>
-                      <div className="col-12 col-md-6">
-                        <p className="bold">
-                          Hangout spots
-                        </p>
-                        <p
-                          onClick={ (e) => this.handleClickCategory(e, "forTheSweetTooth") }
-                          className={ this.state.categories.forTheSweetTooth && "active" }
-                        >
-                          For the sweet tooth
-                        </p>
-                        <p
-                          onClick={ (e) => this.handleClickCategory(e, "forTheStudyGrind") }
-                          className={ this.state.categories.forTheStudyGrind && "active" }
-                        >
-                          For the study grind
-                        </p>
-                        <p
-                          onClick={ (e) => this.handleClickCategory(e, "openLate") }
-                          className={ this.state.categories.openLate && "active" }
-                        >
-                          It’s midnight and I’m hungry
-                        </p>
-                      </div>
-                    </div>
-                    {/* Close first row of categories */}
-
-                    {/* Start second row of categories */}
-                    <div className="row">
-                      <div className="col-12 col-md-6">
-                        <p className="bold">
-                          Wanna drink?
-                        </p>
-                        <p
-                          onClick={ (e) => this.handleClickCategory(e, "bars") }
-                          className={ this.state.categories.bars && "active" }
-                        >
-                          Bars
-                        </p>
-                        <p
-                          onClick={ (e) => this.handleClickCategory(e, "byos") }
-                          className={ this.state.categories.byos && "active" }
-                        >
-                          BYOs
-                        </p>
-                        <p
-                          onClick={ (e) => this.handleClickCategory(e, "speakeasies") }
-                          className={ this.state.categories.speakeasies && "active" }
-                        >
-                          Speakeasies
-                        </p>
-                      </div>
-                      <div className="col-12 col-md-6">
-                        <p className="bold">
-                          Lazy weekend
-                        </p>
-                        <p
-                          onClick={ (e) => this.handleClickCategory(e, "parentsVisiting") }
-                          className={ this.state.categories.parentsVisiting && "active" }
-                        >
-                          Parents are visiting?!
-                        </p>
-                        <p
-                          onClick={ (e) => this.handleClickCategory(e, "gotPlasteredLastNight") }
-                          className={ this.state.categories.gotPlasteredLastNight && "active" }
-                        >
-                          Got plastered last night…
-                        </p>
-                      </div>
-                    </div>
-                    {/* End second row of categories */}
-
-                    {/* Begin third row of categories */}
-                    <div className="row">
-                      <div className="col-12 col-md-6">
-                        <p className="bold">
-                          Special occasions
-                        </p>
-                        <p
-                          onClick={ (e) => this.handleClickCategory(e, "dateNight") }
-                          className={ this.state.categories.dateNight && "active" }
-                        >
-                          Date night
-                        </p>
-                        <p
-                          onClick={ (e) => this.handleClickCategory(e, "formals") }
-                          className={ this.state.categories.formals && "active" }
-                        >
-                          Formals
-                        </p>
-                        <p
-                          onClick={ (e) => this.handleClickCategory(e, "birthdays") }
-                          className={ this.state.categories.birthdays && "active" }
-                        >
-                          Birthdays
-                        </p>
+                          </p>
                         </div>
                         <div className="col-12 col-md-6">
-                        <p className="bold">
+                          <p className="bold">
+                          Hangout spots
+                          </p>
+                          <p
+                            onClick={ (e) => this.handleClickCategory(e, "forTheSweetTooth") }
+                            className={ this.state.categories.forTheSweetTooth && "active" }
+                          >
+                          For the sweet tooth
+                          </p>
+                          <p
+                            onClick={ (e) => this.handleClickCategory(e, "forTheStudyGrind") }
+                            className={ this.state.categories.forTheStudyGrind && "active" }
+                          >
+                          For the study grind
+                          </p>
+                          <p
+                            onClick={ (e) => this.handleClickCategory(e, "openLate") }
+                            className={ this.state.categories.openLate && "active" }
+                          >
+                          It’s midnight and I’m hungry
+                          </p>
+                        </div>
+                      </div>
+                      {/* Close first row of categories */}
+
+                      {/* Start second row of categories */}
+                      <div className="row">
+                        <div className="col-12 col-md-6">
+                          <p className="bold">
+                          Wanna drink?
+                          </p>
+                          <p
+                            onClick={ (e) => this.handleClickCategory(e, "bars") }
+                            className={ this.state.categories.bars && "active" }
+                          >
+                          Bars
+                          </p>
+                          <p
+                            onClick={ (e) => this.handleClickCategory(e, "byos") }
+                            className={ this.state.categories.byos && "active" }
+                          >
+                          BYOs
+                          </p>
+                          <p
+                            onClick={ (e) => this.handleClickCategory(e, "speakeasies") }
+                            className={ this.state.categories.speakeasies && "active" }
+                          >
+                          Speakeasies
+                          </p>
+                        </div>
+                        <div className="col-12 col-md-6">
+                          <p className="bold">
+                          Lazy weekend
+                          </p>
+                          <p
+                            onClick={ (e) => this.handleClickCategory(e, "parentsVisiting") }
+                            className={ this.state.categories.parentsVisiting && "active" }
+                          >
+                          Parents are visiting?!
+                          </p>
+                          <p
+                            onClick={ (e) => this.handleClickCategory(e, "gotPlasteredLastNight") }
+                            className={ this.state.categories.gotPlasteredLastNight && "active" }
+                          >
+                          Got plastered last night…
+                          </p>
+                        </div>
+                      </div>
+                      {/* End second row of categories */}
+
+                      {/* Begin third row of categories */}
+                      <div className="row">
+                        <div className="col-12 col-md-6">
+                          <p className="bold">
+                          Special occasions
+                          </p>
+                          <p
+                            onClick={ (e) => this.handleClickCategory(e, "dateNight") }
+                            className={ this.state.categories.dateNight && "active" }
+                          >
+                          Date night
+                          </p>
+                          <p
+                            onClick={ (e) => this.handleClickCategory(e, "formals") }
+                            className={ this.state.categories.formals && "active" }
+                          >
+                          Formals
+                          </p>
+                          <p
+                            onClick={ (e) => this.handleClickCategory(e, "birthdays") }
+                            className={ this.state.categories.birthdays && "active" }
+                          >
+                          Birthdays
+                          </p>
+                        </div>
+                        <div className="col-12 col-md-6">
+                          <p className="bold">
                           Dinner with friends
-                        </p>
-                        <p
-                          onClick={ (e) => this.handleClickCategory(e, "treatYourself") }
-                          className={ this.state.categories.treatYourself && "active" }
-                        >
+                          </p>
+                          <p
+                            onClick={ (e) => this.handleClickCategory(e, "treatYourself") }
+                            className={ this.state.categories.treatYourself && "active" }
+                          >
                           Treat yourself
-                        </p>
-                        <p
-                          onClick={ (e) => this.handleClickCategory(e, "adulting") }
-                          className={ this.state.categories.adulting && "active" }
-                        >
+                          </p>
+                          <p
+                            onClick={ (e) => this.handleClickCategory(e, "adulting") }
+                            className={ this.state.categories.adulting && "active" }
+                          >
                           #adulting
-                        </p>
-                        <p
-                          onClick={ (e) => this.handleClickCategory(e, "feelingLazy") }
-                          className={ this.state.categories.feelingLazy && "active" }
-                        >
+                          </p>
+                          <p
+                            onClick={ (e) => this.handleClickCategory(e, "feelingLazy") }
+                            className={ this.state.categories.feelingLazy && "active" }
+                          >
                           Feeling lazy
-                        </p>
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                    {/* End third row of categories */}
+                      {/* End third row of categories */}
 
-                    <p className="bold">
+                      <p className="bold">
                       Adventure
-                    </p>
-                    <p
-                      onClick={ (e) => this.handleClickCategory(e, "holeInTheWall") }
-                      className={ this.state.categories.holeInTheWall && "active" }
-                    >
+                      </p>
+                      <p
+                        onClick={ (e) => this.handleClickCategory(e, "holeInTheWall") }
+                        className={ this.state.categories.holeInTheWall && "active" }
+                      >
                       Hole in the wall
-                    </p>
-                    <p
-                      onClick={ (e) => this.handleClickCategory(e, "showoffToYourFriends") }
-                      className={ this.state.categories.showoffToYourFriends && "active" }
-                    >
+                      </p>
+                      <p
+                        onClick={ (e) => this.handleClickCategory(e, "showoffToYourFriends") }
+                        className={ this.state.categories.showoffToYourFriends && "active" }
+                      >
                       Showoff to your friends
-                    </p>
-                    <p
-                      onClick={ (e) => this.handleClickCategory(e, "forTheGram") }
-                      className={ this.state.categories.forTheGram && "active" }
-                    >
+                      </p>
+                      <p
+                        onClick={ (e) => this.handleClickCategory(e, "forTheGram") }
+                        className={ this.state.categories.forTheGram && "active" }
+                      >
                       #forthegram
-                    </p>
-                  </div>
+                      </p>
+                    </div>
 
-                  <label className="marg-bot-1">
+                    <label className="marg-bot-1">
                     Amenities
-                  </label>
-                  <div className="categories-form marg-bot-1">
-                    {/* Begin first row of categories */}
-                    <div className="row">
-                      <div className="col-12 col-md-6">
-                        <p
-                          onClick={ (e) => this.handleClickAmenity(e, "cashOnly") }
-                          className={ this.state.amenities.cashOnly && "active" }
-                        >
-                          <CashOnly />
+                    </label>
+                    <div className="categories-form marg-bot-1">
+                      {/* Begin first row of categories */}
+                      <div className="row">
+                        <div className="col-12 col-md-6">
+                          <p
+                            onClick={ (e) => this.handleClickAmenity(e, "cashOnly") }
+                            className={ this.state.amenities.cashOnly && "active" }
+                          >
+                            <CashOnly />
                           Cash only
-                        </p>
-                        <p
-                          onClick={ (e) => this.handleClickAmenity(e, "formal") }
-                          className={ this.state.amenities.formal && "active" }
-                        >
-                          <Formal />
+                          </p>
+                          <p
+                            onClick={ (e) => this.handleClickAmenity(e, "formal") }
+                            className={ this.state.amenities.formal && "active" }
+                          >
+                            <Formal />
                           Formal
-                        </p>
-                        <p
-                          onClick={ (e) => this.handleClickAmenity(e, "outdoorSeating") }
-                          className={ this.state.amenities.outdoorSeating && "active" }
-                        >
-                          <OutdoorSeating />
+                          </p>
+                          <p
+                            onClick={ (e) => this.handleClickAmenity(e, "outdoorSeating") }
+                            className={ this.state.amenities.outdoorSeating && "active" }
+                          >
+                            <OutdoorSeating />
                           Outdoor seating
-                        </p>
-                        <p
-                          onClick={ (e) => this.handleClickAmenity(e, "wink") }
-                          className={ this.state.amenities.wink && "active" }
-                        >
-                          <Wink />
+                          </p>
+                          <p
+                            onClick={ (e) => this.handleClickAmenity(e, "wink") }
+                            className={ this.state.amenities.wink && "active" }
+                          >
+                            <Wink />
                           Wink
-                        </p>
-                      </div>
-                      <div className="col-12 col-md-6">
-                        <p
-                          onClick={ (e) => this.handleClickAmenity(e, "parking") }
-                          className={ this.state.amenities.parking && "active" }
-                        >
-                          <Parking />
+                          </p>
+                        </div>
+                        <div className="col-12 col-md-6">
+                          <p
+                            onClick={ (e) => this.handleClickAmenity(e, "parking") }
+                            className={ this.state.amenities.parking && "active" }
+                          >
+                            <Parking />
                           Parking
-                        </p>
-                        <p
-                          onClick={ (e) => this.handleClickAmenity(e, "reservation") }
-                          className={ this.state.amenities.reservation && "active" }
-                        >
-                          <Reservation />
+                          </p>
+                          <p
+                            onClick={ (e) => this.handleClickAmenity(e, "reservation") }
+                            className={ this.state.amenities.reservation && "active" }
+                          >
+                            <Reservation />
                           Reservation
-                        </p>
-                        <p
-                          onClick={ (e) => this.handleClickAmenity(e, "wifi") }
-                          className={ this.state.amenities.wifi && "active" }
-                        >
-                          <Wifi />
+                          </p>
+                          <p
+                            onClick={ (e) => this.handleClickAmenity(e, "wifi") }
+                            className={ this.state.amenities.wifi && "active" }
+                          >
+                            <Wifi />
                           Wifi
-                        </p>
-                        <p
-                          onClick={ (e) => this.handleClickAmenity(e, "waiter") }
-                          className={ this.state.amenities.waiter && "active" }
-                        >
-                          <Waiter />
+                          </p>
+                          <p
+                            onClick={ (e) => this.handleClickAmenity(e, "waiter") }
+                            className={ this.state.amenities.waiter && "active" }
+                          >
+                            <Waiter />
                           Waiter
-                        </p>
-                      </div>
-                      <div className="col-12">
-                        <input
-                          className="form-control border marg-bot-1"
-                          placeholder="Add comma separated additional amenities..."
-                          value={this.state.additionalAmenitiesString}
-                          onChange={this.handleChangeAdditionalAmenities}
-                        />
-                        { this.renderAdditionalAmenities() }
+                          </p>
+                        </div>
+                        <div className="col-12">
+                          <input
+                            className="form-control border marg-bot-1"
+                            placeholder="Add comma separated additional amenities..."
+                            value={this.state.additionalAmenitiesString}
+                            onChange={this.handleChangeAdditionalAmenities}
+                          />
+                          { this.renderAdditionalAmenities() }
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  <input
-                    type="submit"
-                    value={ this.state.pendingSubmit ? "Updating listing..." : "Update listing" }
-                    className={
-                      !this.state.pendingSubmit && (
-                        this.state.title &&
+                    <input
+                      type="submit"
+                      value={ this.state.pendingSubmit ? "Updating listing..." : "Update listing" }
+                      className={
+                        !this.state.pendingSubmit && (
+                          this.state.title &&
                         this.state.description &&
                         this.state.image &&
                         this.state.price &&
                         document.getElementById("location") &&
                         document.getElementById("location").value
-                      ) ? (
-                        "btn btn-primary full-width"
-                      ) : (
-                        "btn btn-primary disabled full-width"
-                      )
-                    }
-                  />
+                        ) ? (
+                            "btn btn-primary full-width"
+                          ) : (
+                            "btn btn-primary disabled full-width"
+                          )
+                      }
+                    />
                   </div>
                 )
               }

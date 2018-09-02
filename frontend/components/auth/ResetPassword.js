@@ -39,18 +39,18 @@ class ResetPassword extends Component {
     const token = this.props.match.params.token;
     // Call backend to make sure token is valid/not expired
     axios.get(`/api/reset/${token}`)
-    .then((resp) => {
-      if (!resp.data.success) {
+      .then((resp) => {
+        if (!resp.data.success) {
+          this.setState({
+            error: resp.data.error,
+          });
+        }
+      })
+      .catch((err) => {
         this.setState({
-          error: resp.data.error,
+          error: err,
         });
-      }
-    })
-    .catch((err) => {
-      this.setState({
-        error: err,
       });
-    });
   }
 
   /**
@@ -168,10 +168,10 @@ class ResetPassword extends Component {
                   this.state.newPassword &&
                   this.state.newPassword === this.state.newPasswordConfirm
                 ) ? (
-                  "btn btn-primary"
-                ) : (
-                  "btn btn-primary disabled"
-                )
+                    "btn btn-primary"
+                  ) : (
+                    "btn btn-primary disabled"
+                  )
               }
             />
             <div className="marg-top-1">
@@ -200,7 +200,7 @@ const mapStateToProps = state => {
 
 // Redux config
 ResetPassword = connect(
-    mapStateToProps,
+  mapStateToProps,
 )(ResetPassword);
 
 export default ResetPassword;

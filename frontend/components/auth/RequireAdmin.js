@@ -14,11 +14,11 @@ export default (ComponentToRender) => {
       if (this.props.userId && this.props.userType === 'admin') {
         // Component is returned with all properties it originally had
         return (
-            <ComponentToRender {...this.props} />
+          <ComponentToRender {...this.props} />
         );
       }
       return (
-            <Redirect to="/login"/>
+        <Redirect to="/login"/>
       );
     }
   }

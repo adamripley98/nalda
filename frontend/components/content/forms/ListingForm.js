@@ -609,7 +609,7 @@ class ListingForm extends React.Component {
                 onDrop={(acceptedFiles, rejectedFiles) => this.onDrop(acceptedFiles, rejectedFiles, "hero")}
                 accept="image/*"
                 style={{ marginBottom: "1rem" }}
-                >
+              >
                 <p className="dropzone">
                   <i className="fa fa-file-o" aria-hidden="true" />
                   {
@@ -630,7 +630,7 @@ class ListingForm extends React.Component {
                 onDrop={(acceptedFiles, rejectedFiles) => this.onDrop(acceptedFiles, rejectedFiles)}
                 accept="image/*"
                 style={{ marginBottom: "1rem" }}
-                >
+              >
                 <p className="dropzone">
                   <i className="fa fa-file-o" aria-hidden="true" />
                   Try dropping an image here, or click to select image to upload.
@@ -692,15 +692,15 @@ class ListingForm extends React.Component {
                   Tuesday
                 </p>
                 <input
-                type="time"
-                onChange={(e) => { this.handleChangeHours(e, "start", "tuesday");}}
-                className="form-control"
-              />
+                  type="time"
+                  onChange={(e) => { this.handleChangeHours(e, "start", "tuesday");}}
+                  className="form-control"
+                />
                 <input
-                type="time"
-                onChange={(e) => { this.handleChangeHours(e, "finish", "tuesday");}}
-                className="form-control"
-              />
+                  type="time"
+                  onChange={(e) => { this.handleChangeHours(e, "finish", "tuesday");}}
+                  className="form-control"
+                />
               </div>
               <div className="time-select">
                 <p>
@@ -954,8 +954,8 @@ class ListingForm extends React.Component {
                     >
                       Birthdays
                     </p>
-                    </div>
-                    <div className="col-12 col-md-6">
+                  </div>
+                  <div className="col-12 col-md-6">
                     <p className="bold">
                       Dinner with friends
                     </p>
@@ -1094,10 +1094,10 @@ class ListingForm extends React.Component {
                     this.state.price &&
                     document.getElementById("location").value
                   ) ? (
-                    "btn btn-primary full-width"
-                  ) : (
-                    "btn btn-primary disabled full-width"
-                  )
+                      "btn btn-primary full-width"
+                    ) : (
+                      "btn btn-primary disabled full-width"
+                    )
                 }
               />
             </form>

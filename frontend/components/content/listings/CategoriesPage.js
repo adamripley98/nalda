@@ -67,7 +67,7 @@ class Categories extends React.Component {
 
     axios.get(`/api/listings/categories/${categoryName}`)
       .then(resp => {
-          // If there was no error
+        // If there was no error
         this.setState({
           listings: resp.data.filteredListings,
           pending: false,
@@ -216,9 +216,9 @@ class Categories extends React.Component {
         <div className="space-1"/>
         {
           this.state.pending ? null :
-          <h3 className="title section-title">
+            <h3 className="title section-title">
           Listings tagged with "{categoryMap[this.state.categoryName]}"
-          </h3>
+            </h3>
         }
         {
           (this.state.listings && this.state.listings.length > 1) ? (

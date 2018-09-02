@@ -1,3 +1,4 @@
+/* global $ */
 // Import frameworks
 import React from 'react';
 import axios from 'axios';
@@ -24,9 +25,6 @@ import ListingHeader from './ListingHeader';
 import Hours from './Hours';
 import ParallaxImage from '../ParallaxImage';
 
-/**
- * Component to render a listing
- */
 class Listing extends React.Component {
   // Constructor method
   constructor(props) {

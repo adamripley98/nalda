@@ -2,10 +2,10 @@
 // Import frameworks
 import React from 'react';
 import autosize from 'autosize';
-import {Redirect} from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 import PropTypes from 'prop-types';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 
 // Import components
 import ErrorMessage from '../../shared/ErrorMessage';
@@ -57,10 +57,10 @@ class EditVideoForm extends React.Component {
     // Pull existing data from the database
     axios.get(`/api/videos/${id}`)
       .then(res => {
-          // If there was no error
+        // If there was no error
         this.setState({
           pending: false,
-          error: "",
+          error: '',
           ...res.data.video,
           videoId: id,
         });
@@ -89,7 +89,7 @@ class EditVideoForm extends React.Component {
         const options = {
           componentRestrictions: {country: 'us'},
         };
-        new google.maps.places.Autocomplete(location, options);
+        const place = new google.maps.places.Autocomplete(location, options);
 
         // Update the location field
         document.getElementById('location').value = this.state.location.name;
@@ -97,18 +97,12 @@ class EditVideoForm extends React.Component {
     }
   }
 
-  /**
-   * Helper method to handle a change to the title state
-   */
   handleChangeTitle(event) {
     this.setState({
       title: event.target.value,
     });
   }
 
-  /**
-   * Helper method to handle a change to the video state
-   */
   handleChangeVideo(event) {
     this.setState({
       url: event.target.value,
@@ -213,21 +207,21 @@ class EditVideoForm extends React.Component {
               lng: longitude,
             },
           })
-          .then(() => {
+            .then(() => {
             // Notify success
-            this.props.notifyMessage("Successfully edited video.");
+              this.props.notifyMessage("Successfully edited video.");
 
-            // Redirect to home after successful submission
-            this.setState({
-              redirectToHome: true,
-              pendingSubmit: false,
+              // Redirect to home after successful submission
+              this.setState({
+                redirectToHome: true,
+                pendingSubmit: false,
+              });
+            })
+            .catch(err => {
+              this.setState({
+                error: err.response.data.error || err.response.data,
+              });
             });
-          })
-          .catch(err => {
-            this.setState({
-              error: err.response.data.error || err.response.data,
-            });
-          });
         }
       });
     }
@@ -306,10 +300,10 @@ class EditVideoForm extends React.Component {
                         this.state.title &&
                         this.state.url &&
                         this.state.description ? (
-                          "btn btn-primary full-width"
-                        ) : (
-                          "btn btn-primary disabled full-width"
-                        )
+                            "btn btn-primary full-width"
+                          ) : (
+                            "btn btn-primary disabled full-width"
+                          )
                       }
                     />
                   </div>

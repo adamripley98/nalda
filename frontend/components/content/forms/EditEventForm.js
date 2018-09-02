@@ -1,3 +1,4 @@
+/* global google */
 // Import frameworks
 import React from 'react';
 import autosize from 'autosize';
@@ -6,7 +7,7 @@ import axios from 'axios';
 import Dropzone from 'react-dropzone';
 import uuid from 'uuid-v4';
 import async from 'async';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import EXIF from 'exif-js';
 
@@ -22,13 +23,7 @@ import {processImg, getTargetSize} from '../../../helperMethods/imageUploading';
 // Import actions
 import {notifyMessage} from '../../../actions/notification';
 
-/**
- * Component to render the new listing form
- */
 class EditEventForm extends React.Component {
-  /**
-   * Constructor method
-   */
   constructor(props) {
     super(props);
     this.state = {
@@ -86,32 +81,29 @@ class EditEventForm extends React.Component {
 
     // Pull existing data from the database
     axios.get(`/api/events/${id}`)
-    .then(res => {
-      const requirements = res.data.event.requirements;
-      let requirementsString = "";
-      if (requirements && requirements.length) {
-        requirementsString = requirements.join(", ");
-      }
-      // If there was no error
-      this.setState({
-        pending: false,
-        error: "",
-        ...res.data.event,
-        requirementsString,
-        eventId: id,
+      .then(res => {
+        const requirements = res.data.event.requirements;
+        let requirementsString = "";
+        if (requirements && requirements.length) {
+          requirementsString = requirements.join(", ");
+        }
+        // If there was no error
+        this.setState({
+          pending: false,
+          error: '',
+          ...res.data.event,
+          requirementsString,
+          eventId: id,
+        });
+      })
+      .catch(err => {
+        this.setState({
+          error: err.response.data.error || err.response.data,
+          pending: false,
+        });
       });
-    })
-    .catch(err => {
-      this.setState({
-        error: err.response.data.error || err.response.data,
-        pending: false,
-      });
-    });
   }
 
-  /**
-   * When the component updates
-   */
   componentDidUpdate(prevProps, prevState) {
     if (prevState.pending && !this.state.pending) {
       // Autocomplete the user's city
@@ -122,7 +114,7 @@ class EditEventForm extends React.Component {
         const options = {
           componentRestrictions: { country: 'us' },
         };
-        new google.maps.places.Autocomplete(location, options);
+        const place = new google.maps.places.Autocomplete(location, options);
 
         // Populate the location field with the existing database value
         document.getElementById('location').value = this.state.location ? this.state.location.name : null;
@@ -374,23 +366,23 @@ class EditEventForm extends React.Component {
             categories: this.state.categories,
             requirements: this.state.requirements,
           })
-          .then(resp => {
+            .then(resp => {
             // Notify success
-            this.props.notifyMessage("Successfully updated event.");
+              this.props.notifyMessage("Successfully updated event.");
 
-            // Redirect to the created listing if successful
-            this.setState({
-              eventId: resp.data.event._id,
-              redirectToHome: true,
-              pendingSubmit: false,
+              // Redirect to the created listing if successful
+              this.setState({
+                eventId: resp.data.event._id,
+                redirectToHome: true,
+                pendingSubmit: false,
+              });
+            })
+            .catch(err => {
+              this.setState({
+                error: err.response.data.error || err.response.data,
+                pendingSubmit: false,
+              });
             });
-          })
-          .catch(err => {
-            this.setState({
-              error: err.response.data.error || err.response.data,
-              pendingSubmit: false,
-            });
-          });
         } else {
           this.setState({
             error: "Invalid location passed in.",
@@ -474,7 +466,7 @@ class EditEventForm extends React.Component {
                       onDrop={(acceptedFiles, rejectedFiles) => this.onDrop(acceptedFiles, rejectedFiles, "hero")}
                       accept="image/*"
                       style={{ marginBottom: "1rem" }}
-                      >
+                    >
                       <p className="dropzone">
                         <i className="fa fa-file-o" aria-hidden="true" />
                         {
@@ -495,7 +487,7 @@ class EditEventForm extends React.Component {
                       onDrop={(acceptedFiles, rejectedFiles) => this.onDrop(acceptedFiles, rejectedFiles)}
                       accept="image/*"
                       style={{ marginBottom: "1rem" }}
-                      >
+                    >
                       <p className="dropzone">
                         <i className="fa fa-file-o" aria-hidden="true" />
                         Try dropping up to 10 images here, or click to select image to upload.

@@ -7,7 +7,7 @@ import axios from 'axios';
 import Dropzone from 'react-dropzone';
 import uuid from 'uuid-v4';
 import async from 'async';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import EXIF from 'exif-js';
 
@@ -17,18 +17,12 @@ import Medium from '../../shared/Medium';
 import Tags from '../../shared/Tags';
 
 // Import helper functions
-import {processImg, getTargetSize} from '../../../helperMethods/imageUploading';
+import { processImg, getTargetSize } from '../../../helperMethods/imageUploading';
 
 // Import actions
-import {notifyMessage} from '../../../actions/notification';
+import { notifyMessage } from '../../../actions/notification';
 
-/**
- * Component to render the new listing form
- */
 class EventForm extends React.Component {
-  /**
-   * Constructor method
-   */
   constructor(props) {
     super(props);
     this.state = {
@@ -88,7 +82,7 @@ class EventForm extends React.Component {
     const options = {
       componentRestrictions: {country: 'us'},
     };
-    new google.maps.places.Autocomplete(location, options);
+    const place = new google.maps.places.Autocomplete(location, options);
   }
 
   // Generic helper method for input change
@@ -116,10 +110,6 @@ class EventForm extends React.Component {
     });
   }
 
-
-  /**
-   * Handle change requirements
-   */
   handleChangeRequirements(event) {
     // Prevent the default action
     event.preventDefault();
@@ -335,23 +325,23 @@ class EventForm extends React.Component {
             categories: this.state.categories,
             requirements: this.state.requirements,
           })
-          .then(resp => {
+            .then(resp => {
             // Notify success
-            this.props.notifyMessage("Successfully created event.");
+              this.props.notifyMessage("Successfully created event.");
 
-            // Redirect to the created listing if successful
-            this.setState({
-              eventId: resp.data.event._id,
-              redirectToHome: true,
-              pending: false,
+              // Redirect to the created listing if successful
+              this.setState({
+                eventId: resp.data.event._id,
+                redirectToHome: true,
+                pending: false,
+              });
+            })
+            .catch(err => {
+              this.setState({
+                error: err.response.data.error || err.response.data,
+                pending: false,
+              });
             });
-          })
-          .catch(err => {
-            this.setState({
-              error: err.response.data.error || err.response.data,
-              pending: false,
-            });
-          });
         } else {
           this.setState({
             error: "Invalid location passed in.",
@@ -426,7 +416,7 @@ class EventForm extends React.Component {
                 onDrop={(acceptedFiles, rejectedFiles) => this.onDrop(acceptedFiles, rejectedFiles, "hero")}
                 accept="image/*"
                 style={{ marginBottom: "1rem" }}
-                >
+              >
                 <p className="dropzone">
                   <i className="fa fa-file-o" aria-hidden="true" />
                   {
@@ -447,7 +437,7 @@ class EventForm extends React.Component {
                 onDrop={(acceptedFiles, rejectedFiles) => this.onDrop(acceptedFiles, rejectedFiles)}
                 accept="image/*"
                 style={{ marginBottom: "1rem" }}
-                >
+              >
                 <p className="dropzone">
                   <i className="fa fa-file-o" aria-hidden="true" />
                   Try dropping up to 10 images here, or click to select image to upload.

@@ -1,3 +1,4 @@
+/* global google, $ */
 // Import frameworks
 import React from 'react';
 import autosize from 'autosize';
@@ -94,7 +95,7 @@ class EditArticleForm extends React.Component {
         const options = {
           componentRestrictions: {country: 'us'},
         };
-        new google.maps.places.Autocomplete(location, options);
+        const place = new google.maps.places.Autocomplete(location, options);
       }
 
       // Update the location field
@@ -421,7 +422,7 @@ class EditArticleForm extends React.Component {
                       onDrop={(acceptedFiles, rejectedFiles) => this.onDrop(acceptedFiles, rejectedFiles, "main")}
                       accept="image/*"
                       style={{ marginBottom: "1rem" }}
-                      >
+                    >
                       <p className="dropzone">
                         <i className="fa fa-file-o" aria-hidden="true" />
                         {
@@ -627,10 +628,10 @@ class EditArticleForm extends React.Component {
                         this.state.title &&
                         this.state.subtitle &&
                         this.state.body[0].body ? (
-                          "btn btn-primary full-width"
-                        ) : (
-                          "btn btn-primary disabled full-width"
-                        )
+                            "btn btn-primary full-width"
+                          ) : (
+                            "btn btn-primary disabled full-width"
+                          )
                       }
                       onSubmit={(e) => this.handleSubmit(e)}
                     />
