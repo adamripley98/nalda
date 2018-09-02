@@ -15,10 +15,14 @@
     "go": "nodemon --exec npm start",
     "start": "NODE_ENV=production node server.js",
     "test": "mocha --compilers js:babel-core/register ./test/**/*.js --require ignore-styles",
-    "pre-commit": "yarn lint"
   },
   "author": "Adam Ripley, Cameron Cabo",
   "license": "ISC",
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn lint"
+    },
+  },
   "dependencies": {
     "@sendgrid/mail": "^6.2.1",
     "async": "^2.6.0",
